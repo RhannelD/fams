@@ -1,6 +1,55 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="p-0 full-height p-sm-3 p-md-5 p-1 full-height">
+    <div class="card border-0 full-height overflow-hidden login-panel shadow ">
+        <div class="row mx-0 full-height">
+            <div class="offset-md-5 col-md-7 offset-lg-7 col-lg-5 bg-white full-height">
+                <div class="row full-height align-items-center">
+                    <div class="offset-md-1 col-md-10">
+
+                        <img src="{{ asset('img/scholarship-icon.png') }}" alt="" height="100px" class="mx-auto d-block mb-5">
+
+                        @if(session('error'))
+                            <div class="alert alert-danger">
+                                <span>{{ session('error') }}</span>
+                            </div>
+                            <hr>
+                        @endif
+
+                        <form method="POST" action="{{ route('login.verify') }}" class="col-12 mb-5">
+                            @csrf
+        
+                            <div class="form-group">
+                                <label for="email">Email address</label>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" placeholder="user.email@example.com" required autocomplete="email" autofocus>
+                            </div>
+        
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required>
+                            </div>
+        
+                            <div class="form-group row mb-0">
+                                <div class="col-md-8 offset-md-2">
+                                    <button type="submit" class="btn btn-primary btn-block ">
+                                        Login
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@endsection
+
+{{-- @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -70,4 +119,4 @@
         </div>
     </div>
 </div>
-@endsection
+@endsection --}}
