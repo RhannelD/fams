@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\AuthController;
+// use App\Http\Controllers\AuthController;
+use App\Http\Livewire\Login;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,10 +20,13 @@ Route::get('/', function () {
     return redirect()->route('login.index');
 });
 
-Route::get('/login', [AuthController::class, 'index'])->name('login.index');
+Route::get('/login', Login::class)->name('login.index');
 
-Route::post('/login', [AuthController::class, 'signin'])->name('login.verify');
 
-Route::post('users/{id}', function ($id) {
-    
-});
+
+
+
+// Route::get('/try', function () {
+//     return "redirect()->route('login.index')".Auth::id();
+// })->name('try');
+

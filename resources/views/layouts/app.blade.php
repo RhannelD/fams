@@ -21,14 +21,47 @@
 
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
+    @livewireStyles
 </head>
 <body>
     @include('sweet::alert')
     <div id="app" class="full-height">
         <main class="full-height">
-            @yield('content')
+
+            <livewire:login />
+
         </main>
     </div>
+
+    @livewireScripts
+
+    <script>
+  
+        window.addEventListener('swal:modal', event => { 
+            swal({
+              title: event.detail.message,
+              text: event.detail.text,
+              icon: event.detail.type,
+            });
+        });
+          
+        window.addEventListener('swal:confirm', event => { 
+            swal({
+              title: event.detail.message,
+              text: event.detail.text,
+              icon: event.detail.type,
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((willDelete) => {
+              if (willDelete) {
+                window.livewire.emit('remove');
+              }
+            });
+        });
+    </script>
 </body>
 </html>
