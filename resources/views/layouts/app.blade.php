@@ -20,8 +20,11 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 <body>
+    @include('sweet::alert')
     <div id="app" class="full-height">
         <main class="full-height">
             @yield('content')

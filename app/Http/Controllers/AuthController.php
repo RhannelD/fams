@@ -26,6 +26,8 @@ class AuthController extends Controller
             return Auth::id();
         }
 
+        alert()->error('Email and Password doesn\'t match');
+
         return back()
             ->with('error',"Username and Password does not match!")
             ->withInput();;

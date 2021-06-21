@@ -10,13 +10,6 @@
 
                         <img src="{{ asset('img/scholarship-icon.png') }}" alt="" height="100px" class="mx-auto d-block mb-5">
 
-                        @if(session('error'))
-                            <div class="alert alert-danger">
-                                <span>{{ session('error') }}</span>
-                            </div>
-                            <hr>
-                        @endif
-
                         <form method="POST" action="{{ route('login.verify') }}" class="col-12 mb-5">
                             @csrf
         
@@ -27,7 +20,7 @@
         
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required>
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required placeholder="Password">
                             </div>
         
                             <div class="form-group row mb-0">

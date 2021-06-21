@@ -16,11 +16,8 @@ use App\Http\Controllers\AuthController;
 */
 
 Route::get('/', function () {
-    return redirect('login.index');
+    return redirect()->route('login.index');
 });
-
-// Auth::routes();
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/login', [AuthController::class, 'index'])->name('login.index');
 
