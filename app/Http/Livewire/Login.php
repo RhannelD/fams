@@ -13,12 +13,25 @@ class Login extends Component
 
     protected $rules = [
         'email' => 'required|email',
-        'password' => 'required',
+        'password' => 'required|min:9',
     ];
+
+    protected $messages = [
+        'email.required' => 'Email Address cannot be empty.',
+        'email.email' => 'Email Address format is not valid.',
+        'password.required' => 'Password cannot be empty.',
+        'password.min' => 'Password must be at least 9 characters.',
+    ];
+
 
     public function render()
     {
         return view('livewire.auth.login');
+    }
+
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
     }
 
     public function signin()
@@ -26,7 +39,7 @@ class Login extends Component
         $this->validate();
 
         if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
-            redirect()->route('try');
+            redirect()->route('main');
         }
 
         $this->dispatchBrowserEvent('swal:modal', [

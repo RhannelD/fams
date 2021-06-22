@@ -31,7 +31,7 @@
     <div id="app" class="full-height">
         <main class="full-height">
 
-            <livewire:login />
+          {{ $slot }}
 
         </main>
     </div>

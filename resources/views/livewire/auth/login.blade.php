@@ -7,22 +7,24 @@
 
                         <img src="{{ asset('img/scholarship-icon.png') }}" alt="" height="100px" class="mx-auto d-block mb-5">
 
-                        <form class="col-12 mb-5">
+                        <form class="col-12 mb-5" wire:submit.prevent="signin()">
                             <div class="form-group">
-                                <label for="email">Email address</label>
-                                <input type="email" class="form-control" id="email" wire:model="email" placeholder="user.email@example.com" required autocomplete="email" autofocus>
+                                <label for="email">Email Address</label>
+                                <input type="email" class="form-control" id="email" wire:model.lazy="email" placeholder="user.email@example.com" required autocomplete="email" autofocus>
                                 @error('email') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input type="password" class="form-control" id="password" wire:model="password" required placeholder="Password">
+                                <input type="password" class="form-control" id="password" wire:model.lazy="password" required placeholder="Password">
                                 @error('password') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
+
+                            <hr>
                         
                             <div class="form-group row mb-0">
                                 <div class="col-md-8 offset-md-2">
-                                    <button type="submit" class="btn btn-primary btn-block" wire:click.prevent="signin()">
+                                    <button type="submit" class="btn btn-primary btn-block">
                                         Login
                                     </button>
                                 </div>

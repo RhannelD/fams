@@ -22,11 +22,3 @@ Route::get('/', function () {
 
 Route::get('/login', Login::class)->name('login.index');
 
-
-
-
-
-// Route::get('/try', function () {
-//     return "redirect()->route('login.index')".Auth::id();
-// })->name('try');
-
