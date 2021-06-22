@@ -19,7 +19,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
-    <link href="{{ asset('css/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
     <script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
     <script src="{{ asset('js/sweetalert.min.js') }}"></script>
@@ -28,11 +28,11 @@
 </head>
 <body>
     @include('sweet::alert')
-
+    
     <div id="app" class="full-height">
         <main class="full-height">
 
-          {{ $slot }}
+            @yield('content')
 
         </main>
     </div>
@@ -67,12 +67,6 @@
               }
             });
         });
-		
-		document.addEventListener('DOMContentLoaded', function () {
-			window.livewire.on('urlChange', (url) => {
-				history.pushState(null, null, url);
-			});
-		});
     </script>
 </body>
 </html>

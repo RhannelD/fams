@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-// use App\Http\Controllers\AuthController;
 use App\Http\Livewire\Login;
+use App\Http\Livewire\Main;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,3 +22,4 @@ Route::get('/', function () {
 
 Route::get('/login', Login::class)->name('login.index');
 
+Route::get('/main/{page?}', Main::class)->name('main');
