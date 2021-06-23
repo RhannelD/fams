@@ -16,7 +16,7 @@ class Main extends Component
 
     public function render()
     {
-        return view('livewire.main');
+        return view('livewire.main.main');
     }
 
     public function change_tab($page)

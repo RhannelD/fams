@@ -8,11 +8,10 @@ class Dashboard extends Component
 {
     public function render()
     {
-        return view('livewire.dashboard');
+        return view('livewire.dashboard.dashboard');
     }
 
     public function notif(){
-        
         $this->dispatchBrowserEvent('swal:modal', [
             'type' => 'error',  
             'message' => '', 

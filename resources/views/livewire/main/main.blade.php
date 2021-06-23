@@ -6,7 +6,7 @@
             <i class="fas fa-user-graduate"></i>
 
             <span class="account_info_name">
-                Rhannel Dinlasan
+                {{ Auth::user()->firstname . ' ' . Auth::user()->lastname }}
             </span>
 
             <br>
@@ -24,7 +24,7 @@
 
             <a class="list-group-item list-group-item-action bg-light tabs" wire:click="change_tab('scholar')">
                 <i class="fas fa-user-graduate"></i>
-                Student
+                Scholar
             </a>
 
             <a class="list-group-item list-group-item-action bg-light tabs" id="tab_report">
