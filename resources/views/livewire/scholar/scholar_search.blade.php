@@ -20,7 +20,7 @@
             <tbody>
 
                 @foreach ($scholars as $scholar)
-                    <tr class="rows">
+                    <tr class="rows" wire:click="info({{ $scholar->id }})">
                         <td class="text-nowrap">{{ $scholar->id }}</td>
                         <td class="text-nowrap">{{ $scholar->firstname }}</td>
                         <td class="text-nowrap">{{ $scholar->lastname }}</td>

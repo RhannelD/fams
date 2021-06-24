@@ -53,26 +53,26 @@
             });
         });
           
-        window.addEventListener('swal:confirm', event => { 
-            swal({
-              title: event.detail.message,
-              text: event.detail.text,
-              icon: event.detail.type,
-              buttons: true,
-              dangerMode: true,
-            })
-            .then((willDelete) => {
-              if (willDelete) {
-                window.livewire.emit('remove');
-              }
-            });
-        });
+        // window.addEventListener('swal:confirm', event => { 
+        //     swal({
+        //       title: event.detail.message,
+        //       text: event.detail.text,
+        //       icon: event.detail.type,
+        //       buttons: true,
+        //       dangerMode: true,
+        //     })
+        //     .then((willDelete) => {
+        //       if (willDelete) {
+        //         window.livewire.emit('delete');
+        //       }
+        //     });
+        // });
 		
-		document.addEventListener('DOMContentLoaded', function () {
-			window.livewire.on('urlChange', (url) => {
-				history.pushState(null, null, url);
-			});
-		});
+      document.addEventListener('DOMContentLoaded', function () {
+        window.livewire.on('urlChange', (url) => {
+          history.pushState(null, null, url);
+        });
+      });
     </script>
 </body>
 </html>
