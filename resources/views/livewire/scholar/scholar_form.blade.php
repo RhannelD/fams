@@ -64,11 +64,14 @@
                 @error('birthday') <span class="text-danger">{{ $message }}</span> @enderror	
             </div>
 
-            <div class="form-group">
-                <label for="c_student_password">Password</label>
-                <input type="password" wire:model.lazy="password" class="form-control" id="c_student_password" placeholder="Password">
-                @error('password') <span class="text-danger">{{ $message }}</span> @enderror
-            </div>
+            @if (!isset($scholar_id))
+                <div class="form-group">
+                    <label for="c_student_password">Password</label>
+                    <input type="password" wire:model.lazy="password" class="form-control" id="c_student_password" placeholder="Password">
+                    @error('password') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+            @endif
+            @error('password') <span class="text-danger">{{ $message }}</span> @enderror
 
         </div>
 

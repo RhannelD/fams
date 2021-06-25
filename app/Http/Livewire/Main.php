@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class Main extends Component
 {
@@ -27,5 +28,11 @@ class Main extends Component
 
     protected function update_url(){
         $this->emit('urlChange', '/main/'.$this->page);
+    }
+
+    public function signout(){
+        Auth::logout();
+
+        redirect()->route('login.index');
     }
 }

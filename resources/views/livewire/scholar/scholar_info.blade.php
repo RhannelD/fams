@@ -34,7 +34,7 @@
                 </table>
             </div>
             <div class="card-footer">
-                <button type="button" class="btn btn-info mt-1" data-toggle="modal" data-target="#student_form">
+                <button type="button" class="btn btn-info mt-1" wire:click="edit({{ $scholar->id }})" data-toggle="modal" data-target="#student_form">
                     <i class="fas fa-edit"></i>
                     Edit Info
                 </button>

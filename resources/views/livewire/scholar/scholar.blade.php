@@ -14,7 +14,7 @@
 		<div class="col-md-6 mt-2">
 
 			<div class="input-group rounded">
-				<button class="btn btn-info ml-auto mr-0 text-white" type="button" data-toggle="modal" data-target="#student_form">
+				<button class="btn btn-info ml-auto mr-0 text-white" type="button" wire:click="nullinputs" data-toggle="modal" data-target="#student_form">
 					<i class="fas fa-plus"></i>
 					Create Scholar
 				</button>

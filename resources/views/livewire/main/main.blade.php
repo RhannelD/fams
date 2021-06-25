@@ -10,7 +10,7 @@
             </span>
 
             <br>
-            <button class="btn btn-sm btn-danger sign_out">
+            <button class="btn btn-sm btn-danger sign_out" wire:click="signout()">
               <i class="fas fa-sign-out"></i>
               Signout
             </button>

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use App\Models\User;
 
 class UserSeeder extends Seeder
 {
@@ -29,19 +30,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('123123123'),
         ]);
 
-        for ($i=0; $i < 30; $i++) { 
-            DB::table('users')->insert([   
-                'usertype' => 'scholar',
-                'firstname' => Str::random(10),
-                'middlename' => Str::random(10),
-                'lastname' => Str::random(10),
-                'gender' => 'male',
-                'phone' => Str::random(10),
-                'email' => Str::random(10).'@gmail.com',
-                'password' => Hash::make('password'),
-                'birthday' => '1900-01-01',
-            ]);
-        }
-        
+        User::factory()->count(100)->create();
+
     }
 }

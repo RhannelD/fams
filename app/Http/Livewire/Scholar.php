@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -26,16 +27,18 @@ class Scholar extends Component
     public $password;
     public $birthday;
 
-    protected $rules = [
-        'firstname' => 'required|regex:/^[a-z ,.\'-]+$/i',
-        'middlename' => 'required|regex:/^[a-z ,.\'-]+$/i',
-        'lastname' => 'required|regex:/^[a-z ,.\'-]+$/i',
-        'gender' => 'required|in:male,female',
-        'phone' => 'required|unique:users|regex:/(09)[0-9]{9}/',
-        'birthday' => 'required|before:5 years ago',
-        'email' => 'required|email|unique:users',
-        'password' => 'required|min:9',
-    ];
+    function rules() {
+        return [
+            'firstname' => 'required|regex:/^[a-z ,.\'-]+$/i',
+            'middlename' => 'required|regex:/^[a-z ,.\'-]+$/i',
+            'lastname' => 'required|regex:/^[a-z ,.\'-]+$/i',
+            'gender' => 'required|in:male,female',
+            'phone' => "required|unique:users".((isset($this->scholar_id))?",phone,$this->scholar_id":'')."|regex:/(09)[0-9]{9}/",
+            'birthday' => 'required|before:5 years ago',
+            'email' => "required|email|unique:users".((isset($this->scholar_id))?",email,$this->scholar_id":''),
+            'password' => 'required|min:9',
+        ];
+    }
 
 
     public function render()
@@ -97,10 +100,47 @@ class Scholar extends Component
         $this->dispatchBrowserEvent('scholar-info', ['action' => 'hide']);
     }
 
+    public function nullinputs()
+    {
+        $this->scholar_id   = null;
+        $this->firstname    = null;
+        $this->middlename   = null;
+        $this->lastname     = null;
+        $this->gender       = null;
+        $this->phone        = null;
+        $this->email        = null;
+        $this->password     = null;
+        $this->birthday     = null;
+    }
+
+    public function edit($id)
+    {
+        $data = User::findorfail($id);
+
+        $this->scholar_id   = $data->id;
+        $this->firstname    = $data->firstname;
+        $this->middlename   = $data->middlename;
+        $this->lastname     = $data->lastname;
+        $this->gender       = $data->gender;
+        $this->phone        = $data->phone;
+        $this->email        = $data->email;
+        // $this->password     = $data->password;
+        $this->birthday     = $data->birthday;
+    }
+
     public function save()
     {
+        if (isset($this->scholar_id)) {
+            $this->password = '123123123';
+        }
+
         $data = $this->validate();
         $data['usertype'] = 'scholar';
+        if (isset($this->scholar_id)) {
+            unset($data['password']);
+        } else {
+            $data['password'] = Hash::make($data['password']);
+        }
 
         $scholar = User::updateOrCreate(
             ['id' => $this->scholar_id],
@@ -115,11 +155,24 @@ class Scholar extends Component
             ]);
             return;
         } elseif (!$scholar->wasRecentlyCreated && $scholar->wasChanged()){
-            // updateOrCreate performed an update
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'success',  
+                'message' => 'Scholar Account Updated', 
+                'text' => 'Scholar account has been successfully updated'
+            ]);
+            return;
         } elseif (!$scholar->wasRecentlyCreated && !$scholar->wasChanged()){
-            // updateOrCreate performed nothing, row did not change
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'info',  
+                'message' => 'Nothing has been changed', 
+                'text' => ''
+            ]);
+
+            $this->edit($this->scholar_id);
+            return;
         }
 
+        
         $this->dispatchBrowserEvent('swal:modal', [
             'type' => 'error',  
             'message' => 'Runtime error!', 
