@@ -30,7 +30,7 @@ class UserFactory extends Factory
             'middlename' => $this->faker->lastname,
             'lastname' => $this->faker->lastname,
             'gender' => $gender,
-            'phone' => Str::random(10),
+            'phone' => '09'.rand(100000000,999999999),
             'email' => $this->faker->unique()->safeEmail(),
             'password' => Hash::make('123123123'),
             'birthday' => $this->faker->date($format = 'Y-m-d', $max = '2015-12-01'),

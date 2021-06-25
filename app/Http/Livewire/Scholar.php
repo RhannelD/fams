@@ -153,6 +153,8 @@ class Scholar extends Component
                 'message' => 'Scholar Account Created', 
                 'text' => 'Scholar account has been successfully created'
             ]);
+            $this->info($scholar->id);
+            $this->dispatchBrowserEvent('scholar-form', ['action' => 'hide']);
             return;
         } elseif (!$scholar->wasRecentlyCreated && $scholar->wasChanged()){
             $this->dispatchBrowserEvent('swal:modal', [
@@ -160,6 +162,8 @@ class Scholar extends Component
                 'message' => 'Scholar Account Updated', 
                 'text' => 'Scholar account has been successfully updated'
             ]);
+            $this->info($this->scholar_id);
+            $this->dispatchBrowserEvent('scholar-form', ['action' => 'hide']);
             return;
         } elseif (!$scholar->wasRecentlyCreated && !$scholar->wasChanged()){
             $this->dispatchBrowserEvent('swal:modal', [
@@ -167,12 +171,10 @@ class Scholar extends Component
                 'message' => 'Nothing has been changed', 
                 'text' => ''
             ]);
-
             $this->edit($this->scholar_id);
             return;
         }
-
-        
+ 
         $this->dispatchBrowserEvent('swal:modal', [
             'type' => 'error',  
             'message' => 'Runtime error!', 

@@ -1,5 +1,7 @@
 <div>
     @if ($paginator->hasPages())
+
+
         <nav style="max-height: 35px;">
             <ul class="pagination">
                 {{-- Previous Page Link --}}
@@ -18,6 +20,36 @@
                 @endif
 
                 {{-- Pagination Elements --}}
+
+                @if ($paginator->lastPage() > 0)
+                    @php
+                        $currentpage = $paginator->currentPage();
+                        $firstpage = $currentpage;
+                        $lastpage = $currentpage;
+                        $numOfPagination = 5;
+                    @endphp
+                    @while ($firstpage != 1 || $lastpage != $paginator->lastPage())
+                        @if ($numOfPagination <= 1)
+                            @break
+                        @endif
+                        @if ($lastpage < $paginator->lastPage())
+                            @php
+                                $lastpage++;
+                                $numOfPagination--;
+                            @endphp
+                        @endif
+                        @if ($numOfPagination <= 1)
+                            @break
+                        @endif
+                        @if ($firstpage > 1)
+                            @php
+                                $firstpage--;
+                                $numOfPagination--;
+                            @endphp
+                        @endif
+                    @endwhile
+                @endif
+
                 @foreach ($elements as $element)
                     {{-- "Three Dots" Separator --}}
                     @if (is_string($element))
@@ -27,10 +59,12 @@
                     {{-- Array Of Links --}}
                     @if (is_array($element))
                         @foreach ($element as $page => $url)
-                            @if ($page == $paginator->currentPage())
-                                <li class="page-item active" wire:key="paginator-page-{{ $page }}" aria-current="page"><span class="page-link">{{ $page }}</span></li>
-                            @else
-                                <li class="page-item" wire:key="paginator-page-{{ $page }}"><button type="button" class="page-link" wire:click="gotoPage({{ $page }})">{{ $page }}</button></li>
+                            @if ($page >= $firstpage && $page <= $lastpage)
+                                @if ($page == $paginator->currentPage())
+                                    <li class="page-item active" wire:key="paginator-page-{{ $page }}" aria-current="page"><span class="page-link">{{ $page }}</span></li>
+                                @else
+                                    <li class="page-item" wire:key="paginator-page-{{ $page }}"><button type="button" class="page-link" wire:click="gotoPage({{ $page }})">{{ $page }}</button></li>
+                                @endif
                             @endif
                         @endforeach
                     @endif

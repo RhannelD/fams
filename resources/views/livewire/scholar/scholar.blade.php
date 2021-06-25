@@ -14,7 +14,7 @@
 		<div class="col-md-6 mt-2">
 
 			<div class="input-group rounded">
-				<button class="btn btn-info ml-auto mr-0 text-white" type="button" wire:click="nullinputs" data-toggle="modal" data-target="#student_form">
+				<button class="btn btn-info ml-auto mr-0 text-white" type="button" wire:click="nullinputs" data-toggle="modal" data-target="#scholar_form">
 					<i class="fas fa-plus"></i>
 					Create Scholar
 				</button>
@@ -34,7 +34,7 @@
 		</div>
 
 		<div class="creating_student_modal">
-			<div wire:ignore.self class="modal fade" id="student_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			<div wire:ignore.self class="modal fade" id="scholar_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 				<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
 					<form class="modal-content" wire:submit.prevent="save()">
 						<div class="modal-header bg-dark text-white">
@@ -66,6 +66,10 @@
 	<script>
 		window.addEventListener('scholar-info', event => {
 			$(".info_scholar").collapse(event.detail.action);
-		})
+		});
+
+		window.addEventListener('scholar-form', event => {
+			$("#scholar_form").modal(event.detail.action);
+		});
 	</script>
 </div>
