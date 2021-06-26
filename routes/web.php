@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Livewire\Login;
-use App\Http\Livewire\Main;
+use App\Http\Livewire\LoginLivewire;
+use App\Http\Livewire\MainLivewire;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,5 +20,5 @@ Route::get('/', function () {
     return redirect()->route('login.index');
 });
 
-Route::get('/login', Login::class)->name('login.index')->middleware('auth.login');
-Route::get('/main/{page?}', Main::class)->name('main')->middleware('auth');
+Route::get('/login', LoginLivewire::class)->name('login.index')->middleware('auth.login');
+Route::get('/main/{page?}', MainLivewire::class)->name('main')->middleware('auth');

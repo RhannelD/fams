@@ -6,7 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Scholarship as ScholarshipProgram;
 
-class Scholarship extends Component
+class ScholarshipLivewire extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
@@ -32,7 +32,7 @@ class Scholarship extends Component
 
         $scholarships = ScholarshipProgram::where('scholarship', 'like', "%$search%")->paginate(15);
 
-        return view('livewire.scholarship.scholarship', ['scholarships' => $scholarships]);
+        return view('livewire.scholarship.scholarship-livewire', ['scholarships' => $scholarships]);
     }
     
     public function updated($propertyName)

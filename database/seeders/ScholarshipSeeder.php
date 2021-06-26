@@ -14,6 +14,6 @@ class ScholarshipSeeder extends Seeder
      */
     public function run()
     {
-        Scholarship::factory()->count(20)->create();
+        Scholarship::factory()->count(5)->create();
     }
 }

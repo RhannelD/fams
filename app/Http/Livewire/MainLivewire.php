@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
-class Main extends Component
+class MainLivewire extends Component
 {
     public $page;
 
@@ -17,7 +17,7 @@ class Main extends Component
 
     public function render()
     {
-        return view('livewire.main.main');
+        return view('livewire.main.main-livewire');
     }
 
     public function change_tab($page)

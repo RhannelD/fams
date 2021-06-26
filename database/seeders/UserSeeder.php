@@ -18,18 +18,20 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([   
-            'usertype' => 'admin',
-            'firstname' => 'Rhannel',
-            'middlename' => 'Dalida',
-            'lastname' => 'Dinlasan',
-            'gender' => 'male',
-            'religion' => 'Roman Catholic',
-            'birthday' => '1999-12-07',
-            'birthplace' => 'Biga, Calatagan Batangas',
-            'phone' => '09351458776',
-            'email' => 'rhanneldinlasan@gmail.com',
-            'password' => Hash::make('123123123'),
+        User::insert([   
+            'usertype'      => 'admin',
+            'firstname'     => 'Rhannel',
+            'middlename'    => 'Dalida',
+            'lastname'      => 'Dinlasan',
+            'gender'        => 'male',
+            'religion'      => 'Roman Catholic',
+            'birthday'      => '1999-12-07',
+            'birthplace'    => 'Biga, Calatagan Batangas',
+            'phone'         => '09351458776',
+            'email'         => 'rhanneldinlasan@gmail.com',
+            'password'      => Hash::make('123123123'),
+            'created_at'    => Carbon::now(),
+            'updated_at'    => Carbon::now(),
         ]);
 
         User::factory()->count(100)->create();

@@ -26,11 +26,11 @@
 	<div class="row">
 
 		<div class="contents-container col-md-6 mb-2 table_student">
-			@include('livewire.scholar.scholar_search')
+			@include('livewire.scholar.scholar-search-livewire')
 		</div>
 
 		<div class="contents-container col-md-6 info_scholar collapse"  wire:ignore.self>
-			@include('livewire.scholar.scholar_info')
+			@include('livewire.scholar.scholar-info-livewire')
 		</div>
 
 		<div class="creating_student_modal">
@@ -44,7 +44,7 @@
 							</button>
 						</div>
 						<div class="modal-body student_creating">
-							@include('livewire.scholar.scholar_form')
+							@include('livewire.scholar.scholar-form-livewire')
 						</div>
 						<div class="modal-footer">
 							<button type="submit" class="btn btn-success">

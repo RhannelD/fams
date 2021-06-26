@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
-class Scholar extends Component
+class ScholarLivewire extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
@@ -58,7 +58,7 @@ class Scholar extends Component
             })
             ->paginate(15);
 
-        return view('livewire.scholar.scholar', ['scholars' => $scholars]);
+        return view('livewire.scholar.scholar-livewire', ['scholars' => $scholars]);
     }
 
     public function updated($propertyName)

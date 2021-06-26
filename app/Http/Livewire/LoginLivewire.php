@@ -6,7 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-class Login extends Component
+class LoginLivewire extends Component
 {
     public $email;
     public $password;
@@ -26,7 +26,7 @@ class Login extends Component
 
     public function render()
     {
-        return view('livewire.auth.login')
+        return view('livewire.auth.login-livewire')
             ->extends('layouts.login');
     }
 

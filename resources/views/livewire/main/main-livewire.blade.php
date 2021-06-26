@@ -84,13 +84,13 @@
         <div class="container-fluid" id="mainpanel">
             @switch($page)
                 @case('dashboard')
-                    <livewire:dashboard />
+                    <livewire:dashboard-livewire />
                     @break
                 @case('scholarship')
-                        <livewire:scholarship />
-                        @break
+                    <livewire:scholarship-livewire />
+                    @break
                 @case('scholar')
-                    <livewire:scholar />
+                    <livewire:scholar-livewire />
                     @break
             @endswitch
         </div>
