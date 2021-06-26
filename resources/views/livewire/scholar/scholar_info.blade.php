@@ -11,16 +11,8 @@
                             <td class="pl-sm-1 pl-md-2">{{ $scholar->id }}</td>
                         </tr>
                         <tr>
-                            <td>Firstname:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholar->firstname }}</td>
-                        </tr>
-                        <tr>
-                            <td>Middlename:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholar->middlename }}</td>
-                        </tr>
-                        <tr>
-                            <td>Lastname:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholar->lastname }}</td>
+                            <td>Full Name:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $scholar->firstname }} {{ $scholar->middlename }} {{ $scholar->lastname }}</td>
                         </tr>
                         <tr>
                             <td>Phonenumber:</td>
@@ -30,11 +22,27 @@
                             <td>Email:</td>
                             <td class="pl-sm-1 pl-md-2">{{ $scholar->email }}</td>
                         </tr>
+                        <tr>
+                            <td>Gender:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $scholar->gender }}</td>
+                        </tr>
+                        <tr>
+                            <td>Religiom:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $scholar->religion }}</td>
+                        </tr>
+                        <tr>
+                            <td>Birth Date:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $scholar->birthday }}</td>
+                        </tr>
+                        <tr>
+                            <td>Birth Place:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $scholar->birthplace }}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
             <div class="card-footer">
-                <button type="button" class="btn btn-info mt-1" wire:click="edit({{ $scholar->id }})" data-toggle="modal" data-target="#scholar_form">
+                <button type="button" class="btn btn-info mt-1 text-white" wire:click="edit({{ $scholar->id }})" data-toggle="modal" data-target="#scholar_form">
                     <i class="fas fa-edit"></i>
                     Edit Info
                 </button>

@@ -20,6 +20,5 @@ Route::get('/', function () {
     return redirect()->route('login.index');
 });
 
-Route::get('/login', Login::class)->name('login.index');
-
-Route::get('/main/{page?}', Main::class)->name('main');
+Route::get('/login', Login::class)->name('login.index')->middleware('auth.login');
+Route::get('/main/{page?}', Main::class)->name('main')->middleware('auth');

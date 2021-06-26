@@ -21,11 +21,13 @@ class Scholar extends Component
     public $firstname;
     public $middlename;
     public $lastname;
-    public $gender;
+    public $gender = 'male';
     public $phone;
     public $email;
     public $password;
     public $birthday;
+    public $birthplace;
+    public $religion;
 
     function rules() {
         return [
@@ -35,6 +37,8 @@ class Scholar extends Component
             'gender' => 'required|in:male,female',
             'phone' => "required|unique:users".((isset($this->scholar_id))?",phone,$this->scholar_id":'')."|regex:/(09)[0-9]{9}/",
             'birthday' => 'required|before:5 years ago',
+            'birthplace' => 'max:200',
+            'religion' => 'max:200',
             'email' => "required|email|unique:users".((isset($this->scholar_id))?",email,$this->scholar_id":''),
             'password' => 'required|min:9',
         ];
@@ -106,11 +110,13 @@ class Scholar extends Component
         $this->firstname    = null;
         $this->middlename   = null;
         $this->lastname     = null;
-        $this->gender       = null;
+        $this->gender       = 'male';
         $this->phone        = null;
         $this->email        = null;
         $this->password     = null;
         $this->birthday     = null;
+        $this->birthplace   = null;
+        $this->religion     = null;
     }
 
     public function edit($id)
@@ -124,8 +130,9 @@ class Scholar extends Component
         $this->gender       = $data->gender;
         $this->phone        = $data->phone;
         $this->email        = $data->email;
-        // $this->password     = $data->password;
         $this->birthday     = $data->birthday;
+        $this->birthplace   = $data->birthplace;
+        $this->religion     = $data->religion;
     }
 
     public function save()

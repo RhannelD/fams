@@ -22,9 +22,14 @@
                 Dashboard
             </a> 
 
+            <a class="list-group-item list-group-item-action bg-light tabs" wire:click="change_tab('scholarship')">
+                <i class="fas fa-user-graduate"></i>
+                Scholarships
+            </a>
+
             <a class="list-group-item list-group-item-action bg-light tabs" wire:click="change_tab('scholar')">
                 <i class="fas fa-user-graduate"></i>
-                Scholar
+                Scholars
             </a>
 
             <a class="list-group-item list-group-item-action bg-light tabs" id="tab_report">
@@ -81,6 +86,9 @@
                 @case('dashboard')
                     <livewire:dashboard />
                     @break
+                @case('scholarship')
+                        <livewire:scholarship />
+                        @break
                 @case('scholar')
                     <livewire:scholar />
                     @break
