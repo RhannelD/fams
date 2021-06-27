@@ -27,6 +27,10 @@
                 Scholarships
             </a>
 
+            <a class="list-group-item list-group-item-action bg-light tabs" wire:click="change_tab('scholarship-officer')">
+                <i class="fas fa-user-graduate"></i>
+                Officers
+            </a>
             <a class="list-group-item list-group-item-action bg-light tabs" wire:click="change_tab('scholar')">
                 <i class="fas fa-user-graduate"></i>
                 Scholars
@@ -72,7 +76,7 @@
                 </div>
 
                 <div>
-                    <div class="top-title title-batstateu">BATANGAS STATE UNIVERSITY</div>
+                    <div class="top-title title-batstateu"></div>
                 </div>
 
                 <div class="icons ml-2 mr-auto">
@@ -85,6 +89,9 @@
             @switch($page)
                 @case('dashboard')
                     <livewire:dashboard-livewire />
+                    @break
+                @case('scholarship-officer')
+                    <livewire:scholarship-officer-livewire />
                     @break
                 @case('scholarship')
                     <livewire:scholarship-livewire />

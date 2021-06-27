@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\LoginLivewire;
 use App\Http\Livewire\MainLivewire;
 
+use App\Http\Controllers\HomeController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,3 +24,5 @@ Route::get('/', function () {
 
 Route::get('/login', LoginLivewire::class)->name('login.index')->middleware('auth.login');
 Route::get('/main/{page?}', MainLivewire::class)->name('main')->middleware('auth');
+
+Route::get('/try', [HomeController::class, 'index']);

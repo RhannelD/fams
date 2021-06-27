@@ -34,7 +34,9 @@ class UserSeeder extends Seeder
             'updated_at'    => Carbon::now(),
         ]);
 
-        User::factory()->count(100)->create();
+        User::factory()->count(15)->create(['usertype' => 'officer']);
+
+        User::factory()->count(85)->create();
 
     }
 }

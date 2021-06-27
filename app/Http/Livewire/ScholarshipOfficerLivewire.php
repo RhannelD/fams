@@ -1,0 +1,228 @@
+<?php
+
+namespace App\Http\Livewire;
+
+use Livewire\Component;
+use Livewire\WithPagination;
+use App\Models\User;
+use App\Models\ScholarshipOfficer;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
+class ScholarshipOfficerLivewire extends Component
+{
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
+
+    public $search = '';
+    public $officer;
+    public $officer_id_delete;
+
+    public $officer_id;
+    public $firstname;
+    public $middlename;
+    public $lastname;
+    public $gender = 'male';
+    public $phone;
+    public $email;
+    public $password;
+    public $birthday;
+    public $birthplace;
+    public $religion;
+
+    function rules() {
+        return [
+            'firstname' => 'required|regex:/^[a-z ,.\'-]+$/i',
+            'middlename' => 'required|regex:/^[a-z ,.\'-]+$/i',
+            'lastname' => 'required|regex:/^[a-z ,.\'-]+$/i',
+            'gender' => 'required|in:male,female',
+            'phone' => "required|unique:users".((isset($this->officer_id))?",phone,$this->officer_id":'')."|regex:/(09)[0-9]{9}/",
+            'birthday' => 'required|before:5 years ago',
+            'birthplace' => 'max:200',
+            'religion' => 'max:200',
+            'email' => "required|email|unique:users".((isset($this->officer_id))?",email,$this->officer_id":''),
+            'password' => 'required|min:9',
+        ];
+    }
+
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
+
+    public function render()
+    {
+        $search = $this->search;
+
+        $officers = User::where('usertype', 'officer')
+            ->where(function ($query) use ($search) {
+                $query->where('firstname', 'like', "%$search%")
+                    ->orWhere('middlename', 'like', "%$search%")
+                    ->orWhere('lastname', 'like', "%$search%")
+                    ->orWhere(DB::raw('CONCAT(firstname, " ", lastname)'), 'like', "%$search%");
+            })
+            ->paginate(15);
+
+        return view('livewire.scholarship-officer.scholarship-officer-livewire', ['officers' => $officers]);
+    }
+    
+    public function info($id)
+    {
+        $this->officer = User::find($id);
+
+        $this->dispatchBrowserEvent('officer-info', ['action' => 'show']);
+    }
+
+    public function confirm_delete($id)
+    {
+        if ($this->cannotbedeleted()) {
+            return;
+        }
+
+        $checker = ScholarshipOfficer::select('id')
+            ->where('user_id', $this->officer_id_delete)
+            ->exists();
+
+        if ($checker) {
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'info',  
+                'message' => 'Cannot be Deleted', 
+                'text' => 'Account is Connected to a Scholarship Program'
+            ]);
+            return;
+        }
+        
+        $this->officer_id_delete = $id;
+
+        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_officer', [
+            'type' => 'warning',  
+            'message' => 'Are you sure?', 
+            'text' => 'If deleted, you will not be able to recover this account!',
+            'function' => "delete"
+        ]);
+    }
+
+    public function delete()
+    {
+        if ($this->cannotbedeleted()) {
+            return;
+        }
+
+        $user = User::findorfail($this->officer_id_delete);
+        
+        if (!$user->delete()) {
+            return;
+        }
+
+        $this->officer = null;
+
+        $this->dispatchBrowserEvent('swal:modal', [
+            'type' => 'success',  
+            'message' => 'Scholar Account Deleted', 
+            'text' => 'Scholar account has been successfully deleted'
+        ]);
+
+        $this->dispatchBrowserEvent('officer-info', ['action' => 'hide']);
+    }
+
+    protected function cannotbedeleted(){
+        $checker = ScholarshipOfficer::select('id')
+            ->where('user_id', $this->officer_id_delete)
+            ->exists();
+
+        if ($checker) {
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'info',  
+                'message' => 'Cannot be Deleted', 
+                'text' => 'Account is Connected to a Scholarship Program'
+            ]);
+        }
+        return $checker;
+    }
+
+    public function nullinputs()
+    {
+        $this->officer_id   = null;
+        $this->firstname    = null;
+        $this->middlename   = null;
+        $this->lastname     = null;
+        $this->gender       = 'male';
+        $this->phone        = null;
+        $this->email        = null;
+        $this->password     = null;
+        $this->birthday     = null;
+        $this->birthplace   = null;
+        $this->religion     = null;
+    }
+
+    public function edit($id)
+    {
+        $data = User::findorfail($id);
+
+        $this->officer_id   = $data->id;
+        $this->firstname    = $data->firstname;
+        $this->middlename   = $data->middlename;
+        $this->lastname     = $data->lastname;
+        $this->gender       = $data->gender;
+        $this->phone        = $data->phone;
+        $this->email        = $data->email;
+        $this->birthday     = $data->birthday;
+        $this->birthplace   = $data->birthplace;
+        $this->religion     = $data->religion;
+    }
+
+    public function save()
+    {
+        if (isset($this->officer_id)) {
+            $this->password = '123123123';
+        }
+
+        $data = $this->validate();
+        $data['usertype'] = 'officer';
+        if (isset($this->officer_id)) {
+            unset($data['password']);
+        } else {
+            $data['password'] = Hash::make($data['password']);
+        }
+
+        $officer = User::updateOrCreate(
+            ['id' => $this->officer_id],
+            $data
+        );
+
+        if($officer->wasRecentlyCreated){
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'success',  
+                'message' => 'Scholar Account Created', 
+                'text' => 'Scholar account has been successfully created'
+            ]);
+            $this->info($officer->id);
+            $this->dispatchBrowserEvent('officer-form', ['action' => 'hide']);
+            return;
+        } elseif (!$officer->wasRecentlyCreated && $officer->wasChanged()){
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'success',  
+                'message' => 'Scholar Account Updated', 
+                'text' => 'Scholar account has been successfully updated'
+            ]);
+            $this->info($this->officer_id);
+            $this->dispatchBrowserEvent('officer-form', ['action' => 'hide']);
+            return;
+        } elseif (!$officer->wasRecentlyCreated && !$officer->wasChanged()){
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'info',  
+                'message' => 'Nothing has been changed', 
+                'text' => ''
+            ]);
+            $this->edit($this->officer_id);
+            return;
+        }
+ 
+        $this->dispatchBrowserEvent('swal:modal', [
+            'type' => 'error',  
+            'message' => 'Runtime error!', 
+            'text' => ''
+        ]);
+    }
+}

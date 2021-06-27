@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Scholarship as ScholarshipProgram;
+use App\Models\Scholarship;
 
 class ScholarshipLivewire extends Component
 {
@@ -30,7 +30,7 @@ class ScholarshipLivewire extends Component
     {
         $search = $this->search;
 
-        $scholarships = ScholarshipProgram::where('scholarship', 'like', "%$search%")->paginate(15);
+        $scholarships = Scholarship::where('scholarship', 'like', "%$search%")->paginate(15);
 
         return view('livewire.scholarship.scholarship-livewire', ['scholarships' => $scholarships]);
     }
@@ -42,7 +42,7 @@ class ScholarshipLivewire extends Component
 
     public function info($id)
     {
-        $this->scholarship_program = ScholarshipProgram::find($id);
+        $this->scholarship_program = Scholarship::find($id);
 
         $this->dispatchBrowserEvent('scholarship-info', ['action' => 'show']);
     }
@@ -61,7 +61,7 @@ class ScholarshipLivewire extends Component
 
     public function delete()
     {
-        $user = ScholarshipProgram::findorfail($this->scholarship_id_delete);
+        $user = Scholarship::findorfail($this->scholarship_id_delete);
         
         if (!$user->delete()) {
             return;
@@ -86,7 +86,7 @@ class ScholarshipLivewire extends Component
 
     public function edit($id)
     {
-        $data = ScholarshipProgram::findorfail($id);
+        $data = Scholarship::findorfail($id);
 
         $this->scholarship_id = $data->id;
         $this->scholarship    = $data->scholarship;
@@ -96,7 +96,7 @@ class ScholarshipLivewire extends Component
     {
         $data = $this->validate();
         
-        $scholarship = ScholarshipProgram::updateOrCreate(
+        $scholarship = Scholarship::updateOrCreate(
             ['id' => $this->scholarship_id],
             $data
         );

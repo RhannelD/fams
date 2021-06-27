@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ScholarshipSeeder::class,
             OfficerPositionSeeder::class,
+            ScholarshipOfficerSeeder::class,
         ]);
     }
 }
