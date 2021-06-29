@@ -18,7 +18,7 @@ class ScholarshipOfficerLivewire extends Component
     public $officer;
     public $officer_id_delete;
 
-    public $officer_id;
+    public $user_id;
     public $firstname;
     public $middlename;
     public $lastname;
@@ -36,11 +36,11 @@ class ScholarshipOfficerLivewire extends Component
             'middlename' => 'required|regex:/^[a-z ,.\'-]+$/i',
             'lastname' => 'required|regex:/^[a-z ,.\'-]+$/i',
             'gender' => 'required|in:male,female',
-            'phone' => "required|unique:users".((isset($this->officer_id))?",phone,$this->officer_id":'')."|regex:/(09)[0-9]{9}/",
+            'phone' => "required|unique:users".((isset($this->user_id))?",phone,$this->user_id":'')."|regex:/(09)[0-9]{9}/",
             'birthday' => 'required|before:5 years ago',
             'birthplace' => 'max:200',
             'religion' => 'max:200',
-            'email' => "required|email|unique:users".((isset($this->officer_id))?",email,$this->officer_id":''),
+            'email' => "required|email|unique:users".((isset($this->user_id))?",email,$this->user_id":''),
             'password' => 'required|min:9',
         ];
     }
@@ -64,7 +64,7 @@ class ScholarshipOfficerLivewire extends Component
             })
             ->paginate(15);
 
-        return view('livewire.scholarship-officer.scholarship-officer-livewire', ['officers' => $officers]);
+        return view('livewire.pages.scholarship-officer.scholarship-officer-livewire', ['officers' => $officers]);
     }
     
     public function info($id)
@@ -143,7 +143,7 @@ class ScholarshipOfficerLivewire extends Component
 
     public function nullinputs()
     {
-        $this->officer_id   = null;
+        $this->user_id   = null;
         $this->firstname    = null;
         $this->middlename   = null;
         $this->lastname     = null;
@@ -160,7 +160,7 @@ class ScholarshipOfficerLivewire extends Component
     {
         $data = User::findorfail($id);
 
-        $this->officer_id   = $data->id;
+        $this->user_id   = $data->id;
         $this->firstname    = $data->firstname;
         $this->middlename   = $data->middlename;
         $this->lastname     = $data->lastname;
@@ -174,20 +174,20 @@ class ScholarshipOfficerLivewire extends Component
 
     public function save()
     {
-        if (isset($this->officer_id)) {
+        if (isset($this->user_id)) {
             $this->password = '123123123';
         }
 
         $data = $this->validate();
         $data['usertype'] = 'officer';
-        if (isset($this->officer_id)) {
+        if (isset($this->user_id)) {
             unset($data['password']);
         } else {
             $data['password'] = Hash::make($data['password']);
         }
 
         $officer = User::updateOrCreate(
-            ['id' => $this->officer_id],
+            ['id' => $this->user_id],
             $data
         );
 
@@ -206,7 +206,7 @@ class ScholarshipOfficerLivewire extends Component
                 'message' => 'Scholar Account Updated', 
                 'text' => 'Scholar account has been successfully updated'
             ]);
-            $this->info($this->officer_id);
+            $this->info($this->user_id);
             $this->dispatchBrowserEvent('officer-form', ['action' => 'hide']);
             return;
         } elseif (!$officer->wasRecentlyCreated && !$officer->wasChanged()){
@@ -215,7 +215,7 @@ class ScholarshipOfficerLivewire extends Component
                 'message' => 'Nothing has been changed', 
                 'text' => ''
             ]);
-            $this->edit($this->officer_id);
+            $this->edit($this->user_id);
             return;
         }
  

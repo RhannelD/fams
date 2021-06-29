@@ -17,7 +17,7 @@ class ScholarLivewire extends Component
     public $scholar;
     public $scholar_id_delete;
 
-    public $scholar_id;
+    public $user_id;
     public $firstname;
     public $middlename;
     public $lastname;
@@ -35,11 +35,11 @@ class ScholarLivewire extends Component
             'middlename' => 'required|regex:/^[a-z ,.\'-]+$/i',
             'lastname' => 'required|regex:/^[a-z ,.\'-]+$/i',
             'gender' => 'required|in:male,female',
-            'phone' => "required|unique:users".((isset($this->scholar_id))?",phone,$this->scholar_id":'')."|regex:/(09)[0-9]{9}/",
+            'phone' => "required|unique:users".((isset($this->user_id))?",phone,$this->user_id":'')."|regex:/(09)[0-9]{9}/",
             'birthday' => 'required|before:5 years ago',
             'birthplace' => 'max:200',
             'religion' => 'max:200',
-            'email' => "required|email|unique:users".((isset($this->scholar_id))?",email,$this->scholar_id":''),
+            'email' => "required|email|unique:users".((isset($this->user_id))?",email,$this->user_id":''),
             'password' => 'required|min:9',
         ];
     }
@@ -58,7 +58,7 @@ class ScholarLivewire extends Component
             })
             ->paginate(15);
 
-        return view('livewire.scholar.scholar-livewire', ['scholars' => $scholars]);
+        return view('livewire.pages.scholar.scholar-livewire', ['scholars' => $scholars]);
     }
 
     public function updated($propertyName)
@@ -106,7 +106,7 @@ class ScholarLivewire extends Component
 
     public function nullinputs()
     {
-        $this->scholar_id   = null;
+        $this->user_id   = null;
         $this->firstname    = null;
         $this->middlename   = null;
         $this->lastname     = null;
@@ -123,7 +123,7 @@ class ScholarLivewire extends Component
     {
         $data = User::findorfail($id);
 
-        $this->scholar_id   = $data->id;
+        $this->user_id   = $data->id;
         $this->firstname    = $data->firstname;
         $this->middlename   = $data->middlename;
         $this->lastname     = $data->lastname;
@@ -137,20 +137,20 @@ class ScholarLivewire extends Component
 
     public function save()
     {
-        if (isset($this->scholar_id)) {
+        if (isset($this->user_id)) {
             $this->password = '123123123';
         }
 
         $data = $this->validate();
         $data['usertype'] = 'scholar';
-        if (isset($this->scholar_id)) {
+        if (isset($this->user_id)) {
             unset($data['password']);
         } else {
             $data['password'] = Hash::make($data['password']);
         }
 
         $scholar = User::updateOrCreate(
-            ['id' => $this->scholar_id],
+            ['id' => $this->user_id],
             $data
         );
 
@@ -169,7 +169,7 @@ class ScholarLivewire extends Component
                 'message' => 'Scholar Account Updated', 
                 'text' => 'Scholar account has been successfully updated'
             ]);
-            $this->info($this->scholar_id);
+            $this->info($this->user_id);
             $this->dispatchBrowserEvent('scholar-form', ['action' => 'hide']);
             return;
         } elseif (!$scholar->wasRecentlyCreated && !$scholar->wasChanged()){
@@ -178,10 +178,20 @@ class ScholarLivewire extends Component
                 'message' => 'Nothing has been changed', 
                 'text' => ''
             ]);
-            $this->edit($this->scholar_id);
+            $this->edit($this->user_id);
             return;
         }
  
+        $this->dispatchBrowserEvent('swal:modal', [
+            'type' => 'error',  
+            'message' => 'Runtime error!', 
+            'text' => ''
+        ]);
+    }
+
+    public function change_pass($id){
+        $this->validateOnly('password');
+
         $this->dispatchBrowserEvent('swal:modal', [
             'type' => 'error',  
             'message' => 'Runtime error!', 

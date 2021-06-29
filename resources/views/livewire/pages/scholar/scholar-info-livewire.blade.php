@@ -46,6 +46,10 @@
                     <i class="fas fa-edit"></i>
                     Edit Info
                 </button>
+                <button class="btn btn-info text-white mt-1" wire:click="change_pass({{ $scholar->id }})">
+                    <i class="fas fa-lock"></i>
+                    Change Password
+                </button>
                 <button class="btn btn-danger text-white mt-1" wire:click="confirm_delete({{ $scholar->id }})">
                     <i class="fas fa-trash"></i>
                     Delete

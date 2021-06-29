@@ -32,7 +32,7 @@ class ScholarshipLivewire extends Component
 
         $scholarships = Scholarship::where('scholarship', 'like', "%$search%")->paginate(15);
 
-        return view('livewire.scholarship.scholarship-livewire', ['scholarships' => $scholarships]);
+        return view('livewire.pages.scholarship.scholarship-livewire', ['scholarships' => $scholarships]);
     }
     
     public function updated($propertyName)

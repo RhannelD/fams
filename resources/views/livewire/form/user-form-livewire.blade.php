@@ -4,10 +4,10 @@
 
 		<div class="col-lg-6">
 
-            @isset($scholar_id)
+            @isset($user_id)
                 <div class="form-group">
                     <label for="c_sr_code">User ID</label>
-                    <input type="text" class="form-control" id="c_sr_code" value="{{ $scholar_id }}" disabled>
+                    <input type="text" class="form-control" id="c_sr_code" value="{{ $user_id }}" disabled>
                 </div>
             @endisset
 
@@ -71,7 +71,7 @@
                 @error('birthplace') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
 
-            @if (!isset($scholar_id))
+            @if (!isset($user_id))
                 <div class="form-group">
                     <label for="c_password">Password</label>
                     <input type="password" wire:model.lazy="password" class="form-control" id="c_password" placeholder="Password">
