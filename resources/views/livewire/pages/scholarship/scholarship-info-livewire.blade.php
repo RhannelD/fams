@@ -1,7 +1,7 @@
 <div>
     @isset($scholarship_program)
         
-        <div class="card my-5 my">
+        <div class="card">
             <h4 class="card-header bg-dark text-white">Scholarship Program Info</h4>
             <div class="card-body">
                 <table>

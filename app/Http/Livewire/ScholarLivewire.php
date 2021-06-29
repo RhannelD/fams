@@ -14,8 +14,8 @@ class ScholarLivewire extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $search = '';
-    public $scholar;
-    public $scholar_id_delete;
+    public $user;
+    public $user_id_delete;
 
     public $user_id;
     public $firstname;
@@ -68,14 +68,14 @@ class ScholarLivewire extends Component
 
     public function info($id)
     {
-        $this->scholar = User::find($id);
+        $this->user = User::find($id);
 
         $this->dispatchBrowserEvent('scholar-info', ['action' => 'show']);
     }
 
     public function confirm_delete($id)
     {
-        $this->scholar_id_delete = $id;
+        $this->user_id_delete = $id;
 
         $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_scholar', [
             'type' => 'warning',  
@@ -87,13 +87,13 @@ class ScholarLivewire extends Component
 
     public function delete()
     {
-        $user = User::findorfail($this->scholar_id_delete);
+        $user = User::findorfail($this->user_id_delete);
         
         if (!$user->delete()) {
             return;
         }
 
-        $this->scholar = null;
+        $this->user = null;
 
         $this->dispatchBrowserEvent('swal:modal', [
             'type' => 'success',  
@@ -123,7 +123,7 @@ class ScholarLivewire extends Component
     {
         $data = User::findorfail($id);
 
-        $this->user_id   = $data->id;
+        $this->user_id      = $data->id;
         $this->firstname    = $data->firstname;
         $this->middlename   = $data->middlename;
         $this->lastname     = $data->lastname;
@@ -189,8 +189,34 @@ class ScholarLivewire extends Component
         ]);
     }
 
-    public function change_pass($id){
+    public function change_pass(){
         $this->validateOnly('password');
+
+        $user = User::find($this->user->id);
+
+        if(!$user) {
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'error',  
+                'message' => 'Scholar not found!', 
+                'text' => ''
+            ]);
+            $this->password = null;
+            $this->dispatchBrowserEvent('change-password-form', ['action' => 'hide']);
+            return;
+        }
+
+        $user->password = Hash::make($this->password);
+
+        if ($user->save()) {
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'success',  
+                'message' => 'Password Successfully Updated', 
+                'text' => 'Scholar\'s password has been successfully updated'
+            ]);
+            $this->password = null;
+            $this->dispatchBrowserEvent('change-password-form', ['action' => 'hide']);
+            return;
+        }
 
         $this->dispatchBrowserEvent('swal:modal', [
             'type' => 'error',  
@@ -198,4 +224,5 @@ class ScholarLivewire extends Component
             'text' => ''
         ]);
     }
+    
 }

@@ -1,52 +1,58 @@
 <div>
-    @isset($officer)
+    @isset($user)
         
-        <div class="card my-5 my">
+        <div class="card">
             <h4 class="card-header bg-dark text-white">Scholar Info</h4>
             <div class="card-body">
                 <table>
                     <tbody>
                         <tr>
                             <td>ID:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $officer->id }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->id }}</td>
                         </tr>
                         <tr>
                             <td>Full Name:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $officer->firstname }} {{ $officer->middlename }} {{ $officer->lastname }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->firstname }} {{ $user->middlename }} {{ $user->lastname }}</td>
                         </tr>
                         <tr>
                             <td>Phonenumber:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $officer->phone }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->phone }}</td>
                         </tr>
                         <tr>
                             <td>Email:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $officer->email }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->email }}</td>
                         </tr>
                         <tr>
                             <td>Gender:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $officer->gender }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->gender }}</td>
                         </tr>
                         <tr>
-                            <td>Religiom:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $officer->religion }}</td>
+                            <td>Religion:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->religion }}</td>
                         </tr>
                         <tr>
                             <td>Birth Date:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $officer->birthday }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->birthday }}</td>
                         </tr>
                         <tr>
                             <td>Birth Place:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $officer->birthplace }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->birthplace }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="card-footer">
-                <button type="button" class="btn btn-info mt-1 text-white" wire:click="edit({{ $officer->id }})" data-toggle="modal" data-target="#officer_form">
+                <button type="button" class="btn btn-info mt-1 text-white" wire:click="edit({{ $user->id }})" data-toggle="modal" data-target="#officer_form">
                     <i class="fas fa-edit"></i>
                     Edit Info
                 </button>
-                <button class="btn btn-danger text-white mt-1" wire:click="confirm_delete({{ $officer->id }})">
+                
+                <button class="btn btn-info ml-auto mr-0 text-white" type="button" wire:click="nullinputs" data-toggle="modal" data-target="#change_password_form">
+                    <i class="fas fa-lock"></i>
+                    Change Password
+                </button>
+
+                <button class="btn btn-danger text-white mt-1" wire:click="confirm_delete({{ $user->id }})">
                     <i class="fas fa-trash"></i>
                     Delete
                 </button>

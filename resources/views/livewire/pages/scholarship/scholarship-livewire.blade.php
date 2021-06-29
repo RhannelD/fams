@@ -33,7 +33,7 @@
 			@include('livewire.pages.scholarship.scholarship-info-livewire')
 		</div>
 
-		<div class="creating_student_modal">
+		<div>
 			<div wire:ignore.self class="modal fade scholarship_form" id="scholarship_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 				<div class="modal-dialog modal-dialog-centered" role="document">
 					<form class="modal-content" wire:submit.prevent="save()">

@@ -1,56 +1,58 @@
 <div>
-    @isset($scholar)
+    @isset($user)
         
-        <div class="card my-5 my">
+        <div class="card">
             <h4 class="card-header bg-dark text-white">Scholar Info</h4>
             <div class="card-body">
                 <table>
                     <tbody>
                         <tr>
                             <td>ID:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholar->id }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->id }}</td>
                         </tr>
                         <tr>
                             <td>Full Name:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholar->firstname }} {{ $scholar->middlename }} {{ $scholar->lastname }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->firstname }} {{ $user->middlename }} {{ $user->lastname }}</td>
                         </tr>
                         <tr>
                             <td>Phonenumber:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholar->phone }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->phone }}</td>
                         </tr>
                         <tr>
                             <td>Email:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholar->email }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->email }}</td>
                         </tr>
                         <tr>
                             <td>Gender:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholar->gender }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->gender }}</td>
                         </tr>
                         <tr>
-                            <td>Religiom:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholar->religion }}</td>
+                            <td>Religion:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->religion }}</td>
                         </tr>
                         <tr>
                             <td>Birth Date:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholar->birthday }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->birthday }}</td>
                         </tr>
                         <tr>
                             <td>Birth Place:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholar->birthplace }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->birthplace }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="card-footer">
-                <button type="button" class="btn btn-info mt-1 text-white" wire:click="edit({{ $scholar->id }})" data-toggle="modal" data-target="#scholar_form">
+                <button type="button" class="btn btn-info mt-1 text-white" wire:click="edit({{ $user->id }})" data-toggle="modal" data-target="#scholar_form">
                     <i class="fas fa-edit"></i>
                     Edit Info
                 </button>
-                <button class="btn btn-info text-white mt-1" wire:click="change_pass({{ $scholar->id }})">
+                
+                <button class="btn btn-info ml-auto mr-0 text-white" type="button" wire:click="nullinputs" data-toggle="modal" data-target="#change_password_form">
                     <i class="fas fa-lock"></i>
                     Change Password
                 </button>
-                <button class="btn btn-danger text-white mt-1" wire:click="confirm_delete({{ $scholar->id }})">
+
+                <button class="btn btn-danger text-white mt-1" wire:click="confirm_delete({{ $user->id }})">
                     <i class="fas fa-trash"></i>
                     Delete
                 </button>

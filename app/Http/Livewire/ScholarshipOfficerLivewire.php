@@ -15,8 +15,8 @@ class ScholarshipOfficerLivewire extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $search = '';
-    public $officer;
-    public $officer_id_delete;
+    public $user;
+    public $user_id_delete;
 
     public $user_id;
     public $firstname;
@@ -69,7 +69,7 @@ class ScholarshipOfficerLivewire extends Component
     
     public function info($id)
     {
-        $this->officer = User::find($id);
+        $this->user = User::find($id);
 
         $this->dispatchBrowserEvent('officer-info', ['action' => 'show']);
     }
@@ -81,7 +81,7 @@ class ScholarshipOfficerLivewire extends Component
         }
 
         $checker = ScholarshipOfficer::select('id')
-            ->where('user_id', $this->officer_id_delete)
+            ->where('user_id', $this->user_id_delete)
             ->exists();
 
         if ($checker) {
@@ -93,7 +93,7 @@ class ScholarshipOfficerLivewire extends Component
             return;
         }
         
-        $this->officer_id_delete = $id;
+        $this->user_id_delete = $id;
 
         $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_officer', [
             'type' => 'warning',  
@@ -109,13 +109,13 @@ class ScholarshipOfficerLivewire extends Component
             return;
         }
 
-        $user = User::findorfail($this->officer_id_delete);
+        $user = User::findorfail($this->user_id_delete);
         
         if (!$user->delete()) {
             return;
         }
 
-        $this->officer = null;
+        $this->user = null;
 
         $this->dispatchBrowserEvent('swal:modal', [
             'type' => 'success',  
@@ -128,7 +128,7 @@ class ScholarshipOfficerLivewire extends Component
 
     protected function cannotbedeleted(){
         $checker = ScholarshipOfficer::select('id')
-            ->where('user_id', $this->officer_id_delete)
+            ->where('user_id', $this->user_id_delete)
             ->exists();
 
         if ($checker) {
@@ -225,4 +225,41 @@ class ScholarshipOfficerLivewire extends Component
             'text' => ''
         ]);
     }
+    
+    public function change_pass(){
+        $this->validateOnly('password');
+
+        $user = User::find($this->user->id);
+
+        if(!$user) {
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'error',  
+                'message' => 'Officer not found!', 
+                'text' => ''
+            ]);
+            $this->password = null;
+            $this->dispatchBrowserEvent('change-password-form', ['action' => 'hide']);
+            return;
+        }
+
+        $user->password = Hash::make($this->password);
+
+        if ($user->save()) {
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'success',  
+                'message' => 'Password Successfully Updated', 
+                'text' => 'Officer\'s password has been successfully updated'
+            ]);
+            $this->password = null;
+            $this->dispatchBrowserEvent('change-password-form', ['action' => 'hide']);
+            return;
+        }
+
+        $this->dispatchBrowserEvent('swal:modal', [
+            'type' => 'error',  
+            'message' => 'Runtime error!', 
+            'text' => ''
+        ]);
+    }
+    
 }

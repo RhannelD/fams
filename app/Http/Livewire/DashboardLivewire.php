@@ -8,7 +8,7 @@ class DashboardLivewire extends Component
 {
     public function render()
     {
-        return view('livewire.dashboard.dashboard-livewire');
+        return view('livewire.pages.dashboard.dashboard-livewire');
     }
 
     public function notif(){

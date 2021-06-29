@@ -19,15 +19,21 @@
 
             <tbody>
 
-                @foreach ($scholars as $scholar)
+                @forelse($scholars as $scholar)
                     <tr class="rows" wire:click="info({{ $scholar->id }})">
                         <td class="text-nowrap">{{ $scholar->id }}</td>
                         <td class="text-nowrap">{{ $scholar->firstname }}</td>
                         <td class="text-nowrap">{{ $scholar->lastname }}</td>
                         <td class="text-nowrap">{{ $scholar->email }}</td>
                     </tr>
-                @endforeach
-
+                @empty
+                    <tr class="rows">
+                        <td class="text-nowrap" colspan="4">
+                            No Results
+                        </td>
+                    </tr>
+                @endforelse
+                
             </tbody>
 
         </table> 
