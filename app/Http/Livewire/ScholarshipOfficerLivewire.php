@@ -69,14 +69,21 @@ class ScholarshipOfficerLivewire extends Component
     
     public function info($id)
     {
-        $this->user = User::find($id);
+        $user = User::find($id);
+
+        if (!$user) {
+            $this->dispatchBrowserEvent('officer-info', ['action' => 'hide']);
+            return;
+        }
+
+        $this->user = $user->toArray();
 
         $this->dispatchBrowserEvent('officer-info', ['action' => 'show']);
     }
 
     public function confirm_delete($id)
     {
-        if ($this->cannotbedeleted()) {
+        if ($this->cannotbedeleted($id)) {
             return;
         }
 
@@ -105,7 +112,7 @@ class ScholarshipOfficerLivewire extends Component
 
     public function delete()
     {
-        if ($this->cannotbedeleted()) {
+        if ($this->cannotbedeleted($this->user_id_delete)) {
             return;
         }
 
@@ -126,9 +133,9 @@ class ScholarshipOfficerLivewire extends Component
         $this->dispatchBrowserEvent('officer-info', ['action' => 'hide']);
     }
 
-    protected function cannotbedeleted(){
+    protected function cannotbedeleted($id){
         $checker = ScholarshipOfficer::select('id')
-            ->where('user_id', $this->user_id_delete)
+            ->where('user_id', $id)
             ->exists();
 
         if ($checker) {
@@ -229,7 +236,7 @@ class ScholarshipOfficerLivewire extends Component
     public function change_pass(){
         $this->validateOnly('password');
 
-        $user = User::find($this->user->id);
+        $user = User::find($this->user['id']);
 
         if(!$user) {
             $this->dispatchBrowserEvent('swal:modal', [

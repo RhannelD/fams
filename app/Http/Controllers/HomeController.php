@@ -26,10 +26,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // $user = User::with(["scholarship_officers"])->get();
-        $checker = ScholarshipOfficer::select('id')->where('user_id',16)->exists();
+        // $user = Scholarship::all();
 
-        print_r($checker);
+        // print_r($user[1]);
+
+        // $user = User::with(["scholarship_officers"])->get();
+        // $checker = ScholarshipOfficer::select('id')->where('user_id',16)->exists();
+
+        // print_r($checker);
 
         // $officers = User::where('usertype', 'officer')->get()->toArray();
         

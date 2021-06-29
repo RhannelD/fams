@@ -8,41 +8,41 @@
                     <tbody>
                         <tr>
                             <td>ID:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $user->id }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user['id'] }}</td>
                         </tr>
                         <tr>
                             <td>Full Name:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $user->firstname }} {{ $user->middlename }} {{ $user->lastname }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user['firstname'] }} {{ $user['middlename'] }} {{ $user['lastname'] }}</td>
                         </tr>
                         <tr>
                             <td>Phonenumber:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $user->phone }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user['phone'] }}</td>
                         </tr>
                         <tr>
                             <td>Email:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $user->email }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user['email'] }}</td>
                         </tr>
                         <tr>
                             <td>Gender:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $user->gender }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user['gender'] }}</td>
                         </tr>
                         <tr>
                             <td>Religion:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $user->religion }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user['religion'] }}</td>
                         </tr>
                         <tr>
                             <td>Birth Date:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $user->birthday }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user['birthday'] }}</td>
                         </tr>
                         <tr>
                             <td>Birth Place:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $user->birthplace }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user['birthplace'] }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="card-footer">
-                <button type="button" class="btn btn-info mt-1 text-white" wire:click="edit({{ $user->id }})" data-toggle="modal" data-target="#officer_form">
+                <button type="button" class="btn btn-info text-white" wire:click="edit({{ $user['id'] }})" data-toggle="modal" data-target="#officer_form">
                     <i class="fas fa-edit"></i>
                     Edit Info
                 </button>
@@ -52,7 +52,7 @@
                     Change Password
                 </button>
 
-                <button class="btn btn-danger text-white mt-1" wire:click="confirm_delete({{ $user->id }})">
+                <button class="btn btn-danger text-white" wire:click="confirm_delete({{ $user['id'] }})">
                     <i class="fas fa-trash"></i>
                     Delete
                 </button>

@@ -5,6 +5,8 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Scholarship;
+use App\Models\ScholarshipOfficer;
+use App\Models\ScholarshipCategory;
 
 class ScholarshipLivewire extends Component
 {
@@ -49,6 +51,10 @@ class ScholarshipLivewire extends Component
 
     public function confirm_delete($id)
     {
+        if ($this->cannotbedeleted($id)) {
+            return;
+        }
+
         $this->scholarship_id_delete = $id;
 
         $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_scholarship', [
@@ -61,6 +67,10 @@ class ScholarshipLivewire extends Component
 
     public function delete()
     {
+        if ($this->cannotbedeleted($this->scholarship_id_delete)) {
+            return;
+        }
+
         $user = Scholarship::findorfail($this->scholarship_id_delete);
         
         if (!$user->delete()) {
@@ -76,6 +86,35 @@ class ScholarshipLivewire extends Component
         ]);
 
         $this->dispatchBrowserEvent('scholarship-info', ['action' => 'hide']);
+    }
+
+    protected function cannotbedeleted($id){
+        $checker = ScholarshipOfficer::select('id')
+            ->where('scholarship_id', $id)
+            ->exists();
+
+        if ($checker) {
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'info',  
+                'message' => 'Cannot be Deleted', 
+                'text' => 'Scholarship has Already Scholarship Officers'
+            ]);
+            return true;
+        }
+        
+        $checker = ScholarshipCategory::select('id')
+            ->where('scholarship_id', $id)
+            ->exists();
+
+        if ($checker) {
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'info',  
+                'message' => 'Cannot be Deleted', 
+                'text' => 'Scholarship has Already Scholarship Category Already'
+            ]);
+        }
+        
+        return $checker;
     }
 
     public function nullinputs()
