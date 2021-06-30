@@ -17,13 +17,18 @@
 
             <tbody>
 
-                @foreach ($scholarships as $scholarship)
+                @forelse($scholarships as $scholarship)
                     <tr class="rows" wire:click="info({{ $scholarship->id }})">
                         <td class="text-nowrap">{{ $scholarship->id }}</td>
                         <td class="text-nowrap">{{ $scholarship->scholarship }}</td>
                     </tr>
-                @endforeach
-
+                @empty
+                    <tr class="rows">
+                        <td class="text-nowrap" colspan="2">
+                            No Results
+                        </td>
+                    </tr>
+                @endforelse
             </tbody>
 
         </table> 

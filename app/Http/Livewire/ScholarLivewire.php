@@ -17,6 +17,8 @@ class ScholarLivewire extends Component
     public $search = '';
     public $user;
     public $user_id_delete;
+    public $user_scholarships;
+    public $user_scholarships_id_delete;
 
     public $user_id;
     public $firstname;
@@ -78,7 +80,20 @@ class ScholarLivewire extends Component
 
         $this->user = $user->toArray();
 
+        $this->info_scholarships();
+
         $this->dispatchBrowserEvent('scholar-info', ['action' => 'show']);
+    }
+
+    public function info_scholarships()
+    {
+        $scholar_scholarships = ScholarshipScholar::select('scholarship_scholars.id', 'scholarship', 'category', 'amount', 'scholarship_scholars.created_at')
+            ->join('scholarship_categories', 'scholarship_scholars.category_id', '=', 'scholarship_categories.id')
+            ->join('scholarships', 'scholarships.id', '=', 'scholarship_categories.scholarship_id')
+            ->where('scholarship_scholars.user_id', $this->user['id'])
+            ->get()->toArray();
+
+        $this->user_scholarships = $scholar_scholarships;
     }
 
     public function confirm_delete($id)
@@ -103,13 +118,14 @@ class ScholarLivewire extends Component
             return;
         }
 
-        $user = User::findorfail($this->user_id_delete);
+        $user = User::find($this->user_id_delete);
         
         if (!$user->delete()) {
             return;
         }
 
         $this->user = null;
+        $this->user_scholarships = null;
 
         $this->dispatchBrowserEvent('swal:modal', [
             'type' => 'success',  
@@ -133,6 +149,35 @@ class ScholarLivewire extends Component
             ]);
         }
         return $checker;
+    }
+
+    public function confirm_delete_scholarship($id)
+    {
+        $this->user_scholarships_id_delete = $id;
+
+        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_scholar', [
+            'type' => 'warning',  
+            'message' => 'Are you sure?', 
+            'text' => 'If deleted, you will not be able to recover this account!',
+            'function' => "delete_scholarship"
+        ]);
+    }
+
+    public function delete_scholarship()
+    {
+        $scholarship = ScholarshipScholar::find($this->user_scholarships_id_delete);
+
+        if (!$scholarship->delete()) {
+            return;
+        }
+        
+        $this->info_scholarships();
+
+        $this->dispatchBrowserEvent('swal:modal', [
+            'type' => 'success',  
+            'message' => 'Scholar\'s Scholarship Deleted', 
+            'text' => 'Scholar\'s Scholarship has been successfully deleted'
+        ]);
     }
 
     public function nullinputs()

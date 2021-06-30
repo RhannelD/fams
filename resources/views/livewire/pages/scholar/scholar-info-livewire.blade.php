@@ -1,7 +1,7 @@
 <div>
     @isset($user)
         
-        <div class="card">
+        <div class="card mt-2">
             <h4 class="card-header bg-dark text-white">Scholar Info</h4>
             <div class="card-body">
                 <table>
@@ -58,6 +58,49 @@
                 </button>
             </div>
         </div>
+
+        <div class="card my-2">
+            <h4 class="card-header bg-dark text-white">Scholarships</h4>
+            <div class="card-body">
+                @forelse ($user_scholarships as $user_scholarship)
+                    @if (!$loop->first)
+                        <hr>
+                    @endif
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>Scholarship:</td>
+                                <td class="pl-sm-1 pl-md-2">{{ $user_scholarship['scholarship'] }}</td>
+                            </tr>
+                            <tr>
+                                <td>Category:</td>
+                                <td class="pl-sm-1 pl-md-2">{{ $user_scholarship['category']}}</td>
+                            </tr>
+                            <tr>
+                                <td>Amount:</td>
+                                <td class="pl-sm-1 pl-md-2">{{ $user_scholarship['amount'] }}</td>
+                            </tr>
+                            <tr>
+                                <td>Accepted at:</td>
+                                <td class="pl-sm-1 pl-md-2">{{ $user_scholarship['created_at'] }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <button wire:click="confirm_delete_scholarship({{ $user_scholarship['id'] }})" class="btn btn-danger btn-sm">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                @empty
+                    <div class="alert alert-info">
+                        None
+                    </div>
+                @endforelse
+            </div>
+        </div>
+
 
         <script>
 
