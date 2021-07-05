@@ -11,17 +11,9 @@
 
     <!-- Sidebar -->
     <div class="bg-light border-right" id="sidebar-wrapper">
-        <div class="sidebar-heading" style="font-size: 18px;">
-            <i class="fas fa-user-graduate"></i>
-
-            <span class="account_info_name">
-                {{ Auth::user()->firstname . ' ' . Auth::user()->lastname }}
-            </span>
-
-            <br>
-
-            <livewire:logout-livewire />
-
+        <div class="sidebar-heading" style="font-size: 26px;">
+            {{-- <img src="{{ asset('img/scholarship-icon.png') }}" alt="" height="50px" class=""> --}}
+            <img src="{{ asset('img/scholarship-icon.png') }}" alt="" height="80px" class="mx-auto d-block mb-2">
         </div>
 
         <div class="list-group list-group-flush">  
@@ -71,25 +63,42 @@
     <!-- Page Content -->
     <div id="page-content-wrapper">
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom d-flex align-content-center">
+        {{-- <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom d-flex align-content-center">
             <div class="float-left">
                 <button class="btn" id="menu-toggle">
                     <span class="navbar-toggler-icon"></span>
                 </button>
             </div>
+            
+            <a class="navbar-brand ml-3"><strong>FAMS</strong></a>
 
-            <div class="offset-md-1 col-md-8 offset-0 col-10 container-fluid">
-                <div class="icons ml-auto mr-2">
-                    {{-- <img class="top-icon top-left-icon" src="../img/icon/BSU_icon.png"> --}}
-                </div>
+            <div class="collapse navbar-collapse" id="navbarSuapportedContent-4">
+			</div>
+        </nav> --}}
+        
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+            <button class="btn btn-outline-secondary disabled" id="menu-toggle">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-brand ml-2 font-weight-bold">FAMS</div>
 
-                <div>
-                    <div class="top-title title-batstateu"></div>
-                </div>
-
-                <div class="icons ml-2 mr-auto">
-                   
-                </div>
+            <button type="" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse1">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+    
+            <div class="collapse navbar-collapse" id="navbarCollapse1">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-user"></i> 
+                            {{ Auth::user()->firstname . ' ' . Auth::user()->lastname }} 
+                        </a>
+						<div class="dropdown-menu dropdown-menu-right dropdown-cyan" aria-labelledby="navbarDropdownMenuLink-4">
+							<a class="dropdown-item" href="#">My account</a>
+							<livewire:logout-livewire />
+						</div>
+					</li>
+				</ul>
             </div>
         </nav>
 
