@@ -1,3 +1,12 @@
+@extends('layouts.app')
+
+@section('styles')
+    @livewireStyles 
+@endsection
+
+
+@section('contents')
+
 <div class="d-flex" id="wrapper">
 
     <!-- Sidebar -->
@@ -10,28 +19,27 @@
             </span>
 
             <br>
-            <button class="btn btn-sm btn-danger sign_out" wire:click="signout()">
-              <i class="fas fa-sign-out"></i>
-              Signout
-            </button>
+
+            <livewire:logout-livewire />
+
         </div>
 
         <div class="list-group list-group-flush">  
-            <a class="list-group-item list-group-item-action bg-light tabs" wire:click="change_tab('dashboard')">
+            <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('dashboard') }}">
                 <i class="fas fa-chart-line"></i>
                 Dashboard
             </a> 
 
-            <a class="list-group-item list-group-item-action bg-light tabs" wire:click="change_tab('scholarship')">
+            <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('scholarhip') }}">
                 <i class="fas fa-user-graduate"></i>
                 Scholarships
             </a>
 
-            <a class="list-group-item list-group-item-action bg-light tabs" wire:click="change_tab('scholarship-officer')">
+            <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('officer') }}">
                 <i class="fas fa-user-graduate"></i>
                 Officers
             </a>
-            <a class="list-group-item list-group-item-action bg-light tabs" wire:click="change_tab('scholar')">
+            <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('scholar') }}">
                 <i class="fas fa-user-graduate"></i>
                 Scholars
             </a>
@@ -86,22 +94,18 @@
         </nav>
 
         <div class="container-fluid" id="mainpanel">
-            @switch($page)
-                @case('dashboard')
-                    <livewire:dashboard-livewire />
-                    @break
-                @case('scholarship-officer')
-                    <livewire:scholarship-officer-livewire />
-                    @break
-                @case('scholarship')
-                    <livewire:scholarship-livewire />
-                    @break
-                @case('scholar')
-                    <livewire:scholar-livewire />
-                    @break
-            @endswitch
+            
+            @yield('content')
+            
         </div>
 
     </div>
 
 </div>
+
+@endsection
+
+
+@section('scripts')
+    @livewireScripts
+@endsection

@@ -66,7 +66,8 @@ class ScholarLivewire extends Component
             })
             ->paginate(15);
 
-        return view('livewire.pages.scholar.scholar-livewire', ['scholars' => $scholars]);
+        return view('livewire.pages.scholar.scholar-livewire', ['scholars' => $scholars])
+            ->extends('livewire.main.main-livewire');
     }
 
     public function info($id)

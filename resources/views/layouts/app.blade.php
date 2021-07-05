@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'FAMS') }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -24,7 +24,7 @@
     <script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
     <script src="{{ asset('js/sweetalert.min.js') }}"></script>
     
-    @livewireStyles
+    @yield('styles')
 </head>
 <body>
     @include('sweet::alert')
@@ -32,12 +32,12 @@
     <div id="app" class="full-height">
         <main class="full-height">
 
-          {{ $slot }}
+          @yield('contents')
 
         </main>
     </div>
-
-    @livewireScripts
+    
+    @yield('scripts')
 
     <script>
         $("#menu-toggle").click(function(e) {
@@ -52,27 +52,6 @@
               icon: event.detail.type,
             });
         });
-          
-        // window.addEventListener('swal:confirm', event => { 
-        //     swal({
-        //       title: event.detail.message,
-        //       text: event.detail.text,
-        //       icon: event.detail.type,
-        //       buttons: true,
-        //       dangerMode: true,
-        //     })
-        //     .then((willDelete) => {
-        //       if (willDelete) {
-        //         window.livewire.emit('delete');
-        //       }
-        //     });
-        // });
-		
-      document.addEventListener('DOMContentLoaded', function () {
-        window.livewire.on('urlChange', (url) => {
-          history.pushState(null, null, url);
-        });
-      });
     </script>
 </body>
 </html>

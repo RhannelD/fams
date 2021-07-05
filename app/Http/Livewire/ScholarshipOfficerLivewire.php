@@ -64,7 +64,8 @@ class ScholarshipOfficerLivewire extends Component
             })
             ->paginate(15);
 
-        return view('livewire.pages.scholarship-officer.scholarship-officer-livewire', ['officers' => $officers]);
+        return view('livewire.pages.scholarship-officer.scholarship-officer-livewire', ['officers' => $officers])
+            ->extends('livewire.main.main-livewire');
     }
     
     public function info($id)
