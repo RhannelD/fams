@@ -26,7 +26,7 @@ Route::get('/', function () {
 });
 
 Route::get('/login', LoginLivewire::class)->name('login.index')->middleware('auth.login');
-Route::get('/dashboard', DashboardLivewire::class)->name('dashboard')->middleware('auth');
-Route::get('/scholarhip', ScholarshipLivewire::class)->name('scholarhip')->middleware('auth');
-Route::get('/officer', ScholarshipOfficerLivewire::class)->name('officer')->middleware('auth');
-Route::get('/scholar', ScholarLivewire::class)->name('scholar')->middleware('auth');
+Route::get('/dashboard', DashboardLivewire::class)->name('dashboard')->middleware('auth.main');
+Route::get('/scholarhip', ScholarshipLivewire::class)->name('scholarhip')->middleware('auth.main');
+Route::get('/officer', ScholarshipOfficerLivewire::class)->name('officer')->middleware('auth.main');
+Route::get('/scholar', ScholarLivewire::class)->name('scholar')->middleware('auth.main');

@@ -12,7 +12,6 @@
     <!-- Sidebar -->
     <div class="bg-light border-right" id="sidebar-wrapper">
         <div class="sidebar-heading" style="font-size: 26px;">
-            {{-- <img src="{{ asset('img/scholarship-icon.png') }}" alt="" height="50px" class=""> --}}
             <img src="{{ asset('img/scholarship-icon.png') }}" alt="" height="80px" class="mx-auto d-block mb-2">
         </div>
 
@@ -34,26 +33,6 @@
             <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('scholar') }}">
                 <i class="fas fa-user-graduate"></i>
                 Scholars
-            </a>
-
-            <a class="list-group-item list-group-item-action bg-light tabs" id="tab_report">
-                <i class="fas fa-print"></i>
-                Report
-            </a>
-            
-            <a class="list-group-item list-group-item-action bg-light tabs" id="tab_request">
-                <i class="fas fa-paper-plane"></i>
-                Request
-            </a>
-            
-            <a class="list-group-item list-group-item-action bg-light tabs" id="tab_proposal">
-                <i class="fas fa-file-alt"></i>
-                Proposal Slip
-            </a>
-                
-            <a class="list-group-item list-group-item-action bg-light tabs" id="tab_account">
-                <i class="fad fa-cogs"></i>
-                Account
             </a>
         </div>
     </div>
@@ -90,11 +69,13 @@
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-user"></i> 
-                            {{ Auth::user()->firstname . ' ' . Auth::user()->lastname }} 
+                            <strong>{{ Auth::user()->firstname . ' ' . Auth::user()->lastname }} </strong>
                         </a>
 						<div class="dropdown-menu dropdown-menu-right dropdown-cyan" aria-labelledby="navbarDropdownMenuLink-4">
-							<a class="dropdown-item" href="#">My account</a>
+							<a class="dropdown-item" href="#">
+                                <i class="fas fa-user-circle"></i>
+                                My account
+                            </a>
 							<livewire:logout-livewire />
 						</div>
 					</li>

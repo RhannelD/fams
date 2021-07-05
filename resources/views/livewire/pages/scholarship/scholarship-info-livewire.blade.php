@@ -1,7 +1,7 @@
 <div>
     @isset($scholarship_program)
         
-        <div class="card mt-2">
+        <div class="card mt-2 mb-1">
             <h4 class="card-header bg-dark text-white">Scholarship Program Info</h4>
             <div class="card-body">
                 <table>
@@ -18,11 +18,11 @@
                 </table>
             </div>
             <div class="card-footer">
-                <button type="button" class="btn btn-info mt-1 text-white" wire:click="edit({{ $scholarship_program->id }})" data-toggle="modal" data-target="#scholarship_form">
+                <button type="button" class="btn btn-info mb-1 mb-lg-0 text-white" wire:click="edit({{ $scholarship_program->id }})" data-toggle="modal" data-target="#scholarship_form">
                     <i class="fas fa-edit"></i>
                     Edit Info
                 </button>
-                <button class="btn btn-danger text-white mt-1" wire:click="confirm_delete({{ $scholarship_program->id }})">
+                <button class="btn btn-danger text-white mb-1 mb-lg-0" wire:click="confirm_delete({{ $scholarship_program->id }})">
                     <i class="fas fa-trash"></i>
                     Delete
                 </button>

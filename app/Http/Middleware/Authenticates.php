@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class Authenticated
+class Authenticates
 {
     /**
      * Handle an incoming request.
@@ -18,9 +18,9 @@ class Authenticated
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check()) {
-            return redirect()->route('dashboard');
+            return $next($request);
         }
 
-        return $next($request);
+        return redirect()->route('login.index');
     }
 }

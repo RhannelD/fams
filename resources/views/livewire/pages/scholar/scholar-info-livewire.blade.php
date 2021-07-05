@@ -1,7 +1,7 @@
 <div>
     @isset($user)
         
-        <div class="card mt-2">
+        <div class="card mt-2 mb-1">
             <h4 class="card-header bg-dark text-white">Scholar Info</h4>
             <div class="card-body">
                 <table>
@@ -42,17 +42,17 @@
                 </table>
             </div>
             <div class="card-footer">
-                <button type="button" class="btn btn-info text-white" wire:click="edit({{ $user['id'] }})" data-toggle="modal" data-target="#scholar_form">
+                <button type="button" class="btn btn-info mb-1 mb-lg-0 text-white" wire:click="edit({{ $user['id'] }})" data-toggle="modal" data-target="#scholar_form">
                     <i class="fas fa-edit"></i>
                     Edit Info
                 </button>
                 
-                <button class="btn btn-info ml-auto mr-0 text-white" type="button" wire:click="nullinputs" data-toggle="modal" data-target="#change_password_form">
+                <button class="btn btn-info ml-auto mr-0 mb-1 mb-lg-0 text-white" type="button" wire:click="nullinputs" data-toggle="modal" data-target="#change_password_form">
                     <i class="fas fa-lock"></i>
                     Change Password
                 </button>
 
-                <button class="btn btn-danger text-white" wire:click="confirm_delete({{ $user['id'] }})">
+                <button class="btn btn-danger text-white mb-1 mb-lg-0" wire:click="confirm_delete({{ $user['id'] }})">
                     <i class="fas fa-trash"></i>
                     Delete
                 </button>

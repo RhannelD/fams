@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\ScholarshipScholar;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ScholarLivewire extends Component
 {
@@ -52,6 +53,15 @@ class ScholarLivewire extends Component
         $this->validateOnly($propertyName);
     }
 
+    protected function verifyUser()
+    {
+        if (!Auth::check()) {
+            redirect()->route('dashboard');
+            return true;
+        }
+        return false;
+    }
+
 
     public function render()
     {
@@ -72,6 +82,8 @@ class ScholarLivewire extends Component
 
     public function info($id)
     {
+        if ($this->verifyUser()) return;
+
         $user = User::find($id);
 
         if (!$user) {
@@ -88,6 +100,8 @@ class ScholarLivewire extends Component
 
     public function info_scholarships()
     {
+        if ($this->verifyUser()) return;
+
         $scholar_scholarships = ScholarshipScholar::select('scholarship_scholars.id', 'scholarship', 'category', 'amount', 'scholarship_scholars.created_at')
             ->join('scholarship_categories', 'scholarship_scholars.category_id', '=', 'scholarship_categories.id')
             ->join('scholarships', 'scholarships.id', '=', 'scholarship_categories.scholarship_id')
@@ -115,6 +129,8 @@ class ScholarLivewire extends Component
 
     public function delete()
     {
+        if ($this->verifyUser()) return;
+        
         if ($this->cannotbedeleted($this->user_id_delete)) {
             return;
         }
@@ -137,7 +153,8 @@ class ScholarLivewire extends Component
         $this->dispatchBrowserEvent('scholar-info', ['action' => 'hide']);
     }
 
-    protected function cannotbedeleted($id){
+    protected function cannotbedeleted($id)
+    {
         $checker = ScholarshipScholar::select('id')
             ->where('user_id', $id)
             ->exists();
@@ -154,6 +171,8 @@ class ScholarLivewire extends Component
 
     public function confirm_delete_scholarship($id)
     {
+        if ($this->verifyUser()) return;
+        
         $this->user_scholarships_id_delete = $id;
 
         $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_scholar', [
@@ -166,6 +185,8 @@ class ScholarLivewire extends Component
 
     public function delete_scholarship()
     {
+        if ($this->verifyUser()) return;
+        
         $scholarship = ScholarshipScholar::find($this->user_scholarships_id_delete);
 
         if (!$scholarship->delete()) {
@@ -198,6 +219,8 @@ class ScholarLivewire extends Component
 
     public function edit($id)
     {
+        if ($this->verifyUser()) return;
+        
         $data = User::findorfail($id);
 
         $this->user_id      = $data->id;
@@ -214,6 +237,8 @@ class ScholarLivewire extends Component
 
     public function save()
     {
+        if ($this->verifyUser()) return;
+        
         if (isset($this->user_id)) {
             $this->password = '123123123';
         }
@@ -266,7 +291,10 @@ class ScholarLivewire extends Component
         ]);
     }
 
-    public function change_pass(){
+    public function change_pass()
+    {
+        if ($this->verifyUser()) return;
+        
         $this->validateOnly('password');
 
         $user = User::find($this->user['id']);

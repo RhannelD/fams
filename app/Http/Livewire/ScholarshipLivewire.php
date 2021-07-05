@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\Models\Scholarship;
 use App\Models\ScholarshipOfficer;
 use App\Models\ScholarshipCategory;
+use Illuminate\Support\Facades\Auth;
 
 class ScholarshipLivewire extends Component
 {
@@ -27,6 +28,20 @@ class ScholarshipLivewire extends Component
         ];
     }
 
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
+    protected function verifyUser()
+    {
+        if (!Auth::check()) {
+            redirect()->route('dashboard');
+            return true;
+        }
+        return false;
+    }
+
 
     public function render()
     {
@@ -38,13 +53,10 @@ class ScholarshipLivewire extends Component
             ->extends('livewire.main.main-livewire');
     }
     
-    public function updated($propertyName)
-    {
-        $this->validateOnly($propertyName);
-    }
-
     public function info($id)
     {
+        if ($this->verifyUser()) return;
+
         $this->scholarship_program = Scholarship::find($id);
 
         $this->dispatchBrowserEvent('scholarship-info', ['action' => 'show']);
@@ -68,6 +80,8 @@ class ScholarshipLivewire extends Component
 
     public function delete()
     {
+        if ($this->verifyUser()) return;
+        
         if ($this->cannotbedeleted($this->scholarship_id_delete)) {
             return;
         }
@@ -126,6 +140,8 @@ class ScholarshipLivewire extends Component
 
     public function edit($id)
     {
+        if ($this->verifyUser()) return;
+        
         $data = Scholarship::findorfail($id);
 
         $this->scholarship_id = $data->id;
@@ -134,6 +150,8 @@ class ScholarshipLivewire extends Component
     
     public function save()
     {
+        if ($this->verifyUser()) return;
+        
         $data = $this->validate();
         
         $scholarship = Scholarship::updateOrCreate(
