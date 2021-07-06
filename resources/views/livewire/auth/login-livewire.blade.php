@@ -1,7 +1,7 @@
 <div class="p-0 full-height p-sm-3 p-md-5 p-1 full-height">
     <div class="card border-0 full-height overflow-hidden login-panel shadow ">
         <div class="row mx-0 full-height">
-            <div class="offset-md-5 col-md-7 offset-lg-7 col-lg-5 bg-white full-height">
+            <div class="offset-md-5 col-md-7 offset-lg-7 col-lg-5 full-height" style="background-color: #B5E1FE">
                 <div class="row full-height align-items-center">
                     <div class="offset-md-1 col-md-10">
 
