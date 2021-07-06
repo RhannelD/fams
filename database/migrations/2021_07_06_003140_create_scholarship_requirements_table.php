@@ -15,7 +15,7 @@ class CreateScholarshipRequirementsTable extends Migration
     {
         Schema::create('scholarship_requirements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('scholarship_id')->unique();
+            $table->foreignId('scholarship_id');
             $table->string('requirement');
             $table->longText('description');
             $table->timestamps();
