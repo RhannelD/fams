@@ -15,12 +15,12 @@ class CreateScholarResponseFilesTable extends Migration
     {
         Schema::create('scholar_response_files', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
+            $table->foreignId('response_id');
             $table->foreignId('item_id');
-            $table->longText('file_url');
+            $table->text('file_url');
             $table->timestamps();
             
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('response_id')->references('id')->on('scholar_responses');
             $table->foreign('item_id')->references('id')->on('scholarship_requirement_items');
         });
     }
@@ -33,9 +33,9 @@ class CreateScholarResponseFilesTable extends Migration
     public function down()
     {
         Schema::table('scholar_response_files', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
+            $table->dropForeign(['response_id']);
             $table->dropForeign(['item_id']);
-            $table->dropColumn(['user_id', 'item_id']);
+            $table->dropColumn(['response_id', 'item_id']);
         });
         
         Schema::dropIfExists('scholar_response_files');

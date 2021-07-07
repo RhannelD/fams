@@ -17,7 +17,7 @@ class CreateScholarshipRequirementsTable extends Migration
             $table->id();
             $table->foreignId('scholarship_id');
             $table->string('requirement');
-            $table->longText('description');
+            $table->text('description');
             $table->timestamps();
             
             $table->foreign('scholarship_id')->references('id')->on('scholarships');
