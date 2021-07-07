@@ -15,6 +15,7 @@ class ScholarshipRequirementItemOption extends Model
      * @var array
      */
     protected $fillable = [
+        'item_id',
         'option',
     ];
 }

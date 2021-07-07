@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ScholarResponseFile extends Model
+class ScholarshipApplicationCategory extends Model
 {
     use HasFactory;
 
@@ -15,8 +15,7 @@ class ScholarResponseFile extends Model
      * @var array
      */
     protected $fillable = [
-        'response_id',
-        'item_id',
-        'file_url',
+        'application_id',
+        'category_id',
     ];
 }

@@ -15,7 +15,7 @@ class ScholarResponseAnswer extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
+        'response_id',
         'item_id',
         'answer',
     ];
