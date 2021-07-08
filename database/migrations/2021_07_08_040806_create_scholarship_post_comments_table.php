@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateScholarResponsesTable extends Migration
+class CreateScholarshipPostCommentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,15 @@ class CreateScholarResponsesTable extends Migration
      */
     public function up()
     {
-        Schema::create('scholar_responses', function (Blueprint $table) {
+        Schema::create('scholarship_post_comments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('post_id');
             $table->foreignId('user_id');
-            $table->foreignId('requirement_id');
-            $table->boolean('approval')->nullable();
-            $table->timestamp('submit_at')->nullable();
+            $table->text('comment');
             $table->timestamps();
             
+            $table->foreign('post_id')->references('id')->on('scholarship_posts');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('requirement_id')->references('id')->on('scholarship_requirements');
         });
     }
 
@@ -33,12 +32,12 @@ class CreateScholarResponsesTable extends Migration
      */
     public function down()
     {
-        Schema::table('scholar_responses', function (Blueprint $table) {
+        Schema::table('scholarship_post_comments', function (Blueprint $table) {
+            $table->dropForeign(['post_id']);
             $table->dropForeign(['user_id']);
-            $table->dropForeign(['requirement_id']);
-            $table->dropColumn(['user_id', 'requirement_id']);
+            $table->dropColumn(['user_id', 'post_id']);
         });
         
-        Schema::dropIfExists('scholar_responses');
+        Schema::dropIfExists('scholarship_post_comments');
     }
 }
