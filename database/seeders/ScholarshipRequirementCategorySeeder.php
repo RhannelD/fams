@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class ScholarshipApplicationSeeder extends Seeder
+class ScholarshipRequirementCategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.

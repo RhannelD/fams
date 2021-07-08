@@ -18,5 +18,8 @@ class ScholarshipRequirement extends Model
         'scholarship_id',
         'requirement',
         'description',
+        'promote',
+        'start_at',
+        'end_at',
     ];
 }

@@ -17,6 +17,7 @@ class CreateScholarResponsesTable extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('requirement_id')->unique();
+            $table->boolean('approval')->nullable();
             $table->timestamp('submit_at')->nullable();
             $table->timestamps();
             

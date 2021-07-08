@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ScholarshipApplicationCategory extends Model
+class ScholarshipRequirementCategory extends Model
 {
     use HasFactory;
 
@@ -15,7 +15,7 @@ class ScholarshipApplicationCategory extends Model
      * @var array
      */
     protected $fillable = [
-        'application_id',
+        'requirement_id',
         'category_id',
     ];
 }
