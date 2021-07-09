@@ -1,6 +1,16 @@
-<div class="">
+<div>
     <script src="{{ asset('js/Chart.min.js') }}"></script>
-
+    <div class="row mt-1">
+        <div class="col-5">
+            <h2 class="text-bold">Dashboard</h2>
+        </div>
+        <div class="col-7">
+            <button wire:click='refresh_all' class="btn btn-info float-right text-white">
+                <i class="fas fa-sync-alt" wire:target="refresh_all" wire:loading.class.add='fa-spin'></i>
+                Refresh
+            </button>
+        </div>
+    </div>
     <div class="row">
         <div class="col-10 offset-1 offset-sm-0 col-sm-6 col-lg-4 col-xl-3">
             <canvas id="scholar" width="100" height="100"></canvas>

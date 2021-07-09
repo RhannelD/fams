@@ -21,7 +21,14 @@ class DashboardLivewire extends Component
             ->extends('livewire.main.main-livewire');
     }
 
-    public function scholar_chart(){
+    public function refresh_all()
+    {
+        $this->scholar_chart();
+        $this->scholarship_chart();
+    }
+
+    public function scholar_chart()
+    {
         $scholars =  DB::select('SELECT DISTINCT(COUNT(u.id)) as label, (
             SELECT COUNT(u2.id)
             FROM users u2
@@ -48,7 +55,8 @@ class DashboardLivewire extends Component
         ]);
     }
     
-    public function scholarship_chart(){
+    public function scholarship_chart()
+    {
         $scholarships =  DB::select('SELECT DISTINCT(COUNT(sc.scholarship_id)) AS label, (
                 SELECT COUNT(s.id)
                 FROM scholarships s 

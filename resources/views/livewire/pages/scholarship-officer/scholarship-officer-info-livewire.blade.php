@@ -2,7 +2,7 @@
     @isset($user)
         
         <div class="card mt-2 mb-1">
-            <h4 class="card-header bg-dark text-white">Scholar Info</h4>
+            <h4 class="card-header bg-dark text-white">Officer Info</h4>
             <div class="card-body">
                 <table>
                     <tbody>
