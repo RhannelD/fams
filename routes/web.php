@@ -30,3 +30,5 @@ Route::get('/dashboard', DashboardLivewire::class)->name('dashboard')->middlewar
 Route::get('/scholarhip', ScholarshipLivewire::class)->name('scholarhip')->middleware('auth.main');
 Route::get('/officer', ScholarshipOfficerLivewire::class)->name('officer')->middleware('auth.main');
 Route::get('/scholar', ScholarLivewire::class)->name('scholar')->middleware('auth.main');
+
+Route::get('/try', [HomeController::class, 'index'])->name('try');
