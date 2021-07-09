@@ -27,6 +27,19 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $search = '';
+        $scholars = DB::table('scholarship_scholars')->select('*')
+            ->join('users', 'users.id', '=', 'scholarship_scholars.user_id')
+            ->where('usertype', 'scholar')
+            ->where(function ($query) use ($search) {
+                $query->where('firstname', 'like', "%$search%")
+                    ->orWhere('middlename', 'like', "%$search%")
+                    ->orWhere('lastname', 'like', "%$search%")
+                    ->orWhere(DB::raw('CONCAT(firstname, " ", lastname)'), 'like', "%$search%");
+            })->get();
+        
+        echo $scholars;
+
         // $user = Scholarship::all();
         // $scholars = DB::table('users AS u')
         //     ->select(
@@ -48,27 +61,27 @@ class HomeController extends Controller
         //     ->groupBy('u.id')
         //     ->get();
 
-        $scholars =  DB::select('SELECT DISTINCT(COUNT(u.id)) as acquired, (
-            SELECT COUNT(u2.id)
-            FROM users u2
-            WHERE (COUNT(u.id)) = (
-                SELECT COUNT(u2.id)
-                FROM scholarship_scholars ss2
-                WHERE ss2.user_id = u2.id
-                )
-            ) AS counts
-        FROM users u
-            INNER JOIN scholarship_scholars ss ON u.id = ss.user_id 
-        GROUP BY u.id');
+        // $scholars =  DB::select('SELECT DISTINCT(COUNT(u.id)) as acquired, (
+        //     SELECT COUNT(u2.id)
+        //     FROM users u2
+        //     WHERE (COUNT(u.id)) = (
+        //         SELECT COUNT(u2.id)
+        //         FROM scholarship_scholars ss2
+        //         WHERE ss2.user_id = u2.id
+        //         )
+        //     ) AS counts
+        // FROM users u
+        //     INNER JOIN scholarship_scholars ss ON u.id = ss.user_id 
+        // GROUP BY u.id');
 
-        $acquired = [];
-        $counts = [];
-        foreach ($scholars as $scholar) {
-            array_push($acquired, $scholar->acquired);
-            array_push($counts, $scholar->counts);
-        }
+        // $acquired = [];
+        // $counts = [];
+        // foreach ($scholars as $scholar) {
+        //     array_push($acquired, $scholar->acquired);
+        //     array_push($counts, $scholar->counts);
+        // }
 
-        return ['acquired' => $acquired, 'counts' => $counts];
+        // return ['acquired' => $acquired, 'counts' => $counts];
         // print_r($user[1]);
 
         // $user = User::with(["scholarship_officers"])->get();
