@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ScholarshipProgramLivewire extends Component
 {
-    public $tab = '';
+    public $tab = 'home';
     public $scholarship;
 
     protected function verifyUser()
@@ -21,7 +21,7 @@ class ScholarshipProgramLivewire extends Component
     }
 
     
-    public function mount($id, $tab='')
+    public function mount($id, $tab='home')
     {
         $scholarship = Scholarship::find($id);
         if(!$scholarship){

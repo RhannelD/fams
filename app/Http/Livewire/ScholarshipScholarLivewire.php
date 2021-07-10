@@ -29,7 +29,11 @@ class ScholarshipScholarLivewire extends Component
         }
         return false;
     }
-
+    
+    public function getQueryString()
+    {
+        return [];
+    }
     
     public function mount($scholarship_id)
     {

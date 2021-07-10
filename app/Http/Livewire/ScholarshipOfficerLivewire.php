@@ -40,6 +40,12 @@ class ScholarshipOfficerLivewire extends Component
         }
     }
 
+    public function getQueryString()
+    {
+        return [];
+    }
+
+    
     public function render()
     {
         $search = $this->search;

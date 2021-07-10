@@ -18,7 +18,7 @@
                 </table>
             </div>
             <div class="card-footer">
-                <a href="{{ route('scholarship.program', [$scholarship_program->id]) }}"
+                <a href="{{ route('scholarship.program', [$scholarship_program->id, 'home']) }}"
                     class="btn btn-info text-white">
                     Open Scholarship
                 </a>

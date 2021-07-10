@@ -4,7 +4,7 @@
     </div> 
 
     <div class="table-wrap table-responsive">
-        <table class="table myaccordion table-hover" id="accordion">
+        <table class="table myaccordion table-hover" id="accordions">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -28,7 +28,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="6" id="collapse{{ $officer->user_id }}" data-parent="#accordion" class="collapse acc p-1" >
+                        <td colspan="6" id="collapse{{ $officer->user_id }}" data-parent="#accordions" class="collapse acc p-1" >
                             <div class="card mb-3">
                                 <div class="card-body p-2">
                                     <div class="row">

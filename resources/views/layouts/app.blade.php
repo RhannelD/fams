@@ -56,6 +56,10 @@
         
         document.addEventListener('DOMContentLoaded', function () {
             window.livewire.on('url_update', (url) => {
+                history.replaceState(null, null, url);
+            });
+
+            window.livewire.on('url_push', (url) => {
                 history.pushState(null, null, url);
             });
         });
