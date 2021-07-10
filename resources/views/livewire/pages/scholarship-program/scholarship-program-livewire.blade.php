@@ -22,7 +22,7 @@
                             </a>
                         </li>
                         <li class="nav-item mr-1" role="presentation">
-                            <a wire:click="changetab('scholar')" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" 
+                            <a wire:click="changetab('scholar')" id="pills-scholar-tab" data-toggle="pill" href="#pills-scholar" role="tab" aria-controls="pills-scholar" 
                                 @if ($tab == 'scholar')
                                     class="btn btn-light active"
                                     aria-selected="true"
@@ -35,7 +35,7 @@
                             </a>
                         </li>
                         <li class="nav-item mr-1" role="presentation">
-                            <a wire:click="changetab('officer')" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact"
+                            <a wire:click="changetab('officer')" id="pills-officer-tab" data-toggle="pill" href="#pills-officer" role="tab" aria-controls="pills-officer"
                                 @if ($tab == 'officer')
                                     class="btn btn-light active"
                                     aria-selected="true"
@@ -45,6 +45,19 @@
                                 @endif
                                 >
                                 <strong>Officers</strong>
+                            </a>
+                        </li>
+                        <li class="nav-item mr-1" role="presentation">
+                            <a wire:click="changetab('requirement')" id="pills-requirement-tab" data-toggle="pill" href="#requirement-contact" role="tab" aria-controls="requirement-contact"
+                                @if ($tab == 'requirement')
+                                    class="btn btn-light active"
+                                    aria-selected="true"
+                                @else
+                                    class="btn btn-light"
+                                    aria-selected="false"
+                                @endif
+                                >
+                                <strong>Requirement</strong>
                             </a>
                         </li>
                     </ul>
@@ -65,7 +78,7 @@
                     >
                     @livewire('scholarship-page-livewire', key('page-tabs-'.time().$scholarship->id))
                 </div>
-                <div id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab"
+                <div id="pills-scholar" role="tabpanel" aria-labelledby="pills-scholar-tab"
                     @if ($tab == 'scholar')
                         class="tab-pane fade show active" 
                     @else
@@ -74,7 +87,7 @@
                     >
                     @livewire('scholarship-scholar-livewire', [$scholarship->id], key('scholar-tabs-'.time().$scholarship->id))
                 </div>
-                <div id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab"
+                <div id="pills-officer" role="tabpanel" aria-labelledby="pills-officer-tab"
                     @if ($tab == 'officer')
                         class="tab-pane fade show active" 
                     @else
@@ -82,6 +95,15 @@
                     @endif
                     >
                     @livewire('scholarship-officer-livewire', [$scholarship->id], key('officer-tabs-'.time().$scholarship->id))
+                </div>
+                <div id="pills-requirement" role="tabpanel" aria-labelledby="pills-requirement-tab"
+                    @if ($tab == 'requirement')
+                        class="tab-pane fade show active" 
+                    @else
+                        class="tab-pane fade" 
+                    @endif
+                    >
+                    @livewire('scholarship-requirement-livewire', key('requirement-tabs-'.time().$scholarship->id))
                 </div>
             </div>
         </div>

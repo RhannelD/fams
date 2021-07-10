@@ -1,14 +1,19 @@
 <div>
     <script src="{{ asset('js/Chart.min.js') }}"></script>
-    <div class="row mt-1">
-        <div class="col-5">
-            <h2 class="text-bold">Dashboard</h2>
-        </div>
-        <div class="col-7">
-            <button wire:click='refresh_all' class="btn btn-info float-right text-white">
-                <i class="fas fa-sync-alt" wire:target="refresh_all" wire:loading.class.add='fa-spin'></i>
-                Refresh
-            </button>
+    <div class="row mt-1 mx-2">
+        <div class="card col-12 bg-secondary text-white border-secondary">
+            <h2 class="m-2 row">
+                <strong class="my-auto">
+                    Dashboard
+                </strong>
+                
+                <div class="mr-1 ml-auto">
+                    <button wire:click='refresh_all' class="btn btn-success float-right text-white">
+                        <i class="fas fa-sync-alt" wire:target="refresh_all" wire:loading.class.add='fa-spin'></i>
+                        Refresh
+                    </button>
+                </div>
+            </h2>
         </div>
     </div>
     <div class="row mb-3">

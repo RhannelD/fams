@@ -29,7 +29,7 @@
                     </tr>
                     <tr>
                         <td colspan="6" id="collapse{{ $officer->user_id }}" data-parent="#accordions" class="collapse acc p-1" >
-                            <div class="card mb-3">
+                            <div class="card mb-3 shadow-sm">
                                 <div class="card-body p-2">
                                     <div class="row">
                                         <div class="col-md-6 pb-0">
