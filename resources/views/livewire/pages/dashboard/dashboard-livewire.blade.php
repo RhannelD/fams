@@ -11,12 +11,22 @@
             </button>
         </div>
     </div>
-    <div class="row">
-        <div class="col-10 offset-1 offset-sm-0 col-sm-6 col-lg-4 col-xl-3">
-            <canvas id="scholar" width="100" height="100"></canvas>
+    <div class="row mb-3">
+        <div class="col-10 offset-1 offset-md-0 col-md-8 col-xl-6">
+            <canvas id="scholars_by_scholarship" width="100" height="100"></canvas>
         </div>
-        <div class="col-10 offset-1 offset-sm-0 col-sm-6 col-lg-4 col-xl-3">
-            <canvas id="scholarship" width="100" height="100"></canvas>
+        <div class="col-10 offset-1 offset-md-0 col-md-4 col-xl-6">
+            <div class="row">
+                <div class="col-10 offset-1 offset-md-0 col-md-12 col-xl-6">
+                    <canvas id="scholar" width="100" height="100"></canvas>
+                </div>
+                <div class="col-10 offset-1 offset-md-0 col-md-12 col-xl-6">
+                    <canvas id="scholarship" width="100" height="100"></canvas>
+                </div>
+                <div class="col-10 offset-1 offset-md-0 col-md-12 col-xl-6">
+                    <canvas id="scholars_by_gender" width="100" height="100"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -67,9 +77,49 @@
             });
         });
 
+        window.addEventListener('scholars_by_gender', event => { 
+            new Chart("scholars_by_gender", {
+                type: "pie",
+                data: {
+                labels: event.detail.label,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: event.detail.data
+                }]
+                },  
+                options: {
+                    title: {
+                        display: true,
+                        text: "Scholars by Gender"
+                    }
+                }
+            });
+        });
+
+        window.addEventListener('scholars_by_scholarship', event => { 
+            new Chart("scholars_by_scholarship", {
+                type: "pie",
+                data: {
+                labels: event.detail.label,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: event.detail.data
+                }]
+                },  
+                options: {
+                    title: {
+                        display: true,
+                        text: "Scholars Per Scholarship"
+                    }
+                }
+            });
+        });
+
         $(document).ready(function(){
             window.livewire.emit('scholar_chart');
             window.livewire.emit('scholarship_chart');
+            window.livewire.emit('scholars_by_gender');
+            window.livewire.emit('scholars_by_scholarship');
         });
     </script>
 
