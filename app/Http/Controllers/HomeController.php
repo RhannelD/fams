@@ -27,18 +27,20 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $search = '';
-        $scholars = DB::table('scholarship_scholars')->select('*')
-            ->join('users', 'users.id', '=', 'scholarship_scholars.user_id')
-            ->where('usertype', 'scholar')
-            ->where(function ($query) use ($search) {
-                $query->where('firstname', 'like', "%$search%")
-                    ->orWhere('middlename', 'like', "%$search%")
-                    ->orWhere('lastname', 'like', "%$search%")
-                    ->orWhere(DB::raw('CONCAT(firstname, " ", lastname)'), 'like', "%$search%");
-            })->get();
+        return route('scholarship.program', [1, 'home']);
+
+        // $search = '';
+        // $scholars = DB::table('scholarship_scholars')->select('*')
+        //     ->join('users', 'users.id', '=', 'scholarship_scholars.user_id')
+        //     ->where('usertype', 'scholar')
+        //     ->where(function ($query) use ($search) {
+        //         $query->where('firstname', 'like', "%$search%")
+        //             ->orWhere('middlename', 'like', "%$search%")
+        //             ->orWhere('lastname', 'like', "%$search%")
+        //             ->orWhere(DB::raw('CONCAT(firstname, " ", lastname)'), 'like', "%$search%");
+        //     })->get();
         
-        echo $scholars;
+        // echo $scholars;
 
         // $user = Scholarship::all();
         // $scholars = DB::table('users AS u')

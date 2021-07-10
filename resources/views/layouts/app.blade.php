@@ -53,6 +53,12 @@
               icon: event.detail.type,
             });
         });
+        
+        document.addEventListener('DOMContentLoaded', function () {
+            window.livewire.on('url_update', (url) => {
+                history.pushState(null, null, url);
+            });
+        });
     </script>
 </body>
 </html>
