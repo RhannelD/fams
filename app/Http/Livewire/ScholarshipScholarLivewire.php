@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\Models\ScholarshipCategory;
 use App\Models\ScholarshipScholar;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ScholarshipScholarLivewire extends Component
 {
@@ -20,6 +21,16 @@ class ScholarshipScholarLivewire extends Component
     
     public $category_id = '';
 
+    protected function verifyUser()
+    {
+        if (!Auth::check()) {
+            redirect()->route('dashboard');
+            return true;
+        }
+        return false;
+    }
+
+    
     public function mount($scholarship_id)
     {
         $this->scholarship_id = $scholarship_id;
@@ -34,6 +45,8 @@ class ScholarshipScholarLivewire extends Component
 
     public function render()
     {
+        if ($this->verifyUser()) return;
+
         $categories = ScholarshipCategory::where('scholarship_id', $this->scholarship_id)->get();
         $this->categories = $categories->toArray();
 

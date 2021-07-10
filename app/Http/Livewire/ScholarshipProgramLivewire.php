@@ -4,12 +4,23 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Scholarship;
+use Illuminate\Support\Facades\Auth;
 
 class ScholarshipProgramLivewire extends Component
 {
     public $tab = '';
     public $scholarship;
 
+    protected function verifyUser()
+    {
+        if (!Auth::check()) {
+            redirect()->route('dashboard');
+            return true;
+        }
+        return false;
+    }
+
+    
     public function mount($id, $tab='')
     {
         $scholarship = Scholarship::find($id);
@@ -29,6 +40,8 @@ class ScholarshipProgramLivewire extends Component
 
     public function changetab($tab)
     {
+        if ($this->verifyUser()) return;
+
         $this->tab = $tab;
         $this->update_url();
     }

@@ -7,6 +7,9 @@
                 </strong>
                 
                 <div class="mr-1 ml-auto">
+                    <button wire:click="changetab('')" class="btn btn-light">
+                        <strong>Home</strong>
+                    </button>
                     <button wire:click="changetab('scholar')" class="btn btn-light">
                         <strong>Scholars</strong>
                     </button>
@@ -23,6 +26,10 @@
             @switch($tab)
                 @case('scholar')   
                     @livewire('scholarship-scholar-livewire', [$scholarship->id])
+                    @break
+            
+                @case('officer')   
+                    @livewire('scholarship-officer-livewire', [$scholarship->id])
                     @break
             
                 @default

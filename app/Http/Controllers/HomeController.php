@@ -27,7 +27,22 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return route('scholarship.program', [1, 'home']);
+        $search = '';
+
+        $officers = User::where('usertype', 'officer')
+            ->join('scholarship_officers', 'users.id', '=', 'scholarship_officers.user_id')
+            ->join('officer_positions', 'scholarship_officers.position_id', '=', 'officer_positions.id')
+            ->where('scholarship_id', 1)
+            ->where(function ($query) use ($search) {
+                $query->where('firstname', 'like', "%$search%")
+                    ->orWhere('middlename', 'like', "%$search%")
+                    ->orWhere('lastname', 'like', "%$search%")
+                    ->orWhere(DB::raw('CONCAT(firstname, " ", lastname)'), 'like', "%$search%");
+            })->get();
+
+        return $officers;
+
+        // return route('scholarship.program', [1, 'home']);
 
         // $search = '';
         // $scholars = DB::table('scholarship_scholars')->select('*')

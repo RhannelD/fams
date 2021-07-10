@@ -92,7 +92,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td>Categoty:</td>
+                                                        <td>Category:</td>
                                                         <td>{{ $scholar->category }}</td>
                                                     </tr>
                                                     <tr>
