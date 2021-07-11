@@ -22,7 +22,8 @@ class ScholarshipRequirementItemOptionFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'item_id' => 1,
+            'option' => $this->faker->sentence($nbWords = 4, $variableNbWords = true),
         ];
     }
 }
