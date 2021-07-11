@@ -3,11 +3,62 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ScholarshipRequirement;
 
 class ScholarshipRequirementLivewire extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
+
+    public $scholarship_id;
+    public $search;
+    public $show_row = 10;
+    public $promote = '';
+
+    protected function verifyUser()
+    {
+        if (!Auth::check()) {
+            redirect()->route('dashboard');
+            return true;
+        }
+        return false;
+    }
+    
+    public function getQueryString()
+    {
+        return [];
+    }
+    
+    public function mount($scholarship_id)
+    {
+        $this->scholarship_id = $scholarship_id;
+    }
+    
+    public function updated($name)
+    {
+        if ('show_row') {
+            $this->page = 1;
+        }
+    }
+
+
     public function render()
     {
-        return view('livewire.pages.scholarship-requirement.scholarship-requirement-livewire');
+        if ($this->verifyUser()) return;
+
+        $search = $this->search;
+        $requirements = DB::table('scholarship_requirements')
+            ->where('scholarship_requirements.requirement', 'like', "%$search%")
+            ->where('scholarship_requirements.scholarship_id', $this->scholarship_id);
+        if ($this->promote != '') {
+            $requirements = $requirements->where('scholarship_requirements.promote', $this->promote);
+        }
+        $requirements = $requirements
+            ->paginate($this->show_row);
+
+        return view('livewire.pages.scholarship-requirement.scholarship-requirement-livewire', ['requirements' => $requirements]);
     }
 }

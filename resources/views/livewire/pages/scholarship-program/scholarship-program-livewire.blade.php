@@ -103,7 +103,7 @@
                         class="tab-pane fade" 
                     @endif
                     >
-                    @livewire('scholarship-requirement-livewire', key('requirement-tabs-'.time().$scholarship->id))
+                    @livewire('scholarship-requirement-livewire', [$scholarship->id], key('requirement-tabs-'.time().$scholarship->id))
                 </div>
             </div>
         </div>

@@ -1,50 +1,53 @@
 <div>
-    <h1>Requirement</h1>
+	<div class="row mb-1">
+		<div class="input-group col-md-5 mt-2">
 
-    <div class=" table-responsive">
-        <table class="table table-borderless">
-            <tbody>
-                @for ($i = 1; $i <= 5; $i++)
-                    <tr>
-                        <td>
-                            <div class="shadow p-2 mb-0 bg-white rounded d-flex bd-highlight">
-                                <div class="mr-auto p-2 bd-highlight">
-                                    
-                                </div>
-                                <button class="btn btn-info bd-highlight mx-1 text-white">
-                                    Open
-                                </button>
-                                <button class="btn btn-info bd-highlight mx-1 text-white">
-                                    Edit
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                @endfor
-            </tbody>
-        </table>
-    </div>
+			<div class="input-group rounded">
+				<input type="search" class="form-control rounded" placeholder="Search Requirement" wire:model.debounce.1000ms='search'/>
+				<span class="input-group-text border-0">
+					<i class="fas fa-search"></i>
+				</span>
+			</div>
 
-    {{-- <table>
-        <tbody>
-            <tr>
-                <td class="shadow p-3 mb-3 bg-white rounded">
-                    Regular shadow
-                </td>
-            </tr>
-            <tr>
-                <td class="shadow p-3 mb-3 bg-white rounded">
-                    Regular shadow
-                </td>
-            </tr>
-            <tr>
-                <td class="shadow p-3 mb-3 bg-white rounded">
-                    Regular shadow
-                </td>
-            </tr>
-        </tbody>
-    </table> --}}
+		</div>
 
-    {{-- <div class="shadow p-3 mb-3 bg-white rounded">Regular shadow</div>
-    <div class="shadow p-3 mb-3 bg-white rounded">Regular shadow</div> --}}
+        <div class="col-md-7 mt-2">
+            <div class="form-row">
+                <div class="input-group col-5 my-0">
+                    <select wire:model="promote" class="form-control" id="category">
+                        <option value="">All Requirements</option>
+                        <option value="1">Promoted</option>
+                        <option value="0">Not Promoted</option>
+                    </select>
+                </div>
+                <div class="input-group col-4 my-0">
+                    <div class="input-group-prepend">
+                      <label class="input-group-text" for="rows">Rows</label>
+                    </div>
+                    <select wire:model="show_row" class="form-control" id="rows">
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="150">150</option>
+                        <option value="200">200</option>
+                    </select>
+                </div>
+                <div class="form-group col-3  my-0">
+                    <button class="form-control btn btn-success">
+                        Create
+                    </button>
+                </div>
+            </div>
+		</div>
+	</div>
+
+	<div class="row">
+
+		<div class="contents-container col-12 mb-2">
+			@include('livewire.pages.scholarship-requirement.scholarship-requirement-search-livewire')
+		</div>
+
+	</div>
 </div>

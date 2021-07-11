@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\ScholarshipRequirement;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Carbon\Carbon;
 
 class ScholarshipRequirementFactory extends Factory
 {
@@ -21,8 +22,16 @@ class ScholarshipRequirementFactory extends Factory
      */
     public function definition()
     {
+        $end = $this->faker->dateTimeThisYear($max = 'now', $timezone = null);
+        $start = $this->faker->dateTimeThisYear($max = $end, $timezone = null);
+
         return [
-            //
+            'scholarship_id' => 1,
+            'requirement' => $this->faker->sentence($nbWords = 6, $variableNbWords = true),
+            'description' => $this->faker->sentence($nbWords = 20, $variableNbWords = true),
+            'promote' => false,
+            'start_at' => $start,
+            'end_at' => $end,
         ];
     }
 }

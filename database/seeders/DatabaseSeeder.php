@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             ScholarshipOfficerSeeder::class,
             ScholarshipCategorySeeder::class,
             ScholarshipScholarSeeder::class,
+            ScholarshipRequirementSeeder::class,
         ]);
     }
 }
