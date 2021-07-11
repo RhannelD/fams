@@ -4,12 +4,16 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Scholarship;
+use App\Models\ScholarshipRequirement;
 use Illuminate\Support\Facades\Auth;
 
 class ScholarshipProgramLivewire extends Component
 {
+    protected $listeners = ['view_requirement' => 'view_requirement'];
+
     public $tab = 'home';
     public $scholarship;
+    public $requirement_id;
 
     protected function verifyUser()
     {
@@ -21,7 +25,7 @@ class ScholarshipProgramLivewire extends Component
     }
 
     
-    public function mount($id, $tab='home')
+    public function mount($id, $tab='home', $requirement_id=null)
     {
         $scholarship = Scholarship::find($id);
         if(!$scholarship){
@@ -29,7 +33,14 @@ class ScholarshipProgramLivewire extends Component
         }
         $this->scholarship = $scholarship;
         $this->tab = $tab;
-        $this->update_url();
+
+        if (!empty($requirement_id)) {
+            if(!$this->verify_requirement($requirement_id)){
+                $requirement_id = null;
+            }
+        }
+        $this->requirement_id = $requirement_id;
+        $this->update_url($requirement_id);
     }
 
     public function render()
@@ -43,10 +54,33 @@ class ScholarshipProgramLivewire extends Component
         if ($this->verifyUser()) return;
 
         $this->tab = $tab;
+        $this->requirement_id = null;
         $this->update_url();
     }
     
-    protected function update_url(){
-        $this->emit('url_update', route('scholarship.program', [$this->scholarship->id, $this->tab]));
+    public function view_requirement($requirement_id)
+    {
+        if ($this->verifyUser()) return;
+
+        if(!$this->verify_requirement($requirement_id)){
+            $requirement_id = null;
+        }
+
+        $this->tab = 'requirement';
+        $this->requirement_id = $requirement_id;
+        $this->update_url($requirement_id);
+    }
+
+    protected function verify_requirement($requirement_id)
+    {
+        $requirement = ScholarshipRequirement::where('scholarship_requirements.id', $requirement_id)
+            ->where('scholarship_requirements.scholarship_id', $this->scholarship->id)
+            ->first();
+        
+        return ($requirement);
+    }
+
+    protected function update_url($requirement_id = null){
+        $this->emit('url_update', route('scholarship.program', [$this->scholarship->id, $this->tab, $requirement_id]));
     }
 }

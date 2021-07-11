@@ -97,13 +97,24 @@
                     @livewire('scholarship-officer-livewire', [$scholarship->id], key('officer-tabs-'.time().$scholarship->id))
                 </div>
                 <div id="pills-requirement" role="tabpanel" aria-labelledby="pills-requirement-tab"
-                    @if ($tab == 'requirement')
+                    @if ($tab == 'requirement' && empty($requirement_id))
                         class="tab-pane fade show active" 
                     @else
                         class="tab-pane fade" 
                     @endif
                     >
                     @livewire('scholarship-requirement-livewire', [$scholarship->id], key('requirement-tabs-'.time().$scholarship->id))
+                </div>
+                <div id="pills-requirement" role="tabpanel" aria-labelledby="pills-requirement-tab"
+                    @if ($tab == 'requirement' && !empty($requirement_id))
+                        class="tab-pane fade show active" 
+                    @else
+                        class="tab-pane fade" 
+                    @endif
+                    >
+                    @if (!empty($requirement_id))
+                        @livewire('scholarship-requirement-open-livewire', [$requirement_id], key('requirement-open-tabs-'.time().$requirement_id))
+                    @endif
                 </div>
             </div>
         </div>

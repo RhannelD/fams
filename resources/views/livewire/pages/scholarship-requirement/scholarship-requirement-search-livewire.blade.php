@@ -16,6 +16,7 @@
                                     mb-0 
                                 @endif    
                                 "
+                                wire:click="view_requirement({{ $requirement->id }})"
                                 style="cursor: pointer;">
                                 <div class="mr-auto p-2 bd-highlight">
                                     {{ $requirement->requirement }}

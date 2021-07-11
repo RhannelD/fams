@@ -52,7 +52,8 @@ class ScholarshipRequirementLivewire extends Component
         $search = $this->search;
         $requirements = DB::table('scholarship_requirements')
             ->where('scholarship_requirements.requirement', 'like', "%$search%")
-            ->where('scholarship_requirements.scholarship_id', $this->scholarship_id);
+            ->where('scholarship_requirements.scholarship_id', $this->scholarship_id)
+            ->orderBy('scholarship_requirements.end_at', 'desc');
         if ($this->promote != '') {
             $requirements = $requirements->where('scholarship_requirements.promote', $this->promote);
         }
@@ -60,5 +61,9 @@ class ScholarshipRequirementLivewire extends Component
             ->paginate($this->show_row);
 
         return view('livewire.pages.scholarship-requirement.scholarship-requirement-livewire', ['requirements' => $requirements]);
+    }
+
+    public function view_requirement($requirement_id){
+        $this->emit('view_requirement', $requirement_id);
     }
 }

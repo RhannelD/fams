@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Scholarship;
 use App\Models\ScholarshipOfficer;
+use App\Models\ScholarshipRequirement;
+use App\Models\ScholarshipRequirementItem;
+use App\Models\ScholarshipRequirementItemOption;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -27,20 +30,33 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $search = '';
+        $requirement_items =  ScholarshipRequirementItem::where('requirement_id', 2)
+            ->get();
 
-        $officers = User::where('usertype', 'officer')
-            ->join('scholarship_officers', 'users.id', '=', 'scholarship_officers.user_id')
-            ->join('officer_positions', 'scholarship_officers.position_id', '=', 'officer_positions.id')
-            ->where('scholarship_id', 1)
-            ->where(function ($query) use ($search) {
-                $query->where('firstname', 'like', "%$search%")
-                    ->orWhere('middlename', 'like', "%$search%")
-                    ->orWhere('lastname', 'like', "%$search%")
-                    ->orWhere(DB::raw('CONCAT(firstname, " ", lastname)'), 'like', "%$search%");
-            })->get();
+        foreach ($requirement_items as $key => $requirement_item) {
+            if (in_array($requirement_item->type, array('radio', 'check'))) {
+                $options = ScholarshipRequirementItemOption::where('item_id', $requirement_item->id)->get();
 
-        return $officers;
+                $requirement_items[$key]['options'] = $options;
+            }
+        }
+
+        return ($requirement_items);
+
+        // $search = '';
+
+        // $officers = User::where('usertype', 'officer')
+        //     ->join('scholarship_officers', 'users.id', '=', 'scholarship_officers.user_id')
+        //     ->join('officer_positions', 'scholarship_officers.position_id', '=', 'officer_positions.id')
+        //     ->where('scholarship_id', 1)
+        //     ->where(function ($query) use ($search) {
+        //         $query->where('firstname', 'like', "%$search%")
+        //             ->orWhere('middlename', 'like', "%$search%")
+        //             ->orWhere('lastname', 'like', "%$search%")
+        //             ->orWhere(DB::raw('CONCAT(firstname, " ", lastname)'), 'like', "%$search%");
+        //     })->get();
+
+        // return $officers;
 
         // return route('scholarship.program', [1, 'home']);
 
