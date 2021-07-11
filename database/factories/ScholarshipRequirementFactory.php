@@ -22,7 +22,8 @@ class ScholarshipRequirementFactory extends Factory
      */
     public function definition()
     {
-        $end = $this->faker->dateTimeThisYear($max = 'now', $timezone = null);
+        // $end = $this->faker->dateTimeThisYear($max = 'now', $timezone = null);
+        $end = $this->faker->dateTimeBetween($startDate = '-16 weeks', $endDate = '+4 weeks', $timezone = null);
         $start = $this->faker->dateTimeThisYear($max = $end, $timezone = null);
 
         return [

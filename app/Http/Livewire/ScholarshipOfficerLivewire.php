@@ -16,6 +16,7 @@ class ScholarshipOfficerLivewire extends Component
 
     public $scholarship_id;
     public $search = '';
+    public $position = '';
     public $show_row = 10;
 
     protected function verifyUser()
@@ -59,8 +60,11 @@ class ScholarshipOfficerLivewire extends Component
                     ->orWhere('middlename', 'like', "%$search%")
                     ->orWhere('lastname', 'like', "%$search%")
                     ->orWhere(DB::raw('CONCAT(firstname, " ", lastname)'), 'like', "%$search%");
-            })
-            ->paginate($this->show_row);
+            });
+        if ($this->position != '') {
+            $officers = $officers->where('scholarship_officers.position_id', $this->position);
+        }
+        $officers = $officers->paginate($this->show_row);
 
         return view('livewire.pages.scholarship-officer.scholarship-officer-livewire', ['officers' => $officers]);
     }

@@ -19,7 +19,7 @@
             </div>
             <div class="card-footer">
                 <a href="{{ route('scholarship.program', [$scholarship_program->id, 'home']) }}"
-                    class="btn btn-info text-white">
+                    class="btn btn-info text-white mb-1 mb-lg-0">
                     Open Scholarship
                 </a>
                 <button type="button" class="btn btn-info mb-1 mb-lg-0 text-white" wire:click="edit({{ $scholarship_program->id }})" data-toggle="modal" data-target="#scholarship_form">

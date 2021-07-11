@@ -15,6 +15,16 @@
             <div class="form-row">
                 <div class="input-group col-5 my-0">
                     <div class="input-group-prepend">
+                      <label class="input-group-text" for="position">Position</label>
+                    </div>
+                    <select wire:model="position" class="form-control" id="position">
+                        <option value="">All</option>
+                        <option value="1">Admin</option>
+                        <option value="2">Officer</option>
+                    </select>
+                </div>
+                <div class="input-group col-4 my-0">
+                    <div class="input-group-prepend">
                       <label class="input-group-text" for="rows">Rows</label>
                     </div>
                     <select wire:model="show_row" class="form-control" id="rows">
@@ -27,7 +37,7 @@
                         <option value="200">200</option>
                     </select>
                 </div>
-                <div class="form-group offset-4 col-3  my-0">
+                <div class="form-group col-3  my-0">
                     <button class="form-control btn btn-success">
                         Invite
                     </button>

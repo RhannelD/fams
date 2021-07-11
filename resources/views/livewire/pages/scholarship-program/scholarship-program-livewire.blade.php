@@ -57,7 +57,7 @@
                                     aria-selected="false"
                                 @endif
                                 >
-                                <strong>Requirement</strong>
+                                <strong>Requirements</strong>
                             </a>
                         </li>
                     </ul>

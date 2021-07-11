@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($officers as $officer)
+                @forelse ($officers as $officer)
                     <tr data-toggle="collapse" data-target="#collapse{{ $officer->user_id }}" aria-expanded="true" aria-controls="collapse{{ $officer->user_id }}" aria-expanded="false">
                         <th scope="row">{{ $officer->user_id }}</th>
                         <td>{{ $officer->firstname }} {{ $officer->middlename }} {{ $officer->lastname }}</td>
@@ -81,7 +81,11 @@
                             </div>
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="6">No results...</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

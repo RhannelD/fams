@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\ScholarshipRequirementItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 class ScholarshipRequirementItemFactory extends Factory
 {
@@ -21,8 +22,13 @@ class ScholarshipRequirementItemFactory extends Factory
      */
     public function definition()
     {
+        $types = ['question', 'question', 'file', 'file', 'file', 'radio', 'check'];
+
         return [
-            //
+            'requirement_id' => 1,
+            'item' => $this->faker->sentence($nbWords = 4, $variableNbWords = true),
+            'type' => Arr::random($types),
+            'note' => $this->faker->sentence($nbWords = 10, $variableNbWords = true),
         ];
     }
 }
