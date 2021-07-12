@@ -56,83 +56,42 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="card shadow mb-2 requirement-item-hover">
+                <div class="card-body">
+                    <button wire:click="save_all" class="btn btn-success btn-block">Save</button>
+                </div>
+            </div>
+
             <hr>
         </div>
 
         <div class="col-12 col-md-9 order-md-first">
-            {{-- <div class="card bg-primary border-primary mb-4 shadow">
-                <div class="card-body text-white border-primary">
-                    <h2>
-                        <strong>{{ $requirement->requirement }}</strong>
-                    </h2>
-                    <p class="mb-0">
-                        {{ $requirement->description }}
-                    </p>
+            <div class="card bg-white border-dark mb-4 shadow">
+                <div class="card-body border-primary">
+                    <div class="form-group">
+                        <label for="requirement"><h5><strong>Requirement Title</strong></h5></label>
+                        <input wire:model="requirement.requirement" class="form-control form-control-lg" type="text" 
+                            placeholder=".form-control-lg" id='requirement'>
+                        @error('requirement.requirement') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="form-group mb-0">
+                        <label for="description">Description</label>
+                        <textarea wire:model="requirement.description" class="form-control" id="description" rows="3"></textarea>
+                        @error('requirement.description') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>  
                 </div>
-            </div> --}}
+            </div>
         
-            {{-- <div class="row">
+            <div class="row">
                 <div class="col-sm-12 offset-sm-0 col-md-10 offset-md-1">
-                    @foreach ($requirement_items as $requirement_item)
-                        <div class="card mb-3 shadow requirement-item-hover">
-                            <div class="card-body">
-        
-                                <h4>{{ $requirement_item->item }}</h4>
-                                @if (!empty($requirement_item->note))
-                                    <p>{{ $requirement_item->note }}</p>
-                                @endif
-        
-                                @switch($requirement_item->type)
-                                    @case('file')
-                                        <div class="input-group mb-1">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-file"></i>
-                                                </span>
-                                            </div>
-                                            <div class="form-control">File Upload</div>
-                                        </div>
-                                        @break
-                                    @case('question')
-                                        <div class="input-group mb-1">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-question"></i>
-                                                </span>
-                                            </div>
-                                            <div class="form-control">Answer</div>
-                                        </div>
-                                        @break
-                                    @case('radio')
-                                        @foreach ($requirement_item->options as $option)
-                                            <div class="input-group mb-1">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                        <input type="radio" name="radio_{{ $requirement_item->id }}">
-                                                    </div>
-                                                </div>
-                                                <input type="text" class="form-control bg-white" value="{{ $option->option }}" readonly>
-                                            </div>
-                                        @endforeach
-                                        @break
-                                    @case('check')
-                                        @foreach ($requirement_item->options as $option)
-                                            <div class="input-group mb-1">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                        <input type="checkbox">
-                                                    </div>
-                                                </div>
-                                                <input type="text" class="form-control bg-white" value="{{ $option->option }}" readonly>
-                                            </div>
-                                        @endforeach
-                                        @break
-                                @endswitch
-                            </div>
-                        </div>
+                    @foreach ($items as $item)
+                    
+                        @livewire('scholarship-requirement-edit-item-livewire', [$item->id], key('item-'.time().$item->id))
+
                     @endforeach
                 </div>
-            </div> --}}
+            </div>
         </div>
     </div>
     
