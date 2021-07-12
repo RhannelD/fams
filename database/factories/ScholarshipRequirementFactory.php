@@ -31,6 +31,7 @@ class ScholarshipRequirementFactory extends Factory
             'requirement' => $this->faker->sentence($nbWords = 6, $variableNbWords = true),
             'description' => $this->faker->sentence($nbWords = 20, $variableNbWords = true),
             'promote' => false,
+            'enable' => (rand(1, 5) != 5),
             'start_at' => $start,
             'end_at' => $end,
         ];

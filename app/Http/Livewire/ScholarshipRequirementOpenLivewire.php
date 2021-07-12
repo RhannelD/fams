@@ -45,4 +45,17 @@ class ScholarshipRequirementOpenLivewire extends Component
             'requirement_items' => $requirement_items
         ]);
     }
+
+    public function toggle_enable_form()
+    {
+        $this->requirement->enable = (!$this->requirement->enable);
+        $this->requirement->save();
+
+        $message = 'Disable Form Requirement ...';
+        if ($this->requirement->enable) {
+            $message = 'Enable Form Requirement ...';
+        }
+
+        $this->dispatchBrowserEvent('toggle_enable_form', ['message' => $message]);
+    }
 }

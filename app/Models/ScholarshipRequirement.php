@@ -19,6 +19,7 @@ class ScholarshipRequirement extends Model
         'requirement',
         'description',
         'promote',
+        'enable',
         'start_at',
         'end_at',
     ];
