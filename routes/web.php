@@ -8,6 +8,7 @@ use App\Http\Livewire\ScholarLivewire;
 use App\Http\Livewire\OfficerLivewire;
 use App\Http\Livewire\ScholarshipLivewire;
 use App\Http\Livewire\ScholarshipProgramLivewire;
+use App\Http\Livewire\ScholarshipRequirementEditLivewire;
 
 use App\Http\Controllers\HomeController;
 
@@ -30,7 +31,8 @@ Route::get('/login', LoginLivewire::class)->name('login.index')->middleware('aut
 Route::get('/dashboard', DashboardLivewire::class)->name('dashboard')->middleware('auth.main');
 Route::get('/officer', OfficerLivewire::class)->name('officer')->middleware('auth.main');
 Route::get('/scholar', ScholarLivewire::class)->name('scholar')->middleware('auth.main');
-Route::get('/scholarhip', ScholarshipLivewire::class)->name('scholarhip')->middleware('auth.main');
+Route::get('/scholarship', ScholarshipLivewire::class)->name('scholarship')->middleware('auth.main');
 Route::get('/scholarship/{id}/{tab}/{requirement_id?}', ScholarshipProgramLivewire::class)->name('scholarship.program')->middleware('auth.main');
+Route::get('/requirement/{id}/edit', ScholarshipRequirementEditLivewire::class)->name('requirement.edit')->middleware('auth.main');
 
 Route::get('/try', [HomeController::class, 'index'])->name('try');

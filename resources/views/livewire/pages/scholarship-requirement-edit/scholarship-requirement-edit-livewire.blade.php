@@ -1,4 +1,20 @@
 <div>
+    <div class="row mt-1 p-1">
+        <div class="card col-12 bg-secondary text-white border-secondary">
+            <h2 class="m-2 row">
+                <strong class="my-auto">
+                    {{ $scholarship->scholarship }} -  Requirement
+                </strong>
+                
+                <div class="mr-1 ml-auto">
+                    <button class="btn btn-light">Action</button>
+                    <button class="btn btn-light">Action</button>
+                    <button class="btn btn-light">Action</button>
+                </div>
+            </h2>
+        </div>
+    </div>
+
     <hr>
     <div class="row">
         <div class="col-12 col-md-3 mb-2">
@@ -40,25 +56,11 @@
                     </div>
                 </div>
             </div>
-
-            <div class="card shadow mb-2 requirement-item-hover">
-                <div class="card-body">
-                    <button class="btn btn-success btn-block">View Responds</button>
-                </div>
-            </div>
-
-            <div class="card shadow requirement-item-hover">
-                <div class="card-body">
-                    <a href="{{ route('requirement.edit', [$requirement->id]) }}" class="btn btn-info btn-block text-white">Edit</a>
-                    <button class="btn btn-danger btn-block">Delete</button>
-                </div>
-            </div>
-
             <hr>
         </div>
 
         <div class="col-12 col-md-9 order-md-first">
-            <div class="card bg-primary border-primary mb-4 shadow">
+            {{-- <div class="card bg-primary border-primary mb-4 shadow">
                 <div class="card-body text-white border-primary">
                     <h2>
                         <strong>{{ $requirement->requirement }}</strong>
@@ -67,9 +69,9 @@
                         {{ $requirement->description }}
                     </p>
                 </div>
-            </div>
+            </div> --}}
         
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-sm-12 offset-sm-0 col-md-10 offset-md-1">
                     @foreach ($requirement_items as $requirement_item)
                         <div class="card mb-3 shadow requirement-item-hover">
@@ -130,7 +132,7 @@
                         </div>
                     @endforeach
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
     

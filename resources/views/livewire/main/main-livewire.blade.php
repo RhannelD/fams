@@ -21,7 +21,7 @@
                 Dashboard
             </a> 
 
-            <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('scholarhip') }}">
+            <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('scholarship') }}">
                 <i class="fas fa-user-graduate"></i>
                 Scholarships
             </a>
