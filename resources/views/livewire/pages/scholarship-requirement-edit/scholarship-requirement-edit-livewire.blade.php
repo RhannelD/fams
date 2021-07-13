@@ -72,11 +72,11 @@
             </div>
         
             <div class="row">
-                <div class="col-12">
+                <div class="col-12"  wire:sortable="update_requirement_order">
                     @foreach ($items as $item)
-                    
-                        @livewire('scholarship-requirement-edit-item-livewire', [$item->id], key('item-'.time().$item->id))
-
+                        <div wire:sortable.item="{{ $item->id }}" wire:key="item-{{ $item->id }}" class="div_item_id_sort_{{ $item->id }}">
+                            @livewire('scholarship-requirement-edit-item-livewire', [$item->id], key('item-'.time().$item->id))
+                        </div>
                     @endforeach
                 </div>
                 <div class="col-sm-12 offset-sm-0 col-md-10 offset-md-1">
@@ -99,7 +99,9 @@
         });
 
         window.addEventListener('delete_item_div', event => { 
-            $( '.div_item_id_'+event.detail.div_class ).fadeOut( 500 );
+            $( '.div_item_id_'+event.detail.div_class ).fadeOut( 500, function(){
+                $( '.div_item_id_sort_'+event.detail.div_class ).remove();
+            });
         });
 
         window.onload = function() {

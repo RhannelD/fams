@@ -30,10 +30,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $options = ScholarshipRequirementItemOption::select('id')
-            ->where('item_id', 218)->get();
+        $position = ScholarshipRequirementItem::where('requirement_id', 1)
+            ->max('position');
 
-        return $options;
+        return $position+1;
+
+        // $options = ScholarshipRequirementItemOption::select('id')
+        //     ->where('item_id', 218)->get();
+
+        // return $options;
 
         // $items = ScholarshipRequirementItem::select('id')
         //     ->where('requirement_id', 1)

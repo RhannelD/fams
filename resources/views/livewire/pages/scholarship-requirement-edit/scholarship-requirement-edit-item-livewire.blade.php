@@ -2,14 +2,13 @@
     
     <div class="col-sm-12 offset-sm-0 col-md-1 px-0">
         <hr class="d-block d-md-none">
-        <button class="btn btn-primary float-right mx-0 rounded-circle shadow mb-1 requirement-item-hover">
-            <i class="fas fa-chevron-circle-up"></i>
+        <button class="btn btn-primary float-right ml-1 rounded-circle shadow mb-1 requirement-item-hover" wire:sortable.handle
+            style="min-width: 39px; min-height: 39px; max-width: 39px; max-height: 39px;">
+            <i class="fas fa-sort"></i>
         </button>
-        <button class="btn btn-primary float-right mx-0 rounded-circle shadow mb-1 requirement-item-hover">
-            <i class="fas fa-chevron-circle-down"></i>
-        </button>
-        <button class="btn btn-danger float-right mx-0 rounded-circle shadow mb-1 requirement-item-hover"
-            wire:click="delete_confirmation">
+        <button class="btn btn-danger float-right ml-1 rounded-circle shadow mb-1 requirement-item-hover"
+            wire:click="delete_confirmation"
+            style="min-width: 39px; min-height: 39px; max-width: 39px; max-height: 39px;">
             <i class="fas fa-trash"></i>
         </button>
     </div>
@@ -18,7 +17,7 @@
         <div class="card-body mx-0 px-0">
             <div class="form-group">
                 <input wire:model.lazy="item.item" class="form-control form-control-lg" type="text" 
-                    placeholder=".form-control-lg">
+                    placeholder="Item">
                 @error('item.item') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-row">

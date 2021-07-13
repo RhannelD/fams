@@ -35,6 +35,7 @@ class ScholarshipRequirementEditLivewire extends Component
         $this->scholarship = Scholarship::find($id->scholarship_id);
         $this->items = ScholarshipRequirementItem::select('id')
             ->where('requirement_id', $id->id)
+            ->orderBy('position')
             ->get();
     }
 
@@ -51,13 +52,29 @@ class ScholarshipRequirementEditLivewire extends Component
 
     public function add_item()
     {
+        $position = ScholarshipRequirementItem::where('requirement_id', 1)
+            ->max('position');
+
         $item = new ScholarshipRequirementItem;
         $item->requirement_id = $this->requirement->id;
         $item->item = 'Enter Item Title Here';
         $item->type = 'question';
         $item->note = '';
+        $item->position = $position+1;
         $item->save();
         $this->items[count($this->items)] = $item;
+    }
+
+    public function update_requirement_order($list)
+    {
+        foreach ($list as $item) {
+            ScholarshipRequirementItem::find($item['value'])
+                ->update(['position' => $item['order']]);
+        }
+        $this->items = ScholarshipRequirementItem::select('id')
+            ->where('requirement_id', $this->requirement->id)
+            ->orderBy('position')
+            ->get();
     }
 
     public function save()

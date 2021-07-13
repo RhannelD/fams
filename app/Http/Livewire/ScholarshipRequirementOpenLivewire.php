@@ -31,6 +31,7 @@ class ScholarshipRequirementOpenLivewire extends Component
     public function render()
     {
         $requirement_items =  ScholarshipRequirementItem::where('requirement_id', $this->requirement->id)
+            ->orderBy('position')
             ->get();
 
         foreach ($requirement_items as $key => $requirement_item) {
