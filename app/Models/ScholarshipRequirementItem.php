@@ -19,5 +19,6 @@ class ScholarshipRequirementItem extends Model
         'item',
         'type',
         'note',
+        'position',
     ];
 }

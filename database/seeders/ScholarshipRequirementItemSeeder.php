@@ -21,6 +21,7 @@ class ScholarshipRequirementItemSeeder extends Seeder
             for ($items=0; $items < rand(5,8); $items++) { 
                 ScholarshipRequirementItem::factory()->create([   
                     'requirement_id' => $requirement->id,
+                    'position' => ($items+1)
                 ]);
             }
         }

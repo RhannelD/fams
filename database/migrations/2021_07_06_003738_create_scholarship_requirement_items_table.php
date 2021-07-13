@@ -19,6 +19,7 @@ class CreateScholarshipRequirementItemsTable extends Migration
             $table->string('item');
             $table->string('type', 20);
             $table->text('note');
+            $table->smallInteger('position');
             $table->timestamps();
             
             $table->foreign('requirement_id')->references('id')->on('scholarship_requirements');

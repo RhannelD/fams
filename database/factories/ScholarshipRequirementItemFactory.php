@@ -29,6 +29,7 @@ class ScholarshipRequirementItemFactory extends Factory
             'item' => $this->faker->sentence($nbWords = 4, $variableNbWords = true),
             'type' => Arr::random($types),
             'note' => $this->faker->sentence($nbWords = 10, $variableNbWords = true),
+            'position' => 1,
         ];
     }
 }
