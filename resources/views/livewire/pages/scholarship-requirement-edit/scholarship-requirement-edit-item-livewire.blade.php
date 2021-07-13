@@ -1,6 +1,21 @@
-<div>
-    <div class="card mb-3 shadow requirement-item-hover">
-        <div class="card-body">
+<div class="row mx-0 div_item_id_{{ $item->id }}">
+    
+    <div class="col-sm-12 offset-sm-0 col-md-1 px-0">
+        <hr class="d-block d-md-none">
+        <button class="btn btn-primary float-right mx-0 rounded-circle shadow mb-1 requirement-item-hover">
+            <i class="fas fa-chevron-circle-up"></i>
+        </button>
+        <button class="btn btn-primary float-right mx-0 rounded-circle shadow mb-1 requirement-item-hover">
+            <i class="fas fa-chevron-circle-down"></i>
+        </button>
+        <button class="btn btn-danger float-right mx-0 rounded-circle shadow mb-1 requirement-item-hover"
+            wire:click="delete_confirmation">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+    
+    <div class="card mb-3 shadow requirement-item-hover col-sm-12 offset-sm-0 col-md-10 offset-md-1 order-md-first">
+        <div class="card-body mx-0 px-0">
             <div class="form-group">
                 <input wire:model.lazy="item.item" class="form-control form-control-lg" type="text" 
                     placeholder=".form-control-lg">
@@ -57,7 +72,7 @@
                         @case('radio')
                         @case('check')
                             <div class="form-row">
-                                <div class="form-group col-11">
+                                <div class="form-group col-sm-12 col-md-11 mb-1">
                                     @foreach ($options as $option)
 
                                         @livewire('scholarship-requirement-edit-item-option-livewire', [$option->id, $item->type], key('item-option-'.time().$option->id))
@@ -66,8 +81,8 @@
                                     
                                 </div>
                                 
-                                <div class="form-group col-1">
-                                    <button wire:click="add_item_option" class="btn btn-success">
+                                <div class="form-group col-sm-12 col-md-1">
+                                    <button wire:click="add_item_option" class="btn btn-success float-right">
                                         <i class="fas fa-plus-circle"></i>
                                     </button>
                                 </div>
@@ -82,6 +97,21 @@
     <script>
         window.addEventListener('delete_option_div', event => { 
             $( '.item_option_id_'+event.detail.div_class ).fadeOut( 500 );
+        });
+
+        window.addEventListener('swal:confirm:delete_confirmation', event => { 
+            swal({
+              title: event.detail.message,
+              text: event.detail.text,
+              icon: event.detail.type,
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((willDelete) => {
+              if (willDelete) {
+                @this.call(event.detail.function)
+              }
+            });
         });
     </script>
 </div>

@@ -49,6 +49,17 @@ class ScholarshipRequirementEditLivewire extends Component
         $this->save();
     }
 
+    public function add_item()
+    {
+        $item = new ScholarshipRequirementItem;
+        $item->requirement_id = $this->requirement->id;
+        $item->item = 'Enter Item Title Here';
+        $item->type = 'question';
+        $item->note = '';
+        $item->save();
+        $this->items[count($this->items)] = $item;
+    }
+
     public function save()
     {
         $this->validate();

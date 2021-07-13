@@ -30,18 +30,42 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $requirement_items =  ScholarshipRequirementItem::where('requirement_id', 2)
-            ->get();
+        $options = ScholarshipRequirementItemOption::select('id')
+            ->where('item_id', 218)->get();
 
-        foreach ($requirement_items as $key => $requirement_item) {
-            if (in_array($requirement_item->type, array('radio', 'check'))) {
-                $options = ScholarshipRequirementItemOption::where('item_id', $requirement_item->id)->get();
+        return $options;
 
-                $requirement_items[$key]['options'] = $options;
-            }
-        }
+        // $items = ScholarshipRequirementItem::select('id')
+        //     ->where('requirement_id', 1)
+        //     ->get();
 
-        return ($requirement_items);
+        // $item = ScholarshipRequirementItem::select('id')
+        //     ->where('id', 30)
+        //     ->first();
+
+        // // $items->setAttribute(, $item);
+        // $items[count($items)] = $item;
+        // // $items[count($items)] = (object) ["id" => '100'];
+
+        // foreach ($items as $key => $value) {
+        //     echo gettype($value).'<br>';
+        //     echo $key.'  '.$value.'<br>'; 
+        // }
+
+        // return  $items;
+
+        // $requirement_items =  ScholarshipRequirementItem::where('requirement_id', 2)
+        //     ->get();
+
+        // foreach ($requirement_items as $key => $requirement_item) {
+        //     if (in_array($requirement_item->type, array('radio', 'check'))) {
+        //         $options = ScholarshipRequirementItemOption::where('item_id', $requirement_item->id)->get();
+
+        //         $requirement_items[$key]['options'] = $options;
+        //     }
+        // }
+
+        // return ($requirement_items);
 
         // $search = '';
 

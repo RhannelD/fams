@@ -72,12 +72,21 @@
             </div>
         
             <div class="row">
-                <div class="col-sm-12 offset-sm-0 col-md-10 offset-md-1">
+                <div class="col-12">
                     @foreach ($items as $item)
                     
                         @livewire('scholarship-requirement-edit-item-livewire', [$item->id], key('item-'.time().$item->id))
 
                     @endforeach
+                </div>
+                <div class="col-sm-12 offset-sm-0 col-md-10 offset-md-1">
+                    <div class="card mb-3 shadow requirement-item-hover">
+                        <div class="card-body">
+                            <button wire:click="add_item" class="btn btn-primary btn-block"> 
+                                Add New Item 
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,6 +96,10 @@
         $('.saving_loading .saving_state').hide();
         $(".requirement-item-hover").hover(function () {
             $(this).toggleClass("shadow-lg");
+        });
+
+        window.addEventListener('delete_item_div', event => { 
+            $( '.div_item_id_'+event.detail.div_class ).fadeOut( 500 );
         });
 
         window.onload = function() {

@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ScholarshipRequirementEditItemLivewire extends Component
 {
-    
     public $item;
     public $options;
 
@@ -38,7 +37,7 @@ class ScholarshipRequirementEditItemLivewire extends Component
 
     public function get_options()
     {
-        $this->options = ScholarshipRequirementItemOption::select('id', 'option')
+        $this->options = ScholarshipRequirementItemOption::select('id')
             ->where('item_id', $this->item->id)->get();
     }
     
@@ -62,6 +61,37 @@ class ScholarshipRequirementEditItemLivewire extends Component
     {
         $this->validate();
         $this->save();
+    }
+
+    public function delete_confirmation()
+    {
+        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_confirmation', [
+            'type' => 'warning',  
+            'message' => 'Are you sure?', 
+            'text' => 'If deleted, you will not be able to recover this Item!',
+            'function' => "delete_item"
+        ]);
+    }
+
+    public function delete_item()
+    {
+        if ($this->options->first()) { 
+            $this->options = [];
+            $options = ScholarshipRequirementItemOption::where('item_id', $this->item->id);
+    
+            if (!$options->delete()) {
+                $this->get_options();
+                return;
+            }
+        } 
+
+        if (!$this->item->delete()) {
+            return;
+        }
+
+        $this->dispatchBrowserEvent('delete_item_div', [
+            'div_class' => $this->item->id,  
+        ]);
     }
 
     public function change_item_type()
