@@ -18,6 +18,7 @@
                                     aria-selected="false"
                                 @endif
                                 >
+                                <i class="fas fa-newspaper"></i>
                                 <strong>Home</strong>
                             </a>
                         </li>
@@ -31,6 +32,7 @@
                                     aria-selected="false"
                                 @endif
                                 >
+                                <i class="fas fa-user-graduate"></i>
                                 <strong>Scholars</strong>
                             </a>
                         </li>
@@ -44,6 +46,7 @@
                                     aria-selected="false"
                                 @endif
                                 >
+                                <i class="fas fa-address-card"></i>
                                 <strong>Officers</strong>
                             </a>
                         </li>
@@ -57,6 +60,7 @@
                                     aria-selected="false"
                                 @endif
                                 >
+                                <i class="fas fa-file-alt"></i>
                                 <strong>Requirements</strong>
                             </a>
                         </li>

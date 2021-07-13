@@ -2,7 +2,7 @@
     <div class="card mb-3 shadow requirement-item-hover">
         <div class="card-body">
             <div class="form-group">
-                <input wire:model="item.item" class="form-control form-control-lg" type="text" 
+                <input wire:model.lazy="item.item" class="form-control form-control-lg" type="text" 
                     placeholder=".form-control-lg">
                 @error('item.item') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
@@ -10,14 +10,14 @@
                 <div class="col-9">
                     <div class="form-group">
                         <label for="description">Note (Optional)</label>
-                        <textarea wire:model="item.note" class="form-control" id="description" rows="2"></textarea>
+                        <textarea wire:model.lazy="item.note" class="form-control" id="description" rows="2"></textarea>
                         @error('item.note') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
                 <div class="col-3">
                     <div class="form-group">
                         <label for="type_{{ $item->id }}">Type</label>
-                        <select wire:model="item.type" class="form-control" id="type_{{ $item->id }}">
+                        <select wire:model.lazy="item.type" class="form-control" id="type_{{ $item->id }}">
                             <option value="question">Answer</option>
                             <option value="file">File Upload</option>
                             <option value="radio">Radio</option>

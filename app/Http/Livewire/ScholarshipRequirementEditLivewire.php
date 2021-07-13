@@ -61,17 +61,4 @@ class ScholarshipRequirementEditLivewire extends Component
         $this->save();
         $this->emit('save_all');
     }
-    
-    public function toggle_enable_form()
-    {
-        $this->requirement->enable = (!$this->requirement->enable);
-        $this->requirement->save();
-
-        $message = 'Disable Form Requirement ...';
-        if ($this->requirement->enable) {
-            $message = 'Enable Form Requirement ...';
-        }
-
-        $this->dispatchBrowserEvent('toggle_enable_form', ['message' => $message]);
-    }
 }
