@@ -47,6 +47,19 @@ class ScholarshipRequirementActivateLivewire extends Component
         return view('livewire.pages.scholarship-requirement-edit.scholarship-requirement-activate-livewire');
     }
     
+    public function toggle_disable_at_end()
+    {
+        if (isset($this->requirement->enable)) {
+            $this->requirement->enable = null;
+            $this->requirement->save();
+            $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Disable Form At End Date']);
+            return;
+        }
+        $this->requirement->enable = false;
+        $this->requirement->save();
+        $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Disable Form Requirement ...']);
+    }
+
     public function toggle_enable_form()
     {
         $this->requirement->enable = (!$this->requirement->enable);

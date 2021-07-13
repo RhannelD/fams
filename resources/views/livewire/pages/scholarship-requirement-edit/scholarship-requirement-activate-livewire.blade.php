@@ -1,8 +1,19 @@
 <div class="card shadow mb-2 requirement-item-hover">
     <div class="card-body">
         <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="disable_at_end" 
+                wire:click="toggle_disable_at_end"
+                @if (!isset($requirement->enable))
+                    checked
+                @endif>
+            <label class="custom-control-label" for="disable_at_end">Disable At End Date</label>
+        </div>
+        <div class="custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" id="enabled" 
-                wire:click="toggle_enable_form"
+                wire:click="toggle_enable_form" 
+                @if (!isset($requirement->enable))
+                    disabled
+                @endif
                 @if ($requirement->enable)
                     checked
                 @endif>

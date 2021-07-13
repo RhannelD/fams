@@ -36,7 +36,13 @@
                                             $date_end = \Carbon\Carbon::parse($requirement->end_at);
                                             $date_now = \Carbon\Carbon::now()->toDateTimeString();
                                         @endphp
-                                        @if (!$requirement->enable)
+                                        @if (!isset($requirement->enable))
+                                            @if ($date_end > $date_now)
+                                                <span class="badge badge-pill badge-success">Ongoing</span>
+                                            @else
+                                                <span class="badge badge-pill badge-dark">Disabled</span>
+                                            @endif
+                                        @elseif (!$requirement->enable)
                                             <span class="badge badge-pill badge-dark">Disabled</span>
                                         @elseif ($date_end > $date_now)
                                             <span class="badge badge-pill badge-success">Ongoing</span>
