@@ -98,7 +98,7 @@
             $( '.item_option_id_'+event.detail.div_class ).fadeOut( 500 );
         });
 
-        window.addEventListener('swal:confirm:delete_confirmation', event => { 
+        window.addEventListener('swal:confirm:delete_confirmation_{{ $item->id }}', event => { 
             swal({
               title: event.detail.message,
               text: event.detail.text,

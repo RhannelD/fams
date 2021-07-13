@@ -65,7 +65,7 @@ class ScholarshipRequirementEditItemLivewire extends Component
 
     public function delete_confirmation()
     {
-        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_confirmation', [
+        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_confirmation_'.$this->item->id, [
             'type' => 'warning',  
             'message' => 'Are you sure?', 
             'text' => 'If deleted, you will not be able to recover this Item!',
