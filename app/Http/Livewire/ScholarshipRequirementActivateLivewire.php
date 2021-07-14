@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\ScholarshipRequirement;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ScholarshipRequirementActivateLivewire extends Component
 {
@@ -19,8 +20,19 @@ class ScholarshipRequirementActivateLivewire extends Component
         'end_at' => 'required|date_format:Y-m-d\Th:i|after:requirement.start_at',
     ];
 
+    protected function verifyUser()
+    {
+        if (!Auth::check()) {
+            redirect()->route('index');
+            return true;
+        }
+        return false;
+    }
+    
     public function updated($propertyName)
     {
+        if ($this->verifyUser()) return;
+
         $this->validate();
 
         $this->requirement->start_at = Carbon::parse($this->start_at)->format('Y-m-d H:i:s');
@@ -37,6 +49,8 @@ class ScholarshipRequirementActivateLivewire extends Component
     
     public function mount(ScholarshipRequirement $id)
     {
+        if ($this->verifyUser()) return;
+
         $this->requirement = $id;
         $this->start_at = Carbon::parse($this->requirement->start_at)->format('Y-m-d\Th:i');
         $this->end_at   = Carbon::parse($this->requirement->end_at)->format('Y-m-d\Th:i');
@@ -49,6 +63,8 @@ class ScholarshipRequirementActivateLivewire extends Component
     
     public function toggle_disable_at_end()
     {
+        if ($this->verifyUser()) return;
+
         if (isset($this->requirement->enable)) {
             $this->requirement->enable = null;
             $this->requirement->save();
@@ -62,6 +78,8 @@ class ScholarshipRequirementActivateLivewire extends Component
 
     public function toggle_enable_form()
     {
+        if ($this->verifyUser()) return;
+
         $this->requirement->enable = (!$this->requirement->enable);
         $this->requirement->save();
 

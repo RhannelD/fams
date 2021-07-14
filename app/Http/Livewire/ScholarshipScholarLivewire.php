@@ -24,7 +24,7 @@ class ScholarshipScholarLivewire extends Component
     protected function verifyUser()
     {
         if (!Auth::check()) {
-            redirect()->route('dashboard');
+            redirect()->route('index');
             return true;
         }
         return false;
@@ -37,6 +37,8 @@ class ScholarshipScholarLivewire extends Component
     
     public function mount($scholarship_id)
     {
+        if ($this->verifyUser()) return;
+        
         $this->scholarship_id = $scholarship_id;
     }
     
@@ -49,7 +51,8 @@ class ScholarshipScholarLivewire extends Component
 
     public function render()
     {
-        if ($this->verifyUser()) return;
+        if ($this->verifyUser()) 
+            return view('livewire.pages.scholarship-scholar.scholarship-scholar-livewire');
 
         $categories = ScholarshipCategory::where('scholarship_id', $this->scholarship_id)->get();
         $this->categories = $categories->toArray();

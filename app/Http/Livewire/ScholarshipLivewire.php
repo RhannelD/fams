@@ -64,6 +64,8 @@ class ScholarshipLivewire extends Component
 
     public function confirm_delete($id)
     {
+        if ($this->verifyUser()) return;
+        
         if ($this->cannotbedeleted($id)) {
             return;
         }

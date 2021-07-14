@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardLivewire extends Component
 {
@@ -17,6 +18,15 @@ class DashboardLivewire extends Component
 
     public $scholars;
 
+    protected function verifyUser()
+    {
+        if (!Auth::check()) {
+            redirect()->route('dashboard');
+            return true;
+        }
+        return false;
+    }
+    
     public function render()
     {
         return view('livewire.pages.dashboard.dashboard-livewire')
@@ -25,6 +35,8 @@ class DashboardLivewire extends Component
 
     public function refresh_all()
     {
+        if ($this->verifyUser()) return;
+        
         $this->scholar_chart();
         $this->scholarship_chart();
         $this->scholars_by_gender();

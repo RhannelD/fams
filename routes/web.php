@@ -25,7 +25,7 @@ use App\Http\Controllers\HomeController;
 
 Route::get('/', function () {
     return redirect()->route('login.index');
-});
+})->name('index');
 
 Route::get('/login', LoginLivewire::class)->name('login.index')->middleware('auth.login');
 Route::get('/dashboard', DashboardLivewire::class)->name('dashboard')->middleware('auth.main');

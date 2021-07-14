@@ -23,9 +23,20 @@ class ScholarshipRequirementEditItemLivewire extends Component
         'item.type' => 'required',
     ];
 
+    protected function verifyUser()
+    {
+        if (!Auth::check()) {
+            redirect()->route('index');
+            return true;
+        }
+        return false;
+    }
+    
 
     public function mount(ScholarshipRequirementItem $id)
     {
+        if ($this->verifyUser()) return;
+
         $this->item = $id;
         $this->get_options();
     }
@@ -43,6 +54,8 @@ class ScholarshipRequirementEditItemLivewire extends Component
     
     public function updated($propertyName)
     {
+        if ($this->verifyUser()) return;
+
         $this->validate();
 
         if($propertyName == 'item.type') {
@@ -54,17 +67,23 @@ class ScholarshipRequirementEditItemLivewire extends Component
 
     public function save()
     {
+        if ($this->verifyUser()) return;
+
         $this->item->save();
     }
     
     public function save_all()
     {
+        if ($this->verifyUser()) return;
+
         $this->validate();
         $this->save();
     }
 
     public function delete_confirmation()
     {
+        if ($this->verifyUser()) return;
+
         $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_confirmation_'.$this->item->id, [
             'type' => 'warning',  
             'message' => 'Are you sure?', 
@@ -75,6 +94,8 @@ class ScholarshipRequirementEditItemLivewire extends Component
 
     public function delete_item()
     {
+        if ($this->verifyUser()) return;
+
         if ($this->options->first()) { 
             $this->options = [];
             $options = ScholarshipRequirementItemOption::where('item_id', $this->item->id);
@@ -96,6 +117,8 @@ class ScholarshipRequirementEditItemLivewire extends Component
 
     public function change_item_type()
     {
+        if ($this->verifyUser()) return;
+
         if(!in_array($this->item->type, array('radio', 'check'))) {
             $options = ScholarshipRequirementItemOption::where('item_id', $this->item->id)->delete();
             return;
@@ -110,6 +133,8 @@ class ScholarshipRequirementEditItemLivewire extends Component
 
     public function add_item_option()
     {
+        if ($this->verifyUser()) return;
+        
         $option = new ScholarshipRequirementItemOption;
         $option->item_id = $this->item->id;
         $option->option = 'Enter Option Here';

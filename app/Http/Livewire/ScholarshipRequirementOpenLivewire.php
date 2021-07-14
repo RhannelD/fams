@@ -19,7 +19,7 @@ class ScholarshipRequirementOpenLivewire extends Component
     protected function verifyUser()
     {
         if (!Auth::check()) {
-            redirect()->route('dashboard');
+            redirect()->route('index');
             return true;
         }
         return false;
@@ -27,6 +27,8 @@ class ScholarshipRequirementOpenLivewire extends Component
     
     public function mount(ScholarshipRequirement $requirement)
     {
+        if ($this->verifyUser()) return;
+
         $this->requirement = $requirement;
     }
     
@@ -56,6 +58,8 @@ class ScholarshipRequirementOpenLivewire extends Component
 
     public function delete_confirmation()
     {
+        if ($this->verifyUser()) return;
+
         $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_requirement', [
             'type' => 'warning',  
             'message' => 'Are you sure?', 
@@ -66,6 +70,8 @@ class ScholarshipRequirementOpenLivewire extends Component
 
     public function delete_requirement()
     {
+        if ($this->verifyUser()) return;
+        
         $requirement_items =  ScholarshipRequirementItem::where('requirement_id', $this->requirement->id)
             ->get();
 

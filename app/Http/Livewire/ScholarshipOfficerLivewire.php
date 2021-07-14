@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\ScholarshipOfficer;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class ScholarshipOfficerLivewire extends Component
 {
@@ -22,7 +23,7 @@ class ScholarshipOfficerLivewire extends Component
     protected function verifyUser()
     {
         if (!Auth::check()) {
-            redirect()->route('dashboard');
+            redirect()->route('index');
             return true;
         }
         return false;
@@ -31,11 +32,15 @@ class ScholarshipOfficerLivewire extends Component
     
     public function mount($scholarship_id)
     {
+        if ($this->verifyUser()) return;
+        
         $this->scholarship_id = $scholarship_id;
     }
     
     public function updated($name)
     {
+        if ($this->verifyUser()) return;
+
         if ('show_row') {
             $this->page = 1;
         }

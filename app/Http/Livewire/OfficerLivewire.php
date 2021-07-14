@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\ScholarshipOfficer;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class OfficerLivewire extends Component
 {
@@ -50,6 +51,15 @@ class OfficerLivewire extends Component
         $this->validateOnly($propertyName);
     }
 
+    protected function verifyUser()
+    {
+        if (!Auth::check()) {
+            redirect()->route('dashboard');
+            return true;
+        }
+        return false;
+    }
+    
 
     public function render()
     {
@@ -70,6 +80,8 @@ class OfficerLivewire extends Component
     
     public function info($id)
     {
+        if ($this->verifyUser()) return;
+
         $user = User::find($id);
 
         if (!$user) {
@@ -84,6 +96,8 @@ class OfficerLivewire extends Component
 
     public function confirm_delete($id)
     {
+        if ($this->verifyUser()) return;
+
         if ($this->cannotbedeleted($id)) {
             return;
         }
@@ -113,6 +127,8 @@ class OfficerLivewire extends Component
 
     public function delete()
     {
+        if ($this->verifyUser()) return;
+
         if ($this->cannotbedeleted($this->user_id_delete)) {
             return;
         }
@@ -134,7 +150,8 @@ class OfficerLivewire extends Component
         $this->dispatchBrowserEvent('officer-info', ['action' => 'hide']);
     }
 
-    protected function cannotbedeleted($id){
+    protected function cannotbedeleted($id)
+    {
         $checker = ScholarshipOfficer::select('id')
             ->where('user_id', $id)
             ->exists();
@@ -151,7 +168,7 @@ class OfficerLivewire extends Component
 
     public function nullinputs()
     {
-        $this->user_id   = null;
+        $this->user_id      = null;
         $this->firstname    = null;
         $this->middlename   = null;
         $this->lastname     = null;
@@ -166,6 +183,8 @@ class OfficerLivewire extends Component
 
     public function edit($id)
     {
+        if ($this->verifyUser()) return;
+
         $data = User::findorfail($id);
 
         $this->user_id   = $data->id;
@@ -182,6 +201,8 @@ class OfficerLivewire extends Component
 
     public function save()
     {
+        if ($this->verifyUser()) return;
+
         if (isset($this->user_id)) {
             $this->password = '123123123';
         }
@@ -235,6 +256,8 @@ class OfficerLivewire extends Component
     }
     
     public function change_pass(){
+        if ($this->verifyUser()) return;
+        
         $this->validateOnly('password');
 
         $user = User::find($this->user['id']);

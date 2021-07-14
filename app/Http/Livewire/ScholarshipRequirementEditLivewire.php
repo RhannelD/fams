@@ -22,7 +22,7 @@ class ScholarshipRequirementEditLivewire extends Component
     protected function verifyUser()
     {
         if (!Auth::check()) {
-            redirect()->route('dashboard');
+            redirect()->route('index');
             return true;
         }
         return false;
@@ -31,6 +31,8 @@ class ScholarshipRequirementEditLivewire extends Component
 
     public function mount(ScholarshipRequirement $id)
     {
+        if ($this->verifyUser()) return;
+
         $this->requirement = $id;
         $this->scholarship = Scholarship::find($id->scholarship_id);
         $this->items = ScholarshipRequirementItem::select('id')
@@ -47,11 +49,15 @@ class ScholarshipRequirementEditLivewire extends Component
 
     public function updated($propertyName)
     {
+        if ($this->verifyUser()) return;
+        
         $this->save();
     }
 
     public function add_item()
     {
+        if ($this->verifyUser()) return;
+
         $position = ScholarshipRequirementItem::where('requirement_id', 1)
             ->max('position');
 
@@ -67,6 +73,8 @@ class ScholarshipRequirementEditLivewire extends Component
 
     public function update_requirement_order($list)
     {
+        if ($this->verifyUser()) return;
+
         foreach ($list as $item) {
             ScholarshipRequirementItem::find($item['value'])
                 ->update(['position' => $item['order']]);
@@ -79,6 +87,8 @@ class ScholarshipRequirementEditLivewire extends Component
 
     public function save()
     {
+        if ($this->verifyUser()) return;
+
         $this->validate();
 
         $this->requirement->save();
@@ -86,6 +96,8 @@ class ScholarshipRequirementEditLivewire extends Component
     
     public function save_all()
     {
+        if ($this->verifyUser()) return;
+
         $this->save();
         $this->emit('save_all');
     }

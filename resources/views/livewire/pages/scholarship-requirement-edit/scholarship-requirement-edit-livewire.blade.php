@@ -60,7 +60,7 @@
                     <div class="form-group">
                         <label for="requirement"><h5><strong>Requirement Title</strong></h5></label>
                         <input wire:model.lazy="requirement.requirement" class="form-control form-control-lg" type="text" 
-                            placeholder=".form-control-lg" id='requirement'>
+                            placeholder="Requirement Title" id='requirement'>
                         @error('requirement.requirement') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group mb-0">
