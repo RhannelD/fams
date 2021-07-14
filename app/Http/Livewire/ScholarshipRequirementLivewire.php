@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementItem;
+use Carbon\Carbon;
 
 class ScholarshipRequirementLivewire extends Component
 {
@@ -79,8 +80,8 @@ class ScholarshipRequirementLivewire extends Component
         $new_requirement->description = 'Requirement Description';
         $new_requirement->promote = false;
         $new_requirement->enable = null;
-        $new_requirement->start_at = null;
-        $new_requirement->start_at = null;
+        $new_requirement->start_at = Carbon::now()->format('Y-m-d H:i:s');
+        $new_requirement->end_at = Carbon::now()->addDay()->format('Y-m-d H:i:s');
         $new_requirement->save();
 
         $position = 1;

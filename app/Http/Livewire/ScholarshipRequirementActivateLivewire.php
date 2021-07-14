@@ -16,8 +16,8 @@ class ScholarshipRequirementActivateLivewire extends Component
     public $end_at;
 
     protected $rules = [
-        'start_at' => 'required|date_format:Y-m-d\Th:i',
-        'end_at' => 'required|date_format:Y-m-d\Th:i|after:requirement.start_at',
+        'start_at' => 'required|date_format:Y-m-d\TH:i',
+        'end_at' => 'required|date_format:Y-m-d\TH:i|after:requirement.start_at',
     ];
 
     protected function verifyUser()
@@ -52,8 +52,8 @@ class ScholarshipRequirementActivateLivewire extends Component
         if ($this->verifyUser()) return;
 
         $this->requirement = $id;
-        $this->start_at = Carbon::parse($this->requirement->start_at)->format('Y-m-d\Th:i');
-        $this->end_at   = Carbon::parse($this->requirement->end_at)->format('Y-m-d\Th:i');
+        $this->start_at = Carbon::parse($this->requirement->start_at)->format('Y-m-d\TH:i');
+        $this->end_at   = Carbon::parse($this->requirement->end_at)->format('Y-m-d\TH:i');
     }
 
     public function render()

@@ -10,6 +10,7 @@ use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementItem;
 use App\Models\ScholarshipRequirementItemOption;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -30,10 +31,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $position = ScholarshipRequirementItem::where('requirement_id', 1)
-            ->max('position');
+        echo Carbon::now()->addDay()->format('Y-m-d H:i:s').'<br>';
+        return Carbon::now()->format('Y-m-d H:i:s');
 
-        return $position+1;
+        // $position = ScholarshipRequirementItem::where('requirement_id', 1)
+        //     ->max('position');
+
+        // return $position+1;
 
         // $options = ScholarshipRequirementItemOption::select('id')
         //     ->where('item_id', 218)->get();
