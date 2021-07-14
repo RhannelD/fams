@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirement;
+use App\Models\ScholarshipRequirementItem;
 
 class ScholarshipRequirementLivewire extends Component
 {
@@ -68,5 +69,38 @@ class ScholarshipRequirementLivewire extends Component
 
     public function view_requirement($requirement_id){
         $this->emit('view_requirement', $requirement_id);
+    }
+
+    public function create_requirement()
+    {
+        $new_requirement = new ScholarshipRequirement;
+        $new_requirement->scholarship_id = $this->scholarship_id;
+        $new_requirement->requirement = 'Requirement Title';
+        $new_requirement->description = 'Requirement Description';
+        $new_requirement->promote = false;
+        $new_requirement->enable = null;
+        $new_requirement->start_at = null;
+        $new_requirement->start_at = null;
+        $new_requirement->save();
+
+        $position = 1;
+
+        $item_COR = new ScholarshipRequirementItem;
+        $item_COR->requirement_id  = $new_requirement->id;
+        $item_COR->item = 'Certificate of Registration';
+        $item_COR->note = 'Upload in PDF file';
+        $item_COR->type = 'cor';
+        $item_COR->position = $position++;
+        $item_COR->save();
+        
+        $item_Grade = new ScholarshipRequirementItem;
+        $item_Grade->requirement_id  = $new_requirement->id;
+        $item_Grade->item = 'Previuos Semester Grades';
+        $item_Grade->note = 'Upload in PDF file';
+        $item_Grade->type = 'grade';
+        $item_Grade->position = $position++;
+        $item_Grade->save();
+
+        redirect()->route('requirement.edit', [$new_requirement->id]);
     }
 }

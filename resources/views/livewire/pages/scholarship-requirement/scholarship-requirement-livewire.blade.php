@@ -35,7 +35,7 @@
                     </select>
                 </div>
                 <div class="form-group col-3  my-0">
-                    <button class="form-control btn btn-success">
+                    <button wire:click="create_requirement" class="form-control btn btn-success">
                         Create
                     </button>
                 </div>

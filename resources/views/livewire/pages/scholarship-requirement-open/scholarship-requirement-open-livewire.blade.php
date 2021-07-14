@@ -54,13 +54,23 @@
         
                                 @switch($requirement_item->type)
                                     @case('file')
+                                    @case('cor')
+                                    @case('grade')
                                         <div class="input-group mb-1">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">
                                                     <i class="fas fa-file"></i>
                                                 </span>
                                             </div>
-                                            <div class="form-control">File Upload</div>
+                                            <div class="form-control">
+                                                @if($requirement_item->type == 'grade')
+                                                    Grade Upload
+                                                @elseif ($requirement_item->type == 'cor')
+                                                    COR Upload
+                                                @else
+                                                    File Upload
+                                                @endif
+                                            </div>
                                         </div>
                                         @break
                                     @case('question')

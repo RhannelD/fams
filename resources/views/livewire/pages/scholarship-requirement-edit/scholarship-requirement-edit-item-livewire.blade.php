@@ -36,6 +36,8 @@
                             <option value="file">File Upload</option>
                             <option value="radio">Radio</option>
                             <option value="check">Checkbox</option>
+                            <option value="cor">COR Upload</option>
+                            <option value="grade">Grade Upload</option>
                         </select>
                         @error('item.type') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
@@ -57,6 +59,8 @@
                             </div>
                             @break
                         @case('file')
+                        @case('cor')
+                        @case('grade')
                             <div class="form-group">
                                 <div class="input-group mb-1">
                                     <div class="input-group-prepend">
@@ -64,7 +68,15 @@
                                             <i class="fas fa-file"></i>
                                         </span>
                                     </div>
-                                    <div class="form-control">File Upload</div>
+                                    <div class="form-control">
+                                        @if($item->type == 'grade')
+                                            Grade Upload
+                                        @elseif ($item->type == 'cor')
+                                            COR Upload
+                                        @else
+                                            File Upload
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                             @break
