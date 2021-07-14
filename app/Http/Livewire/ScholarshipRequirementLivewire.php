@@ -57,7 +57,7 @@ class ScholarshipRequirementLivewire extends Component
         $requirements = DB::table('scholarship_requirements')
             ->where('scholarship_requirements.requirement', 'like', "%$search%")
             ->where('scholarship_requirements.scholarship_id', $this->scholarship_id)
-            ->orderBy('scholarship_requirements.end_at', 'desc');
+            ->orderBy('scholarship_requirements.id', 'desc');
         if ($this->promote != '') {
             $requirements = $requirements->where('scholarship_requirements.promote', $this->promote);
         }

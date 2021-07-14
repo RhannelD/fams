@@ -13,9 +13,14 @@
                         <strong>Home</strong>
                     </a>
                     <a class="btn btn-light"
+                        href="{{ route('scholarship.program', [$scholarship->id, 'requirement']) }}">
+                        <i class="fas fa-file-alt"></i>
+                        <strong>Requirements</strong>
+                    </a>
+                    <a class="btn btn-light"
                         href="{{ route('scholarship.program', [$scholarship->id, 'requirement', $requirement->id]) }}">
                         <i class="fas fa-arrow-circle-left"></i>
-                        <strong>Back</strong>
+                        <strong>View</strong>
                     </a>
                 </div>
             </h2>
@@ -50,6 +55,19 @@
             </div>
 
             @livewire('scholarship-requirement-activate-livewire', [$requirement->id], key('activate-livewire-'.time().$requirement->id))
+
+            <div class="card shadow requirement-item-hover">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="promote_{{ $requirement->id }}">Requirement for</label>
+                        <select wire:model.lazy="requirement.promote" class="form-control" id="promote_{{ $requirement->id }}">
+                            <option value="1">Applicatants</option>
+                            <option value="0">Old Scholars</option>
+                        </select>
+                        @error('requirement.promote') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+            </div>
 
             <hr>
         </div>

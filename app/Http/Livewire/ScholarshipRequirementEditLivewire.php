@@ -17,6 +17,7 @@ class ScholarshipRequirementEditLivewire extends Component
     protected $rules = [
         'requirement.requirement' => 'required|string|min:6',
         'requirement.description' => 'required|string|max:500',
+        'requirement.promote' => 'required',
     ];
 
     protected function verifyUser()
@@ -52,6 +53,14 @@ class ScholarshipRequirementEditLivewire extends Component
         if ($this->verifyUser()) return;
         
         $this->save();
+
+        if ($propertyName == 'requirement.promote') {
+            if ($this->requirement->promote) {
+                $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Requirement type changed for New Applicants']);
+            } else {
+                $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Requirement type changed for Old Scholars']);
+            }
+        }
     }
 
     public function add_item()
