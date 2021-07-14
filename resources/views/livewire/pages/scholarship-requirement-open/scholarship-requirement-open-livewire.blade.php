@@ -3,7 +3,9 @@
     <div class="row">
         <div class="col-12 col-md-3 mb-2">
             
-            @livewire('scholarship-requirement-activate-livewire', [$requirement->id], key('activate-livewire-'.time().$requirement->id))
+            @isset($requirement->id)
+                @livewire('scholarship-requirement-activate-livewire', [$requirement->id], key('activate-livewire-'.time().$requirement->id))
+            @endisset
 
             <div class="card shadow mb-2 requirement-item-hover">
                 <div class="card-body">
@@ -13,8 +15,10 @@
 
             <div class="card shadow requirement-item-hover">
                 <div class="card-body">
-                    <a href="{{ route('requirement.edit', [$requirement->id]) }}" class="btn btn-info btn-block text-white">Edit</a>
-                    <button class="btn btn-danger btn-block">Delete</button>
+                    @isset($requirement->id)
+                        <a href="{{ route('requirement.edit', [$requirement->id]) }}" class="btn btn-info btn-block text-white">Edit</a>
+                    @endisset
+                    <button wire:click="delete_confirmation"  class="btn btn-danger btn-block">Delete</button>
                 </div>
             </div>
 
@@ -25,10 +29,14 @@
             <div class="card bg-primary border-primary mb-4 shadow">
                 <div class="card-body text-white border-primary">
                     <h2>
-                        <strong>{{ $requirement->requirement }}</strong>
+                        @isset( $requirement->requirement )
+                            <strong>{{ $requirement->requirement }}</strong>
+                        @endisset
                     </h2>
                     <p class="mb-0">
-                        {{ $requirement->description }}
+                        @isset( $requirement->description )
+                            {{ $requirement->description }}
+                        @endisset
                     </p>
                 </div>
             </div>
@@ -101,6 +109,21 @@
     <script>
         $(".requirement-item-hover").hover(function () {
             $(this).toggleClass("shadow-lg");
+        });
+        
+        window.addEventListener('swal:confirm:delete_requirement', event => { 
+            swal({
+              title: event.detail.message,
+              text: event.detail.text,
+              icon: event.detail.type,
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((willDelete) => {
+              if (willDelete) {
+                @this.call(event.detail.function)
+              }
+            });
         });
     </script>
 </div>

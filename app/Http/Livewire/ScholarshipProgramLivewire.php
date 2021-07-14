@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\Auth;
 
 class ScholarshipProgramLivewire extends Component
 {
-    protected $listeners = ['view_requirement' => 'view_requirement'];
+    protected $listeners = [
+        'view_requirement' => 'view_requirement',
+        'changetab' => 'changetab'
+    ];
 
     public $tab = 'home';
     public $scholarship;
