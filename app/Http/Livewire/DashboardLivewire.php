@@ -24,9 +24,18 @@ class DashboardLivewire extends Component
             redirect()->route('dashboard');
             return true;
         }
+        if (Auth::user()->usertype == 'scholar') {
+            redirect()->route('scholarship');
+            return true;
+        }
         return false;
     }
     
+    public function mount()
+    {
+        if ($this->verifyUser()) return;
+    }
+
     public function render()
     {
         return view('livewire.pages.dashboard.dashboard-livewire')

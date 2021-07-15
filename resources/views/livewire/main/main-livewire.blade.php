@@ -16,24 +16,40 @@
         </div>
 
         <div class="list-group list-group-flush">  
-            <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('dashboard') }}">
-                <i class="fas fa-chart-line"></i>
-                Dashboard
-            </a> 
+            @if (in_array(Auth::user()->usertype, array('officer', 'admin')))
+                <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('dashboard') }}">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
+                </a> 
+            @endif
 
             <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('scholarship') }}">
-                <i class="fas fa-user-graduate"></i>
+                <i class="fas fa-file-invoice-dollar"></i>
                 Scholarships
             </a>
 
-            <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('officer') }}">
-                <i class="fas fa-user-graduate"></i>
-                Officers
-            </a>
-            <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('scholar') }}">
-                <i class="fas fa-user-graduate"></i>
-                Scholars
-            </a>
+            @if (!Auth::check())
+                <hr>
+            @elseif (Auth::user()->usertype == 'admin')
+                <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('officer') }}">
+                    <i class="fas fa-address-card"></i>
+                    Officers
+                </a>
+                <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('scholar') }}">
+                    <i class="fas fa-user-graduate"></i>
+                    Scholars
+                </a>
+            @elseif (in_array(Auth::user()->usertype, array('officer', 'scholar')))
+                <hr class="my-2">
+                <strong class="ml-3">
+                    @if (Auth::user()->usertype == 'officer')
+                        Managing
+                    @else
+                        Scholarship
+                    @endif
+                </strong>
+                @livewire('navbar-scholarship-livewire', key('sidebar-scholarship-'.time().$scholarship->id))
+            @endif
         </div>
     </div>
     <!-- /#sidebar-wrapper -->
@@ -42,19 +58,6 @@
     <!-- Page Content -->
     <div id="page-content-wrapper">
 
-        {{-- <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom d-flex align-content-center">
-            <div class="float-left">
-                <button class="btn" id="menu-toggle">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-            
-            <a class="navbar-brand ml-3"><strong>FAMS</strong></a>
-
-            <div class="collapse navbar-collapse" id="navbarSuapportedContent-4">
-			</div>
-        </nav> --}}
-        
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
             <button class="btn btn-outline-secondary disabled" id="menu-toggle">
                 <span class="navbar-toggler-icon"></span>

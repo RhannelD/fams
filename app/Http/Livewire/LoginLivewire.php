@@ -40,7 +40,11 @@ class LoginLivewire extends Component
         $this->validate();
 
         if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
-            redirect()->route('dashboard');
+            if (Auth::user()->usertype == 'scholar') {
+                redirect()->route('scholarship');
+            } else {
+                redirect()->route('dashboard');
+            }
         }
 
         $this->dispatchBrowserEvent('swal:modal', [
