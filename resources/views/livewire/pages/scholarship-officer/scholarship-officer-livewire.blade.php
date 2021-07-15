@@ -37,11 +37,13 @@
                         <option value="200">200</option>
                     </select>
                 </div>
-                <div class="form-group col-3  my-0">
-                    <button class="form-control btn btn-success">
-                        Invite
-                    </button>
-                </div>
+                @if (!Auth::user()->usertype == 'scholar')    
+                    <div class="form-group col-3  my-0">
+                        <button class="form-control btn btn-success">
+                            Invite
+                        </button>
+                    </div>
+                @endif
             </div>
 		</div>
 	</div>

@@ -11,9 +11,9 @@
 
 		</div>
 
-        @if (!Auth::user()->usertype == 'scholar')
-            <div class="col-md-7 mt-2">
-                <div class="form-row">
+        <div class="col-md-7 mt-2">
+            <div class="form-row">
+                @if (!Auth::user()->usertype == 'scholar')
                     <div class="input-group col-6 my-0">
                         <div class="input-group-prepend">
                         <label class="input-group-text" for="category">Category</label>
@@ -25,28 +25,30 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="input-group col-4 my-0">
-                        <div class="input-group-prepend">
-                        <label class="input-group-text" for="rows">Rows</label>
-                        </div>
-                        <select wire:model="show_row" class="form-control" id="rows">
-                            <option value="10">10</option>
-                            <option value="15">15</option>
-                            <option value="20">20</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="150">150</option>
-                            <option value="200">200</option>
-                        </select>
+                @endif
+                <div class="input-group col-4 my-0">
+                    <div class="input-group-prepend">
+                    <label class="input-group-text" for="rows">Rows</label>
                     </div>
+                    <select wire:model="show_row" class="form-control" id="rows">
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="150">150</option>
+                        <option value="200">200</option>
+                    </select>
+                </div>
+                @if (!Auth::user()->usertype == 'scholar')
                     <div class="form-group col-2  my-0">
                         <button class="form-control btn btn-success">
                             Invite
                         </button>
                     </div>
-                </div>
+                @endif
             </div>
-        @endif
+        </div>
 	</div>
 
 	<div class="row">

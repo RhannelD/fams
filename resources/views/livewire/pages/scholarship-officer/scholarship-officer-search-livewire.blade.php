@@ -7,80 +7,102 @@
         <table class="table myaccordion table-hover" id="accordions">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th></th>
+                    @if (!Auth::user()->usertype == 'scholar')
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th></th>
+                    @else
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Email</th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
                 @forelse ($officers as $officer)
-                    <tr data-toggle="collapse" data-target="#collapse{{ $officer->user_id }}" aria-expanded="true" aria-controls="collapse{{ $officer->user_id }}" aria-expanded="false">
-                        <th scope="row">{{ $officer->user_id }}</th>
-                        <td>{{ $officer->firstname }} {{ $officer->middlename }} {{ $officer->lastname }}</td>
-                        <td>{{ $officer->position }}</td>
-                        <td>{{ $officer->email }}</td>
-                        <td>{{ $officer->phone }}</td>
-                        <td>
-                            <i class="fa" aria-hidden="true"></i>
-                        </td>
+                    <tr 
+                        @if (!Auth::user()->usertype == 'scholar')    
+                            data-toggle="collapse" 
+                            data-target="#collapse{{ $officer->user_id }}" 
+                            aria-expanded="true" 
+                            aria-controls="collapse{{ $officer->user_id }}" 
+                            aria-expanded="false"
+                        @endif
+                        >
+                        @if (!Auth::user()->usertype == 'scholar')    
+                            <th scope="row">{{ $officer->user_id }}</th>
+                            <td>{{ $officer->firstname }} {{ $officer->middlename }} {{ $officer->lastname }}</td>
+                            <td>{{ $officer->position }}</td>
+                            <td>{{ $officer->email }}</td>
+                            <td>{{ $officer->phone }}</td>
+                            <td>
+                                <i class="fa" aria-hidden="true"></i>
+                            </td>
+                        @else
+                            <td>{{ $officer->firstname }} {{ $officer->middlename }} {{ $officer->lastname }}</td>
+                            <td>{{ $officer->position }}</td>
+                            <td>{{ $officer->email }}</td>
+                        @endif
                     </tr>
-                    <tr>
-                        <td colspan="6" id="collapse{{ $officer->user_id }}" data-parent="#accordions" class="collapse acc p-1" >
-                            <div class="card mb-3 shadow-sm">
-                                <div class="card-body p-2">
-                                    <div class="row">
-                                        <div class="col-md-6 pb-0">
-                                            <table class="table table-borderless table-sm m-0">
-                                                <tbody>
-                                                    <tr>
-                                                        <td>ID:</td>
-                                                        <td>{{ $officer->user_id }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Full Name:</td>
-                                                        <td>{{ $officer->firstname }} {{ $officer->middlename }} {{ $officer->lastname }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Phonenumber:</td>
-                                                        <td>{{ $officer->phone }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Email:</td>
-                                                        <td>{{ $officer->email }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="col-md-6 pb-0">
-                                            <table class="table table-borderless table-sm m-0">
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Gender:</td>
-                                                        <td>{{ $officer->gender }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Religion:</td>
-                                                        <td>{{ $officer->religion }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Birth Date:</td>
-                                                        <td>{{ $officer->birthday }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Birth Place:</td>
-                                                        <td>{{ $officer->birthplace }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                    @if (!Auth::user()->usertype == 'scholar')
+                        <tr>
+                            <td colspan="6" id="collapse{{ $officer->user_id }}" data-parent="#accordions" class="collapse acc p-1" >
+                                <div class="card mb-3 shadow-sm">
+                                    <div class="card-body p-2">
+                                        <div class="row">
+                                            <div class="col-md-6 pb-0">
+                                                <table class="table table-borderless table-sm m-0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>ID:</td>
+                                                            <td>{{ $officer->user_id }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Full Name:</td>
+                                                            <td>{{ $officer->firstname }} {{ $officer->middlename }} {{ $officer->lastname }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Phonenumber:</td>
+                                                            <td>{{ $officer->phone }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Email:</td>
+                                                            <td>{{ $officer->email }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-6 pb-0">
+                                                <table class="table table-borderless table-sm m-0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Gender:</td>
+                                                            <td>{{ $officer->gender }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Religion:</td>
+                                                            <td>{{ $officer->religion }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Birth Date:</td>
+                                                            <td>{{ $officer->birthday }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Birth Place:</td>
+                                                            <td>{{ $officer->birthplace }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
+                    @endif
                 @empty
                     <tr>
                         <td colspan="6">No results...</td>
