@@ -56,7 +56,7 @@
 
             @livewire('scholarship-requirement-activate-livewire', [$requirement->id], key('activate-livewire-'.time().$requirement->id))
 
-            <div class="card shadow requirement-item-hover">
+            <div class="card shadow mb-2 requirement-item-hover">
                 <div class="card-body">
                     <div class="form-group">
                         <label for="promote_{{ $requirement->id }}">Requirement for</label>
@@ -65,6 +65,27 @@
                             <option value="0">Old Scholars</option>
                         </select>
                         @error('requirement.promote') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                
+                    <div class="form-group mb-0">
+                        <label for="">Categories</label>
+                        @foreach ($categories as $category)
+                            <div class="input-group mb-1">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <input type="checkbox"
+                                            @isset($category->category_id)
+                                                checked
+                                            @endisset
+                                            wire:click="toggle_category({{ $category->id }})"
+                                            >
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control bg-white" readonly
+                                    value="{{ $category->category }}"
+                                    >
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>

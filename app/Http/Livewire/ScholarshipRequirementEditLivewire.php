@@ -6,6 +6,8 @@ use Livewire\Component;
 use App\Models\Scholarship;
 use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementItem;
+use App\Models\ScholarshipRequirementCategory;
+use App\Models\ScholarshipCategory;
 use Illuminate\Support\Facades\Auth;
 
 class ScholarshipRequirementEditLivewire extends Component
@@ -13,6 +15,7 @@ class ScholarshipRequirementEditLivewire extends Component
     public $requirement;
     public $scholarship;
     public $items;
+    public $categories;
 
     protected $rules = [
         'requirement.requirement' => 'required|string|min:6',
@@ -39,6 +42,16 @@ class ScholarshipRequirementEditLivewire extends Component
         $this->items = ScholarshipRequirementItem::select('id')
             ->where('requirement_id', $id->id)
             ->orderBy('position')
+            ->get();
+        $this->load_categories();
+    }
+
+    public function load_categories()
+    {
+        $this->categories = ScholarshipCategory::select('scholarship_categories.*', 'scholarship_requirement_categories.category_id')
+            ->join('scholarship_requirements', 'scholarship_categories.scholarship_id', '=', 'scholarship_requirements.scholarship_id')
+            ->leftJoin('scholarship_requirement_categories', 'scholarship_categories.id', '=', 'scholarship_requirement_categories.category_id')
+            ->where('scholarship_requirements.id', 5)
             ->get();
     }
 
@@ -109,5 +122,19 @@ class ScholarshipRequirementEditLivewire extends Component
 
         $this->save();
         $this->emit('save_all');
+    }
+
+    public function toggle_category($category_id)
+    {
+        $delete = ScholarshipRequirementCategory::where('requirement_id', $this->requirement->id)
+            ->where('category_id', $category_id)->delete();
+
+        if (!$delete) {
+            ScholarshipRequirementCategory::firstOrCreate([
+                'requirement_id' =>  $this->requirement->id,
+                'category_id' => $category_id
+            ]);
+        }
+        $this->load_categories();
     }
 }

@@ -24,7 +24,7 @@
             <tbody>
                 @forelse ($officers as $officer)
                     <tr 
-                        @if (!Auth::user()->usertype == 'scholar')    
+                        @if (Auth::user()->usertype != 'scholar')    
                             data-toggle="collapse" 
                             data-target="#collapse{{ $officer->user_id }}" 
                             aria-expanded="true" 
@@ -32,7 +32,7 @@
                             aria-expanded="false"
                         @endif
                         >
-                        @if (!Auth::user()->usertype == 'scholar')    
+                        @if (Auth::user()->usertype != 'scholar')    
                             <th scope="row">{{ $officer->user_id }}</th>
                             <td>{{ $officer->firstname }} {{ $officer->middlename }} {{ $officer->lastname }}</td>
                             <td>{{ $officer->position }}</td>
@@ -47,7 +47,7 @@
                             <td>{{ $officer->email }}</td>
                         @endif
                     </tr>
-                    @if (!Auth::user()->usertype == 'scholar')
+                    @if (Auth::user()->usertype != 'scholar')
                         <tr>
                             <td colspan="6" id="collapse{{ $officer->user_id }}" data-parent="#accordions" class="collapse acc p-1" >
                                 <div class="card mb-3 shadow-sm">

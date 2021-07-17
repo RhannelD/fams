@@ -37,7 +37,7 @@
                         <option value="200">200</option>
                     </select>
                 </div>
-                @if (!Auth::user()->usertype == 'scholar')    
+                @if (Auth::user()->usertype != 'scholar')    
                     <div class="form-group col-3  my-0">
                         <button class="form-control btn btn-success">
                             Invite

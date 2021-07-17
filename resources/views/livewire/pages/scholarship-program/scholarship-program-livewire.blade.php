@@ -50,20 +50,22 @@
                                 <strong>Officers</strong>
                             </a>
                         </li>
-                        <li class="nav-item mr-1" role="presentation">
-                            <a wire:click="changetab('requirement')" id="pills-requirement-tab" data-toggle="pill" href="#requirement-contact" role="tab" aria-controls="requirement-contact"
-                                @if ($tab == 'requirement')
-                                    class="btn btn-light active"
-                                    aria-selected="true"
-                                @else
-                                    class="btn btn-light"
-                                    aria-selected="false"
-                                @endif
-                                >
-                                <i class="fas fa-file-alt"></i>
-                                <strong>Requirements</strong>
-                            </a>
-                        </li>
+                        @if (Auth::user()->usertype != 'scholar')
+                            <li class="nav-item mr-1" role="presentation">
+                                <a wire:click="changetab('requirement')" id="pills-requirement-tab" data-toggle="pill" href="#requirement-contact" role="tab" aria-controls="requirement-contact"
+                                    @if ($tab == 'requirement')
+                                        class="btn btn-light active"
+                                        aria-selected="true"
+                                    @else
+                                        class="btn btn-light"
+                                        aria-selected="false"
+                                    @endif
+                                    >
+                                    <i class="fas fa-file-alt"></i>
+                                    <strong>Requirements</strong>
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </h2>
@@ -100,26 +102,28 @@
                     >
                     @livewire('scholarship-officer-livewire', [$scholarship->id], key('officer-tabs-'.time().$scholarship->id))
                 </div>
-                <div id="pills-requirement" role="tabpanel" aria-labelledby="pills-requirement-tab"
-                    @if ($tab == 'requirement' && empty($requirement_id))
-                        class="tab-pane fade show active" 
-                    @else
-                        class="tab-pane fade" 
-                    @endif
-                    >
-                    @livewire('scholarship-requirement-livewire', [$scholarship->id], key('requirement-tabs-'.time().$scholarship->id))
-                </div>
-                <div id="pills-requirement" role="tabpanel" aria-labelledby="pills-requirement-tab"
-                    @if ($tab == 'requirement' && !empty($requirement_id))
-                        class="tab-pane fade show active" 
-                    @else
-                        class="tab-pane fade" 
-                    @endif
-                    >
-                    @if (!empty($requirement_id))
-                        @livewire('scholarship-requirement-open-livewire', [$requirement_id], key('requirement-open-tabs-'.time().$requirement_id))
-                    @endif
-                </div>
+                @if (Auth::user()->usertype != 'scholar')
+                    <div id="pills-requirement" role="tabpanel" aria-labelledby="pills-requirement-tab"
+                        @if ($tab == 'requirement' && empty($requirement_id))
+                            class="tab-pane fade show active" 
+                        @else
+                            class="tab-pane fade" 
+                        @endif
+                        >
+                        @livewire('scholarship-requirement-livewire', [$scholarship->id], key('requirement-tabs-'.time().$scholarship->id))
+                    </div>
+                    <div id="pills-requirement" role="tabpanel" aria-labelledby="pills-requirement-tab"
+                        @if ($tab == 'requirement' && !empty($requirement_id))
+                            class="tab-pane fade show active" 
+                        @else
+                            class="tab-pane fade" 
+                        @endif
+                        >
+                        @if (!empty($requirement_id))
+                            @livewire('scholarship-requirement-open-livewire', [$requirement_id], key('requirement-open-tabs-'.time().$requirement_id))
+                        @endif
+                    </div>
+                @endif
             </div>
         </div>
     </div>

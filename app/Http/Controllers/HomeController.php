@@ -9,6 +9,8 @@ use App\Models\ScholarshipOfficer;
 use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementItem;
 use App\Models\ScholarshipRequirementItemOption;
+use App\Models\ScholarshipRequirementCategory;
+use App\Models\ScholarshipCategory;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -31,8 +33,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        echo Carbon::now()->addDay()->format('Y-m-d H:i:s').'<br>';
-        return Carbon::now()->format('Y-m-d H:i:s');
+        $categories = ScholarshipCategory::select('scholarship_categories.*', 'scholarship_requirement_categories.category_id')
+            ->join('scholarship_requirements', 'scholarship_categories.scholarship_id', '=', 'scholarship_requirements.scholarship_id')
+            ->leftJoin('scholarship_requirement_categories', 'scholarship_categories.id', '=', 'scholarship_requirement_categories.category_id')
+            ->where('scholarship_requirements.id', 5)
+            ->get();
+
+        return $categories;
+        // echo Carbon::now()->addDay()->format('Y-m-d H:i:s').'<br>';
+        // return Carbon::now()->format('Y-m-d H:i:s');
 
         // $position = ScholarshipRequirementItem::where('requirement_id', 1)
         //     ->max('position');

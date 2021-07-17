@@ -13,7 +13,7 @@
 
         <div class="col-md-7 mt-2">
             <div class="form-row">
-                @if (!Auth::user()->usertype == 'scholar')
+                @if (Auth::user()->usertype != 'scholar')
                     <div class="input-group col-6 my-0">
                         <div class="input-group-prepend">
                         <label class="input-group-text" for="category">Category</label>
@@ -40,7 +40,7 @@
                         <option value="200">200</option>
                     </select>
                 </div>
-                @if (!Auth::user()->usertype == 'scholar')
+                @if (Auth::user()->usertype != 'scholar')
                     <div class="form-group col-2  my-0">
                         <button class="form-control btn btn-success">
                             Invite
