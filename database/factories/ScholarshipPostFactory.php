@@ -22,7 +22,9 @@ class ScholarshipPostFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'scholarship_id' => 1,
+            'post' => $this->faker->text($maxNbChars = 300),
+            'promote' => false,
         ];
     }
 }
