@@ -50,8 +50,11 @@ class ScholarshipRequirementEditLivewire extends Component
     {
         $this->categories = ScholarshipCategory::select('scholarship_categories.*', 'scholarship_requirement_categories.category_id')
             ->join('scholarship_requirements', 'scholarship_categories.scholarship_id', '=', 'scholarship_requirements.scholarship_id')
-            ->leftJoin('scholarship_requirement_categories', 'scholarship_categories.id', '=', 'scholarship_requirement_categories.category_id')
-            ->where('scholarship_requirements.id', 5)
+            ->leftJoin('scholarship_requirement_categories', function($join) {
+                    $join->on('scholarship_categories.id', '=', 'scholarship_requirement_categories.category_id');
+                    $join->on('scholarship_requirements.id', '=', 'scholarship_requirement_categories.requirement_id');
+                })
+            ->where('scholarship_requirements.id', $this->requirement->id)
             ->get();
     }
 
@@ -129,11 +132,14 @@ class ScholarshipRequirementEditLivewire extends Component
         $delete = ScholarshipRequirementCategory::where('requirement_id', $this->requirement->id)
             ->where('category_id', $category_id)->delete();
 
-        if (!$delete) {
+        if ($delete) {
+            $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Category Removed Successfully']);
+        } else {
             ScholarshipRequirementCategory::firstOrCreate([
                 'requirement_id' =>  $this->requirement->id,
                 'category_id' => $category_id
             ]);
+            $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Category Added Successfully']);
         }
         $this->load_categories();
     }

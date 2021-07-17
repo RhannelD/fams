@@ -68,7 +68,7 @@
                     </div>
                 
                     <div class="form-group mb-0">
-                        <label for="">Categories</label>
+                        <label for="">Requirement for category</label>
                         @foreach ($categories as $category)
                             <div class="input-group mb-1">
                                 <div class="input-group-prepend">

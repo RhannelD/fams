@@ -22,7 +22,8 @@ class ScholarshipRequirementCategoryFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'requirement_id' => 1,
+            'category_id' => 1,
         ];
     }
 }

@@ -33,13 +33,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $categories = ScholarshipCategory::select('scholarship_categories.*', 'scholarship_requirement_categories.category_id')
-            ->join('scholarship_requirements', 'scholarship_categories.scholarship_id', '=', 'scholarship_requirements.scholarship_id')
-            ->leftJoin('scholarship_requirement_categories', 'scholarship_categories.id', '=', 'scholarship_requirement_categories.category_id')
-            ->where('scholarship_requirements.id', 5)
-            ->get();
+        // $categories = ScholarshipCategory::select('*')
+        // ->join('scholarship_requirements', 'scholarship_categories.scholarship_id', '=', 'scholarship_requirements.scholarship_id')
+        // ->leftJoin('scholarship_requirement_categories', function($join) {
+        //         $join->on('scholarship_categories.id', '=', 'scholarship_requirement_categories.category_id');
+        //         $join->on('scholarship_requirements.id', '=', 'scholarship_requirement_categories.requirement_id');
+        //     })
+        // ->where('scholarship_requirements.id', 1)
+        // ->get();
 
-        return $categories;
+        // return $categories;
         // echo Carbon::now()->addDay()->format('Y-m-d H:i:s').'<br>';
         // return Carbon::now()->format('Y-m-d H:i:s');
 

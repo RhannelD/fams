@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\ScholarshipCategory;
+use App\Models\ScholarshipRequirement;
+use App\Models\ScholarshipRequirementCategory;
 
 class ScholarshipRequirementCategorySeeder extends Seeder
 {
@@ -13,6 +16,23 @@ class ScholarshipRequirementCategorySeeder extends Seeder
      */
     public function run()
     {
-        //
+        $requirements = ScholarshipRequirement::all();
+
+        foreach ($requirements as $requirement) {
+            $categories = ScholarshipCategory::where('scholarship_id', $requirement->scholarship_id)->get();
+            $random = rand(0, (count($categories)-1));
+
+            ScholarshipRequirementCategory::factory()->create([   
+                'requirement_id' => $requirement->id,
+                'category_id' => $categories[$random]->id
+            ]);
+
+            if (rand(1, 4) == 1 && $random > 0) {
+                ScholarshipRequirementCategory::factory()->create([   
+                    'requirement_id' => $requirement->id,
+                    'category_id' => $categories[($random-1)]->id
+                ]);
+            }
+        }
     }
 }

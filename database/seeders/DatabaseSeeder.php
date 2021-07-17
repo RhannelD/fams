@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             ScholarshipRequirementSeeder::class,
             ScholarshipRequirementItemSeeder::class,
             ScholarshipRequirementItemOptionSeeder::class,
+            ScholarshipRequirementCategorySeeder::class,
         ]);
     }
 }
