@@ -16,6 +16,7 @@ class CreateScholarshipPostsTable extends Migration
         Schema::create('scholarship_posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('scholarship_id');
+            $table->string('title');
             $table->mediumText('post');
             $table->boolean('promote')->default(0);
             $table->timestamps();

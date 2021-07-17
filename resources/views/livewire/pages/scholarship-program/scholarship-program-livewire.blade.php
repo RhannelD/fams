@@ -82,7 +82,7 @@
                         class="tab-pane fade" 
                     @endif
                     >
-                    @livewire('scholarship-page-livewire', key('page-tabs-'.time().$scholarship->id))
+                    @livewire('scholarship-page-livewire', [$scholarship->id], key('page-tabs-'.time().$scholarship->id))
                 </div>
                 <div id="pills-scholar" role="tabpanel" aria-labelledby="pills-scholar-tab"
                     @if ($tab == 'scholar')

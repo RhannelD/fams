@@ -23,7 +23,8 @@ class ScholarshipPostFactory extends Factory
     {
         return [
             'scholarship_id' => 1,
-            'post' => $this->faker->text($maxNbChars = 300),
+            'title' => $this->faker->sentence($nbWords = 6, $variableNbWords = true),
+            'post' => $this->faker->text($maxNbChars = 400),
             'promote' => false,
         ];
     }

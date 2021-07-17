@@ -16,6 +16,7 @@ class ScholarshipPost extends Model
      */
     protected $fillable = [
         'scholarship_id',
+        'title',
         'post',
         'promote',
     ];
