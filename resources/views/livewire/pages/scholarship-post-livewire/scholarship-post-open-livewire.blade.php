@@ -41,9 +41,17 @@
                 <div class="card-header"> 
                     <h5 class="d-flex">
                         {{ $post->title }} 
-                        <a class="ml-auto mr-0 text-dark">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </a>
+                        <div class="dropdown mr-0 ml-auto">
+                            <span id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </span>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a wire:click="delete_post_confirmation" class="dropdown-item">
+                                    <i class="fas fa-trash mr-1"></i>
+                                    Delete Post
+                                </a>
+                            </div>
+                        </div>
                     </h5>
                     <div class="d-flex">
                         <div class="mr-auto bd-highlight my-0">
@@ -102,6 +110,21 @@
     <script>
         $(".item-hover").hover(function () {
             $(this).toggleClass("shadow-lg");
+        });
+
+        window.addEventListener('swal:confirm:delete_post_{{ $post->id }}', event => { 
+            swal({
+              title: event.detail.message,
+              text: event.detail.text,
+              icon: event.detail.type,
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((willDelete) => {
+              if (willDelete) {
+                @this.call(event.detail.function)
+              }
+            });
         });
     </script>
 </div>

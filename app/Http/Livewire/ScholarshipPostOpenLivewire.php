@@ -61,4 +61,30 @@ class ScholarshipPostOpenLivewire extends Component
         
         $this->post_count += 10;
     }
+
+    public function delete_post_confirmation()
+    {
+        if ($this->verifyUser()) return;
+
+        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_post_'.$this->post->id, [
+            'type' => 'warning',  
+            'message' => 'Are you sure?', 
+            'text' => 'If deleted, you will not be able to recover this post!',
+            'function' => "delete_post"
+        ]);
+    }
+
+    public function delete_post()
+    {
+        if ($this->verifyUser()) return;
+
+        $comments = ScholarshipPostComment::where('post_id', $this->post->id)
+            ->delete();
+
+        $post = ScholarshipPost::find($this->post->id);
+
+        if ($post->delete()) {
+            redirect()->route('scholarship.program', [$this->scholarship->id, 'home']);
+        }
+    }
 }
