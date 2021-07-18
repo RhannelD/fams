@@ -21,10 +21,15 @@ class ScholarshipPostFactory extends Factory
      */
     public function definition()
     {
+        $title = '';
+        if (rand(0,5) != 0) {
+            $title = $this->faker->sentence($nbWords = 6, $variableNbWords = true);
+        }
+
         return [
             'user_id' => 2,
             'scholarship_id' => 1,
-            'title' => $this->faker->sentence($nbWords = 6, $variableNbWords = true),
+            'title' => $title,
             'post' => $this->faker->text($maxNbChars = 400),
             'promote' => false,
         ];

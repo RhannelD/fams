@@ -12,6 +12,8 @@ class ScholarshipPageLivewire extends Component
     public $scholarship_id;
     public $post_count = 10;
     
+    protected $listeners = ['post_updated' => '$refresh'];
+
     protected function verifyUser()
     {
         if (!Auth::check()) {
@@ -28,11 +30,12 @@ class ScholarshipPageLivewire extends Component
         $this->scholarship_id = $scholarship_id;
     }
     
-
     
     public function render()
     {
-        $posts = ScholarshipPost::where('scholarship_id', $this->scholarship_id)
+        $posts = ScholarshipPost::select('scholarship_posts.*', 'users.firstname', 'users.lastname')
+            ->where('scholarship_id', $this->scholarship_id)
+            ->leftJoin('users', 'scholarship_posts.user_id', '=', 'users.id')
             ->orderBy('id', 'desc')
             ->take($this->post_count)
             ->get();
@@ -40,6 +43,8 @@ class ScholarshipPageLivewire extends Component
         $count = ScholarshipPost::where('scholarship_id', $this->scholarship_id)->count();
 
         $show_more = ($count > count($posts));
+
+        $this->dispatchBrowserEvent('remove:modal-backdrop');
 
         return view('livewire.pages.scholarship-page-livewire.scholarship-page-livewire', [
             'posts' => $posts,

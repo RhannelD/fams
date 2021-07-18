@@ -56,6 +56,10 @@
             });
         });
         
+        window.addEventListener('remove:modal-backdrop', event => { 
+            $('.modal-backdrop').remove();
+        });
+        
         document.addEventListener('DOMContentLoaded', function () {
             window.livewire.on('url_update', (url) => {
                 history.replaceState(null, null, url);

@@ -1,35 +1,34 @@
 <div>
     <div class="row mt-3">
         <div class="col-12">
-            <div class="card mb-4 shadow requirement-item-hover mx-auto" style="max-width: 800px">
-                <div class="card-header">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Post something...">
-                        <div class="input-group-append">
-                            <button class="btn btn-dark" type="button">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @if (Auth::user()->usertype != 'scholar')
+                @livewire('scholarship-post-livewire', [$scholarship_id], key('scholarship-page-post-'.time().$scholarship_id))
+            @endif
 
             @foreach ($posts as $post)
                 <div class="card mb-3 shadow requirement-item-hover mx-auto" style="max-width: 800px">
-                    <div class="card-header d-flex"> 
-                        <div class="mr-auto bd-highlight">
-                            <h5 class="my-0">
-                                {{ $post->title }} 
-                            </h5>
-                        </div>
-                        <div class="ml-auto bd-highlight">
-                            {{ $post->created_at }}
+                    <div class="card-header"> 
+                        <h5>
+                            {{ $post->title }} 
+                        </h5>
+                        <div class="d-flex">
+                            <div class="mr-auto bd-highlight my-0">
+                                <h6 class="my-0">
+                                    {{ $post->firstname }} {{ $post->lastname }}
+                                </h6>
+                            </div>
+                            <h6 class="ml-auto mr-1 bd-highlight my-0">
+                                {{ $post->created_at }}
+                            </h6>
                         </div>
                     </div>
                     <div class="card-header">
                         <p>
-                            {{ $post->post }}
+                            {!! nl2br(e($post->post)) !!}
                         </p>
+                    </div>
+                    <div class="card-footer border-top-0 d-flex justify-content-end">
+                        <a>Comment</a>
                     </div>
                 </div>
             @endforeach
