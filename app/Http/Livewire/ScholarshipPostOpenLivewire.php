@@ -40,8 +40,7 @@ class ScholarshipPostOpenLivewire extends Component
 
     public function render()
     {
-        $comments = ScholarshipPostComment::select('scholarship_post_comments.*', 'users.firstname', 'users.lastname')
-            ->leftJoin('users', 'scholarship_post_comments.user_id', '=', 'users.id')
+        $comments = ScholarshipPostComment::select('scholarship_post_comments.*')
             ->where('post_id', $this->post->id)
             ->take($this->post_count)
             ->get();
@@ -58,6 +57,8 @@ class ScholarshipPostOpenLivewire extends Component
 
     public function load_more()
     {
+        if ($this->verifyUser()) return;
+        
         $this->post_count += 10;
     }
 }

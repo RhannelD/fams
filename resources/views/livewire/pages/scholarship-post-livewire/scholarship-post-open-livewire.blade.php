@@ -13,10 +13,22 @@
                         <strong>Home</strong>
                     </a>
                     <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$scholarship->id, 'requirement']) }}">
-                        <i class="fas fa-file-alt"></i>
-                        <strong>Requirements</strong>
+                        href="{{ route('scholarship.program', [$scholarship->id, 'scholar']) }}">
+                        <i class="fas fa-user-graduate"></i>
+                        <strong>Scholars</strong>
                     </a>
+                    <a class="btn btn-light"
+                        href="{{ route('scholarship.program', [$scholarship->id, 'officer']) }}">
+                        <i class="fas fa-address-card"></i>
+                        <strong>Officers</strong>
+                    </a>
+                    @if (Auth::user()->usertype != 'scholar')
+                        <a class="btn btn-light"
+                            href="{{ route('scholarship.program', [$scholarship->id, 'requirement']) }}">
+                            <i class="fas fa-file-alt"></i>
+                            <strong>Requirements</strong>
+                        </a>
+                    @endif
                 </div>
             </h2>
         </div>
@@ -60,14 +72,7 @@
             @livewire('scholarship-post-comment-livewire', [$post->id], key('scholarship-page-post-comment-'.time().$post->id))
 
             @foreach ($comments as $comment)
-                <div class="shadow p-2 mx-2 bg-white rounded d-flex bd-highlight item-hover mx-auto mb-3" style="max-width: 760px">
-                    <div class="mr-auto p-2 bd-highlight">
-                        <h6><strong>
-                            {{ $comment->firstname }} {{ $comment->lastname }}    
-                        </strong></h6>
-                        <p class="mb-0">{!! nl2br(e($comment->comment)) !!}</p>
-                    </div>
-                </div>
+                @livewire('scholarship-post-open-comment-livewire', [$comment->id], key('scholarship-page-post-comment-open-'.time().$post->id))
             @endforeach
             
             @if ($show_more)
