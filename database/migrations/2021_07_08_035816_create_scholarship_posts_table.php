@@ -15,12 +15,14 @@ class CreateScholarshipPostsTable extends Migration
     {
         Schema::create('scholarship_posts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
             $table->foreignId('scholarship_id');
             $table->string('title');
             $table->mediumText('post');
             $table->boolean('promote')->default(0);
             $table->timestamps();
             
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('scholarship_id')->references('id')->on('scholarships');
         });
     }
@@ -33,8 +35,9 @@ class CreateScholarshipPostsTable extends Migration
     public function down()
     {
         Schema::table('scholarship_posts', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
             $table->dropForeign(['scholarship_id']);
-            $table->dropColumn(['scholarship_id']);
+            $table->dropColumn(['scholarship_id', 'user_id']);
         });
         
         Schema::dropIfExists('scholarship_posts');

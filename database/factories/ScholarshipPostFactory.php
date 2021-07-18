@@ -22,6 +22,7 @@ class ScholarshipPostFactory extends Factory
     public function definition()
     {
         return [
+            'user_id' => 2,
             'scholarship_id' => 1,
             'title' => $this->faker->sentence($nbWords = 6, $variableNbWords = true),
             'post' => $this->faker->text($maxNbChars = 400),
