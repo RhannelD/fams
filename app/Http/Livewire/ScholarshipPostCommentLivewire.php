@@ -1,0 +1,62 @@
+<?php
+
+namespace App\Http\Livewire;
+
+use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ScholarshipPostComment;
+
+class ScholarshipPostCommentLivewire extends Component
+{
+    public $post_id;
+    public $comment;
+
+
+    protected $rules = [
+        'comment.comment' => 'string|min:1|max:60000',
+    ];
+
+    protected function verifyUser()
+    {
+        if (!Auth::check()) {
+            redirect()->route('index');
+            return true;
+        }
+        return false;
+    }
+
+    public function mount($id)
+    {
+        if ($this->verifyUser()) return;
+
+        $this->post_id = $id;
+        $this->comment = new ScholarshipPostComment;
+    }
+
+
+    public function render()
+    {
+        return view('livewire.pages.scholarship-post-livewire.scholarship-post-comment-livewire');
+    }
+    
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
+    public function comment()
+    {
+        if ($this->verifyUser()) return;
+
+        $this->validate();
+        
+        $this->comment->user_id = Auth::id();
+        $this->comment->post_id = $this->post_id;
+
+        if ($this->comment->save()) {
+            $this->comment = new ScholarshipPostComment;
+
+            $this->emitUp('comment_updated');
+        }
+    }
+}

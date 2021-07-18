@@ -27,8 +27,11 @@
         <div class="col-12 mb-2">
             <div class="card mb-3 shadow item-hover mx-auto" style="max-width: 800px">
                 <div class="card-header"> 
-                    <h5>
+                    <h5 class="d-flex">
                         {{ $post->title }} 
+                        <a class="ml-auto mr-0 text-dark">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </a>
                     </h5>
                     <div class="d-flex">
                         <div class="mr-auto bd-highlight my-0">
@@ -53,6 +56,8 @@
                     </a>
                 </div>
             </div>
+
+            @livewire('scholarship-post-comment-livewire', [$post->id], key('scholarship-page-post-comment-'.time().$post->id))
 
             @foreach ($comments as $comment)
                 <div class="shadow p-2 mx-2 bg-white rounded d-flex bd-highlight item-hover mx-auto mb-3" style="max-width: 760px">

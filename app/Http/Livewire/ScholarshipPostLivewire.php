@@ -36,7 +36,7 @@ class ScholarshipPostLivewire extends Component
 
     public function render()
     {
-        return view('livewire.pages.scholarship-page-livewire.scholarship-post-livewire');
+        return view('livewire.pages.scholarship-post-livewire.scholarship-post-livewire');
     }
     
     public function updated($propertyName)

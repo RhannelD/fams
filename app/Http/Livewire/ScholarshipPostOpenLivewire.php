@@ -15,6 +15,7 @@ class ScholarshipPostOpenLivewire extends Component
     public $comment_count;
     public $post_count = 10;
     
+    protected $listeners = ['comment_updated' => '$refresh'];
 
     protected function verifyUser()
     {
@@ -25,12 +26,15 @@ class ScholarshipPostOpenLivewire extends Component
         return false;
     }
 
-    public function mount(ScholarshipPost $id)
+    public function mount($id)
     {
         if ($this->verifyUser()) return;
 
-        $this->scholarship = Scholarship::find($id->scholarship_id);
-        $this->post = $id;
+        $this->post = ScholarshipPost::select('scholarship_posts.*', 'users.firstname', 'users.lastname')
+            ->leftJoin('users', 'scholarship_posts.user_id', '=', 'users.id')
+            ->where('scholarship_posts.id', $id)
+            ->first();
+        $this->scholarship = Scholarship::find($this->post->scholarship_id);
     }
 
 
@@ -46,7 +50,7 @@ class ScholarshipPostOpenLivewire extends Component
 
         $show_more = ($this->comment_count > count($comments));
 
-        return view('livewire.pages.scholarship-page-livewire.scholarship-post-open-livewire', [
+        return view('livewire.pages.scholarship-post-livewire.scholarship-post-open-livewire', [
                 'comments' => $comments,
                 'show_more' => $show_more
             ])->extends('livewire.main.main-livewire');
