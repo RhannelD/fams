@@ -17,18 +17,18 @@
         </div>
     </div>
     <div class="row mb-3">
-        <div class="col-10 offset-1 offset-md-0 col-md-8 col-xl-6">
+        <div class="col-10 offset-1 offset-md-0 col-md-8 col-lg-6 col-xl-4">
             <canvas id="scholars_by_scholarship" width="100" height="100"></canvas>
         </div>
-        <div class="col-10 offset-1 offset-md-0 col-md-4 col-xl-6">
+        <div class="col-10 offset-1 offset-md-0 col-md-4 col-lg-6 col-xl-8">
             <div class="row">
-                <div class="col-10 offset-1 offset-md-0 col-md-12 col-xl-6">
+                <div class="col-10 offset-1 offset-md-0 col-md-12 col-lg-6 col-xl-4">
                     <canvas id="scholar" width="100" height="100"></canvas>
                 </div>
-                <div class="col-10 offset-1 offset-md-0 col-md-12 col-xl-6">
+                <div class="col-10 offset-1 offset-md-0 col-md-12 col-lg-6 col-xl-4">
                     <canvas id="scholarship" width="100" height="100"></canvas>
                 </div>
-                <div class="col-10 offset-1 offset-md-0 col-md-12 col-xl-6">
+                <div class="col-10 offset-1 offset-md-0 col-md-12 col-lg-6 col-xl-4">
                     <canvas id="scholars_by_gender" width="100" height="100"></canvas>
                 </div>
             </div>

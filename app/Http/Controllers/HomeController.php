@@ -11,6 +11,8 @@ use App\Models\ScholarshipRequirementItem;
 use App\Models\ScholarshipRequirementItemOption;
 use App\Models\ScholarshipRequirementCategory;
 use App\Models\ScholarshipCategory;
+use App\Models\ScholarshipPost;
+use App\Models\ScholarshipPostComment;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -33,6 +35,42 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $posts = ScholarshipPost::select('scholarship_posts.*', 'users.firstname', 'users.lastname')
+            ->addSelect(['comment_count' => ScholarshipPostComment::select(DB::raw("count(scholarship_post_comments.id)"))
+                ->whereColumn('scholarship_post_comments.post_id', 'scholarship_posts.id')
+            ])
+            ->where('scholarship_id', 1)
+            ->leftJoin('users', 'scholarship_posts.user_id', '=', 'users.id')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return $posts;
+
+        // $posts = ScholarshipPost::select('scholarship_posts.*', 'users.firstname', 'users.lastname', 
+        //     DB::raw('(
+        //         select count(scholarship_post_comments.id) from `scholarship_post_comments` 
+        //         where `scholarship_post_comments`.`post_id` = `scholarship_posts`.`id`
+        //     ) as counts'))
+        //     ->leftJoin('users', 'scholarship_posts.user_id', '=', 'users.id')
+        //     ->where('scholarship_posts.scholarship_id', '1')
+        //     ->orderBy('id', 'desc')
+        //     ->get();
+
+        // return $posts;
+
+        // $officers = User::select('users.*')
+        //     ->join('scholarship_officers', 'users.id', '=', 'scholarship_officers.user_id')
+        //     ->where('scholarship_officers.scholarship_id', 1);
+
+        // $users = User::select('users.*')
+        //     ->join('scholarship_scholars', 'users.id', '=', 'scholarship_scholars.user_id')
+        //     ->join('scholarship_categories', 'scholarship_scholars.category_id', '=', 'scholarship_categories.id')
+        //     ->where('scholarship_categories.scholarship_id', 1)
+        //     ->union($officers)
+        //     ->get();
+
+        // return $users;
+
         // $categories = ScholarshipCategory::select('*')
         // ->join('scholarship_requirements', 'scholarship_categories.scholarship_id', '=', 'scholarship_requirements.scholarship_id')
         // ->leftJoin('scholarship_requirement_categories', function($join) {

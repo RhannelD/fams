@@ -7,29 +7,34 @@
 
             @foreach ($posts as $post)
                 <div class="card mb-3 shadow requirement-item-hover mx-auto" style="max-width: 800px">
-                    <div class="card-header"> 
-                        <h5>
-                            {{ $post->title }} 
-                        </h5>
-                        <div class="d-flex">
-                            <div class="mr-auto bd-highlight my-0">
-                                <h6 class="my-0">
-                                    {{ $post->firstname }} {{ $post->lastname }}
+                    <a href="{{ route('post.show', [$post->id]) }}" class="nounderline text-dark">
+                        <div class="card-header"> 
+                            <h5>
+                                {{ $post->title }} 
+                            </h5>
+                            <div class="d-flex">
+                                <div class="mr-auto bd-highlight my-0">
+                                    <h6 class="my-0">
+                                        {{ $post->firstname }} {{ $post->lastname }}
+                                    </h6>
+                                </div>
+                                <h6 class="ml-auto mr-1 bd-highlight my-0">
+                                    {{ $post->created_at }}
                                 </h6>
                             </div>
-                            <h6 class="ml-auto mr-1 bd-highlight my-0">
-                                {{ $post->created_at }}
-                            </h6>
                         </div>
-                    </div>
-                    <div class="card-header">
-                        <p>
-                            {!! nl2br(e($post->post)) !!}
-                        </p>
-                    </div>
-                    <div class="card-footer border-top-0 d-flex justify-content-end">
-                        <a>Comment</a>
-                    </div>
+                        <div class="card-body bg-light">
+                            <p class="mb-0">
+                                {!! nl2br(e($post->post)) !!}
+                            </p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-end">
+                            <a href="{{ route('post.show', [$post->id]) }}" class=" text-dark">
+                                Comment
+                                <span class="badge badge-primary">{{ $post->comment_count }}</span>
+                            </a>
+                        </div>
+                    </a>
                 </div>
             @endforeach
 

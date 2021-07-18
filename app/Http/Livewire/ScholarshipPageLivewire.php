@@ -5,6 +5,8 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipPost;
+use App\Models\ScholarshipPostComment;
+use Illuminate\Support\Facades\DB;
 
 class ScholarshipPageLivewire extends Component
 {
@@ -34,6 +36,9 @@ class ScholarshipPageLivewire extends Component
     public function render()
     {
         $posts = ScholarshipPost::select('scholarship_posts.*', 'users.firstname', 'users.lastname')
+            ->addSelect(['comment_count' => ScholarshipPostComment::select(DB::raw("count(scholarship_post_comments.id)"))
+                ->whereColumn('scholarship_post_comments.post_id', 'scholarship_posts.id')
+            ])
             ->where('scholarship_id', $this->scholarship_id)
             ->leftJoin('users', 'scholarship_posts.user_id', '=', 'users.id')
             ->orderBy('id', 'desc')
