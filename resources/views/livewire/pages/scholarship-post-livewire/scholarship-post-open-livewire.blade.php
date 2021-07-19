@@ -50,13 +50,23 @@
                                     <i class="fas fa-trash mr-1"></i>
                                     Delete Post
                                 </a>
+                                <a class="dropdown-item" data-toggle="modal" data-target="#post_something">
+                                    <i class="fas fa-pen-square mr-1"></i>
+                                    Edit Post
+                                </a>
                             </div>
                         </div>
                     </h5>
+
+                    @livewire('scholarship-post-livewire', [$scholarship->id, $post->id], key('scholarship-page-post-'.time().$scholarship->id))
+
+
                     <div class="d-flex">
                         <div class="mr-auto bd-highlight my-0">
                             <h6 class="my-0">
-                                {{ $post->firstname }} {{ $post->lastname }}
+                                @if ( $post->firstname )
+                                    {{ $post->firstname }} {{ $post->lastname }}
+                                @endif
                             </h6>
                         </div>
                         <h6 class="ml-auto mr-1 bd-highlight my-0">

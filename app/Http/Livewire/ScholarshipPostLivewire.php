@@ -12,6 +12,7 @@ class ScholarshipPostLivewire extends Component
 {
     public $scholarship_id;
     public $post;
+    public $post_id;
 
     public $show_requirement = false;
     public $requirements;
@@ -32,18 +33,29 @@ class ScholarshipPostLivewire extends Component
         return false;
     }
 
-    public function mount($scholarship_id)
+    public function mount($scholarship_id, $post_id = null)
     {
         if ($this->verifyUser()) return;
 
         $this->scholarship_id = $scholarship_id;
 
-        $this->post = new ScholarshipPost;
-
         $this->requirements = ScholarshipRequirement::where('scholarship_requirements.scholarship_id', $this->scholarship_id)
-            ->whereNotIn('scholarship_requirements.id', $this->added_requirements)
-            ->orderBy('scholarship_requirements.id', 'desc')
-            ->get();
+        ->whereNotIn('scholarship_requirements.id', $this->added_requirements)
+        ->orderBy('scholarship_requirements.id', 'desc')
+        ->get();
+
+        $this->post = new ScholarshipPost;
+        if ( isset($post_id) ) {
+            $this->post_id = $post_id;
+            $this->post = ScholarshipPost::find($post_id);
+
+            $links = ScholarshipPostLinkRequirement::where('post_id', $post_id)
+                ->get();
+
+            foreach ($links as $link) {
+                array_push($this->added_requirements, $link->requirement_id);
+            }
+        }
     }
 
     public function render()
@@ -62,27 +74,39 @@ class ScholarshipPostLivewire extends Component
 
         $this->validate();
         
-        $this->post->scholarship_id = $this->scholarship_id;
-        $this->post->user_id = Auth::id();
+        if ( !isset($this->post_id) ) {
+            $this->post->scholarship_id = $this->scholarship_id;
+            $this->post->user_id = Auth::id();
+        }
 
         if ($this->post->save()) {
+            ScholarshipPostLinkRequirement::where('post_id', $this->post->id)
+                ->whereNotIn('requirement_id', $this->added_requirements)
+                ->delete();
+
             foreach ($this->added_requirements as $requirement_id) {
-                $requirement_list = new ScholarshipPostLinkRequirement;
-                $requirement_list->post_id = $this->post->id;
-                $requirement_list->requirement_id = $requirement_id;
-                $requirement_list->save();
+                $requirement_list = ScholarshipPostLinkRequirement::firstOrCreate([
+                        'post_id' => $this->post->id,
+                        'requirement_id' => $requirement_id
+                    ]);
             }
 
             $this->dispatchBrowserEvent('close_post_modal');
 
-            $this->dispatchBrowserEvent('swal:modal', [
-                'type' => 'success',  
-                'message' => 'Post Successfully', 
-            ]);
+            if ( !isset($this->post_id) ) {
+                $this->dispatchBrowserEvent('swal:modal', [
+                    'type' => 'success',  
+                    'message' => 'Post Successfully', 
+                ]);
+            }
 
             $this->dispatchBrowserEvent('remove:modal-backdrop');
 
-            $this->post = new ScholarshipPost;
+            if ( isset($this->post_id) ) {
+                $this->post = ScholarshipPost::find($this->post_id);
+            } else {
+                $this->post = new ScholarshipPost;
+            }
 
             $this->emitUp('post_updated');
         }

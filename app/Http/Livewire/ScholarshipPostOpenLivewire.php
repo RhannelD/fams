@@ -13,12 +13,17 @@ use App\Models\ScholarshipRequirement;
 class ScholarshipPostOpenLivewire extends Component
 {
     public $scholarship;
+    public $post_id;
     public $post;
     public $requirement_links;
     public $comment_count;
     public $post_count = 10;
     
-    protected $listeners = ['comment_updated' => '$refresh'];
+    protected $listeners = [
+        'comment_updated' => '$refresh',
+        'post_updated' => 'refresh_all'
+    ];
+
 
     protected function verifyUser()
     {
@@ -33,14 +38,21 @@ class ScholarshipPostOpenLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
+        $this->post_id = $id;
+
+        $this->refresh_all();
+    }
+
+    public function refresh_all()
+    {
         $this->post = ScholarshipPost::select('scholarship_posts.*', 'users.firstname', 'users.lastname')
             ->leftJoin('users', 'scholarship_posts.user_id', '=', 'users.id')
-            ->where('scholarship_posts.id', $id)
+            ->where('scholarship_posts.id', $this->post_id)
             ->first();
 
         $this->requirement_links = ScholarshipPostLinkRequirement::select('scholarship_requirements.*')
             ->join('scholarship_requirements', 'scholarship_post_link_requirements.requirement_id', '=', 'scholarship_requirements.id')
-            ->where('post_id', $id)
+            ->where('post_id', $this->post_id)
             ->get();
 
         $this->scholarship = Scholarship::find($this->post->scholarship_id);

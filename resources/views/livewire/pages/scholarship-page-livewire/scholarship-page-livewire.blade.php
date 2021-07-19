@@ -2,6 +2,20 @@
     <div class="row mt-3">
         <div class="col-12">
             @if (Auth::user()->usertype != 'scholar')
+                <div class="card mb-4 shadow requirement-item-hover mx-auto" style="max-width: 800px">
+                    <div class="card-header">
+                        <a data-toggle="modal" data-target="#post_something">
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-white" placeholder="Post something..." disabled>
+                                <div class="input-group-append">
+                                    <button class="btn btn-dark" type="button">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
                 @livewire('scholarship-post-livewire', [$scholarship_id], key('scholarship-page-post-'.time().$scholarship_id))
             @endif
 
