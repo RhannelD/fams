@@ -22,14 +22,92 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <input wire:model.lazy="post.title" type="text" class="form-control form-control-lg" placeholder="Title (Optional)">
-                        @error('post.title') <span class="text-danger">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="post_post">Post</label>
-                        <textarea wire:model.lazy="post.post" class="form-control" id="post_post" rows="5" placeholder="Post something..."></textarea>
-                        @error('post.post') <span class="text-danger">{{ $message }}</span> @enderror
+                    <div class="tab-content" id="pills-tabContent">
+
+                        <div role="tabpanel"
+                            @if (!$show_requirement)
+                                class="tab-pane fade show active" 
+                            @else
+                                class="tab-pane fade" 
+                            @endif
+                            >
+                            <div class="form-group">
+                                <input wire:model.lazy="post.title" type="text" class="form-control form-control-lg" placeholder="Title (Optional)">
+                                @error('post.title') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="post_post">Post</label>
+                                <textarea wire:model.lazy="post.post" class="form-control" id="post_post" rows="5" placeholder="Post something..."></textarea>
+                                @error('post.post') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+
+                            @if ( count($requirements) != 0 )
+                                <div class="form-group d-flex mb-1">
+                                    <button wire:click="show_requirements" type="button" class="btn btn-info mr-0 ml-auto text-white">
+                                        Add Requirement Link
+                                    </button>
+                                </div>
+                            @endif
+                                
+                            @php  $displayed = 0;  @endphp
+                            @foreach ($requirements as $requirement)  
+                                @if ( in_array($requirement->id, $added_requirements)  )    
+                                    @php  $displayed++;  @endphp  
+                                    <div class="input-group mb-1">
+                                        <input type="text" class="form-control bg-white" value="{{ $requirement->requirement }}" readonly>
+                                        <div class="input-group-append">
+                                            <button wire:click="remove_requirement({{ $requirement->id }})" class="btn btn-danger" type="button">
+                                                <i class="fas fa-minus-circle"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+
+                            @if ( $displayed == 0 )
+                                <div class="input-group mb-1">
+                                    <input type="text" class="form-control bg-white" value="None" readonly>
+                                </div>
+                            @endif
+                            
+                        </div>
+
+                        <div role="tabpanel"
+                            @if ($show_requirement)
+                                class="tab-pane fade show active" 
+                            @else
+                                class="tab-pane fade" 
+                            @endif
+                            >
+
+                            @php  $displayed = 0;  @endphp
+                            @foreach ($requirements as $requirement)  
+                                @if ( !in_array($requirement->id, $added_requirements)  )    
+                                    @php  $displayed++;  @endphp  
+                                    <div class="input-group mb-1">
+                                        <input type="text" class="form-control bg-white" value="{{ $requirement->requirement }}" readonly>
+                                        <div class="input-group-append">
+                                            <button wire:click="add_requirement({{ $requirement->id }})" class="btn btn-success" type="button">
+                                                <i class="fas fa-plus-circle"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+
+                            @if ( $displayed == 0 )
+                                <div class="input-group mb-1">
+                                    <input type="text" class="form-control bg-white" value="None" readonly>
+                                </div>
+                            @endif
+
+                            <div class="form-group d-flex">
+                                <button wire:click="show_requirements" type="button" class="btn btn-info mr-0 ml-auto text-white">
+                                    Back
+                                </button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -7,11 +7,14 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Scholarship;
 use App\Models\ScholarshipPost;
 use App\Models\ScholarshipPostComment;
+use App\Models\ScholarshipPostLinkRequirement;
+use App\Models\ScholarshipRequirement;
 
 class ScholarshipPostOpenLivewire extends Component
 {
     public $scholarship;
     public $post;
+    public $requirement_links;
     public $comment_count;
     public $post_count = 10;
     
@@ -34,6 +37,12 @@ class ScholarshipPostOpenLivewire extends Component
             ->leftJoin('users', 'scholarship_posts.user_id', '=', 'users.id')
             ->where('scholarship_posts.id', $id)
             ->first();
+
+        $this->requirement_links = ScholarshipPostLinkRequirement::select('scholarship_requirements.*')
+            ->join('scholarship_requirements', 'scholarship_post_link_requirements.requirement_id', '=', 'scholarship_requirements.id')
+            ->where('post_id', $id)
+            ->get();
+
         $this->scholarship = Scholarship::find($this->post->scholarship_id);
     }
 
@@ -78,7 +87,10 @@ class ScholarshipPostOpenLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
-        $comments = ScholarshipPostComment::where('post_id', $this->post->id)
+        ScholarshipPostComment::where('post_id', $this->post->id)
+            ->delete();
+
+        ScholarshipPostLinkRequirement::where('post_id', $this->post->id)
             ->delete();
 
         $post = ScholarshipPost::find($this->post->id);

@@ -23,15 +23,25 @@
                                 </h6>
                             </div>
                         </div>
+
                         <div class="card-body bg-light">
                             <p class="mb-0">
                                 {!! nl2br(e($post->post)) !!}
                             </p>
+
+                            @if ( $post->link_count > 0 )
+                                <h6 class="mt-2">
+                                    <i class="fas fa-link"></i>
+                                    Requirement links: 
+                                    <span class="badge badge-primary mr-2 pt-1">{{ $post->link_count }}</span>
+                                </h6>
+                            @endif
                         </div>
+
                         <div class="card-footer d-flex justify-content-end">
                             <a href="{{ route('post.show', [$post->id]) }}" class=" text-dark">
                                 Comment
-                                <span class="badge badge-primary">{{ $post->comment_count }}</span>
+                                <span class="badge badge-primary pt-1">{{ $post->comment_count }}</span>
                             </a>
                         </div>
                     </a>

@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipPost;
 use App\Models\ScholarshipPostComment;
+use App\Models\ScholarshipPostLinkRequirement;
 use Illuminate\Support\Facades\DB;
 
 class ScholarshipPageLivewire extends Component
@@ -38,6 +39,9 @@ class ScholarshipPageLivewire extends Component
         $posts = ScholarshipPost::select('scholarship_posts.*', 'users.firstname', 'users.lastname')
             ->addSelect(['comment_count' => ScholarshipPostComment::select(DB::raw("count(scholarship_post_comments.id)"))
                 ->whereColumn('scholarship_post_comments.post_id', 'scholarship_posts.id')
+            ])
+            ->addSelect(['link_count' => ScholarshipPostLinkRequirement::select(DB::raw("count(scholarship_post_link_requirements.id)"))
+                ->whereColumn('scholarship_post_link_requirements.post_id', 'scholarship_posts.id')
             ])
             ->where('scholarship_id', $this->scholarship_id)
             ->leftJoin('users', 'scholarship_posts.user_id', '=', 'users.id')

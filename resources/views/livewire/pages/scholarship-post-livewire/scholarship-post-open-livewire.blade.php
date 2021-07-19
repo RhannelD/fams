@@ -65,9 +65,25 @@
                     </div>
                 </div>
                 <div class="card-body bg-light">
-                    <p class="mb-0">
+                    <p class="mb-3">
                         {!! nl2br(e($post->post)) !!}
                     </p>
+
+                    @if ( count($requirement_links) != 0 )
+                        <hr>
+                        @foreach ($requirement_links as $requirement_link)
+                            <div class="input-group mb-1  item-hover">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-file-alt"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control bg-white" value="{{ $requirement_link->requirement }}" readonly>
+                            </div>
+                        @endforeach
+                        <hr class="mb-1">
+                    @endif
+
                 </div>
                 <div class="card-footer d-flex justify-content-end">
                     <a>

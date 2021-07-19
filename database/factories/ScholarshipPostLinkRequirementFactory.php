@@ -22,7 +22,8 @@ class ScholarshipPostLinkRequirementFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'post_id' => 1,
+            'requirement_id' => 1,
         ];
     }
 }
