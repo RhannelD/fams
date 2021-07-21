@@ -7,6 +7,9 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\ScholarshipScholar;
+use App\Models\ScholarshipPost;
+use App\Models\ScholarshipOfficer;
+use App\Models\ScholarshipPostComment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -138,6 +141,12 @@ class ScholarLivewire extends Component
         if ($this->cannotbedeleted($this->user_id_delete)) {
             return;
         }
+
+        ScholarshipPostComment::where('user_id', $this->user_id_delete)->delete();
+
+        ScholarshipPost::where('user_id', $this->user_id_delete)->delete();
+
+        ScholarshipOfficer::where('user_id', $this->user_id_delete)->delete();
 
         $user = User::find($this->user_id_delete);
         

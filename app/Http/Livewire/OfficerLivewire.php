@@ -5,6 +5,9 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\User;
+use App\Models\ScholarshipScholar;
+use App\Models\ScholarshipPost;
+use App\Models\ScholarshipPostComment;
 use App\Models\ScholarshipOfficer;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -133,6 +136,8 @@ class OfficerLivewire extends Component
             return;
         }
 
+        ScholarshipPostComment::where('user_id', $this->user_id_delete)->delete();
+
         $user = User::findorfail($this->user_id_delete);
         
         if (!$user->delete()) {
@@ -162,7 +167,21 @@ class OfficerLivewire extends Component
                 'message' => 'Cannot be Deleted', 
                 'text' => 'Account is Connected to a Scholarship Program'
             ]);
+            return true;
         }
+        
+        $checker = ScholarshipPost::select('id')
+            ->where('user_id', $id)
+            ->exists();
+
+        if ($checker) {
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'info',  
+                'message' => 'Cannot be Deleted', 
+                'text' => 'Account is has post/s in a Scholarship Program'
+            ]);
+        }
+
         return $checker;
     }
 

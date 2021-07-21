@@ -97,14 +97,15 @@
                 </div>
                 <div class="card-footer d-flex justify-content-end">
                     <a>
+                        <span class="badge badge-primary pt-1">{{ $comment_count }}</span>
                         Comments 
-                        <span class="badge badge-primary">{{ $comment_count }}</span>
                     </a>
                 </div>
             </div>
 
             @livewire('scholarship-post-comment-livewire', [$post->id], key('scholarship-page-post-comment-'.time().$post->id))
 
+            <hr style="max-width: 760px">
             @foreach ($comments as $comment)
                 @livewire('scholarship-post-open-comment-livewire', [$comment->id], key('scholarship-page-post-comment-open-'.time().$post->id))
             @endforeach
