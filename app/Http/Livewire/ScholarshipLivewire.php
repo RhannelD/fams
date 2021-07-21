@@ -51,9 +51,18 @@ class ScholarshipLivewire extends Component
             ->where('scholarship', 'like', "%$search%");
 
         if (Auth::user()->usertype != 'admin') {
-            $scholarships = $scholarships->join('scholarship_officers', 'scholarships.id', '=', 'scholarship_officers.scholarship_id')
-                ->where('scholarship_officers.user_id', Auth::id());
-        }
+            if (Auth::user()->usertype == 'officer') {
+                $scholarships = $scholarships
+                    ->join('scholarship_officers', 'scholarships.id', '=', 'scholarship_officers.scholarship_id')
+                    ->where('scholarship_officers.user_id', Auth::id());
+            }
+            if (Auth::user()->usertype == 'scholar') {
+                $scholarships = $scholarships
+                    ->join('scholarship_categories', 'scholarships.id', '=', 'scholarship_categories.scholarship_id')
+                    ->join('scholarship_scholars', 'scholarship_categories.id', '=', 'scholarship_scholars.category_id')
+                    ->where('scholarship_scholars.user_id', Auth::id());
+            }
+        }   
         
         $scholarships = $scholarships->paginate(15);
 

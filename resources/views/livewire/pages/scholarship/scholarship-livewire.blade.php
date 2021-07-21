@@ -13,12 +13,14 @@
 
 		<div class="col-md-6 mt-2">
 
-			<div class="input-group rounded">
-				<button class="btn btn-info ml-auto mr-0 text-white" type="button" wire:click="nullinputs" data-toggle="modal" data-target="#scholarship_form">
-					<i class="fas fa-plus"></i>
-					Create Scholarship
-				</button>
-			</div>
+			@if (Auth::user()->usertype == 'admin')
+				<div class="input-group rounded">
+					<button class="btn btn-info ml-auto mr-0 text-white" type="button" wire:click="nullinputs" data-toggle="modal" data-target="#scholarship_form">
+						<i class="fas fa-plus"></i>
+						Create Scholarship
+					</button>
+				</div>
+			@endif
 
 		</div>
 	</div>
