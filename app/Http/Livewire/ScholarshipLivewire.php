@@ -115,8 +115,8 @@ class ScholarshipLivewire extends Component
 
         $this->dispatchBrowserEvent('swal:modal', [
             'type' => 'success',  
-            'message' => 'Scholar Account Deleted', 
-            'text' => 'Scholar account has been successfully deleted'
+            'message' => 'Scholarship Program Deleted', 
+            'text' => 'Scholarship Program has been successfully deleted'
         ]);
 
         $this->dispatchBrowserEvent('scholarship-info', ['action' => 'hide']);

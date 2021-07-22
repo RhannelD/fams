@@ -3,7 +3,7 @@
 		<div class="input-group col-md-6 mt-2">
 
 			<div class="input-group rounded">
-				<input type="search" class="form-control rounded" placeholder="Search Officer" wire:model.debounce.1000ms='search'/>
+				<input type="search" class="form-control rounded" placeholder="Search Scholarships" wire:model.debounce.1000ms='search'/>
 				<span class="input-group-text border-0">
 					<i class="fas fa-search"></i>
 				</span>

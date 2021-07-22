@@ -242,8 +242,8 @@ class OfficerLivewire extends Component
         if($officer->wasRecentlyCreated){
             $this->dispatchBrowserEvent('swal:modal', [
                 'type' => 'success',  
-                'message' => 'Scholar Account Created', 
-                'text' => 'Scholar account has been successfully created'
+                'message' => 'Officer\'s Account Created', 
+                'text' => 'Officer\'s account has been successfully created'
             ]);
             $this->info($officer->id);
             $this->dispatchBrowserEvent('officer-form', ['action' => 'hide']);
@@ -251,8 +251,8 @@ class OfficerLivewire extends Component
         } elseif (!$officer->wasRecentlyCreated && $officer->wasChanged()){
             $this->dispatchBrowserEvent('swal:modal', [
                 'type' => 'success',  
-                'message' => 'Scholar Account Updated', 
-                'text' => 'Scholar account has been successfully updated'
+                'message' => 'Officer\'s Account Updated', 
+                'text' => 'Officer\'s account has been successfully updated'
             ]);
             $this->info($this->user_id);
             $this->dispatchBrowserEvent('officer-form', ['action' => 'hide']);
