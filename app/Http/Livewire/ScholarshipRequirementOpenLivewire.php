@@ -72,25 +72,6 @@ class ScholarshipRequirementOpenLivewire extends Component
     {
         if ($this->verifyUser()) return;
         
-        $requirement_items =  ScholarshipRequirementItem::where('requirement_id', $this->requirement->id)
-            ->get();
-
-        foreach ($requirement_items as $requirement_item) {
-            $options = ScholarshipRequirementItemOption::where('item_id', $requirement_item->id)->delete();
-        }
-
-        ScholarshipRequirementCategory::where('requirement_id', $this->requirement->id)
-            ->delete();
-
-        ScholarshipPostLinkRequirement::where('requirement_id', $this->requirement->id)
-            ->delete();
-
-        ScholarResponse::where('requirement_id', $this->requirement->id)
-            ->delete();
-
-        $requirement_items =  ScholarshipRequirementItem::where('requirement_id', $this->requirement->id)
-            ->delete();
-
         $requirement_id = $this->requirement->id;
 
         $this->requirement = [];

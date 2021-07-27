@@ -105,19 +105,6 @@ class OfficerLivewire extends Component
             return;
         }
 
-        $checker = ScholarshipOfficer::select('id')
-            ->where('user_id', $this->user_id_delete)
-            ->exists();
-
-        if ($checker) {
-            $this->dispatchBrowserEvent('swal:modal', [
-                'type' => 'info',  
-                'message' => 'Cannot be Deleted', 
-                'text' => 'Account is Connected to a Scholarship Program'
-            ]);
-            return;
-        }
-        
         $this->user_id_delete = $id;
 
         $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_officer', [
@@ -135,8 +122,6 @@ class OfficerLivewire extends Component
         if ($this->cannotbedeleted($this->user_id_delete)) {
             return;
         }
-
-        ScholarshipPostComment::where('user_id', $this->user_id_delete)->delete();
 
         $user = User::findorfail($this->user_id_delete);
         

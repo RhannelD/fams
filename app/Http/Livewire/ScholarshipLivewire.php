@@ -133,19 +133,6 @@ class ScholarshipLivewire extends Component
                 'message' => 'Cannot be Deleted', 
                 'text' => 'Scholarship has Already Scholarship Officers'
             ]);
-            return true;
-        }
-        
-        $checker = ScholarshipCategory::select('id')
-            ->where('scholarship_id', $id)
-            ->exists();
-
-        if ($checker) {
-            $this->dispatchBrowserEvent('swal:modal', [
-                'type' => 'info',  
-                'message' => 'Cannot be Deleted', 
-                'text' => 'Scholarship has Already Scholarship Category Already'
-            ]);
         }
         
         return $checker;

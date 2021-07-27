@@ -142,12 +142,6 @@ class ScholarLivewire extends Component
             return;
         }
 
-        ScholarshipPostComment::where('user_id', $this->user_id_delete)->delete();
-
-        ScholarshipPost::where('user_id', $this->user_id_delete)->delete();
-
-        ScholarshipOfficer::where('user_id', $this->user_id_delete)->delete();
-
         $user = User::find($this->user_id_delete);
         
         if (!$user->delete()) {

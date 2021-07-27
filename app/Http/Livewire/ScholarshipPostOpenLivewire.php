@@ -99,12 +99,6 @@ class ScholarshipPostOpenLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
-        ScholarshipPostComment::where('post_id', $this->post->id)
-            ->delete();
-
-        ScholarshipPostLinkRequirement::where('post_id', $this->post->id)
-            ->delete();
-
         $post = ScholarshipPost::find($this->post->id);
 
         if ($post->delete()) {

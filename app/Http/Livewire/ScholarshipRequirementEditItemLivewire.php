@@ -96,15 +96,7 @@ class ScholarshipRequirementEditItemLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
-        if ($this->options->first()) { 
-            $this->options = [];
-            $options = ScholarshipRequirementItemOption::where('item_id', $this->item->id);
-    
-            if (!$options->delete()) {
-                $this->get_options();
-                return;
-            }
-        } 
+        $this->options = [];
 
         if (!$this->item->delete()) {
             return;
