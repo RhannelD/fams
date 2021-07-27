@@ -20,8 +20,8 @@ class CreateScholarshipPostCommentsTable extends Migration
             $table->text('comment');
             $table->timestamps();
             
-            $table->foreign('post_id')->references('id')->on('scholarship_posts');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('post_id')->references('id')->on('scholarship_posts')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -22,8 +22,8 @@ class CreateScholarshipPostsTable extends Migration
             $table->boolean('promote')->default(0);
             $table->timestamps();
             
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('scholarship_id')->references('id')->on('scholarships');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('scholarship_id')->references('id')->on('scholarships')->onDelete('cascade');
         });
     }
 

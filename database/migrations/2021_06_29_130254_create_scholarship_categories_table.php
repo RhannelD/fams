@@ -20,7 +20,7 @@ class CreateScholarshipCategoriesTable extends Migration
             $table->double('amount', 8, 2);
             $table->timestamps();
             
-            $table->foreign('scholarship_id')->references('id')->on('scholarships');
+            $table->foreign('scholarship_id')->references('id')->on('scholarships')->onDelete('cascade');
         });
     }
 

@@ -20,9 +20,9 @@ class CreateScholarshipOfficersTable extends Migration
             $table->foreignId('position_id');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('scholarship_id')->references('id')->on('scholarships');
-            $table->foreign('position_id')->references('id')->on('officer_positions');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('scholarship_id')->references('id')->on('scholarships')->onDelete('cascade');
+            $table->foreign('position_id')->references('id')->on('officer_positions')->onDelete('cascade');
         });
     }
 

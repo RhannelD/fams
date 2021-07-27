@@ -20,8 +20,8 @@ class CreateScholarResponseAnswersTable extends Migration
             $table->text('answer');
             $table->timestamps();
             
-            $table->foreign('response_id')->references('id')->on('scholar_responses');
-            $table->foreign('item_id')->references('id')->on('scholarship_requirement_items');
+            $table->foreign('response_id')->references('id')->on('scholar_responses')->onDelete('cascade');
+            $table->foreign('item_id')->references('id')->on('scholarship_requirement_items')->onDelete('cascade');
         });
     }
 

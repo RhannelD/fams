@@ -21,8 +21,8 @@ class CreateScholarResponsesTable extends Migration
             $table->timestamp('submit_at')->nullable();
             $table->timestamps();
             
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('requirement_id')->references('id')->on('scholarship_requirements');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('requirement_id')->references('id')->on('scholarship_requirements')->onDelete('cascade');
         });
     }
 

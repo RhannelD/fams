@@ -19,7 +19,7 @@ class CreateScholarshipRequirementItemOptionsTable extends Migration
             $table->string('option');
             $table->timestamps();
             
-            $table->foreign('item_id')->references('id')->on('scholarship_requirement_items');
+            $table->foreign('item_id')->references('id')->on('scholarship_requirement_items')->onDelete('cascade');
         });
     }
 

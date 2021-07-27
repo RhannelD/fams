@@ -19,8 +19,8 @@ class CreateScholarshipPostLinkRequirementsTable extends Migration
             $table->foreignId('requirement_id');
             $table->timestamps();
             
-            $table->foreign('post_id')->references('id')->on('scholarship_posts');
-            $table->foreign('requirement_id')->references('id')->on('scholarship_requirements');
+            $table->foreign('post_id')->references('id')->on('scholarship_posts')->onDelete('cascade');
+            $table->foreign('requirement_id')->references('id')->on('scholarship_requirements')->onDelete('cascade');
         });
     }
 

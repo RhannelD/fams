@@ -19,8 +19,8 @@ class CreateScholarshipScholarsTable extends Migration
             $table->foreignId('category_id');
             $table->timestamps();
             
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('category_id')->references('id')->on('scholarship_categories');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('scholarship_categories')->onDelete('cascade');
         });
     }
 

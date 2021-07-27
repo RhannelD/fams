@@ -19,8 +19,8 @@ class CreateScholarshipRequirementCategoriesTable extends Migration
             $table->foreignId('category_id');
             $table->timestamps();
             
-            $table->foreign('requirement_id')->references('id')->on('scholarship_requirements');
-            $table->foreign('category_id')->references('id')->on('scholarship_categories');
+            $table->foreign('requirement_id')->references('id')->on('scholarship_requirements')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('scholarship_categories')->onDelete('cascade');
         });
     }
 

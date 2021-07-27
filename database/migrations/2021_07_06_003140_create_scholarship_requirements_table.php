@@ -24,7 +24,7 @@ class CreateScholarshipRequirementsTable extends Migration
             $table->timestamp('end_at')->nullable();
             $table->timestamps();
             
-            $table->foreign('scholarship_id')->references('id')->on('scholarships');
+            $table->foreign('scholarship_id')->references('id')->on('scholarships')->onDelete('cascade');
         });
     }
 

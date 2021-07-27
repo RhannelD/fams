@@ -20,8 +20,8 @@ class CreateScholarResponseOptionsTable extends Migration
             $table->foreignId('option_id');
             $table->timestamps();
             
-            $table->foreign('response_id')->references('id')->on('scholar_responses');
-            $table->foreign('option_id')->references('id')->on('scholarship_requirement_item_options');
+            $table->foreign('response_id')->references('id')->on('scholar_responses')->onDelete('cascade');
+            $table->foreign('option_id')->references('id')->on('scholarship_requirement_item_options')->onDelete('cascade');
         });
     }
 

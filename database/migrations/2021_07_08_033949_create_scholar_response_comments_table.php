@@ -20,8 +20,8 @@ class CreateScholarResponseCommentsTable extends Migration
             $table->text('comment');
             $table->timestamps();
             
-            $table->foreign('response_id')->references('id')->on('scholar_responses');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('response_id')->references('id')->on('scholar_responses')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

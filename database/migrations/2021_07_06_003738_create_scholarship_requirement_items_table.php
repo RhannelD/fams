@@ -22,7 +22,7 @@ class CreateScholarshipRequirementItemsTable extends Migration
             $table->smallInteger('position');
             $table->timestamps();
             
-            $table->foreign('requirement_id')->references('id')->on('scholarship_requirements');
+            $table->foreign('requirement_id')->references('id')->on('scholarship_requirements')->onDelete('cascade');
         });
     }
 
