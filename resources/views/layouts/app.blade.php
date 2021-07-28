@@ -24,7 +24,6 @@
 
     <script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
     <script src="{{ asset('js/sweetalert.min.js') }}"></script>
-    {{-- <script src="{{ asset('js/livewire-sortable.js') }}"></script> --}}
     
     @yield('styles')
 </head>
@@ -41,7 +40,9 @@
     
     @yield('scripts')
 
-    <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v0.x.x/dist/livewire-sortable.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v0.x.x/dist/livewire-sortable.js"></script> --}}
+    
+    <script src="{{ asset('js/livewire-sortable.js') }}"></script>
     <script>
         $("#menu-toggle").click(function(e) {
             e.preventDefault();

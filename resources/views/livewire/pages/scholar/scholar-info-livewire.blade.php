@@ -82,7 +82,7 @@
                             </tr>
                             <tr>
                                 <td>Accepted at:</td>
-                                <td class="pl-sm-1 pl-md-2">{{ $user_scholarship['created_at'] }}</td>
+                                <td class="pl-sm-1 pl-md-2">{{ date('d-m-Y h:i A', strtotime($user_scholarship['created_at'])) }}</td>
                             </tr>
                             <tr>
                                 <td colspan="2">

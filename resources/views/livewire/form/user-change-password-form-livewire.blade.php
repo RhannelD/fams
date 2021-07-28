@@ -7,7 +7,7 @@
             @isset($user)
                 <div class="form-group">
                     <label>Scholar</label>
-                    <input type="text" class="form-control" value="{{ $user['firstname'] }} {{ $user['middlename'] }} {{ $user['lastname'] }}" disabled>
+                    <input type="text" class="form-control" value="{{ $user->firstname }} {{ $user->middlename }} {{ $user->lastname }}" disabled>
                 </div>
 
                 <div class="form-group">

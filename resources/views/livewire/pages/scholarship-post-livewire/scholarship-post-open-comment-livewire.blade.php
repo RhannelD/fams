@@ -3,9 +3,13 @@
         <h6>
             <strong> {{ $comment->firstname }} {{ $comment->lastname }} </strong>
         </h6>
+
+        <h6 class="ml-auto mr-1 bd-highlight my-0">
+            {{ date('d-m-Y h:i A', strtotime($comment->created_at)) }}
+        </h6>
         
         @if (Auth::id() == $comment->user_id)
-            <div class="dropdown mr-0 ml-auto">
+            <div class="dropdown mr-0 ml-1">
                 <span id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-ellipsis-h"></i>
                 </span>

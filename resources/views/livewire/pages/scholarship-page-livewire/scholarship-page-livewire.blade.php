@@ -33,7 +33,7 @@
                                     </h6>
                                 </div>
                                 <h6 class="ml-auto mr-1 bd-highlight my-0">
-                                    {{ $post->created_at }}
+                                    {{ date('d-m-Y h:i A', strtotime($post->created_at)) }}
                                 </h6>
                             </div>
                         </div>
