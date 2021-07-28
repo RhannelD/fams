@@ -25,7 +25,7 @@ class OfficerInfoLivewire extends Component
 
     protected function verifyUser()
     {
-        if (!Auth::check()) {
+        if (!Auth::check() || Auth::user()->usertype != 'admin') {
             redirect()->route('index');
             return true;
         }
@@ -34,8 +34,6 @@ class OfficerInfoLivewire extends Component
 
     public function mount(User $id)
     {
-        if ($this->verifyUser()) return;
-
         $this->user = $id;
     }
 
@@ -138,5 +136,4 @@ class OfficerInfoLivewire extends Component
             'text' => ''
         ]);
     }
-    
 }

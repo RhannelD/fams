@@ -27,13 +27,25 @@ class OfficerLivewire extends Component
 
     protected function verifyUser()
     {
-        if (!Auth::check()) {
-            redirect()->route('dashboard');
+        if (!Auth::check() || Auth::user()->usertype != 'admin') {
+            redirect()->route('index');
             return true;
         }
         return false;
     }
     
+    public function getQueryString()
+    {
+        return [
+            'search' => ['except' => ''],
+            'user' => ['except' => null]
+        ];
+    }
+
+    public function mount()
+    {
+        if ($this->verifyUser()) return;
+    }
 
     public function render()
     {
@@ -47,6 +59,14 @@ class OfficerLivewire extends Component
                     ->orWhere(DB::raw('CONCAT(firstname, " ", lastname)'), 'like', "%$search%");
             })
             ->paginate(15);
+
+        $user = User::select('id')
+            ->where('usertype', 'officer')
+            ->where('id', $this->user)
+            ->first();
+        if ( !$user ) {
+            $this->user = null;
+        }
 
         return view('livewire.pages.officer.officer-livewire', ['officers' => $officers])
             ->extends('livewire.main.main-livewire');

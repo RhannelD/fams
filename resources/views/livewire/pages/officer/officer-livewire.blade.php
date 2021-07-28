@@ -29,10 +29,14 @@
 			@include('livewire.pages.officer.officer-search-livewire')
 		</div>
 
-		<div class="contents-container col-md-6 info_officer collapse"  wire:ignore.self>
-			@if ($user)
+		<div wire:ignore.self class="contents-container col-md-6 info_officer collapse
+			@isset( $user )
+				show
+			@endisset
+			">
+			@isset($user)
 				@livewire('officer-info-livewire', [$user], key('officer-info-'.time().$user))
-			@endif
+			@endisset
 		</div>
 
 	</div>

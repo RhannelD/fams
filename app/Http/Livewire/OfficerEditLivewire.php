@@ -40,8 +40,8 @@ class OfficerEditLivewire extends Component
 
     protected function verifyUser()
     {
-        if (!Auth::check()) {
-            redirect()->route('dashboard');
+        if (!Auth::check() || Auth::user()->usertype != 'admin') {
+            redirect()->route('index');
             return true;
         }
         return false;
@@ -50,19 +50,21 @@ class OfficerEditLivewire extends Component
     
     public function mount()
     {
-        if ($this->verifyUser()) return;
-
         $this->user = new User;
         $this->user->gender = 'male';
     }
 
     public function set_user(User $id)
     {
+        if ($this->verifyUser()) return;
+
         $this->user = $id;
     }
 
     public function unset_user()
     {
+        if ($this->verifyUser()) return;
+
         $this->user = new User;
         $this->user->gender = 'male';
     }
@@ -113,6 +115,7 @@ class OfficerEditLivewire extends Component
                 'text' => 'Officer\'s account has been successfully updated'
             ]);
             $this->emitTo('officer-info-livewire', 'refresh');
+            $this->unset_user();
             $this->dispatchBrowserEvent('officer-form', ['action' => 'hide']);
             return;
         } elseif (!$create && !$this->user->wasChanged()){
