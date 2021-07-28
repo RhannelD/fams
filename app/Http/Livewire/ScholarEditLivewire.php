@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
-class OfficerEditLivewire extends Component
+class ScholarEditLivewire extends Component
 {
     
     public $user;
@@ -47,13 +47,6 @@ class OfficerEditLivewire extends Component
         return false;
     }
 
-    
-    public function mount()
-    {
-        $this->user = new User;
-        $this->user->gender = 'male';
-    }
-
     public function set_user(User $id)
     {
         if ($this->verifyUser()) return;
@@ -73,11 +66,16 @@ class OfficerEditLivewire extends Component
         $this->resetValidation();
     }
     
+    public function mount()
+    {
+        $this->user = new User;
+        $this->user->gender = 'male';
+    }
+    
     public function render()
     {
-        return view('livewire.pages.officer.officer-edit-livewire');
+        return view('livewire.pages.scholar.scholar-edit-livewire');
     }
-
 
     public function save()
     {
@@ -91,7 +89,7 @@ class OfficerEditLivewire extends Component
 
         $this->validate();
         
-        $this->user->usertype = 'officer';
+        $this->user->usertype = 'scholar';
 
         $create = false;
         if (!isset($this->user->id)) {
@@ -105,23 +103,25 @@ class OfficerEditLivewire extends Component
         if( $create && $this->user){
             $this->dispatchBrowserEvent('swal:modal', [
                 'type' => 'success',  
-                'message' => 'Officer\'s Account Created', 
-                'text' => 'Officer\'s account has been successfully created'
+                'message' => 'Scholar\'s Account Created', 
+                'text' => 'Scholar\'s account has been successfully created'
             ]);
             $this->emitUp('info', $this->user->id);
             $this->unset_user();
-            $this->dispatchBrowserEvent('officer-form', ['action' => 'hide']);
+            $this->dispatchBrowserEvent('scholar-form', ['action' => 'hide']);
             return;
+
         } elseif (!$create && $this->user->wasChanged()){
             $this->dispatchBrowserEvent('swal:modal', [
                 'type' => 'success',  
-                'message' => 'Officer\'s Account Updated', 
-                'text' => 'Officer\'s account has been successfully updated'
+                'message' => 'Scholar\'s Account Updated', 
+                'text' => 'Scholar\'s account has been successfully updated'
             ]);
-            $this->emitTo('officer-info-livewire', 'refresh');
+            $this->emitTo('scholar-info-livewire', 'refresh');
             $this->unset_user();
-            $this->dispatchBrowserEvent('officer-form', ['action' => 'hide']);
+            $this->dispatchBrowserEvent('scholar-form', ['action' => 'hide']);
             return;
+            
         } elseif (!$create && !$this->user->wasChanged()){
             $this->dispatchBrowserEvent('swal:modal', [
                 'type' => 'info',  

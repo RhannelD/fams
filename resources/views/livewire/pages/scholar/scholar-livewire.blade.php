@@ -14,7 +14,7 @@
 		<div class="col-md-6 mt-2">
 
 			<div class="input-group rounded">
-				<button class="btn btn-info ml-auto mr-0 text-white" type="button" wire:click="nullinputs" data-toggle="modal" data-target="#scholar_form">
+				<button wire:click="$emitTo('scholar-edit-livewire', 'create')" class="btn btn-info ml-auto mr-0 text-white" type="button" data-toggle="modal" data-target="#scholar_form">
 					<i class="fas fa-plus"></i>
 					Create Scholar
 				</button>
@@ -29,64 +29,20 @@
 			@include('livewire.pages.scholar.scholar-search-livewire')
 		</div>
 
-		<div class="contents-container col-md-6 info_scholar collapse"  wire:ignore.self>
-			@include('livewire.pages.scholar.scholar-info-livewire')
+		<div wire:ignore.self class="contents-container col-md-6 info_scholar collapse
+			@isset( $user )
+				show
+			@endisset
+			">
+			@isset($user)
+				@livewire('scholar-info-livewire', [$user], key('scholar-info-'.time().$user))
+			@endisset
 		</div>
 
 		<div>
 			<div wire:ignore.self class="modal fade" id="scholar_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 				<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-					<form class="modal-content" wire:submit.prevent="save()">
-						<div class="modal-header bg-dark text-white">
-						<h5 class="modal-title" id="exampleModalCenterTitle">Scholar {{ ((isset($user_id))? 'Editing': 'Creating') }}</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true"><i class="fas fa-times-circle text-white"></i></span>
-							</button>
-						</div>
-						<div class="modal-body student_creating">
-							@include('livewire.form.user-form-livewire')
-						</div>
-						<div class="modal-footer">
-							<button type="submit" class="btn btn-success">
-								<i class="fas fa-save" wire:loading.remove wire:target="save"></i>
-								<i class="fas fa-spinner fa-spin" wire:loading wire:target="save"></i>
-								Save
-							</button>
-							<button type="button" data-dismiss="modal" class="btn btn-secondary">
-								<i class="fas fa-times"></i>
-								Cancel
-							</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-
-		<div>
-			<div wire:ignore.self class="modal fade" id="change_password_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered modal-md" role="document">
-					<form class="modal-content" wire:submit.prevent="change_pass()">
-						<div class="modal-header bg-dark text-white">
-						<h5 class="modal-title" id="exampleModalCenterTitle">Change Password</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true"><i class="fas fa-times-circle text-white"></i></span>
-							</button>
-						</div>
-						<div class="modal-body student_creating">
-							@include('livewire.form.user-change-password-form-livewire')
-						</div>
-						<div class="modal-footer">
-							<button type="submit" class="btn btn-success">
-								<i class="fas fa-save" wire:loading.remove wire:target="change_pass"></i>
-								<i class="fas fa-spinner fa-spin" wire:loading wire:target="change_pass"></i>
-								Update
-							</button>
-							<button type="button" data-dismiss="modal" class="btn btn-secondary">
-								<i class="fas fa-times"></i>
-								Cancel
-							</button>
-						</div>
-					</form>
+					@livewire('scholar-edit-livewire'))
 				</div>
 			</div>
 		</div>

@@ -20,21 +20,10 @@ class ScholarLivewire extends Component
 
     public $search = '';
     public $user;
-    public $user_id_delete;
-    public $user_scholarships;
-    public $user_scholarships_id_delete;
 
-    public $user_id;
-    public $firstname;
-    public $middlename;
-    public $lastname;
-    public $gender = 'male';
-    public $phone;
-    public $email;
-    public $password;
-    public $birthday;
-    public $birthplace;
-    public $religion;
+    protected $listeners = [
+        'info' => 'info',
+    ];
 
     function rules() {
         return [
@@ -58,7 +47,7 @@ class ScholarLivewire extends Component
 
     protected function verifyUser()
     {
-        if (!Auth::check()) {
+        if (!Auth::check() || Auth::user()->usertype != 'admin') {
             redirect()->route('dashboard');
             return true;
         }
@@ -67,7 +56,10 @@ class ScholarLivewire extends Component
     
     public function getQueryString()
     {
-        return [];
+        return [
+            'search' => ['except' => ''],
+            'user' => ['except' => null]
+        ];
     }
 
     public function render()
@@ -83,6 +75,14 @@ class ScholarLivewire extends Component
             })
             ->paginate(15);
 
+        $user = User::select('id')
+            ->where('usertype', 'scholar')
+            ->where('id', $this->user)
+            ->first();
+        if ( !$user ) {
+            $this->user = null;
+        }
+
         return view('livewire.pages.scholar.scholar-livewire', ['scholars' => $scholars])
             ->extends('livewire.main.main-livewire');
     }
@@ -91,250 +91,12 @@ class ScholarLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
-        $user = User::find($id);
-
-        if (!$user) {
-            $this->dispatchBrowserEvent('scholar-info', ['action' => 'hide']);
-            return;
+        if ( !isset($id) ) {
+            $this->user = null;
         }
 
-        $this->user = $user->toArray();
-
-        $this->info_scholarships();
+        $this->user = $id;
 
         $this->dispatchBrowserEvent('scholar-info', ['action' => 'show']);
     }
-
-    public function info_scholarships()
-    {
-        if ($this->verifyUser()) return;
-
-        $scholar_scholarships = ScholarshipScholar::select('scholarship_scholars.id', 'scholarship', 'category', 'amount', 'scholarship_scholars.created_at')
-            ->join('scholarship_categories', 'scholarship_scholars.category_id', '=', 'scholarship_categories.id')
-            ->join('scholarships', 'scholarships.id', '=', 'scholarship_categories.scholarship_id')
-            ->where('scholarship_scholars.user_id', $this->user['id'])
-            ->get()->toArray();
-
-        $this->user_scholarships = $scholar_scholarships;
-    }
-
-    public function confirm_delete($id)
-    {
-        if ($this->cannotbedeleted($id)) {
-            return;
-        }
-
-        $this->user_id_delete = $id;
-
-        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_scholar', [
-            'type' => 'warning',  
-            'message' => 'Are you sure?', 
-            'text' => 'If deleted, you will not be able to recover this account!',
-            'function' => "delete"
-        ]);
-    }
-
-    public function delete()
-    {
-        if ($this->verifyUser()) return;
-        
-        if ($this->cannotbedeleted($this->user_id_delete)) {
-            return;
-        }
-
-        $user = User::find($this->user_id_delete);
-        
-        if (!$user->delete()) {
-            return;
-        }
-
-        $this->user = null;
-        $this->user_scholarships = null;
-
-        $this->dispatchBrowserEvent('swal:modal', [
-            'type' => 'success',  
-            'message' => 'Scholar Account Deleted', 
-            'text' => 'Scholar account has been successfully deleted'
-        ]);
-
-        $this->dispatchBrowserEvent('scholar-info', ['action' => 'hide']);
-    }
-
-    protected function cannotbedeleted($id)
-    {
-        $checker = ScholarshipScholar::select('id')
-            ->where('user_id', $id)
-            ->exists();
-
-        if ($checker) {
-            $this->dispatchBrowserEvent('swal:modal', [
-                'type' => 'info',  
-                'message' => 'Cannot be Deleted', 
-                'text' => 'Scholar has already Scholarship Program'
-            ]);
-        }
-        return $checker;
-    }
-
-    public function confirm_delete_scholarship($id)
-    {
-        if ($this->verifyUser()) return;
-        
-        $this->user_scholarships_id_delete = $id;
-
-        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_scholar', [
-            'type' => 'warning',  
-            'message' => 'Are you sure?', 
-            'text' => 'If deleted, you will not be able to recover this account!',
-            'function' => "delete_scholarship"
-        ]);
-    }
-
-    public function delete_scholarship()
-    {
-        if ($this->verifyUser()) return;
-        
-        $scholarship = ScholarshipScholar::find($this->user_scholarships_id_delete);
-
-        if (!$scholarship->delete()) {
-            return;
-        }
-        
-        $this->info_scholarships();
-
-        $this->dispatchBrowserEvent('swal:modal', [
-            'type' => 'success',  
-            'message' => 'Scholar\'s Scholarship Deleted', 
-            'text' => 'Scholar\'s Scholarship has been successfully deleted'
-        ]);
-    }
-
-    public function nullinputs()
-    {
-        $this->user_id   = null;
-        $this->firstname    = null;
-        $this->middlename   = null;
-        $this->lastname     = null;
-        $this->gender       = 'male';
-        $this->phone        = null;
-        $this->email        = null;
-        $this->password     = null;
-        $this->birthday     = null;
-        $this->birthplace   = null;
-        $this->religion     = null;
-    }
-
-    public function edit($id)
-    {
-        if ($this->verifyUser()) return;
-        
-        $data = User::findorfail($id);
-
-        $this->user_id      = $data->id;
-        $this->firstname    = $data->firstname;
-        $this->middlename   = $data->middlename;
-        $this->lastname     = $data->lastname;
-        $this->gender       = $data->gender;
-        $this->phone        = $data->phone;
-        $this->email        = $data->email;
-        $this->birthday     = $data->birthday;
-        $this->birthplace   = $data->birthplace;
-        $this->religion     = $data->religion;
-    }
-
-    public function save()
-    {
-        if ($this->verifyUser()) return;
-        
-        if (isset($this->user_id)) {
-            $this->password = '123123123';
-        }
-
-        $data = $this->validate();
-        $data['usertype'] = 'scholar';
-        if (isset($this->user_id)) {
-            unset($data['password']);
-        } else {
-            $data['password'] = Hash::make($data['password']);
-        }
-
-        $scholar = User::updateOrCreate(
-            ['id' => $this->user_id],
-            $data
-        );
-
-        if($scholar->wasRecentlyCreated){
-            $this->dispatchBrowserEvent('swal:modal', [
-                'type' => 'success',  
-                'message' => 'Scholar Account Created', 
-                'text' => 'Scholar account has been successfully created'
-            ]);
-            $this->info($scholar->id);
-            $this->dispatchBrowserEvent('scholar-form', ['action' => 'hide']);
-            return;
-        } elseif (!$scholar->wasRecentlyCreated && $scholar->wasChanged()){
-            $this->dispatchBrowserEvent('swal:modal', [
-                'type' => 'success',  
-                'message' => 'Scholar Account Updated', 
-                'text' => 'Scholar account has been successfully updated'
-            ]);
-            $this->info($this->user_id);
-            $this->dispatchBrowserEvent('scholar-form', ['action' => 'hide']);
-            return;
-        } elseif (!$scholar->wasRecentlyCreated && !$scholar->wasChanged()){
-            $this->dispatchBrowserEvent('swal:modal', [
-                'type' => 'info',  
-                'message' => 'Nothing has been changed', 
-                'text' => ''
-            ]);
-            $this->edit($this->user_id);
-            return;
-        }
- 
-        $this->dispatchBrowserEvent('swal:modal', [
-            'type' => 'error',  
-            'message' => 'Runtime error!', 
-            'text' => ''
-        ]);
-    }
-
-    public function change_pass()
-    {
-        if ($this->verifyUser()) return;
-        
-        $this->validateOnly('password');
-
-        $user = User::find($this->user['id']);
-
-        if(!$user) {
-            $this->dispatchBrowserEvent('swal:modal', [
-                'type' => 'error',  
-                'message' => 'Scholar not found!', 
-                'text' => ''
-            ]);
-            $this->password = null;
-            $this->dispatchBrowserEvent('change-password-form', ['action' => 'hide']);
-            return;
-        }
-
-        $user->password = Hash::make($this->password);
-
-        if ($user->save()) {
-            $this->dispatchBrowserEvent('swal:modal', [
-                'type' => 'success',  
-                'message' => 'Password Successfully Updated', 
-                'text' => 'Scholar\'s password has been successfully updated'
-            ]);
-            $this->password = null;
-            $this->dispatchBrowserEvent('change-password-form', ['action' => 'hide']);
-            return;
-        }
-
-        $this->dispatchBrowserEvent('swal:modal', [
-            'type' => 'error',  
-            'message' => 'Runtime error!', 
-            'text' => ''
-        ]);
-    }
-    
 }

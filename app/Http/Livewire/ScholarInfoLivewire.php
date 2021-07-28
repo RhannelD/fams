@@ -4,17 +4,17 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\User;
-use App\Models\ScholarshipOfficer;
+use App\Models\ScholarshipScholar;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
-class OfficerInfoLivewire extends Component
+class ScholarInfoLivewire extends Component
 {
     public $user;
     public $password;
 
-
+    
     protected $rules = [
         'password' => 'required|min:9',
     ];
@@ -37,13 +37,11 @@ class OfficerInfoLivewire extends Component
         $this->user = $id;
     }
 
-
     public function render()
     {
-        return view('livewire.pages.officer.officer-info-livewire');
+        return view('livewire.pages.scholar.scholar-info-livewire');
     }
 
-    
     public function updated($propertyName)
     {
         if ($this->verifyUser()) return;
@@ -51,7 +49,6 @@ class OfficerInfoLivewire extends Component
         $this->validateOnly($propertyName);
     }
     
-
     public function confirm_delete()
     {
         if ( $this->verifyUser() ) return;
@@ -60,9 +57,9 @@ class OfficerInfoLivewire extends Component
             return;
         }
         
-        $this->emitTo('officer-edit-livewire', 'create');
+        $this->emitTo('scholar-edit-livewire', 'create');
 
-        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_officer', [
+        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_scholar', [
             'type' => 'warning',  
             'message' => 'Are you sure?', 
             'text' => 'If deleted, you will not be able to recover this account!',
@@ -88,15 +85,15 @@ class OfficerInfoLivewire extends Component
         $this->dispatchBrowserEvent('swal:modal', [
             'type' => 'success',  
             'message' => 'Scholar Account Deleted', 
-            'text' => 'Officer\'s account has been successfully deleted'
+            'text' => 'Scholar account has been successfully deleted'
         ]);
 
-        $this->dispatchBrowserEvent('officer-info', ['action' => 'hide']);
+        $this->dispatchBrowserEvent('scholar-info', ['action' => 'hide']);
     }
 
     protected function cannotbedeleted()
     {
-        $checker = ScholarshipOfficer::select('id')
+        $checker = ScholarshipScholar::select('id')
             ->where('user_id', $this->user->id)
             ->exists();
 
@@ -104,14 +101,14 @@ class OfficerInfoLivewire extends Component
             $this->dispatchBrowserEvent('swal:modal', [
                 'type' => 'info',  
                 'message' => 'Cannot be Deleted', 
-                'text' => 'Account is Connected to a Scholarship Program'
+                'text' => 'Scholar has already Scholarship Program'
             ]);
         }
-        
         return $checker;
     }
 
-    public function change_pass(){
+    public function change_pass()
+    {
         if ($this->verifyUser()) return;
         
         $this->validateOnly('password');
@@ -123,7 +120,7 @@ class OfficerInfoLivewire extends Component
             $this->dispatchBrowserEvent('swal:modal', [
                 'type' => 'success',  
                 'message' => 'Password Successfully Updated', 
-                'text' => 'Officer\'s password has been successfully updated'
+                'text' => 'Scholar\'s password has been successfully updated'
             ]);
 
             $this->dispatchBrowserEvent('change-password-form', ['action' => 'hide']);
