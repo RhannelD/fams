@@ -5,12 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\User;
-use App\Models\ScholarshipScholar;
-use App\Models\ScholarshipPost;
-use App\Models\ScholarshipPostComment;
-use App\Models\ScholarshipOfficer;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 class OfficerLivewire extends Component
@@ -42,6 +37,13 @@ class OfficerLivewire extends Component
         ];
     }
 
+    public function updated($propertyName)
+    {
+        if ( $propertyName == 'search' ) {
+            $this->page = 0;
+        }
+    }
+
     public function mount()
     {
         if ($this->verifyUser()) return;
@@ -60,10 +62,9 @@ class OfficerLivewire extends Component
             })
             ->paginate(15);
 
-        $user = User::select('id')
-            ->where('usertype', 'officer')
+        $user = User::where('usertype', 'officer')
             ->where('id', $this->user)
-            ->first();
+            ->exists();
         if ( !$user ) {
             $this->user = null;
         }

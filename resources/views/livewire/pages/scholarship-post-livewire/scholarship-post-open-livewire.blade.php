@@ -82,14 +82,22 @@
                     @if ( count($requirement_links) != 0 )
                         <hr>
                         @foreach ($requirement_links as $requirement_link)
+                            <a 
+                                @if ( Auth::user()->usertype == 'scholar' )
+                                    href="{{ route('reponse', [$requirement_link->id]) }}"
+                                @else
+                                    href="{{ route('scholarship.program', [ $requirement_link->scholarship_id, 'requirement', $requirement_link->id]) }}"  
+                                @endif
+                                >
                             <div class="input-group mb-1  item-hover">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-file-alt"></i>
-                                    </span>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-file-alt"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control bg-white" value="{{ $requirement_link->requirement }}" readonly>
                                 </div>
-                                <input type="text" class="form-control bg-white" value="{{ $requirement_link->requirement }}" readonly>
-                            </div>
+                            </a>
                         @endforeach
                         <hr class="mb-1">
                     @endif

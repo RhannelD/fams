@@ -6,10 +6,6 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use App\Models\ScholarshipScholar;
-use App\Models\ScholarshipPost;
-use App\Models\ScholarshipOfficer;
-use App\Models\ScholarshipPostComment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,26 +20,6 @@ class ScholarLivewire extends Component
     protected $listeners = [
         'info' => 'info',
     ];
-
-    function rules() {
-        return [
-            'firstname' => 'required|regex:/^[a-z ,.\'-]+$/i',
-            'middlename' => 'required|regex:/^[a-z ,.\'-]+$/i',
-            'lastname' => 'required|regex:/^[a-z ,.\'-]+$/i',
-            'gender' => 'required|in:male,female',
-            'phone' => "required|unique:users".((isset($this->user_id))?",phone,$this->user_id":'')."|regex:/(09)[0-9]{9}/",
-            'birthday' => 'required|before:5 years ago',
-            'birthplace' => 'max:200',
-            'religion' => 'max:200',
-            'email' => "required|email|unique:users".((isset($this->user_id))?",email,$this->user_id":''),
-            'password' => 'required|min:9',
-        ];
-    }
-
-    public function updated($propertyName)
-    {
-        $this->validateOnly($propertyName);
-    }
 
     protected function verifyUser()
     {
@@ -62,6 +38,13 @@ class ScholarLivewire extends Component
         ];
     }
 
+    public function updated($propertyName)
+    {
+        if ( $propertyName == 'search' ) {
+            $this->page = 0;
+        }
+    }
+
     public function render()
     {
         $search = $this->search;
@@ -75,10 +58,9 @@ class ScholarLivewire extends Component
             })
             ->paginate(15);
 
-        $user = User::select('id')
-            ->where('usertype', 'scholar')
+        $user = User::where('usertype', 'scholar')
             ->where('id', $this->user)
-            ->first();
+            ->exists();
         if ( !$user ) {
             $this->user = null;
         }
