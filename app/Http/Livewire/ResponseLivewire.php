@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class ResponseLivewire extends Component
 {
     public $requirement;
+    public $user_response;
    
     protected function verifyUser()
     {
@@ -26,7 +27,12 @@ class ResponseLivewire extends Component
         if ($this->verifyUser()) return;
         
         $this->requirement = $id;
-    } 
+
+        $this->user_response = ScholarResponse::firstOrCreate([
+            'user_id' => Auth::id(),
+            'requirement_id' => $this->requirement->id,
+        ]);
+    }
 
     public function render()
     {

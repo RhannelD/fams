@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Scholarship;
 use App\Models\ScholarshipOfficer;
@@ -13,6 +14,7 @@ use App\Models\ScholarshipRequirementCategory;
 use App\Models\ScholarshipCategory;
 use App\Models\ScholarshipPost;
 use App\Models\ScholarshipPostComment;
+use App\Models\ScholarResponse;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -35,16 +37,23 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $posts = ScholarshipPost::select('scholarship_posts.*', 'users.firstname', 'users.lastname')
-            ->addSelect(['comment_count' => ScholarshipPostComment::select(DB::raw("count(scholarship_post_comments.id)"))
-                ->whereColumn('scholarship_post_comments.post_id', 'scholarship_posts.id')
-            ])
-            ->where('scholarship_id', 1)
-            ->leftJoin('users', 'scholarship_posts.user_id', '=', 'users.id')
-            ->orderBy('id', 'desc')
-            ->get();
+        $response = ScholarResponse::firstOrCreate([
+            'user_id' => Auth::id(),
+            'requirement_id' => 2,
+        ]);
 
-        return $posts;
+        return $response;
+
+        // $posts = ScholarshipPost::select('scholarship_posts.*', 'users.firstname', 'users.lastname')
+        //     ->addSelect(['comment_count' => ScholarshipPostComment::select(DB::raw("count(scholarship_post_comments.id)"))
+        //         ->whereColumn('scholarship_post_comments.post_id', 'scholarship_posts.id')
+        //     ])
+        //     ->where('scholarship_id', 1)
+        //     ->leftJoin('users', 'scholarship_posts.user_id', '=', 'users.id')
+        //     ->orderBy('id', 'desc')
+        //     ->get();
+
+        // return $posts;
 
         // $posts = ScholarshipPost::select('scholarship_posts.*', 'users.firstname', 'users.lastname', 
         //     DB::raw('(

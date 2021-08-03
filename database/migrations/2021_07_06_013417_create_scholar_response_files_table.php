@@ -18,6 +18,7 @@ class CreateScholarResponseFilesTable extends Migration
             $table->foreignId('response_id');
             $table->foreignId('item_id');
             $table->text('file_url');
+            $table->text('file_name');
             $table->timestamps();
             
             $table->foreign('response_id')->references('id')->on('scholar_responses')->onDelete('cascade');

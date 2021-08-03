@@ -18,5 +18,6 @@ class ScholarResponseFile extends Model
         'response_id',
         'item_id',
         'file_url',
+        'file_name',
     ];
 }

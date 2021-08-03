@@ -45,7 +45,7 @@
                                     @case('cor')
                                     @case('grade')
 
-                                        @livewire('response-file-upload-livewire', [$requirement_item->id], key('response-file-livewire-'.time().$requirement_item->id))
+                                        @livewire('response-file-upload-livewire', [$requirement_item->id, $user_response->id], key('response-file-livewire-'.time().$requirement_item->id))
 
                                         @break
                                     @case('question')

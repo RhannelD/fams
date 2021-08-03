@@ -1,29 +1,33 @@
 <div>
-    @isset( $file_mine_type )
-        @switch( $file_mine_type )
-            @case( 'application/pdf' )
+    @isset( $file_extension )
+        @switch( $file_extension )
+            @case( 'pdf' )
                 <i class="fas fa-file-pdf"></i>
                 @break
-            @case( 'application/msword' )
+            @case( 'docx' )
                 <i class="fas fa-file-word"></i>
                 @break
-            @case( 'application/vnd.ms-excel' )
-            @case( 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' )
+            @case( 'xlsx' )
+            @case( 'xlsm' )
+            @case( 'xlsb' )
+            @case( 'xlsb' )
                 <i class="fas fa-file-excel"></i>
                 @break
-            @case( 'text/csv' )
+            @case( 'csv' )
                 <i class="fas fa-file-csv"></i>
-            @case( 'text/plain' )
+                @break
+            @case( 'txt' )
                 <i class="fas fa-file-alt"></i>
                 @break
-            @case( 'image/png' )
-            @case( 'image/gif' )
-            @case( 'image/jpeg' )
-            @case( 'image/svg+xml' )
-            @case( 'image/webp' )
+            @case( 'png' )
+            @case( 'gif' )
+            @case( 'jpeg' )
+            @case( 'jpg' )
+            @case( 'svg' )
+            @case( 'webp' )
                 <i class="fas fa-file-image"></i>
                 @break
-            @case( 'text/html' )
+            @case( 'html' )
                 <i class="fas fa-file-code"></i>
                 @break
             @default
