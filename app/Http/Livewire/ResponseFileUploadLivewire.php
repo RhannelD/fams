@@ -81,10 +81,12 @@ class ResponseFileUploadLivewire extends Component
 
         $this->file->storeAs('files', $filename);
 
-        $old_file = ScholarResponseFile::select('file_url')
-            ->where('response_id', $response_id)
+        $old_file = ScholarResponseFile::where('response_id', $response_id)
             ->where('item_id', $requirement_item_id)
             ->first();
+        if ( $old_file ) {
+            $old_file->delete_file();
+        } 
 
         $response_file = ScholarResponseFile::updateOrCreate(
             [
@@ -96,11 +98,12 @@ class ResponseFileUploadLivewire extends Component
                 'file_name' => $orig_name,
             ]
         );
+    }
 
-        if ( $old_file ) {
-            if ( Storage::disk('files')->exists($old_file->file_url) ) {
-                Storage::disk('files')->delete($old_file->file_url);
-            }
+    public function delete($id)
+    {
+        if ( ScholarResponseFile::where('id', $id)->exists() ) {
+            ScholarResponseFile::find($id)->delete();
         }
     }
 }

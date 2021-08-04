@@ -35,23 +35,40 @@
     
     @isset( $response_file ) 
         <hr class="my-2">
-        <a href="{{ Storage::disk('files')->url($response_file->file_url) }}" target="blank">
 
-            <div class="input-group mb-1 item-hover">
-                <div class="input-group-prepend">
-                    <span class="input-group-text bg-primary text-white border-primary">
-                        
-                        @php
-                            $file_extension = pathinfo($response_file->file_url, PATHINFO_EXTENSION);
-                        @endphp
-                        @include('livewire.pages.response.response-file-upload-icon-type-livewire')
-    
-                    </span>
-                </div>
-                <input type="text" class="form-control bg-white border-primary" value="{{ $response_file->file_name }}" readonly>
+        <div class="d-flex">
+            <div class="mr-1 bd-highlight my-0 btn-block">
+                <a href="{{ Storage::disk('files')->url($response_file->file_url) }}" target="blank">   
+                    <div class="input-group mb-1 item-hover">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-primary text-white border-primary">
+        
+                                @if ( $response_file->if_file_exist() )
+                                    @php
+                                        $file_extension = $response_file->get_file_extension();
+                                    @endphp
+                                    @include('livewire.pages.response.response-file-upload-icon-type-livewire')
+                                @else
+                                    <i class="fas fa-exclamation-circle"></i>
+                                @endif
+        
+                            </span>
+                        </div>
+                        <input type="text" class="form-control bg-white border-primary rounded-right" value="{{ $response_file->file_name }}" readonly>
+        
+                    </div>     
+                </a>
             </div>
-            
-        </a>
+
+            <h6 class="ml-1 mr-0 bd-highlight my-0">
+                <button wire:click="delete({{ $response_file->id }})" class="btn btn-danger ml-1">
+                    <i class="fas fa-minus-circle"></i>
+                </button>
+            </h6>
+        </div>
+
+        
+
     @endisset
 
 </div>
