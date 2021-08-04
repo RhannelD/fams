@@ -61,8 +61,9 @@
             </div>
 
             <h6 class="ml-1 mr-0 bd-highlight my-0">
-                <button wire:click="delete({{ $response_file->id }})" class="btn btn-danger ml-1">
-                    <i class="fas fa-minus-circle"></i>
+                <button wire:click="delete({{ $response_file->id }})"  wire:loading.attr="disabled" class="btn btn-danger ml-1">
+                    <i wire:loading.remove wire:target="delete" class="fas fa-minus-circle"></i>
+                    <i wire:loading wire:target="delete" class="fas fa-spinner fa-spin"></i>
                 </button>
             </h6>
         </div>

@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\ScholarResponse;
 use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementItem;
+use App\Models\ScholarshipRequirementItemOption;
 use Illuminate\Support\Facades\Auth;
 
 class ResponseLivewire extends Component
@@ -39,6 +40,14 @@ class ResponseLivewire extends Component
         $requirement_items =  ScholarshipRequirementItem::where('requirement_id', $this->requirement->id)
             ->orderBy('position')
             ->get();
+
+        foreach ($requirement_items as $key => $requirement_item) {
+            if (in_array($requirement_item->type, array('check'))) {
+                $options = ScholarshipRequirementItemOption::where('item_id', $requirement_item->id)->get();
+
+                $requirement_items[$key]['options'] = $options;
+            }
+        }
 
         return view('livewire.pages.response.response-livewire', [
             'requirement_items' => $requirement_items

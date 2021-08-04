@@ -16,7 +16,6 @@ class CreateScholarResponseOptionsTable extends Migration
         Schema::create('scholar_response_options', function (Blueprint $table) {
             $table->id();
             $table->foreignId('response_id');
-            $table->foreignId('item_id');
             $table->foreignId('option_id');
             $table->timestamps();
             

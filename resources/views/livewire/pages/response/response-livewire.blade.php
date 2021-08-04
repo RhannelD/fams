@@ -44,25 +44,23 @@
                                     @case('file')
                                     @case('cor')
                                     @case('grade')
-
                                         @livewire('response-file-upload-livewire', [$requirement_item->id, $user_response->id], key('response-file-livewire-'.time().$requirement_item->id))
+                                        @break
 
-                                        @break
                                     @case('question')
-                                        <div class="input-group mb-1">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-question"></i>
-                                                </span>
-                                            </div>
-                                            <div class="form-control">Answer</div>
-                                        </div>
+                                        @livewire('response-answer-livewire', [$requirement_item->id, $user_response->id], key('response-answer-livewire-'.time().$requirement_item->id))
                                         @break
+
                                     @case('radio')
-                                       
+                                        @livewire('response-radio-livewire', [$requirement_item->id, $user_response->id], key('response-radio-livewire-'.time().$requirement_item->id))
                                         @break
+
                                     @case('check')
-                                       
+                                        @isset($requirement_item->options)
+                                            @foreach ($requirement_item->options as $option)
+                                                @livewire('response-checkbox-livewire', [$requirement_item->id, $user_response->id, $option->id], key('response-checkbox-livewire-'.time().$requirement_item->id.'_'.$option->id))
+                                            @endforeach
+                                        @endisset
                                         @break
                                 @endswitch
 
