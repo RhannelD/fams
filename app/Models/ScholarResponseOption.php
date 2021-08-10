@@ -18,4 +18,9 @@ class ScholarResponseOption extends Model
         'response_id',
         'option_id',
     ];
+
+    public function response()
+    {
+        return $this->belongsTo(ScholarResponse::class, 'response_id', 'id');
+    }
 }

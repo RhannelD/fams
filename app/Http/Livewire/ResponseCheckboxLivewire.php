@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirementItem;
 use App\Models\ScholarshipRequirementItemOption;
+use App\Models\ScholarResponse;
 use App\Models\ScholarResponseOption;
 
 class ResponseCheckboxLivewire extends Component
@@ -36,7 +37,9 @@ class ResponseCheckboxLivewire extends Component
     {
         $option_checked = $this->if_option_checked();
 
-        return view('livewire.pages.response.response-checkbox-livewire', ['option_checked' => $option_checked]);
+        $is_submitted = ScholarResponse::find($this->response_id)->submit_at;
+
+        return view('livewire.pages.response.response-checkbox-livewire', ['option_checked' => $option_checked, 'is_submitted' => $is_submitted]);
     }
 
     public function if_option_checked()

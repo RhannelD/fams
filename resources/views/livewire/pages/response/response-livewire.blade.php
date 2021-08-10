@@ -5,7 +5,23 @@
 
             <div class="card shadow mb-2 requirement-item-hover">
                 <div class="card-body">
-                    <button class="btn btn-success btn-block">Send Respond</button>
+
+                    @if ( !isset( $user_response->submit_at ) )
+                        <button wire:click="submit_response" class="btn btn-success btn-block">
+                            <i class="fas fa-paper-plane mr-1" wire:loading.remove wire:target="submit_response"></i>
+                            <i class="fas fa-spinner fa-spin" wire:loading wire:target="submit_response"></i>
+                            Submit Response
+                        </button>
+
+                    @else
+                        <button wire:click="unsubmit_response" class="btn btn-danger btn-block">
+                            <i class="fas fa-trash mr-1" wire:loading.remove wire:target="unsubmit_response"></i>
+                            <i class="fas fa-spinner fa-spin" wire:loading wire:target="unsubmit_response"></i>
+                            Unsubmit Response
+                        </button>
+                        
+                    @endif
+
                 </div>
             </div>
 

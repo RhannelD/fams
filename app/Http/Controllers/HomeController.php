@@ -15,6 +15,9 @@ use App\Models\ScholarshipCategory;
 use App\Models\ScholarshipPost;
 use App\Models\ScholarshipPostComment;
 use App\Models\ScholarResponse;
+use App\Models\ScholarResponseOption;
+use App\Models\ScholarResponseAnswer;
+use App\Models\ScholarResponseFile;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -37,12 +40,112 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $response = ScholarResponse::firstOrCreate([
-            'user_id' => Auth::id(),
-            'requirement_id' => 2,
-        ]);
+        // DB::enableQueryLog();
 
-        return $response;
+        // $file_uploads = ScholarshipRequirementItem::selectRaw('"file" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
+        //     ->leftJoin(with(new ScholarResponseFile)->getTable(), 'scholarship_requirement_items.id', '=', 'scholar_response_files.item_id')
+        //     ->whereIn('scholarship_requirement_items.type', ['cor', 'grade', 'file'])
+        //     ->where('scholarship_requirement_items.requirement_id', 1)
+        //     ->whereNull('scholar_response_files.id');
+
+        // $asnwer = ScholarshipRequirementItem::selectRaw('"answer" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
+        //     ->leftJoin(with(new ScholarResponseAnswer)->getTable(), 'scholarship_requirement_items.id', '=', 'scholar_response_answers.item_id')
+        //     ->whereIn('scholarship_requirement_items.type', ['question'])
+        //     ->where('scholarship_requirement_items.requirement_id', 1)
+        //     ->whereNull('scholar_response_answers.id');
+
+        // $options = ScholarshipRequirementItem::selectRaw('"options" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
+        //     ->where('scholarship_requirement_items.requirement_id', 1)
+        //     ->whereIn('scholarship_requirement_items.type', ['radio', 'check'])
+        //     ->whereNotIn('scholarship_requirement_items.id', function($query){
+        //         $query->select('scholarship_requirement_item_options.item_id')
+        //         ->from(with(new ScholarshipRequirementItemOption)->getTable())
+        //         ->join(with(new ScholarResponseOption)->getTable(), 'scholarship_requirement_item_options.id', 'scholar_response_options.option_id')
+        //         ->whereColumn('scholarship_requirement_item_options.item_id', 'scholarship_requirement_items.id');
+        //     });
+
+        // $unassigned = $options->union($file_uploads)->union($asnwer)->get();
+
+        // // dd(DB::getQueryLog());
+
+        // return $unassigned;
+
+        // $options = ScholarshipRequirementItem::selectRaw('"options" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
+        //     ->addSelect(['respond' => ScholarshipRequirementItemOption::selectRaw('count(scholar_response_options.id)')
+        //         ->join('scholar_response_options', 'scholar_response_options.option_id', '=', 'scholarship_requirement_item_options.id')
+        //         ->whereColumn('scholarship_requirement_item_options.item_id', 'scholarship_requirement_items.id')
+        //     ])->whereIn('scholarship_requirement_items.type', ['radio', 'check'])
+        //     ->where('scholarship_requirement_items.requirement_id', 1)
+        //     ->groupBy('scholarship_requirement_items.id')
+        //     ->union($file_uploads)
+        //     ->get();
+
+
+        // $options = ScholarshipRequirementItem::selectRaw('"options" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
+        //     ->addSelect(['respond' => ScholarResponseOption::selectRaw('scholar_response_options.id')
+        //         ->whereColumn('scholar_response_options.option_id', 'scholarship_requirement_item_options.id')
+        //         ->whereNotNull('scholar_response_options.id')
+        //     ])
+        //     ->join('scholarship_requirement_item_options', 'scholarship_requirement_items.id', '=', 'scholarship_requirement_item_options.item_id')
+        //     ->whereIn('scholarship_requirement_items.type', ['radio', 'check'])
+        //     ->where('scholarship_requirement_items.requirement_id', 1)
+        //     ->groupBy('scholarship_requirement_items.id')
+        //     ->get();
+
+        // $options = ScholarshipRequirementItem::selectRaw('"options" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
+        //     ->addSelect(['respond' => ScholarshipRequirementItemOption::selectRaw('scholarship_requirement_item_options.id')
+        //         ->join('scholar_response_options', 'scholarship_requirement_item_options.id', '=', 'scholar_response_options.item_id')
+        //         ->whereColumn('scholarship_requirement_item_options.item_id', 'scholarship_requirement_items.id')
+        //         ->whereNotNull('scholarship_requirement_item_options.id')
+        //     ])
+        //     ->whereIn('scholarship_requirement_items.type', ['radio', 'check'])
+        //     ->where('scholarship_requirement_items.requirement_id', 1)
+        //     ->groupBy('scholarship_requirement_items.id')
+        //     ->get();
+
+
+        // $options = ScholarshipRequirementItem::with('options')
+            // ->whereHas('options', function ($query) {
+            //     return $query->;
+            // })
+            // ->where('requirement_id', 1)
+            // ->get();
+
+        // $options = $options->options;
+
+        // $options = ScholarshipRequirementItemOption::with('responses')
+        //     ->whereHas('item', function ($query) {
+        //         return $query->where('requirement_id', 1);
+        //     })
+        //     ->get();
+
+        // $options = ScholarshipRequirementItem::with('requirement')
+        //     ->with('options')
+        //     ->whereHas('options', function ($query) {
+        //         return $query->with('responses');
+        //     })
+        //     ->where('requirement_id', 1)
+        //     ->whereIn('scholarship_requirement_items.type', ['radio', 'check'])
+        //     ->get();
+
+        // return $options;
+
+
+        // $first = DB::table('users')
+        //     ->whereNull('first_name');
+
+        // $users = DB::table('users')
+        //     ->whereNull('last_name')
+        //     ->union($first)
+        //     ->get();
+
+
+        // $response = ScholarResponse::firstOrCreate([
+        //     'user_id' => Auth::id(),
+        //     'requirement_id' => 2,
+        // ]);
+
+        // return $response;
 
         // $posts = ScholarshipPost::select('scholarship_posts.*', 'users.firstname', 'users.lastname')
         //     ->addSelect(['comment_count' => ScholarshipPostComment::select(DB::raw("count(scholarship_post_comments.id)"))

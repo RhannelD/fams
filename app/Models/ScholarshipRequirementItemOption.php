@@ -18,4 +18,14 @@ class ScholarshipRequirementItemOption extends Model
         'item_id',
         'option',
     ];
+
+    public function responses()
+    {
+        return $this->hasMany(ScholarResponseOption::class, 'option_id', 'id');
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(ScholarshipRequirementItem::class, 'item_id', 'id');
+    }
 }

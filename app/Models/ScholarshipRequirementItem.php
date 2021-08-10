@@ -21,4 +21,14 @@ class ScholarshipRequirementItem extends Model
         'note',
         'position',
     ];
+
+    public function options()
+    {
+        return $this->hasMany(ScholarshipRequirementItemOption::class, 'item_id', 'id');
+    }
+
+    public function requirement()
+    {
+        return $this->belongsTo(ScholarshipRequirement::class, 'requirement_id', 'id');
+    }
 }

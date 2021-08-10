@@ -7,7 +7,11 @@ use App\Models\ScholarResponse;
 use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementItem;
 use App\Models\ScholarshipRequirementItemOption;
+use App\Models\ScholarResponseFile;
+use App\Models\ScholarResponseAnswer;
+use App\Models\ScholarResponseOption;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ResponseLivewire extends Component
 {
@@ -52,5 +56,57 @@ class ResponseLivewire extends Component
         return view('livewire.pages.response.response-livewire', [
             'requirement_items' => $requirement_items
         ])->extends('livewire.main.main-livewire');
+    }
+
+    public function submit_response()
+    {
+        $file_uploads = ScholarshipRequirementItem::selectRaw('"file" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
+            ->leftJoin(with(new ScholarResponseFile)->getTable(), 'scholarship_requirement_items.id', '=', 'scholar_response_files.item_id')
+            ->whereIn('scholarship_requirement_items.type', ['cor', 'grade', 'file'])
+            ->where('scholarship_requirement_items.requirement_id', $this->requirement->id)
+            ->whereNull('scholar_response_files.id');
+
+        $asnwer = ScholarshipRequirementItem::selectRaw('"answer" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
+            ->leftJoin(with(new ScholarResponseAnswer)->getTable(), 'scholarship_requirement_items.id', '=', 'scholar_response_answers.item_id')
+            ->whereIn('scholarship_requirement_items.type', ['question'])
+            ->where('scholarship_requirement_items.requirement_id', $this->requirement->id)
+            ->whereNull('scholar_response_answers.id');
+
+        $options = ScholarshipRequirementItem::selectRaw('"options" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
+            ->where('scholarship_requirement_items.requirement_id', $this->requirement->id)
+            ->whereIn('scholarship_requirement_items.type', ['radio', 'check'])
+            ->whereNotIn('scholarship_requirement_items.id', function($query){
+                $query->select('scholarship_requirement_item_options.item_id')
+                ->from(with(new ScholarshipRequirementItemOption)->getTable())
+                ->join(with(new ScholarResponseOption)->getTable(), 'scholarship_requirement_item_options.id', 'scholar_response_options.option_id')
+                ->whereColumn('scholarship_requirement_item_options.item_id', 'scholarship_requirement_items.id');
+            });
+
+        $unassigned = $options->union($file_uploads)->union($asnwer)->get();
+
+        if (!$unassigned->isEmpty()) {
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'info',  
+                'message' => 'Please fill up all!', 
+                'text' => ''
+            ]);
+            return;
+        }
+
+        $this->user_response->submit_at = Carbon::now();
+        
+        if ( $this->user_response->save() ) {
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'success',  
+                'message' => 'Response Submitted', 
+                'text' => ''
+            ]);
+        }
+    }
+
+    public function unsubmit_response()
+    {
+        $this->user_response->submit_at = null;
+        $this->user_response->save();
     }
 }

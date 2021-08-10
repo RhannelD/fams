@@ -5,6 +5,10 @@
             @if ($option_checked)
                 checked
             @endif
+
+            @isset( $is_submitted )
+                disabled
+            @endisset
             >
         <label class="custom-control-label" for="checkbox_{{ $this->checkbox->id }}">{{ $this->checkbox->option }} {{ $option_checked }}</label>
     </div>

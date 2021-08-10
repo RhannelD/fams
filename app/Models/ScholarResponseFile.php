@@ -45,4 +45,9 @@ class ScholarResponseFile extends Model
         
         return parent::delete();
     }
+    
+    public function response()
+    {
+        return $this->belongsTo(ScholarResponse::class, 'response_id', 'id');
+    }
 }
