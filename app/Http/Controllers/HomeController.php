@@ -40,6 +40,23 @@ class HomeController extends Controller
      */
     public function index()
     {
+        return DB::table('scholar_response_files')
+            ->where('file_url', 'fakefile.pdf')
+            ->limit(1000)
+            ->get()->count();
+
+        // $requirements = ScholarshipRequirement::query()
+        //     ->with('responses')
+        //     ->with(array('items' => function($query) {
+        //         $query->whereIn('type', ['cor', 'grade', 'file']);
+        //     }))
+        //     ->whereHas('items', function ($query) {
+        //         $query->whereIn('type', ['cor', 'grade', 'file']);
+        //     })
+        //     ->get();
+            
+        // return $requirements;
+
         // $options = ScholarshipRequirementItemOption::where('item_id', 8)
         //     ->inRandomOrder()
         //     ->first();

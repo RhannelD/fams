@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             ScholarResponseSeeder::class,
             ScholarResponseAnswerSeeder::class,
             ScholarResponseOptionSeeder::class,
+            ScholarResponseFileSeeder::class,
         ]);
     }
 }

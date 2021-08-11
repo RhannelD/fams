@@ -22,7 +22,10 @@ class ScholarResponseFileFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'response_id' => 1,
+            'item_id' => 1,
+            'file_url' => 'fakefile.pdf',
+            'file_name' => 'Temporary File.pdf',
         ];
     }
 }

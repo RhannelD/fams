@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ScholarResponseFile extends Model
 {
@@ -34,6 +35,16 @@ class ScholarResponseFile extends Model
 
     public function delete_file()
     {
+        $count = DB::table('scholar_response_files')
+            ->where('file_url', $this->file_url)
+            ->limit(2)
+            ->get()
+            ->count();
+        
+        if ($count == 2) {
+           return;
+        }
+
         if ( $this->if_file_exist() ) {
             Storage::disk('files')->delete($this->file_url);
         }
