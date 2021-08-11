@@ -22,7 +22,10 @@ class ScholarResponseFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'user_id' => 1,
+            'requirement_id' => 1,
+            'approval' => true,
+            'submit_at' => null,
         ];
     }
 }

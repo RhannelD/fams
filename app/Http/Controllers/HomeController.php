@@ -40,6 +40,12 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $requirements = ScholarshipRequirement::with('categories')
+            ->with('responses')
+            ->get();
+
+        return $requirements;
+
         // DB::enableQueryLog();
 
         // $file_uploads = ScholarshipRequirementItem::selectRaw('"file" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')

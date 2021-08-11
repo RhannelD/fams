@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             ScholarshipPostSeeder::class,
             ScholarshipPostCommentSeeder::class,
             ScholarshipPostLinkRequirementSeeder::class,
+            ScholarResponseSeeder::class,
         ]);
     }
 }

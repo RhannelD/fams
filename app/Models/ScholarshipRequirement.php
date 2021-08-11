@@ -23,4 +23,14 @@ class ScholarshipRequirement extends Model
         'start_at',
         'end_at',
     ];
+
+    public function categories()
+    {
+        return $this->hasMany(ScholarshipRequirementCategory::class, 'requirement_id', 'id');
+    }
+
+    public function responses()
+    {
+        return $this->hasMany(ScholarResponse::class, 'requirement_id', 'id');
+    }
 }
