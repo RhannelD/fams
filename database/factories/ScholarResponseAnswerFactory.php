@@ -22,7 +22,9 @@ class ScholarResponseAnswerFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'response_id' => 1,
+            'item_id' => 1,
+            'answer' => $this->faker->text($maxNbChars = 100)
         ];
     }
 }

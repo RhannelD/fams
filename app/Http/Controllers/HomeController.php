@@ -40,8 +40,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $requirements = ScholarshipRequirement::with('categories')
+        $requirements = ScholarshipRequirement::query()
             ->with('responses')
+            ->with(array('items' => function($query) {
+                $query->where('type','question');
+            }))
+            ->whereHas('items', function ($query) {
+                $query->where('type', 'question');
+            })
             ->get();
 
         return $requirements;
