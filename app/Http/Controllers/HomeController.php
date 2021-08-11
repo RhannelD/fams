@@ -40,17 +40,35 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $requirements = ScholarshipRequirement::query()
-            ->with('responses')
-            ->with(array('items' => function($query) {
-                $query->where('type','question');
-            }))
-            ->whereHas('items', function ($query) {
-                $query->where('type', 'question');
-            })
-            ->get();
+        // $options = ScholarshipRequirementItemOption::where('item_id', 8)
+        //     ->inRandomOrder()
+        //     ->first();
 
-        return $requirements;
+        // return $options;
+
+        // $requirements = ScholarshipRequirement::query()
+        //     ->with('responses')
+        //     ->with(array('items' => function($query) {
+        //         $query->where('type','radio');
+        //     }))
+        //     ->whereHas('items', function ($query) {
+        //         $query->where('type', 'radio');
+        //     })
+        //     ->get();
+
+        // return $requirements;
+
+        // $requirements = ScholarshipRequirement::query()
+        //     ->with('responses')
+        //     ->with(array('items' => function($query) {
+        //         $query->where('type','question');
+        //     }))
+        //     ->whereHas('items', function ($query) {
+        //         $query->where('type', 'question');
+        //     })
+        //     ->get();
+
+        // return $requirements;
 
         // DB::enableQueryLog();
 

@@ -22,7 +22,8 @@ class ScholarResponseOptionFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'response_id' => 1,
+            'option_id' => 1,
         ];
     }
 }
