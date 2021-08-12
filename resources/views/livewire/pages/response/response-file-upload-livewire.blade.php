@@ -1,5 +1,5 @@
 <div>
-    @if ( !isset( $response_file->response->submit_at ) )
+    @if ( !isset( $response->submit_at ) )
         <div class="input-group mb-1">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroupFileAddon01">

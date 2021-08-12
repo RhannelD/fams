@@ -7,6 +7,7 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirementItem;
+use App\Models\ScholarResponse;
 use App\Models\ScholarResponseFile;
 use Carbon\Carbon;
 
@@ -15,7 +16,7 @@ class ResponseFileUploadLivewire extends Component
     use WithFileUploads;
 
     public $requirement_item;
-    public $response_id;
+    public $response;
     public $file;
     
 
@@ -32,17 +33,17 @@ class ResponseFileUploadLivewire extends Component
         return false;
     }
  
-    public function mount(ScholarshipRequirementItem $id, $response_id)
+    public function mount(ScholarshipRequirementItem $id, ScholarResponse $response_id)
     {
         if ($this->verifyUser()) return;
         
         $this->requirement_item = $id;
-        $this->response_id = $response_id;
+        $this->response = $response_id;
     }
 
     public function render()
     {
-        $response_file = ScholarResponseFile::where('response_id', $this->response_id)
+        $response_file = ScholarResponseFile::where('response_id', $this->response->id)
             ->where('item_id', $this->requirement_item->id)
             ->first();
 
@@ -72,7 +73,7 @@ class ResponseFileUploadLivewire extends Component
         $orig_name  = $this->file->getClientOriginalName();
 
         $user_id    = Auth::id();
-        $response_id= $this->response_id;
+        $response_id= $this->response->id;
         $requirement_item_id = $this->requirement_item->id;
         $datetime   = Carbon::now()->format('Y-m-d_h-i-s');
         $extension  = $this->get_file_extension();
