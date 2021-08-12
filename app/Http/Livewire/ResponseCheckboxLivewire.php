@@ -24,6 +24,18 @@ class ResponseCheckboxLivewire extends Component
         return false;
     }
 
+    protected function verifyUserResponse()
+    {
+        $access = ScholarResponse::where('id', $this->response_id)
+            ->where('user_id', Auth::id())
+            ->exists();
+
+        if (!$access) {
+            redirect()->route('index');
+        }
+        return !$access;
+    }
+
     public function mount(ScholarshipRequirementItem $requirement_item_id, $response_id, ScholarshipRequirementItemOption $option_id)
     {
         if ($this->verifyUser()) return;
@@ -52,6 +64,7 @@ class ResponseCheckboxLivewire extends Component
     public function save()
     {
         if ($this->verifyUser()) return;
+        if ($this->verifyUserResponse()) return;
 
         if ( $this->if_option_checked() ) {
             return ScholarResponseOption::where('response_id', $this->response_id)

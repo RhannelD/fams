@@ -33,6 +33,16 @@ class ResponseFileUploadLivewire extends Component
         return false;
     }
  
+    protected function verifyUserResponse()
+    {
+        $access = $this->response->user_id != Auth::id();
+
+        if ($access) {
+            redirect()->route('index');
+        }
+        return $access;
+    }
+
     public function mount(ScholarshipRequirementItem $id, ScholarResponse $response_id)
     {
         if ($this->verifyUser()) return;
@@ -53,6 +63,7 @@ class ResponseFileUploadLivewire extends Component
     public function updated($propertyName)
     {
         if ($this->verifyUser()) return;
+        if ($this->verifyUserResponse()) return;
 
         if ( empty($this->get_file_extension()) ) {
             return $this->addError('file', 'Invalid file type!');
@@ -103,6 +114,9 @@ class ResponseFileUploadLivewire extends Component
 
     public function delete($id)
     {
+        if ($this->verifyUser()) return;
+        if ($this->verifyUserResponse()) return;
+        
         if ( ScholarResponseFile::where('id', $id)->exists() ) {
             ScholarResponseFile::find($id)->delete();
         }

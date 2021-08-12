@@ -33,6 +33,18 @@ class ResponseAnswerLivewire extends Component
         return false;
     }
 
+    protected function verifyUserResponse()
+    {
+        $access = ScholarResponse::where('id', $this->response_id)
+            ->where('user_id', Auth::id())
+            ->exists();
+
+        if (!$access) {
+            redirect()->route('index');
+        }
+        return !$access;
+    }
+
     public function mount(ScholarshipRequirementItem $id, $response_id)
     {
         if ($this->verifyUser()) return;
@@ -54,6 +66,7 @@ class ResponseAnswerLivewire extends Component
     public function updated($propertyName)
     {
         if ($this->verifyUser()) return;
+        if ($this->verifyUserResponse()) return;
 
         $this->validateOnly($propertyName);
 

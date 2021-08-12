@@ -10,6 +10,6 @@
                 disabled
             @endisset
             >
-        <label class="custom-control-label" for="checkbox_{{ $this->checkbox->id }}">{{ $this->checkbox->option }} {{ $option_checked }}</label>
+        <label class="custom-control-label" for="checkbox_{{ $this->checkbox->id }}">{{ $this->checkbox->option }}</label>
     </div>
 </div>

@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirementItem;
 use App\Models\ScholarshipRequirementItemOption;
+use App\Models\ScholarResponse;
 use App\Models\ScholarResponseOption;
 
 class ResponseRadioLivewire extends Component
@@ -32,6 +33,18 @@ class ResponseRadioLivewire extends Component
         return false;
     }
 
+    protected function verifyUserResponse()
+    {
+        $access = ScholarResponse::where('id', $this->response_id)
+            ->where('user_id', Auth::id())
+            ->exists();
+
+        if (!$access) {
+            redirect()->route('index');
+        }
+        return !$access;
+    }
+
     public function mount(ScholarshipRequirementItem $id, $response_id)
     {
         if ($this->verifyUser()) return;
@@ -56,6 +69,7 @@ class ResponseRadioLivewire extends Component
     public function updated($propertyName)
     {
         if ($this->verifyUser()) return;
+        if ($this->verifyUserResponse()) return;
 
         $this->validateOnly($propertyName);
 
@@ -71,6 +85,7 @@ class ResponseRadioLivewire extends Component
     public function clear_selection()
     {
         if ($this->verifyUser()) return;
+        if ($this->verifyUserResponse()) return;
 
         if ( !$this->option->id ) {
             return;

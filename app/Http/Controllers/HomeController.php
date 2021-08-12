@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Scholarship;
+use App\Models\ScholarshipScholar;
 use App\Models\ScholarshipOfficer;
 use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementItem;
@@ -40,47 +41,56 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $file_uploads = ScholarshipRequirement::selectRaw('"file" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
-            ->join(with(new ScholarshipRequirementItem)->getTable(), 'scholarship_requirements.id', '=', 'scholarship_requirement_items.requirement_id')
-            ->join(with(new ScholarResponse)->getTable(), 'scholarship_requirements.id', '=', 'scholar_responses.requirement_id')
-            ->leftJoin(with(new ScholarResponseFile)->getTable(), function($join)
-            {
-                $join->on('scholarship_requirement_items.id', '=', 'scholar_response_files.item_id');
-                $join->on('scholarship_requirements.id', '=', 'scholar_response_files.response_id');
+        return ScholarshipRequirementCategory::where('requirement_id', 1)
+            ->whereIn('scholarship_requirement_categories.category_id', function($query){
+                $query->select('scholarship_scholars.category_id')
+                    ->from(with(new ScholarshipScholar)->getTable())
+                    ->where('scholarship_scholars.user_id', 28);
             })
-            ->whereIn('scholarship_requirement_items.type', ['cor', 'grade', 'file'])
-            ->where('scholarship_requirements.id', 1)
-            ->where('scholar_responses.id', 1)
-            ->whereNull('scholar_response_files.id');
+            ->exists();
 
-        $asnwer = ScholarshipRequirement::selectRaw('"answer" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
-            ->join(with(new ScholarshipRequirementItem)->getTable(), 'scholarship_requirements.id', '=', 'scholarship_requirement_items.requirement_id')
-            ->join(with(new ScholarResponse)->getTable(), 'scholarship_requirements.id', '=', 'scholar_responses.requirement_id')
-            ->leftJoin(with(new ScholarResponseAnswer)->getTable(), function($join)
-            {
-                $join->on('scholarship_requirement_items.id', '=', 'scholar_response_answers.item_id');
-                $join->on('scholarship_requirements.id', '=', 'scholar_response_answers.response_id');
-            })
-            ->whereIn('scholarship_requirement_items.type', ['question'])
-            ->where('scholarship_requirements.id', 1)
-            ->where('scholar_responses.id', 1)
-            ->whereNull('scholar_response_answers.id');
 
-        $options = ScholarshipRequirement::selectRaw('"file" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
-            ->join(with(new ScholarshipRequirementItem)->getTable(), 'scholarship_requirements.id', '=', 'scholarship_requirement_items.requirement_id')
-            ->join(with(new ScholarResponse)->getTable(), 'scholarship_requirements.id', '=', 'scholar_responses.requirement_id')
-            ->whereIn('scholarship_requirement_items.type', ['radio', 'check'])
-            ->where('scholarship_requirements.id', 1)
-            ->where('scholar_responses.id', 1)
-            ->whereNotIn('scholar_responses.id', function($query){
-                $query->select('scholar_response_options.response_id')
-                    ->from(with(new ScholarshipRequirementItemOption)->getTable())
-                    ->join(with(new ScholarResponseOption)->getTable(), 'scholarship_requirement_item_options.id', 'scholar_response_options.option_id')
-                    ->whereColumn('scholarship_requirement_item_options.item_id', 'scholarship_requirement_items.id')
-                    ->whereColumn('scholar_response_options.response_id', 'scholar_responses.id');
-            });
+        // $file_uploads = ScholarshipRequirement::selectRaw('"file" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
+        //     ->join(with(new ScholarshipRequirementItem)->getTable(), 'scholarship_requirements.id', '=', 'scholarship_requirement_items.requirement_id')
+        //     ->join(with(new ScholarResponse)->getTable(), 'scholarship_requirements.id', '=', 'scholar_responses.requirement_id')
+        //     ->leftJoin(with(new ScholarResponseFile)->getTable(), function($join)
+        //     {
+        //         $join->on('scholarship_requirement_items.id', '=', 'scholar_response_files.item_id');
+        //         $join->on('scholarship_requirements.id', '=', 'scholar_response_files.response_id');
+        //     })
+        //     ->whereIn('scholarship_requirement_items.type', ['cor', 'grade', 'file'])
+        //     ->where('scholarship_requirements.id', 1)
+        //     ->where('scholar_responses.id', 1)
+        //     ->whereNull('scholar_response_files.id');
 
-        return $options->union($file_uploads)->union($asnwer)->get();
+        // $asnwer = ScholarshipRequirement::selectRaw('"answer" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
+        //     ->join(with(new ScholarshipRequirementItem)->getTable(), 'scholarship_requirements.id', '=', 'scholarship_requirement_items.requirement_id')
+        //     ->join(with(new ScholarResponse)->getTable(), 'scholarship_requirements.id', '=', 'scholar_responses.requirement_id')
+        //     ->leftJoin(with(new ScholarResponseAnswer)->getTable(), function($join)
+        //     {
+        //         $join->on('scholarship_requirement_items.id', '=', 'scholar_response_answers.item_id');
+        //         $join->on('scholarship_requirements.id', '=', 'scholar_response_answers.response_id');
+        //     })
+        //     ->whereIn('scholarship_requirement_items.type', ['question'])
+        //     ->where('scholarship_requirements.id', 1)
+        //     ->where('scholar_responses.id', 1)
+        //     ->whereNull('scholar_response_answers.id');
+
+        // $options = ScholarshipRequirement::selectRaw('"file" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
+        //     ->join(with(new ScholarshipRequirementItem)->getTable(), 'scholarship_requirements.id', '=', 'scholarship_requirement_items.requirement_id')
+        //     ->join(with(new ScholarResponse)->getTable(), 'scholarship_requirements.id', '=', 'scholar_responses.requirement_id')
+        //     ->whereIn('scholarship_requirement_items.type', ['radio', 'check'])
+        //     ->where('scholarship_requirements.id', 1)
+        //     ->where('scholar_responses.id', 1)
+        //     ->whereNotIn('scholar_responses.id', function($query){
+        //         $query->select('scholar_response_options.response_id')
+        //             ->from(with(new ScholarshipRequirementItemOption)->getTable())
+        //             ->join(with(new ScholarResponseOption)->getTable(), 'scholarship_requirement_item_options.id', 'scholar_response_options.option_id')
+        //             ->whereColumn('scholarship_requirement_item_options.item_id', 'scholarship_requirement_items.id')
+        //             ->whereColumn('scholar_response_options.response_id', 'scholar_responses.id');
+        //     });
+
+        // return $options->union($file_uploads)->union($asnwer)->get();
 
 
         // $file_uploads = ScholarshipRequirementItem::selectRaw('"file" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
