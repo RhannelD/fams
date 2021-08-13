@@ -84,7 +84,8 @@
                         @foreach ($requirement_links as $requirement_link)
                             <a 
                                 @if ( Auth::user()->usertype == 'scholar' )
-                                    href="{{ route('reponse', [$requirement_link->id]) }}"
+                                    {{-- href="{{ route('reponse', [$requirement_link->id]) }}" --}}
+                                    href="{{ route('requirement.view', [$requirement_link->id]) }}"
                                 @else
                                     href="{{ route('scholarship.program', [ $requirement_link->scholarship_id, 'requirement', $requirement_link->id]) }}"  
                                 @endif

@@ -10,6 +10,7 @@ use App\Http\Livewire\ScholarshipLivewire;
 use App\Http\Livewire\ScholarshipProgramLivewire;
 use App\Http\Livewire\ScholarshipRequirementEditLivewire;
 use App\Http\Livewire\ScholarshipPostOpenLivewire;
+use App\Http\Livewire\RequirementPreviewLivewire;
 use App\Http\Livewire\ResponseLivewire;
 
 use App\Http\Controllers\HomeController;
@@ -37,6 +38,7 @@ Route::get('/scholarship', ScholarshipLivewire::class)->name('scholarship')->mid
 Route::get('/scholarship/{id}/{tab}/{requirement_id?}', ScholarshipProgramLivewire::class)->name('scholarship.program')->middleware('auth.main');
 Route::get('/requirement/{id}/edit', ScholarshipRequirementEditLivewire::class)->name('requirement.edit')->middleware('auth.main');
 Route::get('/post/{id}', ScholarshipPostOpenLivewire::class)->name('post.show')->middleware('auth.main');
+Route::get('/requirement/{requirement_id}', RequirementPreviewLivewire::class)->name('requirement.view')->middleware('auth.main');
 Route::get('/response/{id}', ResponseLivewire::class)->name('reponse')->middleware('auth.main');
 
 Route::get('/try', [HomeController::class, 'index'])->name('try');

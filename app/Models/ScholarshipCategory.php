@@ -19,4 +19,9 @@ class ScholarshipCategory extends Model
         'category',
         'amount',
     ];
+
+    public function requirements()
+    {
+        return $this->hasMany(ScholarshipRequirementCategory::class, 'category_id', 'id');
+    }
 }
