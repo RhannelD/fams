@@ -22,7 +22,9 @@ class ScholarResponseCommentFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'response_id' => 1,
+            'user_id' => 1,
+            'comment' => $this->faker->text($maxNbChars = 100)
         ];
     }
 }

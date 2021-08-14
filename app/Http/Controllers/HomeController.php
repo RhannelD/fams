@@ -41,13 +41,25 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return ScholarshipRequirementCategory::where('requirement_id', 1)
-            ->whereIn('scholarship_requirement_categories.category_id', function($query){
-                $query->select('scholarship_scholars.category_id')
-                    ->from(with(new ScholarshipScholar)->getTable())
-                    ->where('scholarship_scholars.user_id', 28);
-            })
-            ->exists();
+        // DB::enableQueryLog();
+
+        return ScholarshipScholar::where('user_id', Auth::id())
+            ->whereIn('category_id', function($query){
+                $query->select('category_id')
+                ->from(with(new ScholarshipRequirementCategory)->getTable())
+                ->where('requirement_id', 5);
+            })->get();
+
+        // dd(DB::getQueryLog());
+
+
+        // return ScholarshipRequirementCategory::where('requirement_id', 1)
+        //     ->whereIn('scholarship_requirement_categories.category_id', function($query){
+        //         $query->select('scholarship_scholars.category_id')
+        //             ->from(with(new ScholarshipScholar)->getTable())
+        //             ->where('scholarship_scholars.user_id', 28);
+        //     })
+        //     ->exists();
 
 
         // $file_uploads = ScholarshipRequirement::selectRaw('"file" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')

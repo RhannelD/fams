@@ -18,5 +18,13 @@ class ScholarResponse extends Model
         'user_id',
         'requirement_id',
         'submit_at',
+        'approval',
     ];
+
+    
+    public function cant_be_edit()
+    {
+        return isset($this->approval);
+    }
+
 }

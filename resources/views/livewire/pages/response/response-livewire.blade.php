@@ -6,7 +6,21 @@
             <div class="card shadow mb-2 requirement-item-hover">
                 <div class="card-body">
 
-                    @if ( !isset( $user_response->submit_at ) )
+                    @if ( $user_response->cant_be_edit() )
+                        <div class="alert alert-info mb-2">
+                            You can't edit your response anymore.
+                            <br>
+                            @if ( $user_response->approval )
+                                This has already been approved.
+                            @else
+                                This has already been denied.
+                            @endif
+                        </div>
+                        <a href="{{ route('requirement.view', [$requirement->id]) }}" class="btn btn-info btn-block pr-md-4 text-white">
+                            View requirement info
+                        </a>
+                            
+                    @elseif ( !isset( $user_response->submit_at ) )
                         <button wire:click="submit_response" class="btn btn-success btn-block">
                             <i class="fas fa-paper-plane mr-1" wire:loading.remove wire:target="submit_response"></i>
                             <i class="fas fa-spinner fa-spin" wire:loading wire:target="submit_response"></i>

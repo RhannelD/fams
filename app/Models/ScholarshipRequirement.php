@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class ScholarshipRequirement extends Model
 {
@@ -23,6 +24,27 @@ class ScholarshipRequirement extends Model
         'start_at',
         'end_at',
     ];
+
+    public function can_be_accessed()
+    {
+        $date_end = Carbon::parse($this->end_at);
+        $date_now = Carbon::now()->toDateTimeString();
+
+        if ( !isset($this->enable) ) {
+            if ($date_end > $date_now) {
+                return 'ongoing';
+            }
+            return 'disabled';
+        }
+        if ( !$this->enable ) {
+            return 'disabled';
+        } 
+        if ( $date_end > $date_now ) {
+            return 'ongoing';
+        }
+        return 'finished';
+    }
+    
 
     public function categories()
     {
