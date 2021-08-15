@@ -164,7 +164,7 @@
             <hr class="mt-1">
 
             @isset( $response )
-                @include('livewire.pages.requirement.requirement-response-view-livewire');
+                @include('livewire.pages.requirement.requirement-response-view-livewire')
             @endisset
 
         </div>

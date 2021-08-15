@@ -53,37 +53,31 @@
         <h5>Comments</h5>
         <hr class="my-2">
         @foreach ($response_comments as $comment)
-            <div class="my-2">
-                <div class="mr-auto mx-2 p-0 bd-highlight d-flex">
-                    <h6>
-                        <strong> {{ $comment->user->firstname }} {{ $comment->user->lastname }} </strong>
-                    </h6>
-    
-                    <h6 class="ml-auto mr-1 bd-highlight my-0">
-                        {{ date('d-m-Y h:i A', strtotime($comment->created_at)) }}
-                    </h6>
-                    
-                    @if (Auth::id() == $comment->user_id)
-                        <div class="dropdown mr-0 ml-1">
-                            <span id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-ellipsis-h"></i>
-                            </span>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item">
-                                    <i class="fas fa-trash mr-1"></i>
-                                    Delete Comment
-                                </a>
-                            </div>
-                        </div>
-                    @endif
+
+            @if ( $comment->user_id == Auth::id() ) 
+                @livewire('requirement-response-open-comment-livewire', [$comment->id], key('response-comment-open-'.time().$comment->id))
+
+            @else
+                <div class="my-2">
+                    <div class="mr-auto mx-2 p-0 bd-highlight d-flex">
+                        <h6>
+                            <strong> {{ $comment->user->firstname }} {{ $comment->user->lastname }} </strong>
+                        </h6>
+        
+                        <h6 class="ml-auto mr-1 bd-highlight my-0">
+                            {{ date('d-m-Y h:i A', strtotime($comment->created_at)) }}
+                        </h6>
+                    </div>
+                    <p class="mb-0 mx-2">{!! nl2br(e($comment->comment)) !!}</p>
                 </div>
-                <p class="mb-0 mx-2">{!! nl2br(e($comment->comment)) !!}</p>
-            </div>
-            <hr class="my-1">
+                
+                <hr class="my-1">
+            @endif
+
         @endforeach
     </div>
 
     <div class="card-footer bg-white">
-        @livewire('requirement-response-comment-livewire', [$response->id], key('response-comment-'.time()))
+        {{-- @livewire('requirement-response-comment-livewire', [$response->id], key('response-comment-'.time())) --}}
     </div>
 </div>

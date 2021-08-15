@@ -19,8 +19,19 @@ class RequirementPreviewLivewire extends Component
         'comment_updated' => '$refresh'
     ];
 
+    protected function verifyUser()
+    {
+        if (!Auth::check()) {
+            redirect()->route('index');
+            return true;
+        }
+        return false;
+    }
+
     public function mount(ScholarshipRequirement $requirement_id)
     {
+        if ($this->verifyUser()) return;
+
         $this->requirement = $requirement_id;
     }
 
