@@ -7,9 +7,15 @@
                     disabled
                 @endisset
                 >
-            <label class="form-check-label" for="option_{{ $option_item->id }}">
-                {{ $option_item->option }}
-            </label>
+            @if ( isset($option->response->submit_at) && $option->option_id == $option_item->id)
+                <label  for="option_{{ $option_item->id }}" class="form-check-label text-dark">
+                    <strong>{{ $option_item->option }}</strong>
+                </label>
+            @else
+                <label  for="option_{{ $option_item->id }}" class="form-check-label">
+                    {{ $option_item->option }}
+                </label>
+            @endif
         </div>
     @endforeach
     @error('option.option_id') <span class="text-danger">{{ $message }}</span> @enderror

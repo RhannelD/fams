@@ -42,24 +42,34 @@
                 <div class="card-body">
 
                     @if ( !isset($response) )
-                        @switch( $requirement->can_be_accessed() )
-                            @case('finished')
-                                <div class="alert alert-info mb-2">
-                                    Due date is finished but you can still send a response.
-                                </div>
-                            @case('ongoing')
-                                <a href="{{ route('reponse', [$requirement->id]) }}" class="btn btn-success btn-block pr-md-4">
-                                    <i class="fas fa-paper-plane mr-1"></i>
-                                    Respond
-                                </a>
-                                @break
+                        @if (!$access && $requirement->promote && $is_scholar)
+                            <div class="alert alert-info mb-2">
+                                You can't respond to this requirement.
+                                <br>
+                                Already a scholar of this scholarship program.
+                            </div>
 
-                            @default
-                                <div class="alert alert-danger my-auto">
-                                    You can't respond to this requirement.
-                                </div>
-                                @break
-                        @endswitch
+                        @else
+                            @switch( $requirement->can_be_accessed() )
+                                @case('finished')
+                                    <div class="alert alert-info mb-2">
+                                        Due date is finished but you can still send a response.
+                                    </div>
+                                @case('ongoing')
+                                    <a href="{{ route('reponse', [$requirement->id]) }}" class="btn btn-success btn-block pr-md-4">
+                                        <i class="fas fa-paper-plane mr-1"></i>
+                                        Respond
+                                    </a>
+                                    @break
+
+                                @default
+                                    <div class="alert alert-danger my-auto">
+                                        You can't respond to this requirement.
+                                    </div>
+                                    @break
+                            @endswitch
+                            
+                        @endif
 
                     @elseif ( $response->cant_be_edit() )
                         <div class="alert alert-info mb-2">

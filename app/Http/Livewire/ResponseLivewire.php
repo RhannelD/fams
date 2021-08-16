@@ -29,8 +29,12 @@ class ResponseLivewire extends Component
         return false;
     }
 
-    protected function verifyUserRequirementAccess($requirement_id)
+    protected function verifyUserRequirementAccess($requirement_id, $promote)
     {
+        if ( $promote ) {
+            return true;
+        }
+
         $access = ScholarshipRequirementCategory::where('requirement_id', $requirement_id)
             ->whereIn('scholarship_requirement_categories.category_id', function($query){
                 $query->select('scholarship_scholars.category_id')
@@ -57,7 +61,7 @@ class ResponseLivewire extends Component
     public function mount(ScholarshipRequirement $id)
     {
         if ($this->verifyUser()) return;
-        if (!$this->verifyUserRequirementAccess($id->id)) return;
+        if (!$this->verifyUserRequirementAccess($id->id, $id->promote)) return;
         
         $this->requirement = $id;
 

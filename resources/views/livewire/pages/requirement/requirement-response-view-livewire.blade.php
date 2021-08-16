@@ -52,7 +52,7 @@
     <div class="card-footer bg-white">
         <h5>Comments</h5>
         <hr class="my-2">
-        @foreach ($response_comments as $comment)
+        @foreach ($comments as $comment)
 
             @if ( $comment->user_id == Auth::id() ) 
                 @livewire('requirement-response-open-comment-livewire', [$comment->id], key('response-comment-open-'.time().$comment->id))
@@ -78,6 +78,6 @@
     </div>
 
     <div class="card-footer bg-white">
-        {{-- @livewire('requirement-response-comment-livewire', [$response->id], key('response-comment-'.time())) --}}
+        @livewire('requirement-response-comment-livewire', [$response_id], key('response-comment-'.time().$response_id))
     </div>
 </div>

@@ -111,16 +111,10 @@
                     </a>
                 </div>
             </div>
-
-            @livewire('scholarship-post-comment-livewire', [$post->id], key('scholarship-page-post-comment-'.time().$post->id))
-
             <hr style="max-width: 760px">
-            @foreach ($comments as $comment)
-                @livewire('scholarship-post-open-comment-livewire', [$comment->id], key('scholarship-page-post-comment-open-'.time().$post->id))
-            @endforeach
-            
+
             @if ($show_more)
-                <div class="card mb-3 shadow requirement-item-hover mx-auto mb-5" style="max-width: 760px">
+                <div class="card mb-3 shadow requirement-item-hover mx-auto" style="max-width: 760px">
                     <div class="card-header">
                         <button class="btn btn-block btn-primary"
                             wire:click="load_more"
@@ -136,9 +130,15 @@
                         </div>  
                     </div>
                 </div>
-            @else
-                <hr class="mb-5" style="max-width: 760px">
             @endif
+            
+            @foreach ($comments as $comment)
+                @livewire('scholarship-post-open-comment-livewire', [$comment->id], key('scholarship-page-post-comment-open-'.time().$post->id))
+            @endforeach
+
+            @livewire('scholarship-post-comment-livewire', [$post->id], key('scholarship-page-post-comment-'.time().$post->id))
+            
+            <hr class="mb-5" style="max-width: 760px">
         </div>
     </div>
 

@@ -13,19 +13,17 @@
 
         <div class="col-md-7 mt-2">
             <div class="form-row">
-                @if (Auth::user()->usertype != 'scholar')
-                    <div class="input-group col-6 my-0">
-                        <div class="input-group-prepend">
-                        <label class="input-group-text" for="category">Category</label>
-                        </div>
-                        <select wire:model="category_id" class="form-control" id="category">
-                            <option value="">All Categories</option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category['id'] }}">{{ $category['category'] }}</option>
-                            @endforeach
-                        </select>
+                <div class="input-group col-6 my-0">
+                    <div class="input-group-prepend">
+                    <label class="input-group-text" for="category">Category</label>
                     </div>
-                @endif
+                    <select wire:model="category_id" class="form-control" id="category">
+                        <option value="">All Categories</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category['id'] }}">{{ $category['category'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="input-group col-4 my-0">
                     <div class="input-group-prepend">
                     <label class="input-group-text" for="rows">Rows</label>

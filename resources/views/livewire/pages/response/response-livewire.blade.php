@@ -39,6 +39,22 @@
                 </div>
             </div>
 
+            @isset( $user_response->approval )     
+                <div class="card shadow mb-2 requirement-item-hover">
+                    <div class="card-body pb-1">
+                        @if ($user_response->approval)
+                            <div class="alert alert-success">
+                                Approved
+                            </div>
+                        @else
+                            <div class="alert alert-danger">
+                                Denied
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @endisset
+
             <hr>
         </div>
 

@@ -19,6 +19,7 @@ use App\Models\ScholarResponse;
 use App\Models\ScholarResponseOption;
 use App\Models\ScholarResponseAnswer;
 use App\Models\ScholarResponseFile;
+use App\Models\ScholarResponseComment;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -41,14 +42,27 @@ class HomeController extends Controller
      */
     public function index()
     {
+        return ScholarshipScholar::with('categories')
+            ->whereHas('categories', function ($query) {
+                $query->where('scholarship_id', 1);
+            })
+            ->where('user_id', Auth::id())
+            ->exists();
+
+        // return ScholarResponseComment::latest('id')
+        //     ->take(10)
+        //     ->get()
+        //     ->reverse()
+        //     ->values();
+
         // DB::enableQueryLog();
 
-        return ScholarshipScholar::where('user_id', Auth::id())
-            ->whereIn('category_id', function($query){
-                $query->select('category_id')
-                ->from(with(new ScholarshipRequirementCategory)->getTable())
-                ->where('requirement_id', 5);
-            })->get();
+        // return ScholarshipScholar::where('user_id', Auth::id())
+        //     ->whereIn('category_id', function($query){
+        //         $query->select('category_id')
+        //         ->from(with(new ScholarshipRequirementCategory)->getTable())
+        //         ->where('requirement_id', 5);
+        //     })->get();
 
         // dd(DB::getQueryLog());
 

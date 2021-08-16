@@ -18,6 +18,9 @@
                         <th></th>
                     @else  
                         <th>Name</th>
+                        @empty($category_id)
+                            <th>Category</th>
+                        @endempty
                         <th>Email</th>
                     @endif
                 </tr>
@@ -46,6 +49,9 @@
                             </td>
                         @else  
                             <td>{{ $scholar->firstname }} {{ $scholar->middlename }} {{ $scholar->lastname }}</td>
+                            @empty($category_id)
+                                <td>{{ $scholar->category }}</td>
+                            @endempty
                             <td>{{ $scholar->email }}</td>
                         @endif
                     </tr>

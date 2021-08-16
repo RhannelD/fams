@@ -18,4 +18,9 @@ class ScholarshipScholar extends Model
         'user_id',
         'category_id',
     ];
+    
+    public function categories()
+    {
+        return $this->belongsTo(ScholarshipCategory::class, 'category_id', 'id');
+    }
 }

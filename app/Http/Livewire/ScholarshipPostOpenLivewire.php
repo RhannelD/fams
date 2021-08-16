@@ -63,8 +63,11 @@ class ScholarshipPostOpenLivewire extends Component
     {
         $comments = ScholarshipPostComment::select('scholarship_post_comments.*')
             ->where('post_id', $this->post->id)
+            ->latest('id')
             ->take($this->post_count)
-            ->get();
+            ->get()
+            ->reverse()
+            ->values();
 
         $this->comment_count = ScholarshipPostComment::where('post_id', $this->post->id)->count();
 
