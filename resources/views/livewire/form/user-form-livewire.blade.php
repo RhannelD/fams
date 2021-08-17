@@ -65,7 +65,7 @@
                 @error('user.birthplace') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
 
-            @if (!isset($user->id))
+            @if (!isset($user_id))
                 <div class="form-group">
                     <label for="c_password">Password</label>
                     <input type="password" wire:model.lazy="password" class="form-control" id="c_password" placeholder="Password">

@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 class OfficerScholarshipLivewire extends Component
 {
     public $user_id;
-    public $scholarships;
     public $delete_scholarship;
     
     protected function verifyUser()
@@ -22,25 +21,16 @@ class OfficerScholarshipLivewire extends Component
         return false;
     }
 
-    public function mount($id)
+    public function mount($user_id)
     {
-        $this->user_id = $id;
-
-        $this->load_scholarships();
+        $this->user_id = $user_id;
     }
     
-    public function load_scholarships()
-    {
-        $this->scholarships = ScholarshipOfficer::select('scholarship_officers.*', 'scholarships.scholarship', 'officer_positions.position')
-            ->join('scholarships', 'scholarship_officers.scholarship_id', '=', 'scholarships.id')
-            ->join('officer_positions', 'scholarship_officers.position_id', '=', 'officer_positions.id')
-            ->where('user_id', $this->user_id)
-            ->get();
-    }
-
     public function render()
     {
-        return view('livewire.pages.officer.officer-scholarship-livewire');
+        $scholarships = ScholarshipOfficer::where('user_id', $this->user_id)->get();
+
+        return view('livewire.pages.officer.officer-scholarship-livewire', ['scholarships' => $scholarships]);
     }
 
     public function confirm_delete($id)
@@ -67,8 +57,6 @@ class OfficerScholarshipLivewire extends Component
         if ( !$scholarship->delete() ) {
             return;
         }
-
-        $this->load_scholarships();
 
         $this->dispatchBrowserEvent('swal:modal', [
             'type' => 'success',  

@@ -2,7 +2,7 @@
     <div class="card my-2">
         <h4 class="card-header bg-dark text-white">Scholarships</h4>
         <div class="card-body">
-            @forelse ($scholarships as $scholarship)
+            @forelse ($scholar_scholarships as $scholarship)
                 @if (!$loop->first)
                     <hr>
                 @endif
@@ -10,15 +10,15 @@
                     <tbody>
                         <tr>
                             <td>Scholarship:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholarship->scholarship }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $scholarship->category->scholarship->scholarship }}</td>
                         </tr>
                         <tr>
                             <td>Category:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholarship->category }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $scholarship->category->category }}</td>
                         </tr>
                         <tr>
                             <td>Amount:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholarship->amount }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $scholarship->category->amount }}</td>
                         </tr>
                         <tr>
                             <td>Accepted at:</td>
@@ -34,7 +34,7 @@
                     </tbody>
                 </table>
             @empty
-                <div class="alert alert-info">
+                <div class="alert alert-info my-auto">
                     None
                 </div>
             @endforelse

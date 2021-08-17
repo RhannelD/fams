@@ -19,4 +19,14 @@ class ScholarshipOfficer extends Model
         'scholarship_id',
         'position_id',
     ];
+
+    public function scholarship()
+    {
+        return $this->belongsTo(Scholarship::class, 'scholarship_id', 'id');
+    }
+    
+    public function position()
+    {
+        return $this->belongsTo(OfficerPosition::class, 'position_id', 'id');
+    }
 }

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class OfficerInfoLivewire extends Component
 {
-    public $user;
+    public $user_id;
     public $password;
 
 
@@ -32,31 +32,46 @@ class OfficerInfoLivewire extends Component
         return false;
     }
 
-    public function mount(User $id)
+    public function mount($user_id)
     {
-        $this->user = $id;
+        $this->user_id = $user_id;
     }
-
 
     public function render()
     {
-        return view('livewire.pages.officer.officer-info-livewire');
-    }
+        $user = User::find($this->user_id);
 
+        return view('livewire.pages.officer.officer-info-livewire', ['user' => $user]);
+    }
     
     public function updated($propertyName)
     {
         if ($this->verifyUser()) return;
         
+        $user = User::find($this->user_id);
+        if ( is_null($user) ) {
+            $this->dispatchBrowserEvent('remove:modal-backdrop');
+            return;
+        }
+        
         $this->validateOnly($propertyName);
     }
-    
 
     public function confirm_delete()
     {
         if ( $this->verifyUser() ) return;
 
         if ( $this->cannotbedeleted() ) {
+            return;
+        }
+        
+        $user = User::find($this->user_id);
+        if ( is_null($user) ) {
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'info',  
+                'message' => 'Officer Account Not Found', 
+                'text' => ''
+            ]);
             return;
         }
         
@@ -78,11 +93,16 @@ class OfficerInfoLivewire extends Component
             return;
         }
 
-        if (!$this->user->delete()) {
+        $user = User::find($this->user_id);
+        if ( is_null($user) ) {
+            $this->emitUp('info', null);
             return;
         }
 
-        $this->user = null;
+        if (!$user->delete()) {
+            return;
+        }
+
         $this->emitUp('info', null);
 
         $this->dispatchBrowserEvent('swal:modal', [
@@ -97,7 +117,7 @@ class OfficerInfoLivewire extends Component
     protected function cannotbedeleted()
     {
         $checker = ScholarshipOfficer::select('id')
-            ->where('user_id', $this->user->id)
+            ->where('user_id', $this->user_id)
             ->exists();
 
         if ($checker) {
@@ -111,15 +131,22 @@ class OfficerInfoLivewire extends Component
         return $checker;
     }
 
-    public function change_pass(){
+    public function change_pass()
+    {
         if ($this->verifyUser()) return;
+        
+        $user = User::find($this->user_id);
+        if ( is_null($user) ) {
+            $this->dispatchBrowserEvent('remove:modal-backdrop');
+            return;
+        }
         
         $this->validateOnly('password');
 
-        $this->user->password = Hash::make($this->password);
+        $user->password = Hash::make($this->password);
         $this->password = null;
 
-        if ( $this->user->save() ) {
+        if ( $user->save() ) {
             $this->dispatchBrowserEvent('swal:modal', [
                 'type' => 'success',  
                 'message' => 'Password Successfully Updated', 

@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 class ScholarScholarshipLivewire extends Component
 {
     public $user_id;
-    public $scholarships;
     public $delete_scholarship;
     
     protected function verifyUser()
@@ -23,34 +22,29 @@ class ScholarScholarshipLivewire extends Component
         return false;
     }
 
-    public function mount($id)
+    public function mount($user_id)
     {
-        $this->user_id = $id;
+        if ($this->verifyUser()) return;
 
-        $this->load_scholarships();
+        $this->user_id = $user_id;
     }
     
     public function render()
     {
-        return view('livewire.pages.scholar.scholar-scholarship-livewire');
-    }
-
-    public function load_scholarships()
-    {
-        if ($this->verifyUser()) return;
-
-        $scholar_scholarships = ScholarshipScholar::select('scholarship_scholars.id', 'scholarship', 'category', 'amount', 'scholarship_scholars.created_at')
-            ->join('scholarship_categories', 'scholarship_scholars.category_id', '=', 'scholarship_categories.id')
-            ->join('scholarships', 'scholarships.id', '=', 'scholarship_categories.scholarship_id')
-            ->where('scholarship_scholars.user_id', $this->user_id)
+        $scholar_scholarships = ScholarshipScholar::where('scholarship_scholars.user_id', $this->user_id)
             ->get();
 
-        $this->scholarships = $scholar_scholarships;
+        return view('livewire.pages.scholar.scholar-scholarship-livewire', ['scholar_scholarships' => $scholar_scholarships]);
     }
 
     public function confirm_delete($id)
     {
         if ($this->verifyUser()) return;
+
+        $scholarship = ScholarshipScholar::find($id);
+        if ( is_null($scholarship) ) {
+            return;
+        }
         
         $this->delete_scholarship = $id;
 
@@ -67,12 +61,13 @@ class ScholarScholarshipLivewire extends Component
         if ($this->verifyUser()) return;
         
         $scholarship = ScholarshipScholar::find($this->delete_scholarship);
+        if ( is_null($scholarship) ) {
+            return;
+        }
 
         if (!$scholarship->delete()) {
             return;
         }
-        
-        $this->load_scholarships();
 
         $this->dispatchBrowserEvent('swal:modal', [
             'type' => 'success',  

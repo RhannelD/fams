@@ -10,11 +10,11 @@
                     <tbody>
                         <tr>
                             <td>Scholarship:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholarship->scholarship }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $scholarship->scholarship->scholarship }}</td>
                         </tr>
                         <tr>
                             <td>Position:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $scholarship->position }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $scholarship->position->position }}</td>
                         </tr>
                         <tr>
                             <td>Accepted at:</td>
@@ -30,7 +30,7 @@
                     </tbody>
                 </table>
             @empty
-                <div class="alert alert-info">
+                <div class="alert alert-info my-auto">
                     None
                 </div>
             @endforelse

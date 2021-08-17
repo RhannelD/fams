@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ScholarEditLivewire extends Component
 {
-    
+    public $user_id;
     public $user;
     public $password;
 
@@ -24,11 +24,11 @@ class ScholarEditLivewire extends Component
             'user.middlename' => 'required|regex:/^[a-z ,.\'-]+$/i',
             'user.lastname' => 'required|regex:/^[a-z ,.\'-]+$/i',
             'user.gender' => 'required|in:male,female',
-            'user.phone' => "required|unique:users,phone".((isset($this->user->id))?",".$this->user->id:'')."|regex:/(09)[0-9]{9}/",
+            'user.phone' => "required|unique:users,phone".((isset($this->user_id))?",".$this->user_id:'')."|regex:/(09)[0-9]{9}/",
             'user.birthday' => 'required|before:5 years ago',
             'user.birthplace' => 'max:200',
             'user.religion' => 'max:200',
-            'user.email' => "required|unique:users,email".((isset($this->user->id))?",".$this->user->id:''),
+            'user.email' => "required|unique:users,email".((isset($this->user_id))?",".$this->user_id:''),
             'password' => 'required|min:9',
         ];
     }
@@ -47,11 +47,33 @@ class ScholarEditLivewire extends Component
         return false;
     }
 
-    public function set_user(User $id)
+    public function mount()
+    {
+        $this->user = new User;
+        $this->user->gender = 'male';
+    }
+    
+    public function set_user($user_id)
     {
         if ($this->verifyUser()) return;
 
-        $this->user = $id;
+        $user = User::find($user_id);
+        if ( is_null($user) ) {
+            return;
+        }
+
+        $this->user_id            = $user_id;
+        $this->user->firstname    = $user->firstname;
+        $this->user->middlename   = $user->middlename;
+        $this->user->lastname     = $user->lastname;
+        $this->user->gender       = $user->gender;
+        $this->user->birthday     = $user->birthday;
+        $this->user->birthplace   = $user->birthplace;
+        $this->user->religion     = $user->religion;
+        $this->user->phone        = $user->phone;
+        $this->user->email        = $user->email;
+        $this->password           = $user->password;
+        
         $this->resetErrorBag();
         $this->resetValidation();
     }
@@ -59,17 +81,13 @@ class ScholarEditLivewire extends Component
     public function unset_user()
     {
         if ($this->verifyUser()) return;
-
+        
+        $this->user_id = null;
         $this->user = new User;
         $this->user->gender = 'male';
+        $this->password = null;
         $this->resetErrorBag();
         $this->resetValidation();
-    }
-    
-    public function mount()
-    {
-        $this->user = new User;
-        $this->user->gender = 'male';
     }
     
     public function render()
@@ -81,13 +99,28 @@ class ScholarEditLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
-        if (isset($this->user->id)) {
-            $user = User::find($this->user->id);
-
-            $this->password = $user->password;
-        }
-
         $this->validate();
+
+        if ( isset($this->user_id) ) {
+            $user = User::find($this->user_id);
+
+            if ( is_null($user) ) {
+                $this->dispatchBrowserEvent('scholar-form', ['action' => 'hide']);
+                $this->emitTo('scholar-info-livewire', 'refresh');
+                return;
+            }
+            $user->firstname    = $this->user->firstname;
+            $user->middlename   = $this->user->middlename;
+            $user->lastname     = $this->user->lastname;
+            $user->gender       = $this->user->gender;
+            $user->birthday     = $this->user->birthday;
+            $user->birthplace   = $this->user->birthplace;
+            $user->religion     = $this->user->religion;
+            $user->phone        = $this->user->phone;
+            $user->email        = $this->user->email;
+
+            $this->user = $user;
+        }
         
         $this->user->usertype = 'scholar';
 
