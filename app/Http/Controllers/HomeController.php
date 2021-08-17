@@ -42,12 +42,21 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return ScholarshipScholar::with('categories')
-            ->whereHas('categories', function ($query) {
-                $query->where('scholarship_id', 1);
-            })
-            ->where('user_id', Auth::id())
-            ->exists();
+        return is_null(ScholarshipPost::find(3002));
+
+        // $comment = ScholarshipPostComment::select('scholarship_post_comments.*', 'users.firstname', 'users.lastname')
+        //     ->leftJoin('users', 'scholarship_post_comments.user_id', '=', 'users.id')
+        //     ->where('scholarship_post_comments.id', 1)
+        //     ->first();
+
+        // return is_null($comment);    
+
+        // return ScholarshipScholar::with('categories')
+        //     ->whereHas('categories', function ($query) {
+        //         $query->where('scholarship_id', 1);
+        //     })
+        //     ->where('user_id', Auth::id())
+        //     ->exists();
 
         // return ScholarResponseComment::latest('id')
         //     ->take(10)

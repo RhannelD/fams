@@ -35,25 +35,7 @@ class ScholarshipRequirementOpenLivewire extends Component
 
     public function render()
     {
-        $requirement_items = [];
-
-        if (isset($this->requirement->id)) {
-            $requirement_items =  ScholarshipRequirementItem::where('requirement_id', $this->requirement->id)
-                ->orderBy('position')
-                ->get();
-    
-            foreach ($requirement_items as $key => $requirement_item) {
-                if (in_array($requirement_item->type, array('radio', 'check'))) {
-                    $options = ScholarshipRequirementItemOption::where('item_id', $requirement_item->id)->get();
-    
-                    $requirement_items[$key]['options'] = $options;
-                }
-            }
-        }
-
-        return view('livewire.pages.scholarship-requirement-open.scholarship-requirement-open-livewire', [
-            'requirement_items' => $requirement_items
-        ]);
+        return view('livewire.pages.scholarship-requirement-open.scholarship-requirement-open-livewire');
     }
 
     public function delete_confirmation()

@@ -11,8 +11,8 @@ use App\Models\ScholarshipRequirement;
 class ScholarshipPostLivewire extends Component
 {
     public $scholarship_id;
-    public $post;
     public $post_id;
+    public $post;
 
     public $show_requirement = false;
     public $requirements;
@@ -40,19 +40,28 @@ class ScholarshipPostLivewire extends Component
         $this->scholarship_id = $scholarship_id;
 
         $this->requirements = ScholarshipRequirement::where('scholarship_requirements.scholarship_id', $this->scholarship_id)
-        ->whereNotIn('scholarship_requirements.id', $this->added_requirements)
-        ->orderBy('scholarship_requirements.id', 'desc')
-        ->get();
+            ->whereNotIn('scholarship_requirements.id', $this->added_requirements)
+            ->orderBy('scholarship_requirements.id', 'desc')
+            ->get();
 
+        $this->post_id = $post_id;
+        $this->set_post();
+    }
+
+    protected function set_post()
+    {
         $this->post = new ScholarshipPost;
-        if ( isset($post_id) ) {
-            $this->post_id = $post_id;
-            $this->post = ScholarshipPost::find($post_id);
+        if ( isset($this->post_id) ) {
+            $post = ScholarshipPost::find($this->post_id);
+            if ( is_null($post) ) {
+                $this->post_id = null;
+                return;
+            }
 
-            $links = ScholarshipPostLinkRequirement::where('post_id', $post_id)
-                ->get();
-
-            foreach ($links as $link) {
+            $this->post->title = $post->title;
+            $this->post->post  = $post->post;
+            
+            foreach ($post->requirement_links as $link) {
                 array_push($this->added_requirements, $link->requirement_id);
             }
         }
@@ -73,10 +82,20 @@ class ScholarshipPostLivewire extends Component
         if ($this->verifyUser()) return;
 
         $this->validate();
-        
-        if ( !isset($this->post_id) ) {
+
+        if ( is_null($this->post_id) ) {
             $this->post->scholarship_id = $this->scholarship_id;
             $this->post->user_id = Auth::id();
+        } else {
+            $post = ScholarshipPost::find($this->post_id);
+            if ( is_null($post) ) {
+                $this->dispatchBrowserEvent('close_post_modal');
+                $this->emitUp('post_updated');
+                return;
+            }
+            $post->title = $this->post->title;
+            $post->post  = $this->post->post;
+            $this->post  = $post;
         }
 
         if ($this->post->save()) {
@@ -101,15 +120,10 @@ class ScholarshipPostLivewire extends Component
             }
 
             $this->dispatchBrowserEvent('remove:modal-backdrop');
-
-            if ( isset($this->post_id) ) {
-                $this->post = ScholarshipPost::find($this->post_id);
-            } else {
-                $this->post = new ScholarshipPost;
-            }
-
             $this->emitUp('post_updated');
         }
+
+        $this->set_post();
     }
 
     public function show_requirements()

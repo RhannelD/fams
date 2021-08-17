@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ScholarshipPost;
 use App\Models\ScholarshipPostComment;
 
 class ScholarshipPostCommentLivewire extends Component
@@ -13,7 +14,7 @@ class ScholarshipPostCommentLivewire extends Component
 
 
     protected $rules = [
-        'comment.comment' => 'string|min:1|max:60000',
+        'comment.comment' => 'required|string|min:1|max:60000',
     ];
 
     protected function verifyUser()
@@ -25,11 +26,11 @@ class ScholarshipPostCommentLivewire extends Component
         return false;
     }
 
-    public function mount($id)
+    public function mount($post_id)
     {
         if ($this->verifyUser()) return;
 
-        $this->post_id = $id;
+        $this->post_id = $post_id;
         $this->comment = new ScholarshipPostComment;
     }
 
@@ -49,6 +50,10 @@ class ScholarshipPostCommentLivewire extends Component
         if ($this->verifyUser()) return;
 
         $this->validate();
+
+        if ( !ScholarshipPost::where('id', $this->post_id)->exists() ) {
+            return redirect()->route('index');
+        }
         
         $this->comment->user_id = Auth::id();
         $this->comment->post_id = $this->post_id;

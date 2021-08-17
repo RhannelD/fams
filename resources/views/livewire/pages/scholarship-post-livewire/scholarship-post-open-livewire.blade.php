@@ -1,30 +1,31 @@
 <div>
+@if ( isset($post) )
     <div class="row mt-1 p-1">
         <div class="card col-12 bg-secondary text-white border-secondary">
             <h2 class="m-2 row">
                 <strong class="my-auto">
-                    {{ $scholarship->scholarship }} -  Post
+                    {{ $post->scholarship->scholarship }} -  Post
                 </strong>
                 
                 <div class="mr-1 ml-auto">
                     <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$scholarship->id, 'home']) }}">
+                        href="{{ route('scholarship.program', [$post->scholarship_id, 'home']) }}">
                         <i class="fas fa-newspaper"></i>
                         <strong>Home</strong>
                     </a>
                     <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$scholarship->id, 'scholar']) }}">
+                        href="{{ route('scholarship.program', [$post->scholarship_id, 'scholar']) }}">
                         <i class="fas fa-user-graduate"></i>
                         <strong>Scholars</strong>
                     </a>
                     <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$scholarship->id, 'officer']) }}">
+                        href="{{ route('scholarship.program', [$post->scholarship_id, 'officer']) }}">
                         <i class="fas fa-address-card"></i>
                         <strong>Officers</strong>
                     </a>
                     @if (Auth::user()->usertype != 'scholar')
                         <a class="btn btn-light"
-                            href="{{ route('scholarship.program', [$scholarship->id, 'requirement']) }}">
+                            href="{{ route('scholarship.program', [$post->scholarship_id, 'requirement']) }}">
                             <i class="fas fa-file-alt"></i>
                             <strong>Requirements</strong>
                         </a>
@@ -58,14 +59,13 @@
                         </div>
                     </h5>
 
-                    @livewire('scholarship-post-livewire', [$scholarship->id, $post->id], key('scholarship-page-post-'.time().$scholarship->id))
-
+                    @livewire('scholarship-post-livewire', [$post->scholarship_id, $post->id], key('scholarship-page-post-'.time().$post->scholarship_id))
 
                     <div class="d-flex">
                         <div class="mr-auto bd-highlight my-0">
                             <h6 class="my-0">
-                                @if ( $post->firstname )
-                                    {{ $post->firstname }} {{ $post->lastname }}
+                                @if ( $post->user->id )
+                                    {{ $post->user->flname() }}
                                 @endif
                             </h6>
                         </div>
@@ -79,15 +79,14 @@
                         {!! nl2br(e($post->post)) !!}
                     </p>
 
-                    @if ( count($requirement_links) != 0 )
+                    @if ( count($post->requirement_links) != 0 )
                         <hr>
-                        @foreach ($requirement_links as $requirement_link)
+                        @foreach ($post->requirement_links as $requirement_link)
                             <a 
                                 @if ( Auth::user()->usertype == 'scholar' )
-                                    {{-- href="{{ route('reponse', [$requirement_link->id]) }}" --}}
-                                    href="{{ route('requirement.view', [$requirement_link->id]) }}"
+                                    href="{{ route('requirement.view', [$requirement_link->requirement->id]) }}"
                                 @else
-                                    href="{{ route('scholarship.program', [ $requirement_link->scholarship_id, 'requirement', $requirement_link->id]) }}"  
+                                    href="{{ route('scholarship.program', [ $requirement_link->requirement->scholarship_id, 'requirement', $requirement_link->requirement->id]) }}"  
                                 @endif
                                 >
                             <div class="input-group mb-1  item-hover">
@@ -96,7 +95,7 @@
                                             <i class="fas fa-file-alt"></i>
                                         </span>
                                     </div>
-                                    <input type="text" class="form-control bg-white" value="{{ $requirement_link->requirement }}" readonly>
+                                    <input type="text" class="form-control bg-white" value="{{ $requirement_link->requirement->requirement }}" readonly>
                                 </div>
                             </a>
                         @endforeach
@@ -163,4 +162,11 @@
             });
         });
     </script>
+        
+@else
+    <div class="alert alert-info mt-5 m-md-5">
+        This post doesn't exist.
+    </div>
+
+@endif
 </div>

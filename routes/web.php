@@ -37,7 +37,7 @@ Route::get('/scholar', ScholarLivewire::class)->name('scholar')->middleware('aut
 Route::get('/scholarship', ScholarshipLivewire::class)->name('scholarship')->middleware('auth.main');
 Route::get('/scholarship/{id}/{tab}/{requirement_id?}', ScholarshipProgramLivewire::class)->name('scholarship.program')->middleware('auth.main');
 Route::get('/requirement/{id}/edit', ScholarshipRequirementEditLivewire::class)->name('requirement.edit')->middleware('auth.main');
-Route::get('/post/{id}', ScholarshipPostOpenLivewire::class)->name('post.show')->middleware('auth.main');
+Route::get('/post/{post_id}', ScholarshipPostOpenLivewire::class)->name('post.show')->middleware('auth.main');
 Route::get('/requirement/{requirement_id}', RequirementPreviewLivewire::class)->name('requirement.view')->middleware('auth.main');
 Route::get('/response/{id}', ResponseLivewire::class)->name('reponse')->middleware('auth.main');
 

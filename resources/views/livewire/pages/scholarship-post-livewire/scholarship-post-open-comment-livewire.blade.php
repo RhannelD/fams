@@ -1,4 +1,9 @@
-<div class="div_comment_id_{{ $comment->id }} shadow p-2 mx-2 bg-white rounded bd-highlight item-hover mx-auto mb-3" style="max-width: 760px">
+<div class="div_comment_id_{{ $comment_id }}">
+@isset($comment)
+
+<div class="shadow p-2 mx-2 bg-white rounded bd-highlight item-hover mx-auto mb-3" style="max-width: 760px">
+    
+
     <div class="mr-auto mx-2 p-0 bd-highlight d-flex">
         <h6>
             <strong> {{ $comment->firstname }} {{ $comment->lastname }} </strong>
@@ -24,6 +29,7 @@
     </div>
     <p class="mb-0 mx-2">{!! nl2br(e($comment->comment)) !!}</p>
 
+
     
 	<script>
         window.addEventListener('delete_comment_div', event => { 
@@ -32,7 +38,7 @@
             });
         });
 
-        window.addEventListener('swal:confirm:delete_comment_{{ $comment->id }}', event => { 
+        window.addEventListener('swal:confirm:delete_comment_{{ $comment_id }}', event => { 
             swal({
               title: event.detail.message,
               text: event.detail.text,
@@ -47,4 +53,7 @@
             });
         });
 	</script>
+</div>
+
+@endisset
 </div>

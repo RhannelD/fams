@@ -43,7 +43,8 @@
         
             <div class="row">
                 <div class="col-sm-12 offset-sm-0 col-md-10 offset-md-1">
-                    @foreach ($requirement_items as $requirement_item)
+                    @isset($requirement->items)
+                    @foreach ($requirement->items as $requirement_item)
                         <div class="card mb-3 shadow requirement-item-hover">
                             <div class="card-body">
         
@@ -111,6 +112,7 @@
                             </div>
                         </div>
                     @endforeach
+                    @endisset
                 </div>
             </div>
         </div>

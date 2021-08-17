@@ -1,7 +1,7 @@
 <div class="shadow p-2 mx-2 bg-white rounded item-hover mx-auto mb-3 p-3" style="max-width: 760px">
     <label class="mb-1">
         <strong>
-            {{ Auth::user()->firstname }} {{ Auth::user()->lastname }}
+            {{ Auth::user()->flname() }}
         </strong>
     </label>
     <form class="form-group my-0" wire:submit.prevent="comment">

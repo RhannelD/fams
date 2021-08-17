@@ -9,7 +9,6 @@ use App\Models\ScholarshipPostComment;
 class ScholarshipPostOpenCommentLivewire extends Component
 {
     public $comment_id;
-    public $comment;
     
     protected function verifyUser()
     {
@@ -25,16 +24,17 @@ class ScholarshipPostOpenCommentLivewire extends Component
         if ($this->verifyUser()) return;
 
         $this->comment_id = $id;
-        $this->comment = ScholarshipPostComment::select('scholarship_post_comments.*', 'users.firstname', 'users.lastname')
-            ->leftJoin('users', 'scholarship_post_comments.user_id', '=', 'users.id')
-            ->where('scholarship_post_comments.id', $this->comment_id)
-            ->first();
     }
 
 
     public function render()
     {
-        return view('livewire.pages.scholarship-post-livewire.scholarship-post-open-comment-livewire');
+        $comment = ScholarshipPostComment::select('scholarship_post_comments.*', 'users.firstname', 'users.lastname')
+            ->leftJoin('users', 'scholarship_post_comments.user_id', '=', 'users.id')
+            ->where('scholarship_post_comments.id', $this->comment_id)
+            ->first();
+        
+        return view('livewire.pages.scholarship-post-livewire.scholarship-post-open-comment-livewire', ['comment' => $comment]);
     }
 
     public function delete_comment_confirmation()
@@ -55,11 +55,15 @@ class ScholarshipPostOpenCommentLivewire extends Component
 
         $comment = ScholarshipPostComment::find($this->comment_id);
 
+        if ( !$comment ) {
+            return;
+        }
+
         if ($comment->delete()) {
             $this->dispatchBrowserEvent('delete_comment_div', [
                 'div_class' => $comment->id,  
             ]);
-
+            
             $this->emitUp('comment_updated');
         }
     }

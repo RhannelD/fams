@@ -12,18 +12,13 @@ use App\Models\ScholarshipRequirement;
 
 class ScholarshipPostOpenLivewire extends Component
 {
-    public $scholarship;
     public $post_id;
-    public $post;
-    public $requirement_links;
-    public $comment_count;
     public $post_count = 10;
     
     protected $listeners = [
         'comment_updated' => '$refresh',
-        'post_updated' => 'refresh_all'
+        'post_updated' => '$refresh'
     ];
-
 
     protected function verifyUser()
     {
@@ -34,48 +29,35 @@ class ScholarshipPostOpenLivewire extends Component
         return false;
     }
 
-    public function mount($id)
+    public function mount($post_id)
     {
         if ($this->verifyUser()) return;
 
-        $this->post_id = $id;
-
-        $this->refresh_all();
-    }
-
-    public function refresh_all()
-    {
-        $this->post = ScholarshipPost::select('scholarship_posts.*', 'users.firstname', 'users.lastname')
-            ->leftJoin('users', 'scholarship_posts.user_id', '=', 'users.id')
-            ->where('scholarship_posts.id', $this->post_id)
-            ->first();
-
-        $this->requirement_links = ScholarshipPostLinkRequirement::select('scholarship_requirements.*')
-            ->join('scholarship_requirements', 'scholarship_post_link_requirements.requirement_id', '=', 'scholarship_requirements.id')
-            ->where('post_id', $this->post_id)
-            ->get();
-
-        $this->scholarship = Scholarship::find($this->post->scholarship_id);
+        $this->post_id = $post_id;
     }
 
 
     public function render()
     {
+        $post = ScholarshipPost::find($this->post_id);
+
         $comments = ScholarshipPostComment::select('scholarship_post_comments.*')
-            ->where('post_id', $this->post->id)
+            ->where('post_id', $this->post_id)
             ->latest('id')
             ->take($this->post_count)
             ->get()
             ->reverse()
             ->values();
 
-        $this->comment_count = ScholarshipPostComment::where('post_id', $this->post->id)->count();
+        $comment_count = ScholarshipPostComment::where('post_id', $this->post_id)->count();
 
-        $show_more = ($this->comment_count > count($comments));
+        $show_more = ($comment_count > count($comments));
 
         return view('livewire.pages.scholarship-post-livewire.scholarship-post-open-livewire', [
+                'post' => $post,
                 'comments' => $comments,
-                'show_more' => $show_more
+                'comment_count' => $comment_count,
+                'show_more' => $show_more,
             ])->extends('livewire.main.main-livewire');
     }
 
@@ -90,7 +72,7 @@ class ScholarshipPostOpenLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
-        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_post_'.$this->post->id, [
+        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_post_'.$this->post_id, [
             'type' => 'warning',  
             'message' => 'Are you sure?', 
             'text' => 'If deleted, you will not be able to recover this post!',
@@ -102,10 +84,15 @@ class ScholarshipPostOpenLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
-        $post = ScholarshipPost::find($this->post->id);
+        $post = ScholarshipPost::find($this->post_id);
+        if ( !$post ) {
+            return;
+        }
+
+        $scholarship_id = $post->scholarship_id;
 
         if ($post->delete()) {
-            redirect()->route('scholarship.program', [$this->scholarship->id, 'home']);
+            redirect()->route('scholarship.program', [$scholarship_id, 'home']);
         }
     }
 }

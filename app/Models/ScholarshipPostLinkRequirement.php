@@ -18,4 +18,9 @@ class ScholarshipPostLinkRequirement extends Model
         'post_id',
         'requirement_id',
     ];
+    
+    public function requirement()
+    {
+        return $this->belongsTo(ScholarshipRequirement::class, 'requirement_id', 'id');
+    }
 }

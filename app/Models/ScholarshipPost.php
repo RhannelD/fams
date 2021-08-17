@@ -15,9 +15,25 @@ class ScholarshipPost extends Model
      * @var array
      */
     protected $fillable = [
+        'user_id',
         'scholarship_id',
         'title',
         'post',
         'promote',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+    
+    public function scholarship()
+    {
+        return $this->belongsTo(Scholarship::class, 'scholarship_id', 'id');
+    }
+
+    public function requirement_links()
+    {
+        return $this->hasMany(ScholarshipPostLinkRequirement::class, 'post_id', 'id');
+    }
 }
