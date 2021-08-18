@@ -15,12 +15,15 @@ class ScholarshipScholarLivewire extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $scholarship_id;
-    public $categories;
     public $search;
     public $show_row = 10;
     
     public $category_id = '';
 
+    protected $listeners = [
+        'refresh' => '$refresh',
+    ];
+    
     protected function verifyUser()
     {
         if (!Auth::check()) {
@@ -55,7 +58,6 @@ class ScholarshipScholarLivewire extends Component
             return view('livewire.pages.scholarship-scholar.scholarship-scholar-livewire');
 
         $categories = ScholarshipCategory::where('scholarship_id', $this->scholarship_id)->get();
-        $this->categories = $categories->toArray();
 
         $search = $this->search;
         $scholars = DB::table('scholarship_scholars')->select(DB::raw('DISTINCT(scholarship_scholars.user_id)'), 'users.*', 'scholarship_categories.*')
@@ -75,6 +77,9 @@ class ScholarshipScholarLivewire extends Component
         $scholars = $scholars
             ->paginate($this->show_row);
 
-        return view('livewire.pages.scholarship-scholar.scholarship-scholar-livewire', ['scholars' => $scholars]);
+        return view('livewire.pages.scholarship-scholar.scholarship-scholar-livewire', [
+                'scholars' => $scholars,
+                'categories' => $categories,
+            ]);
     }
 }

@@ -7,7 +7,7 @@
         <table class="table myaccordion table-hover" id="accordion">
             <thead>
                 <tr>
-                    @if (!Auth::user()->usertype == 'scholar')
+                    @if ( !(Auth::user()->usertype == 'scholar') )
                         <th>ID</th>
                         <th>Name</th>
                         @empty($category_id)

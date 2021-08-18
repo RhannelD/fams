@@ -4,7 +4,7 @@
 
 			<div class="input-group rounded">
 				<input type="search" class="form-control rounded" placeholder="Search Officer" wire:model.debounce.1000ms='search'/>
-				<span class="input-group-text border-0">
+				<span wire:click="$emitSelf('refresh')" class="input-group-text border-0">
 					<i class="fas fa-search"></i>
 				</span>
 			</div>

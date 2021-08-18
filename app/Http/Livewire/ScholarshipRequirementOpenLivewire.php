@@ -14,28 +14,29 @@ use Illuminate\Support\Facades\Auth;
 
 class ScholarshipRequirementOpenLivewire extends Component
 {
-    public $requirement;
+    public $requirement_id;
     
     protected function verifyUser()
     {
-        if (!Auth::check()) {
+        if ( !Auth::check() || Auth::user()->usertype=='scholar' ) {
             redirect()->route('index');
             return true;
         }
         return false;
     }
     
-    public function mount(ScholarshipRequirement $requirement)
+    public function mount($requirement_id)
     {
         if ($this->verifyUser()) return;
 
-        $this->requirement = $requirement;
+        $this->requirement_id = $requirement_id;
     }
     
-
     public function render()
     {
-        return view('livewire.pages.scholarship-requirement-open.scholarship-requirement-open-livewire');
+        $requirement = ScholarshipRequirement::find($this->requirement_id);
+
+        return view('livewire.pages.scholarship-requirement-open.scholarship-requirement-open-livewire', ['requirement' => $requirement]);
     }
 
     public function delete_confirmation()
@@ -53,13 +54,8 @@ class ScholarshipRequirementOpenLivewire extends Component
     public function delete_requirement()
     {
         if ($this->verifyUser()) return;
-        
-        $requirement_id = $this->requirement->id;
 
-        $this->requirement = [];
-
-        ScholarshipRequirement::find($requirement_id)->delete();
-
+        ScholarshipRequirement::find($this->requirement_id)->delete();
         
         $this->dispatchBrowserEvent('swal:modal', [
             'type' => 'success',  

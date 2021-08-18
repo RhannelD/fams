@@ -20,6 +20,10 @@ class ScholarshipRequirementLivewire extends Component
     public $show_row = 10;
     public $promote = '';
 
+    protected $listeners = [
+        'refresh' => '$refresh',
+    ];
+    
     protected function verifyUser()
     {
         if (!Auth::check()) {
@@ -48,15 +52,13 @@ class ScholarshipRequirementLivewire extends Component
         }
     }
 
-
     public function render()
     {
         if ($this->verifyUser()) 
             return view('livewire.pages.scholarship-requirement.scholarship-requirement-livewire');
 
         $search = $this->search;
-        $requirements = DB::table('scholarship_requirements')
-            ->where('scholarship_requirements.requirement', 'like', "%$search%")
+        $requirements = ScholarshipRequirement::where('scholarship_requirements.requirement', 'like', "%$search%")
             ->where('scholarship_requirements.scholarship_id', $this->scholarship_id)
             ->orderBy('scholarship_requirements.id', 'desc');
         if ($this->promote != '') {
@@ -66,10 +68,6 @@ class ScholarshipRequirementLivewire extends Component
             ->paginate($this->show_row);
 
         return view('livewire.pages.scholarship-requirement.scholarship-requirement-livewire', ['requirements' => $requirements]);
-    }
-
-    public function view_requirement($requirement_id){
-        $this->emit('view_requirement', $requirement_id);
     }
 
     public function create_requirement()

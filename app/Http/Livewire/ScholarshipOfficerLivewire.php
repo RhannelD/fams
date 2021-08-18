@@ -20,6 +20,10 @@ class ScholarshipOfficerLivewire extends Component
     public $position = '';
     public $show_row = 10;
 
+    protected $listeners = [
+        'refresh' => '$refresh',
+    ];
+
     protected function verifyUser()
     {
         if (!Auth::check()) {
@@ -28,7 +32,6 @@ class ScholarshipOfficerLivewire extends Component
         }
         return false;
     }
-
     
     public function mount($scholarship_id)
     {
@@ -51,7 +54,6 @@ class ScholarshipOfficerLivewire extends Component
         return [];
     }
 
-    
     public function render()
     {
         $search = $this->search;

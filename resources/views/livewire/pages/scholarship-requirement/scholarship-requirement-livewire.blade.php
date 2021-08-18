@@ -1,14 +1,12 @@
 <div>
 	<div class="row mb-1">
 		<div class="input-group col-md-5 mt-2">
-
 			<div class="input-group rounded">
 				<input type="search" class="form-control rounded" placeholder="Search Requirement" wire:model.debounce.1000ms='search'/>
-				<span class="input-group-text border-0">
+				<span wire:click="$emitSelf('refresh')" class="input-group-text border-0">
 					<i class="fas fa-search"></i>
 				</span>
 			</div>
-
 		</div>
 
         <div class="col-md-7 mt-2">

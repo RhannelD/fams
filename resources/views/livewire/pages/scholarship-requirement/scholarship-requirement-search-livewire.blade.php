@@ -16,7 +16,7 @@
                                     mb-0 
                                 @endif    
                                 "
-                                wire:click="view_requirement({{ $requirement->id }})"
+                                wire:click="$emitUp('view_requirement', {{ $requirement->id }})"
                                 style="cursor: pointer;">
                                 <div class="mr-auto p-2 bd-highlight">
                                     {{ $requirement->requirement }}
@@ -32,23 +32,21 @@
                                 </div>
                                 <div class="bd-highlight mx-1 my-auto">
                                     <h5>
-                                        @php 
-                                            $date_end = \Carbon\Carbon::parse($requirement->end_at);
-                                            $date_now = \Carbon\Carbon::now()->toDateTimeString();
-                                        @endphp
-                                        @if (!isset($requirement->enable))
-                                            @if ($date_end > $date_now)
+                                        
+                                        @switch( $requirement->can_be_accessed() )
+                                            @case('finished')
+                                                <span class="badge badge-pill badge-danger">Finished</span>
+                                                @break
+
+                                            @case('ongoing')
                                                 <span class="badge badge-pill badge-success">Ongoing</span>
-                                            @else
+                                                @break
+
+                                            @case('disabled')
                                                 <span class="badge badge-pill badge-dark">Disabled</span>
-                                            @endif
-                                        @elseif (!$requirement->enable)
-                                            <span class="badge badge-pill badge-dark">Disabled</span>
-                                        @elseif ($date_end > $date_now)
-                                            <span class="badge badge-pill badge-success">Ongoing</span>
-                                        @else
-                                            <span class="badge badge-pill badge-danger">Finished</span>
-                                        @endif
+                                                @break
+                                        @endswitch
+
                                     </h5>
                                 </div>
                             </div>
