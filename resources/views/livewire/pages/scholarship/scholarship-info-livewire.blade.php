@@ -14,6 +14,10 @@
                             <td>Scholarship:</td>
                             <td class="pl-sm-1 pl-md-2">{{ $scholarship_program->scholarship }}</td>
                         </tr>
+                        <tr>
+                            <td>Scholars:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $scholarship_program->scholars_count() }}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -23,11 +27,11 @@
                     Open Scholarship
                 </a>
                 @if ( Auth::user()->usertype == 'admin' )
-                    <button type="button" class="btn btn-info mb-1 mb-lg-0 text-white" wire:click="edit({{ $scholarship_program->id }})" data-toggle="modal" data-target="#scholarship_form">
+                    <button type="button" class="btn btn-info mb-1 mb-lg-0 text-white" wire:click="edit()" data-toggle="modal" data-target="#scholarship_form">
                         <i class="fas fa-edit"></i>
                         Edit Info
                     </button>
-                    <button class="btn btn-danger text-white mb-1 mb-lg-0" wire:click="confirm_delete({{ $scholarship_program->id }})">
+                    <button class="btn btn-danger text-white mb-1 mb-lg-0" wire:click="confirm_delete()">
                         <i class="fas fa-trash"></i>
                         Delete
                     </button>

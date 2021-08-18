@@ -17,4 +17,11 @@ class Scholarship extends Model
     protected $fillable = [
         'scholarship',
     ];
+
+    public function scholars_count()
+    {
+        return ScholarshipScholar::whereHas('category', function ($query) {
+                $query->where('scholarship_id', $this->id);
+            })->count();
+    }
 }

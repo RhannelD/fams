@@ -15,12 +15,14 @@ class ScholarshipLivewire extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $search = '';
-    public $scholarship_program;
-    public $scholarship_id_delete;
+    public $scholarship_program_id;
 
     public $scholarship_id;
     public $scholarship;
 
+    protected $listeners = [
+        'refresh' => '$refresh',
+    ];
     
     function rules() {
         return [
@@ -66,7 +68,12 @@ class ScholarshipLivewire extends Component
         
         $scholarships = $scholarships->paginate(15);
 
-        return view('livewire.pages.scholarship.scholarship-livewire', ['scholarships' => $scholarships])
+        $scholarship_program = Scholarship::find($this->scholarship_program_id);
+
+        return view('livewire.pages.scholarship.scholarship-livewire', [
+                'scholarships' => $scholarships,
+                'scholarship_program' =>$scholarship_program,
+            ])
             ->extends('livewire.main.main-livewire');
     }
     
@@ -74,20 +81,26 @@ class ScholarshipLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
-        $this->scholarship_program = Scholarship::find($id);
+        if ( is_null(Scholarship::find($id)) ) {
+            return;
+        }
+
+        $this->scholarship_program_id = $id;
 
         $this->dispatchBrowserEvent('scholarship-info', ['action' => 'show']);
     }
 
-    public function confirm_delete($id)
+    public function confirm_delete()
     {
         if ($this->verifyUser()) return;
         
-        if ($this->cannotbedeleted($id)) {
+        if ( is_null(Scholarship::find($this->scholarship_program_id)) ) {
             return;
         }
 
-        $this->scholarship_id_delete = $id;
+        if ($this->cannotbedeleted()) {
+            return;
+        }
 
         $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_scholarship', [
             'type' => 'warning',  
@@ -101,11 +114,15 @@ class ScholarshipLivewire extends Component
     {
         if ($this->verifyUser()) return;
         
-        if ($this->cannotbedeleted($this->scholarship_id_delete)) {
+        if ( is_null(Scholarship::find($this->scholarship_program_id)) ) {
             return;
         }
 
-        $user = Scholarship::findorfail($this->scholarship_id_delete);
+        if ($this->cannotbedeleted()) {
+            return;
+        }
+        
+        $user = Scholarship::findorfail($this->scholarship_program_id);
         
         if (!$user->delete()) {
             return;
@@ -122,9 +139,9 @@ class ScholarshipLivewire extends Component
         $this->dispatchBrowserEvent('scholarship-info', ['action' => 'hide']);
     }
 
-    protected function cannotbedeleted($id){
+    protected function cannotbedeleted(){
         $checker = ScholarshipOfficer::select('id')
-            ->where('scholarship_id', $id)
+            ->where('scholarship_id', $this->scholarship_program_id)
             ->exists();
 
         if ($checker) {
@@ -144,11 +161,15 @@ class ScholarshipLivewire extends Component
         $this->scholarship    = null;
     }
 
-    public function edit($id)
+    public function edit()
     {
         if ($this->verifyUser()) return;
-        
-        $data = Scholarship::findorfail($id);
+
+        $data = Scholarship::find($this->scholarship_program_id);
+        if ( is_null($data) ) {
+            $this->nullinputs();
+            return;
+        }
 
         $this->scholarship_id = $data->id;
         $this->scholarship    = $data->scholarship;

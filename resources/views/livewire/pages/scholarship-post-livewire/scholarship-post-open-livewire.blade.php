@@ -42,24 +42,28 @@
                 <div class="card-header"> 
                     <h5 class="d-flex">
                         {{ $post->title }} 
-                        <div class="dropdown mr-0 ml-auto">
-                            <span id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-ellipsis-h"></i>
-                            </span>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a wire:click="delete_post_confirmation" class="dropdown-item">
-                                    <i class="fas fa-trash mr-1"></i>
-                                    Delete Post
-                                </a>
-                                <a class="dropdown-item" data-toggle="modal" data-target="#post_something">
-                                    <i class="fas fa-pen-square mr-1"></i>
-                                    Edit Post
-                                </a>
+                        @if ( $post->user_id == Auth::id() || Auth::user()->is_admin() )
+                            <div class="dropdown mr-0 ml-auto">
+                                <span id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </span>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a wire:click="delete_post_confirmation" class="dropdown-item">
+                                        <i class="fas fa-trash mr-1"></i>
+                                        Delete Post
+                                    </a>
+                                    <a class="dropdown-item" data-toggle="modal" data-target="#post_something">
+                                        <i class="fas fa-pen-square mr-1"></i>
+                                        Edit Post
+                                    </a>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </h5>
 
-                    @livewire('scholarship-post-livewire', [$post->scholarship_id, $post->id], key('scholarship-page-post-'.time().$post->scholarship_id))
+                    @if ( $post->user_id == Auth::id() )
+                        @livewire('scholarship-post-livewire', [$post->scholarship_id, $post->id], key('scholarship-page-post-'.time().$post->scholarship_id))
+                    @endif
 
                     <div class="d-flex">
                         <div class="mr-auto bd-highlight my-0">
@@ -104,10 +108,24 @@
 
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    <a>
-                        <span class="badge badge-primary pt-1">{{ $comment_count }}</span>
-                        Comments 
-                    </a>
+                    <div class="dropdown mr-0 ml-auto">
+                        <span id="dropdown_comments" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="badge badge-primary pt-1">{{ $comment_count }}</span>
+                            Comments 
+                            <i class="fas fa-caret-down"></i>
+                        </span>
+                        <div class="dropdown-menu" aria-labelledby="dropdown_comments">
+                            @if ( isset($post_count) )
+                                <a wire:click='view_all' class="dropdown-item">
+                                    View all comments
+                                </a>
+                            @else
+                                <a wire:click='view_latest' class="dropdown-item">
+                                    View latest comments
+                                </a>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
             <hr style="max-width: 760px">

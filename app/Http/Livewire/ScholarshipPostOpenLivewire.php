@@ -41,13 +41,23 @@ class ScholarshipPostOpenLivewire extends Component
     {
         $post = ScholarshipPost::find($this->post_id);
 
-        $comments = ScholarshipPostComment::select('scholarship_post_comments.*')
-            ->where('post_id', $this->post_id)
-            ->latest('id')
-            ->take($this->post_count)
-            ->get()
-            ->reverse()
-            ->values();
+        $comments = [];
+        if ( isset($this->post_count) ) {
+            $comments = ScholarshipPostComment::select('scholarship_post_comments.*')
+                ->where('post_id', $this->post_id)
+                ->latest('id')
+                ->take($this->post_count)
+                ->get()
+                ->reverse()
+                ->values();
+        } else {
+            $comments = ScholarshipPostComment::select('scholarship_post_comments.*')
+                ->where('post_id', $this->post_id)
+                ->latest('id')
+                ->get()
+                ->reverse()
+                ->values();
+        }
 
         $comment_count = ScholarshipPostComment::where('post_id', $this->post_id)->count();
 
@@ -66,6 +76,16 @@ class ScholarshipPostOpenLivewire extends Component
         if ($this->verifyUser()) return;
         
         $this->post_count += 10;
+    }
+
+    public function view_all()
+    {
+        $this->post_count = null;
+    }
+
+    public function view_latest()
+    {
+        $this->post_count = 10;
     }
 
     public function delete_post_confirmation()

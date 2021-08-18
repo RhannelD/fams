@@ -53,4 +53,9 @@ class User extends Authenticatable
     {
         return $this->firstname .' '. $this->lastname;
     }
+
+    public function is_admin()
+    {
+        return ( $this->usertype == 'admin' );
+    }
 }
