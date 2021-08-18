@@ -8,7 +8,7 @@ use App\Models\ScholarResponseComment;
 
 class RequirementResponseOpenCommentLivewire extends Component
 {
-    public $comment;
+    public $comment_id;
     
     protected function verifyUser()
     {
@@ -19,23 +19,30 @@ class RequirementResponseOpenCommentLivewire extends Component
         return false;
     }
 
-    public function mount(ScholarResponseComment $comment_id)
+    public function mount($comment_id)
     {
         if ($this->verifyUser()) return;
 
-        $this->comment = $comment_id;
+        $this->comment_id = $comment_id;
     }
 
     public function render()
     {
-        return view('livewire.pages.requirement.requirement-response-open-comment-livewire');
+        $comment = ScholarResponseComment::find($this->comment_id);
+
+        return view('livewire.pages.requirement.requirement-response-open-comment-livewire', ['comment' => $comment]);
     }
 
     public function delete_comment_confirmation()
     {
         if ($this->verifyUser()) return;
 
-        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_comment_'.$this->comment->id, [
+        if ( !ScholarResponseComment::find($this->comment_id) ) {
+            $this->emitUp('comment_updated');
+            return;
+        }
+
+        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_comment_'.$this->comment_id, [
             'type' => 'warning',  
             'message' => 'Are you sure?', 
             'text' => 'If deleted, you will not be able to recover this comment!',
@@ -47,11 +54,15 @@ class RequirementResponseOpenCommentLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
-        $comment_id = $this->comment->id;
+        $comment = ScholarResponseComment::find($this->comment_id);
+        if ( !$comment ) {
+            $this->emitUp('comment_updated');
+            return;
+        }
 
-        if ($this->comment->delete()) {
+        if ($comment->delete()) {
             $this->dispatchBrowserEvent('delete_comment_div', [
-                'div_class' => $comment_id,  
+                'div_class' => $this->comment_id,  
             ]);
 
             $this->emitUp('comment_updated');

@@ -18,4 +18,9 @@ class ScholarshipRequirementCategory extends Model
         'requirement_id',
         'category_id',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(ScholarshipCategory::class, 'category_id', 'id');
+    }
 }

@@ -1,4 +1,18 @@
 <div>
+@if ( is_null($requirement) )
+    <div class="alert alert-danger mt-5 mb-2 mx-md-5">
+        This requirement doesn't exist.
+    </div>
+    <div class="alert alert-info mx-md-5">
+        This requirement might be deleted by the officers.
+    </div>
+
+@elseif ( !$requirement->promote && !$is_scholar )
+    <div class="alert alert-info mt-5 mx-md-5">
+        This requirement is unavailable on your scholarship program.
+    </div>
+
+@else
     <div class="row mt-1 p-1">
         <div class="card col-12 bg-secondary text-white border-secondary">
             <h2 class="m-2 row">
@@ -49,6 +63,20 @@
                                 Already a scholar of this scholarship program.
                             </div>
 
+                        @elseif (!$access && !$requirement->promote && $is_scholar)
+                            <div class="alert alert-info mb-2">
+                                You can't respond to this requirement.
+                                <br>
+                                This is out of your scholarship category.
+                            </div>
+
+                        @elseif (!$access && !$requirement->promote && !$is_scholar)
+                            <div class="alert alert-info mb-2">
+                                You can't respond to this requirement.
+                                <br>
+                                This is out of your scholarship program.
+                            </div>
+
                         @else
                             @switch( $requirement->can_be_accessed() )
                                 @case('finished')
@@ -78,9 +106,13 @@
                         <a href="{{ route('reponse', [$requirement->id]) }}" class="btn btn-info btn-block text-white">
                             View your response
                         </a>
+
+                    @elseif ( !$response->cant_be_edit() )
+                        <a href="{{ route('reponse', [$requirement->id]) }}" class="btn btn-info btn-block text-white">
+                            Edit your response
+                        </a>
                         
                     @endif
-
 
                 </div>
             </div>
@@ -108,16 +140,16 @@
                 <div class="col-md-6 px-4 mb-2">
 
                     <h5><strong>Scholar Category</strong></h5>
-                    @foreach ($categories as $category)
+                    @foreach ($requirement->categories as $category)
                         <hr class="my-1">
                         <table>
                             <tr>
                                 <td>Category:</td>
-                                <td class="pl-2">{{ $category->category }}</td>
+                                <td class="pl-2">{{ $category->category->category }}</td>
                             </tr>
                             <tr>
                                 <td>Amount:</td>
-                                <td class="pl-2">{{ $category->amount }}</td>
+                                <td class="pl-2">{{ $category->category->amount }}</td>
                             </tr>
                         </table>
                     @endforeach
@@ -179,4 +211,23 @@
 
         </div>
     </div>
+
+    
+    <script>
+        window.addEventListener('swal:confirm:delete_response_{{ $response_id }}', event => { 
+            swal({
+                title: event.detail.message,
+                text: event.detail.text,
+                icon: event.detail.type,
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                @this.call(event.detail.function)
+                }
+            });
+        });
+    </script>
+@endif
 </div>

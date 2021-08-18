@@ -1,4 +1,6 @@
-<div class="div_comment_id_{{ $comment->id }}">
+<div class="div_comment_id_{{ $comment_id }}">
+@isset($comment)
+
     <div class="my-2">
         <div class="mr-auto mx-2 p-0 bd-highlight d-flex">
             <h6>
@@ -50,4 +52,6 @@
             });
         });
     </script>
+    
+@endisset
 </div>

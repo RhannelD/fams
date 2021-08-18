@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ScholarResponse;
 use App\Models\ScholarResponseComment;
 
 class RequirementResponseCommentLivewire extends Component
@@ -13,7 +14,7 @@ class RequirementResponseCommentLivewire extends Component
 
 
     protected $rules = [
-        'comment.comment' => 'string|min:1|max:60000',
+        'comment.comment' => 'required|string|min:1|max:60000',
     ];
 
     protected function verifyUser()
@@ -49,7 +50,11 @@ class RequirementResponseCommentLivewire extends Component
         if ($this->verifyUser()) return;
 
         $this->validate();
-        
+
+        if ( !ScholarResponse::find($this->response_id) ) {
+            return redirect()->route('index');
+        }
+   
         $this->comment->user_id = Auth::id();
         $this->comment->response_id = $this->response_id;
 

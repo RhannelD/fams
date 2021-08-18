@@ -27,4 +27,8 @@ class ScholarResponse extends Model
         return isset($this->approval);
     }
 
+    public function comments()
+    {
+        return $this->hasMany(ScholarResponseComment::class, 'response_id', 'id');
+    }
 }

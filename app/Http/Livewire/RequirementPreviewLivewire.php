@@ -13,13 +13,8 @@ use Illuminate\Support\Facades\Auth;
 
 class RequirementPreviewLivewire extends Component
 {
-    public $requirement;
-    public $categories;
+    public $requirement_id;
     public $response_id;
-    public $response;
-
-    public $access;
-    public $is_scholar;
 
     protected $listeners = [
         'comment_updated' => '$refresh'
@@ -34,24 +29,25 @@ class RequirementPreviewLivewire extends Component
         return false;
     }
 
-    public function mount(ScholarshipRequirement $requirement_id)
+    public function mount($requirement_id)
     {
         if ($this->verifyUser()) return;
 
-        $this->requirement = $requirement_id;
-        
-        $this->categories = ScholarshipCategory::whereHas('requirements', function ($query) {
-            $query->where('requirement_id', $this->requirement->id);
-        })->get();
+        $this->requirement_id = $requirement_id;
+    }
 
-        $this->response = ScholarResponse::where('requirement_id', $this->requirement->id)
+    public function render()
+    {
+        $requirement = ScholarshipRequirement::find($this->requirement_id);
+
+        $response = ScholarResponse::where('requirement_id', $this->requirement_id)
             ->where('user_id', Auth::id())
             ->first();
 
-        $this->response_id = (isset($this->response->id))? $this->response->id: null;
+        $this->response_id = (isset($response->id))? $response->id: null;
 
         // access is true if user is under the requirements categories
-        $this->access = ScholarshipRequirementCategory::where('requirement_id', $requirement_id)
+        $access = ScholarshipRequirementCategory::where('requirement_id', $this->requirement_id)
             ->whereIn('scholarship_requirement_categories.category_id', function($query){
                 $query->select('scholarship_scholars.category_id')
                     ->from(with(new ScholarshipScholar)->getTable())
@@ -60,32 +56,70 @@ class RequirementPreviewLivewire extends Component
             ->exists();
 
         // is_scholar is true if your under this scholarship program
-        $this->is_scholar = ScholarshipScholar::whereHas('categories', function ($query) {
-                $query->where('scholarship_id', $this->requirement->id);
-            })
-            ->where('user_id', Auth::id())
-            ->exists();
-    }
-
-    public function render()
-    {
-        $comments = null;
-        if ( $this->response_id ) {
-            $comments = ScholarResponseComment::with('user')
-                ->where('response_id', $this->response_id)
-                ->get();
+        $is_scholar = false;
+        if ( isset($requirement) ) {
+            $is_scholar = ScholarshipScholar::whereHas('category', function ($query) use ($requirement) {
+                    $query->where('scholarship_id', $requirement->scholarship_id);
+                })
+                ->where('user_id', Auth::id())
+                ->exists();
         }
 
         $can_respond = ScholarshipScholar::where('user_id', Auth::id())
             ->whereIn('category_id', function($query){
                 $query->select('category_id')
                 ->from(with(new ScholarshipRequirementCategory)->getTable())
-                ->where('requirement_id', $this->requirement->id);
+                ->where('requirement_id', $this->requirement_id);
             })->exists();
 
         return view('livewire.pages.requirement.requirement-preview-livewire', [
-            'comments' => $comments,
+            'requirement' => $requirement,
+            'response' => $response,
+            'access' => $access,
+            'is_scholar' => $is_scholar,
             'can_respond' => $can_respond,
         ])->extends('livewire.main.main-livewire');
+    }
+
+    public function delete_response_confirmation()
+    {
+        if ($this->verifyUser()) return;
+
+        $response = ScholarResponse::find($this->response_id);
+        if ( is_null($response) ) {
+            $this->response_id = null;
+            return;
+        } elseif ( isset($response->approval) ) {
+            return;
+        }
+
+        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_response_'.$this->response_id, [
+            'type' => 'warning',  
+            'message' => 'Are you sure?', 
+            'text' => 'If deleted, you will not be able to recover this response!',
+            'function' => "delete_response"
+        ]);
+    }
+
+    public function delete_response()
+    {
+        if ($this->verifyUser()) return;
+
+        $response = ScholarResponse::find($this->response_id);
+        if ( is_null($response) ) {
+            return;
+        } elseif ( isset($response->approval) ) {
+            return;
+        }
+
+        if ( $response->delete() ) {
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'success',  
+                'message' => 'Response Deleted Successfully', 
+                'text' => ''
+            ]);
+
+            $this->response_id = null;
+        }
     }
 }

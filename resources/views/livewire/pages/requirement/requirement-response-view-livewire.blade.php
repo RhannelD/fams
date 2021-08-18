@@ -15,8 +15,8 @@
             </h5>
             
             @if ( !$response->cant_be_edit() )    
-                <div class="mr-0 ml-2">
-                    <button class="btn btn-danger">
+                <div class="mr-0 ml-2 mt-2">
+                    <button wire:click="delete_response_confirmation" class="btn btn-danger">
                         <i class="fas fa-minus-circle"></i>
                     </button>
                 </div>
@@ -49,35 +49,46 @@
             </tr>
         </table>
     </div>
-    <div class="card-footer bg-white">
-        <h5>Comments</h5>
-        <hr class="my-2">
-        @foreach ($comments as $comment)
 
-            @if ( $comment->user_id == Auth::id() ) 
-                @livewire('requirement-response-open-comment-livewire', [$comment->id], key('response-comment-open-'.time().$comment->id))
+    @if( $response->comments->count() != 0 )    
+        <div class="card-footer bg-white">
 
-            @else
-                <div class="my-2">
-                    <div class="mr-auto mx-2 p-0 bd-highlight d-flex">
-                        <h6>
-                            <strong> {{ $comment->user->firstname }} {{ $comment->user->lastname }} </strong>
-                        </h6>
-        
-                        <h6 class="ml-auto mr-1 bd-highlight my-0">
-                            {{ date('d-m-Y h:i A', strtotime($comment->created_at)) }}
-                        </h6>
-                    </div>
-                    <p class="mb-0 mx-2">{!! nl2br(e($comment->comment)) !!}</p>
+            @if( is_null($response->submit_at) )  
+                <div class="alert alert-info">
+                    These comments will only be visible to officers once submitted.
                 </div>
-                
-                <hr class="my-1">
             @endif
 
-        @endforeach
-    </div>
+            <h5>Comments</h5>
+            <hr class="my-2">
+            @foreach ($response->comments as $comment)
+
+                @if ( $comment->user_id == Auth::id() ) 
+                    @livewire('requirement-response-open-comment-livewire', [$comment->id], key('response-comment-open-'.time().$comment->id))
+
+                @else
+                    <div class="my-2">
+                        <div class="mr-auto mx-2 p-0 bd-highlight d-flex">
+                            <h6>
+                                <strong> {{ $comment->user->flname() }} </strong>
+                            </h6>
+            
+                            <h6 class="ml-auto mr-1 bd-highlight my-0">
+                                {{ date('d-m-Y h:i A', strtotime($comment->created_at)) }}
+                            </h6>
+                        </div>
+                        <p class="mb-0 mx-2">{!! nl2br(e($comment->comment)) !!}</p>
+                    </div>
+                    
+                    <hr class="my-1">
+                @endif
+
+            @endforeach
+        </div>
+    @endif
 
     <div class="card-footer bg-white">
+        {{-- Should be $response->id but an has been occuring --}}
         @livewire('requirement-response-comment-livewire', [$response_id], key('response-comment-'.time().$response_id))
     </div>
 </div>
