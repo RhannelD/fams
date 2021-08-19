@@ -1,4 +1,5 @@
-<div class="item_option_id_{{ $option->id }}">
+<div class="item_option_id_{{ $option_id }}">
+@isset($item_option)
     <div class="input-group mb-1">
         @if ($type == 'radio')
             <div class="input-group-prepend">
@@ -19,5 +20,6 @@
             <i class="fas fa-minus-circle"></i>
         </button>
     </div>
-    @error('option.option') <span class="text-danger">{{ $message }}</span> @enderror
+    @error('option.option') <span class="text-danger">{{ $message }}</span> @enderror 
+@endisset
 </div>

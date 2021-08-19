@@ -1,24 +1,25 @@
 <div>
+@if( isset($scholarship_requirement) )
     <div class="row mt-1 p-1">
         <div class="card col-12 bg-secondary text-white border-secondary">
             <h2 class="m-2 row">
                 <strong class="my-auto">
-                    {{ $scholarship->scholarship }} -  Requirement
+                    {{ $scholarship_requirement->scholarship->scholarship }} -  Requirement
                 </strong>
                 
                 <div class="mr-1 ml-auto">
                     <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$scholarship->id, 'home']) }}">
+                        href="{{ route('scholarship.program', [$scholarship_requirement->scholarship_id, 'home']) }}">
                         <i class="fas fa-newspaper"></i>
                         <strong>Home</strong>
                     </a>
                     <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$scholarship->id, 'requirement']) }}">
+                        href="{{ route('scholarship.program', [$scholarship_requirement->scholarship_id, 'requirement']) }}">
                         <i class="fas fa-file-alt"></i>
                         <strong>Requirements</strong>
                     </a>
                     <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$scholarship->id, 'requirement', $requirement->id]) }}">
+                        href="{{ route('scholarship.program', [$scholarship_requirement->scholarship_id, 'requirement', $scholarship_requirement->id]) }}">
                         <i class="fas fa-arrow-circle-left"></i>
                         <strong>View</strong>
                     </a>
@@ -54,19 +55,19 @@
                 </div>
             </div>
 
-            @livewire('scholarship-requirement-activate-livewire', [$requirement->id], key('activate-livewire-'.time().$requirement->id))
+            @livewire('scholarship-requirement-activate-livewire', [$scholarship_requirement->id], key('activate-livewire-'.time().$requirement->id))
 
             <div class="card shadow mb-2 requirement-item-hover">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="promote_{{ $requirement->id }}">Requirement for</label>
-                        <select wire:model.lazy="requirement.promote" class="form-control" id="promote_{{ $requirement->id }}">
+                        <label for="promote_{{ $scholarship_requirement->id }}">Requirement for</label>
+                        <select wire:model.lazy="requirement.promote" class="form-control" id="promote_{{ $scholarship_requirement->id }}">
                             <option value="1">Applicatants</option>
                             <option value="0">Old Scholars</option>
                         </select>
                         @error('requirement.promote') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
-                
+                    
                     <div class="form-group mb-0">
                         <label for="">Requirement for category</label>
                         @foreach ($categories as $category)
@@ -112,7 +113,7 @@
         
             <div class="row">
                 <div class="col-12"  wire:sortable="update_requirement_order">
-                    @foreach ($items as $item)
+                    @foreach ($scholarship_requirement->items as $item)
                         <div wire:sortable.item="{{ $item->id }}" wire:key="item-{{ $item->id }}" class="div_item_id_sort_{{ $item->id }}">
                             @livewire('scholarship-requirement-edit-item-livewire', [$item->id], key('item-'.time().$item->id))
                         </div>
@@ -155,4 +156,10 @@
             })
         }
     </script>
+@else
+    <div class="alert alert-info mt-5 m-md-5">
+        This requirement doesn't exist.
+    </div>
+
+@endif
 </div>

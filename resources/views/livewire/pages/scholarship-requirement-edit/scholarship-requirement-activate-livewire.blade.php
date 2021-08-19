@@ -1,4 +1,5 @@
 <div class="card shadow mb-2 requirement-item-hover">
+@isset($requirement)
     <div class="card-body">
         <div class="custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" id="disable_at_end" 
@@ -54,5 +55,6 @@
             $('.enable_form_toast .toast-body').text(event.detail.message);
             $('.enable_form_toast').toast('show');
         });
-    </script>
+    </script>  
+@endisset  
 </div>

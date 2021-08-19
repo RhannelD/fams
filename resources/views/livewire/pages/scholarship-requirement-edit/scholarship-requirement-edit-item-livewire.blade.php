@@ -1,5 +1,5 @@
-<div class="row mx-0 div_item_id_{{ $item->id }}">
-    
+<div class="row mx-0 div_item_id_{{ $item_id }}">
+@isset($requirement_item)
     <div class="col-sm-12 offset-sm-0 col-md-1 px-0">
         <hr class="d-block d-md-none">
         <button class="btn btn-primary float-right ml-1 rounded-circle shadow mb-1 requirement-item-hover" wire:sortable.handle
@@ -30,8 +30,8 @@
                 </div>
                 <div class="col-3">
                     <div class="form-group">
-                        <label for="type_{{ $item->id }}">Type</label>
-                        <select wire:model.lazy="item.type" class="form-control" id="type_{{ $item->id }}">
+                        <label for="type_{{ $requirement_item->id }}">Type</label>
+                        <select wire:model.lazy="item.type" class="form-control" id="type_{{ $requirement_item->id }}">
                             <option value="question">Answer</option>
                             <option value="file">File Upload</option>
                             <option value="radio">Radio</option>
@@ -45,7 +45,7 @@
             </div>
             <div class="form-row">
                 <div class="col-12">
-                    @switch($item->type)
+                    @switch($requirement_item->type)
                         @case('question')
                             <div class="form-group">
                                 <div class="input-group mb-1">
@@ -69,9 +69,9 @@
                                         </span>
                                     </div>
                                     <div class="form-control">
-                                        @if($item->type == 'grade')
+                                        @if($requirement_item->type == 'grade')
                                             Grade Upload
-                                        @elseif ($item->type == 'cor')
+                                        @elseif ($requirement_item->type == 'cor')
                                             COR Upload
                                         @else
                                             File Upload
@@ -84,9 +84,9 @@
                         @case('check')
                             <div class="form-row">
                                 <div class="form-group col-sm-12 col-md-11 mb-1">
-                                    @foreach ($options as $option)
+                                    @foreach ($requirement_item->options as $option)
 
-                                        @livewire('scholarship-requirement-edit-item-option-livewire', [$option->id, $item->type], key('item-option-'.time().$option->id))
+                                        @livewire('scholarship-requirement-edit-item-option-livewire', [$option->id, $requirement_item->type], key('item-option-'.time().$option->id))
 
                                     @endforeach
                                     
@@ -110,7 +110,7 @@
             $( '.item_option_id_'+event.detail.div_class ).fadeOut( 500 );
         });
 
-        window.addEventListener('swal:confirm:delete_confirmation_{{ $item->id }}', event => { 
+        window.addEventListener('swal:confirm:delete_confirmation_{{ $requirement_item->id }}', event => { 
             swal({
               title: event.detail.message,
               text: event.detail.text,
@@ -125,4 +125,5 @@
             });
         });
     </script>
+@endisset
 </div>

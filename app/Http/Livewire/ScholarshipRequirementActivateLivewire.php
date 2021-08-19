@@ -9,9 +9,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ScholarshipRequirementActivateLivewire extends Component
 {
-    public $requirement;
+    public $requirement_id;
 
-    
     public $start_at;
     public $end_at;
 
@@ -35,44 +34,57 @@ class ScholarshipRequirementActivateLivewire extends Component
 
         $this->validate();
 
-        $this->requirement->start_at = Carbon::parse($this->start_at)->format('Y-m-d H:i:s');
-        $this->requirement->end_at   = Carbon::parse($this->end_at)->format('Y-m-d H:i:s');
+        $requirement = ScholarshipRequirement::find($this->requirement_id);
+        if ( is_null($requirement) ) {
+            return;
+        }
 
-        $this->requirement->save();
-        
-        if ($propertyName == 'start_at') {
-            $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Start Date Successfully Changed']);
-        } elseif ($propertyName == 'end_at') {
-            $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'End Date Successfully Changed']);
+        $requirement->start_at = Carbon::parse($this->start_at)->format('Y-m-d H:i:s');
+        $requirement->end_at   = Carbon::parse($this->end_at)->format('Y-m-d H:i:s');
+
+        if ( $requirement->save() ) {
+            if ($propertyName == 'start_at') {
+                $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Start Date Successfully Changed']);
+            } elseif ($propertyName == 'end_at') {
+                $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'End Date Successfully Changed']);
+            }
         }
     }
-    
-    public function mount(ScholarshipRequirement $id)
+
+    public function mount($requirement_id)
     {
         if ($this->verifyUser()) return;
 
-        $this->requirement = $id;
-        $this->start_at = Carbon::parse($this->requirement->start_at)->format('Y-m-d\TH:i');
-        $this->end_at   = Carbon::parse($this->requirement->end_at)->format('Y-m-d\TH:i');
+        $this->requirement_id = $requirement_id;
     }
 
     public function render()
     {
-        return view('livewire.pages.scholarship-requirement-edit.scholarship-requirement-activate-livewire');
+        $requirement = ScholarshipRequirement::find($this->requirement_id);
+
+        $this->start_at = Carbon::parse($requirement->start_at)->format('Y-m-d\TH:i');
+        $this->end_at   = Carbon::parse($requirement->end_at)->format('Y-m-d\TH:i');
+
+        return view('livewire.pages.scholarship-requirement-edit.scholarship-requirement-activate-livewire', ['requirement' => $requirement]);
     }
     
     public function toggle_disable_at_end()
     {
         if ($this->verifyUser()) return;
 
-        if (isset($this->requirement->enable)) {
-            $this->requirement->enable = null;
-            $this->requirement->save();
+        $requirement = ScholarshipRequirement::find($this->requirement_id);
+        if ( is_null($requirement) ) {
+            return;
+        }
+
+        if ( isset($requirement->enable) ) {
+            $requirement->enable = null;
+            $requirement->save();
             $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Disable Form At End Date']);
             return;
         }
-        $this->requirement->enable = false;
-        $this->requirement->save();
+        $requirement->enable = false;
+        $requirement->save();
         $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Disable Form Requirement ...']);
     }
 
@@ -80,11 +92,16 @@ class ScholarshipRequirementActivateLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
-        $this->requirement->enable = (!$this->requirement->enable);
-        $this->requirement->save();
+        $requirement = ScholarshipRequirement::find($this->requirement_id);
+        if ( is_null($requirement) ) {
+            return;
+        }
+
+        $requirement->enable = (!$requirement->enable);
+        $requirement->save();
 
         $message = 'Disable Form Requirement ...';
-        if ($this->requirement->enable) {
+        if ($requirement->enable) {
             $message = 'Enable Form Requirement ...';
         }
 

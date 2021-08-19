@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class ScholarshipRequirementEditItemLivewire extends Component
 {
+    public $item_id;
     public $item;
-    public $options;
 
     protected $listeners = [
-        'get_options' => 'get_options',
+        'get_options' => '$refresh',
         'save_all' => 'save_all',
     ];
 
@@ -31,25 +31,32 @@ class ScholarshipRequirementEditItemLivewire extends Component
         }
         return false;
     }
-    
 
-    public function mount(ScholarshipRequirementItem $id)
+    protected function verifyItem()
+    {
+        $requirement_item = ScholarshipRequirementItem::find($this->item_id);
+        return is_null($requirement_item);
+    }
+
+    public function mount($item_id)
     {
         if ($this->verifyUser()) return;
-
-        $this->item = $id;
-        $this->get_options();
+        
+        $this->item = new ScholarshipRequirementItem;
+        $this->item_id = $item_id;
     }
 
     public function render()
     {
-        return view('livewire.pages.scholarship-requirement-edit.scholarship-requirement-edit-item-livewire');
-    }
+        $requirement_item = ScholarshipRequirementItem::find($this->item_id);
 
-    public function get_options()
-    {
-        $this->options = ScholarshipRequirementItemOption::select('id')
-            ->where('item_id', $this->item->id)->get();
+        if ( isset($requirement_item) ) {
+            $this->item->item = $requirement_item->item;
+            $this->item->note = $requirement_item->note;
+            $this->item->type = $requirement_item->type;
+        }
+
+        return view('livewire.pages.scholarship-requirement-edit.scholarship-requirement-edit-item-livewire', ['requirement_item' => $requirement_item]);
     }
     
     public function updated($propertyName)
@@ -60,7 +67,6 @@ class ScholarshipRequirementEditItemLivewire extends Component
 
         if($propertyName == 'item.type') {
             $this->change_item_type();
-            $this->get_options();
         }
         $this->save();
     }
@@ -69,7 +75,15 @@ class ScholarshipRequirementEditItemLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
-        $this->item->save();
+        $requirement_item = ScholarshipRequirementItem::find($this->item_id);
+        if ( is_null($requirement_item) ) 
+            return;
+        
+        $requirement_item->item = $this->item->item;
+        $requirement_item->note = $this->item->note;
+        $requirement_item->type = $this->item->type;
+
+        $requirement_item->save();
     }
     
     public function save_all()
@@ -83,8 +97,9 @@ class ScholarshipRequirementEditItemLivewire extends Component
     public function delete_confirmation()
     {
         if ($this->verifyUser()) return;
+        if ($this->verifyItem()) return;
 
-        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_confirmation_'.$this->item->id, [
+        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_confirmation_'.$this->item_id, [
             'type' => 'warning',  
             'message' => 'Are you sure?', 
             'text' => 'If deleted, you will not be able to recover this Item!',
@@ -96,27 +111,25 @@ class ScholarshipRequirementEditItemLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
-        $this->options = [];
-
-        if (!$this->item->delete()) {
+        if ( !ScholarshipRequirementItem::where('id', $this->item_id)->delete() ) 
             return;
-        }
 
         $this->dispatchBrowserEvent('delete_item_div', [
-            'div_class' => $this->item->id,  
+            'div_class' => $this->item_id,  
         ]);
     }
 
     public function change_item_type()
     {
         if ($this->verifyUser()) return;
+        if ($this->verifyItem()) return;
 
         if(!in_array($this->item->type, array('radio', 'check'))) {
-            $options = ScholarshipRequirementItemOption::where('item_id', $this->item->id)->delete();
+            $options = ScholarshipRequirementItemOption::where('item_id', $this->item_id)->delete();
             return;
         }
         
-        $temp_item = ScholarshipRequirementItem::find($this->item->id);
+        $temp_item = ScholarshipRequirementItem::find($this->item_id);
         if (in_array($temp_item->type, array('radio', 'check'))) 
             return;
 
@@ -126,11 +139,11 @@ class ScholarshipRequirementEditItemLivewire extends Component
     public function add_item_option()
     {
         if ($this->verifyUser()) return;
+        if ($this->verifyItem()) return;
         
         $option = new ScholarshipRequirementItemOption;
-        $option->item_id = $this->item->id;
+        $option->item_id = $this->item_id;
         $option->option = 'Enter Option Here';
         $option->save();
-        $this->get_options();
     }
 }
