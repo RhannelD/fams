@@ -2,7 +2,7 @@
     <div class="card-header bg-white pb-2 border-bottom-0">
         <div class="d-flex">
             <h5 class="ml-0 mr-auto mb-1 mt-2 btn-block">
-                <a href="{{ route('reponse', [$response->requirement_id]) }}">   
+                <a href="{{ route('reponse', [$scholar_response->requirement_id]) }}">   
                     <div class="input-group mb-1 item-hover">
                         <div class="input-group-prepend">
                             <span class="input-group-text bg-primary text-white border-primary">
@@ -14,7 +14,7 @@
                 </a>
             </h5>
             
-            @if ( !$response->cant_be_edit() )    
+            @if ( !$scholar_response->cant_be_edit() )    
                 <div class="mr-0 ml-2 mt-2">
                     <button wire:click="delete_response_confirmation" class="btn btn-danger">
                         <i class="fas fa-minus-circle"></i>
@@ -28,19 +28,19 @@
             <tr>
                 <td>Submitted at:</td>
                 <td class="pl-2">
-                    @if ( is_null($response->submit_at) )
+                    @if ( is_null($scholar_response->submit_at) )
                         Not Yet Submitted
                     @else
-                        {{ date_format(new DateTime($response->submit_at),"M d,  Y h:i A") }}
+                        {{ date_format(new DateTime($scholar_response->submit_at),"M d,  Y h:i A") }}
                     @endif
                 </td>
             </tr>
             <tr>
                 <td>Approval:</td>
                 <td class="pl-2">
-                    @if ( is_null($response->approval) )
+                    @if ( is_null($scholar_response->approval) )
                         <span class="badge badge-pill badge-dark">Not Yet Submitted</span>
-                    @elseif ($response->approval)
+                    @elseif ($scholar_response->approval)
                         <span class="badge badge-pill badge-success">Approved</span>
                     @else
                         <span class="badge badge-pill badge-danger">Denied</span>
@@ -50,10 +50,10 @@
         </table>
     </div>
 
-    @if( $response->comments->count() != 0 )    
+    @if( $scholar_response->comments->count() != 0 )    
         <div class="card-footer bg-white">
 
-            @if( is_null($response->submit_at) )  
+            @if( is_null($scholar_response->submit_at) )  
                 <div class="alert alert-info">
                     These comments will only be visible to officers once submitted.
                 </div>
@@ -61,7 +61,7 @@
 
             <h5>Comments</h5>
             <hr class="my-2">
-            @foreach ($response->comments as $comment)
+            @foreach ($scholar_response->comments as $comment)
 
                 @if ( $comment->user_id == Auth::id() ) 
                     @livewire('requirement-response-open-comment-livewire', [$comment->id], key('response-comment-open-'.time().$comment->id))
@@ -88,7 +88,6 @@
     @endif
 
     <div class="card-footer bg-white">
-        {{-- Should be $response->id but an has been occuring --}}
         @livewire('requirement-response-comment-livewire', [$response_id], key('response-comment-'.time().$response_id))
     </div>
 </div>

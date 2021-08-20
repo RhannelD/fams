@@ -40,11 +40,11 @@ class RequirementPreviewLivewire extends Component
     {
         $requirement = ScholarshipRequirement::find($this->requirement_id);
 
-        $response = ScholarResponse::where('requirement_id', $this->requirement_id)
+        $scholar_response = ScholarResponse::where('requirement_id', $this->requirement_id)
             ->where('user_id', Auth::id())
             ->first();
 
-        $this->response_id = (isset($response->id))? $response->id: null;
+        $this->response_id = (isset($scholar_response->id))? $scholar_response->id: null;
 
         // access is true if user is under the requirements categories
         $access = ScholarshipRequirementCategory::where('requirement_id', $this->requirement_id)
@@ -74,7 +74,7 @@ class RequirementPreviewLivewire extends Component
 
         return view('livewire.pages.requirement.requirement-preview-livewire', [
             'requirement' => $requirement,
-            'response' => $response,
+            'scholar_response' => $scholar_response,
             'access' => $access,
             'is_scholar' => $is_scholar,
             'can_respond' => $can_respond,

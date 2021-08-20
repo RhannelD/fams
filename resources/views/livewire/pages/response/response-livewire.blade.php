@@ -1,5 +1,6 @@
 <div>
 @isset($requirement)
+    @livewire('scholarship-program-livewire', [$requirement->scholarship_id], key('page-tabs-'.time().$requirement->scholarship_id))
     <hr>
     <div class="row">
         <div class="col-12 col-md-3 mb-2">

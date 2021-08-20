@@ -7,7 +7,7 @@
                     disabled
                 @endisset
                 >
-            @if ( isset($response->submit_at) && $option->option_id == $option_item->id)
+            @if ( isset($response->submit_at) && $option_id == $option_item->id)
                 <label  for="option_{{ $option_item->id }}" class="form-check-label text-dark">
                     <strong>{{ $option_item->option }}</strong>
                 </label>

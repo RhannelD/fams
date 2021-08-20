@@ -13,40 +13,7 @@
     </div>
 
 @else
-    <div class="row mt-1 p-1">
-        <div class="card col-12 bg-secondary text-white border-secondary">
-            <h2 class="m-2 row">
-                <strong class="my-auto">
-                    {{ $requirement->scholarship->scholarship }}
-                </strong>
-                
-                <div class="mr-1 ml-auto">
-                    <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$requirement->scholarship_id, 'home']) }}">
-                        <i class="fas fa-newspaper"></i>
-                        <strong>Home</strong>
-                    </a>
-                    <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$requirement->scholarship_id, 'scholar']) }}">
-                        <i class="fas fa-user-graduate"></i>
-                        <strong>Scholars</strong>
-                    </a>
-                    <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$requirement->scholarship_id, 'officer']) }}">
-                        <i class="fas fa-address-card"></i>
-                        <strong>Officers</strong>
-                    </a>
-                    @if (Auth::user()->usertype != 'scholar')
-                        <a class="btn btn-light"
-                            href="{{ route('scholarship.program', [$requirement->scholarship_id, 'requirement']) }}">
-                            <i class="fas fa-file-alt"></i>
-                            <strong>Requirements</strong>
-                        </a>
-                    @endif
-                </div>
-            </h2>
-        </div>
-    </div>
+    @livewire('scholarship-program-livewire', [$requirement->scholarship_id], key('page-tabs-'.time().$requirement->scholarship_id))
 
     <hr>
     <div class="row">
@@ -55,7 +22,7 @@
             <div class="card shadow mb-2 requirement-item-hover ">
                 <div class="card-body">
 
-                    @if ( !isset($response) )
+                    @if ( !isset($scholar_response) )
                         @if (!$access && $requirement->promote && $is_scholar)
                             <div class="alert alert-info mb-2">
                                 You can't respond to this requirement.
@@ -99,7 +66,7 @@
                             
                         @endif
 
-                    @elseif ( $response->cant_be_edit() )
+                    @elseif ( $scholar_response->cant_be_edit() )
                         <div class="alert alert-info mb-2">
                             You can't edit your response anymore.
                         </div>
@@ -107,7 +74,7 @@
                             View your response
                         </a>
 
-                    @elseif ( !$response->cant_be_edit() )
+                    @elseif ( !$scholar_response->cant_be_edit() )
                         <a href="{{ route('reponse', [$requirement->id]) }}" class="btn btn-info btn-block text-white">
                             Edit your response
                         </a>
@@ -205,7 +172,7 @@
 
             <hr class="mt-1">
 
-            @isset( $response )
+            @isset( $scholar_response )
                 @include('livewire.pages.requirement.requirement-response-view-livewire')
             @endisset
 

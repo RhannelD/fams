@@ -5,7 +5,7 @@
                 border-bottom-0 
             @endif 
             "
-            href="{{ route('scholarship.program', [$scholarship->id, 'home']) }}">
+            href="{{ route('scholarship.home', [$scholarship->id]) }}">
             <i class="fas fa-money-check"></i>
             {{ $scholarship->scholarship }}
         </a>
