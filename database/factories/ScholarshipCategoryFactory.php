@@ -25,7 +25,7 @@ class ScholarshipCategoryFactory extends Factory
 
         return [
             'scholarship_id'=> 1,
-            'category'   => $this->faker->unique()->word,
+            'category'   => $this->faker->unique()->company,
             'amount'   => ($amount * 100),
         ];
     }

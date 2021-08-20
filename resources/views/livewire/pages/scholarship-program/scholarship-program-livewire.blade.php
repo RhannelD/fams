@@ -30,6 +30,11 @@
                             <strong>Requirements</strong>
                         </a>
                     @endif
+                    <a class="btn btn-light"
+                        href="{{ route('scholarship.category', [$scholarship->id]) }}">
+                        <i class="fas fa-file-alt"></i>
+                        <strong>Category</strong>
+                    </a>
                 </div>
             </h2>
         </div>

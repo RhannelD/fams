@@ -29,4 +29,9 @@ class ScholarshipOfficer extends Model
     {
         return $this->belongsTo(OfficerPosition::class, 'position_id', 'id');
     }
+    
+    public function is_admin()
+    {
+        return ( $this->position->position == 'Admin' );
+    }
 }

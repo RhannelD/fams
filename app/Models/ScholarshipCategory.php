@@ -25,6 +25,11 @@ class ScholarshipCategory extends Model
         return $this->hasMany(ScholarshipRequirementCategory::class, 'category_id', 'id');
     }
     
+    public function scholars()
+    {
+        return $this->hasMany(ScholarshipScholar::class, 'category_id', 'id');
+    }
+    
     public function scholarship()
     {
         return $this->belongsTo(Scholarship::class, 'scholarship_id', 'id');
