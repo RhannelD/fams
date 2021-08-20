@@ -17,9 +17,13 @@ use Carbon\Carbon;
 
 class ResponseLivewire extends Component
 {
-    public $requirement;
-    public $user_response;
+    public $requirement_id;
+    public $user_response_id = 0;
    
+    protected $listeners = [
+        'refresh' => '$refresh'
+    ];
+
     protected function verifyUser()
     {
         if (!Auth::check() || Auth::user()->usertype != 'scholar') {
@@ -29,13 +33,16 @@ class ResponseLivewire extends Component
         return false;
     }
 
-    protected function verifyUserRequirementAccess($requirement_id, $promote)
+    protected function verifyUserRequirementAccess()
     {
-        if ( $promote ) {
-            return true;
-        }
+        $requirement = ScholarshipRequirement::find($this->requirement_id);
+        if ( is_null($requirement) )
+            return false;
 
-        $access = ScholarshipRequirementCategory::where('requirement_id', $requirement_id)
+        if ( $requirement->promote )
+            return true;
+
+        $access = ScholarshipRequirementCategory::where('requirement_id', $this->requirement_id)
             ->whereIn('scholarship_requirement_categories.category_id', function($query){
                 $query->select('scholarship_scholars.category_id')
                     ->from(with(new ScholarshipScholar)->getTable())
@@ -51,61 +58,64 @@ class ResponseLivewire extends Component
 
     protected function verifyUserResponse()
     {
-        if ($this->user_response->user_id != Auth::id()) {
+        $user_response = ScholarResponse::find($this->user_response_id);
+        if ( is_null($user_response) || $user_response->user_id != Auth::id()) {
             redirect()->route('index');
-            return true;
+            return;
         }
         return false;
     }
 
-    public function mount(ScholarshipRequirement $id)
+    public function mount($id)
     {
         if ($this->verifyUser()) return;
-        if (!$this->verifyUserRequirementAccess($id->id, $id->promote)) return;
         
-        $this->requirement = $id;
+        $this->requirement_id = $id;
 
-        $this->user_response = ScholarResponse::firstOrCreate([
-            'user_id' => Auth::id(),
-            'requirement_id' => $this->requirement->id,
-        ]);
+        if (!$this->verifyUserRequirementAccess()) return;
     }
 
     public function render()
     {
-        $requirement_items =  ScholarshipRequirementItem::where('requirement_id', $this->requirement->id)
-            ->orderBy('position')
-            ->get();
+        $requirement = ScholarshipRequirement::find($this->requirement_id);
 
-        foreach ($requirement_items as $key => $requirement_item) {
-            if (in_array($requirement_item->type, array('check'))) {
-                $options = ScholarshipRequirementItemOption::where('item_id', $requirement_item->id)->get();
+        $user_response = null;
+        if ( isset($requirement) ) {
+            $user_response = ScholarResponse::firstOrCreate([
+                    'user_id' => Auth::id(),
+                    'requirement_id' => $this->requirement_id,
+                ]);
 
-                $requirement_items[$key]['options'] = $options;
-            }
+            $this->user_response_id = $user_response->id;
         }
 
         return view('livewire.pages.response.response-livewire', [
-            'requirement_items' => $requirement_items
-        ])->extends('livewire.main.main-livewire');
+                'requirement' => $requirement,
+                'user_response' => $user_response
+            ])
+            ->extends('livewire.main.main-livewire');
     }
 
     public function submit_response()
     {
         if ($this->verifyUser()) return;
-        if (!$this->verifyUserRequirementAccess($this->requirement->id)) return;
+        if (!$this->verifyUserRequirementAccess()) return;
         if ($this->verifyUserResponse()) return;
+
+        $user_response = ScholarResponse::find($this->user_response_id);
+        if ( is_null($user_response) )
+            return;
 
         $file_uploads = ScholarshipRequirement::selectRaw('"file" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
             ->join(with(new ScholarshipRequirementItem)->getTable(), 'scholarship_requirements.id', '=', 'scholarship_requirement_items.requirement_id')
             ->join(with(new ScholarResponse)->getTable(), 'scholarship_requirements.id', '=', 'scholar_responses.requirement_id')
             ->leftJoin(with(new ScholarResponseFile)->getTable(), function($join) {
                 $join->on('scholarship_requirement_items.id', '=', 'scholar_response_files.item_id');
-                $join->on('scholarship_requirements.id', '=', 'scholar_response_files.response_id');
+                $join->on('scholar_responses.id', '=', 'scholar_response_files.response_id');
             })
             ->whereIn('scholarship_requirement_items.type', ['cor', 'grade', 'file'])
-            ->where('scholarship_requirements.id', 1)
-            ->where('scholar_responses.id', 1)
+            ->where('scholarship_requirements.id', $this->requirement_id)
+            ->where('scholar_responses.id', $this->user_response_id)
             ->whereNull('scholar_response_files.id');
 
         $asnwer = ScholarshipRequirement::selectRaw('"answer" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
@@ -113,19 +123,19 @@ class ResponseLivewire extends Component
             ->join(with(new ScholarResponse)->getTable(), 'scholarship_requirements.id', '=', 'scholar_responses.requirement_id')
             ->leftJoin(with(new ScholarResponseAnswer)->getTable(), function($join) {
                 $join->on('scholarship_requirement_items.id', '=', 'scholar_response_answers.item_id');
-                $join->on('scholarship_requirements.id', '=', 'scholar_response_answers.response_id');
+                $join->on('scholar_responses.id', '=', 'scholar_response_answers.response_id');
             })
             ->whereIn('scholarship_requirement_items.type', ['question'])
-            ->where('scholarship_requirements.id', 1)
-            ->where('scholar_responses.id', 1)
+            ->where('scholarship_requirements.id', $this->requirement_id)
+            ->where('scholar_responses.id', $this->user_response_id)
             ->whereNull('scholar_response_answers.id');
 
         $options = ScholarshipRequirement::selectRaw('"option" as item, scholarship_requirement_items.id, scholarship_requirement_items.type')
             ->join(with(new ScholarshipRequirementItem)->getTable(), 'scholarship_requirements.id', '=', 'scholarship_requirement_items.requirement_id')
             ->join(with(new ScholarResponse)->getTable(), 'scholarship_requirements.id', '=', 'scholar_responses.requirement_id')
             ->whereIn('scholarship_requirement_items.type', ['radio', 'check'])
-            ->where('scholarship_requirements.id', 1)
-            ->where('scholar_responses.id', 1)
+            ->where('scholarship_requirements.id', $this->requirement_id)
+            ->where('scholar_responses.id', $this->user_response_id)
             ->whereNotIn('scholar_responses.id', function($query) {
                 $query->select('scholar_response_options.response_id')
                     ->from(with(new ScholarshipRequirementItemOption)->getTable())
@@ -136,19 +146,18 @@ class ResponseLivewire extends Component
 
         $unassigned = $options->union($file_uploads)->union($asnwer)->get();
 
-
         if (!$unassigned->isEmpty()) {
             $this->dispatchBrowserEvent('swal:modal', [
                 'type' => 'info',  
-                'message' => 'Please fill up all!', 
+                'message' => 'Please fill up all items!', 
                 'text' => ''
             ]);
             return;
         }
 
-        $this->user_response->submit_at = Carbon::now();
+        $user_response->submit_at = Carbon::now();
         
-        if ( $this->user_response->save() ) {
+        if ( $user_response->save() ) {
             $this->dispatchBrowserEvent('swal:modal', [
                 'type' => 'success',  
                 'message' => 'Response Submitted', 
@@ -160,10 +169,14 @@ class ResponseLivewire extends Component
     public function unsubmit_response()
     {
         if ($this->verifyUser()) return;
-        if (!$this->verifyUserRequirementAccess($this->requirement->id)) return;
+        if (!$this->verifyUserRequirementAccess()) return;
         if ($this->verifyUserResponse()) return;
 
-        $this->user_response->submit_at = null;
-        $this->user_response->save();
+        $user_response = ScholarResponse::find($this->user_response_id);
+        if ( is_null($user_response) )
+            return;
+
+        $user_response->submit_at = null;
+        $user_response->save();
     }
 }

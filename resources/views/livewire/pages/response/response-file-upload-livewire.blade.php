@@ -1,4 +1,5 @@
 <div>
+@isset($requirement_item)
     @if ( !isset( $response->submit_at ) )
         <div class="input-group mb-1">
             <div class="input-group-prepend">
@@ -73,5 +74,5 @@
             @endif
         </div>
     @endisset
-
+@endisset
 </div>

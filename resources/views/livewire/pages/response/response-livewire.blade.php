@@ -1,4 +1,5 @@
 <div>
+@isset($requirement)
     <hr>
     <div class="row">
         <div class="col-12 col-md-3 mb-2">
@@ -76,7 +77,7 @@
         
             <div class="row">
                 <div class="col-sm-12 offset-sm-0 col-md-10 offset-md-1">
-                    @foreach ($requirement_items as $requirement_item)
+                    @foreach ($requirement->items as $requirement_item)
                         <div class="card mb-3 shadow requirement-item-hover">
                             <div class="card-body">
         
@@ -137,5 +138,6 @@
               }
             });
         });
-    </script>
+    </script> 
+@endisset
 </div>

@@ -153,11 +153,8 @@ class ScholarshipRequirementEditLivewire extends Component
         $requirement_catergory = ScholarshipRequirementCategory::where('requirement_id', $this->requirement_id)
             ->where('category_id', $category_id)
             ->first();
-        if ( is_null($requirement_catergory) ) {
-            return;
-        }
 
-        if ( $requirement_catergory->delete() ) {
+        if ( isset($requirement_catergory) && $requirement_catergory->delete() ) {
             $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Category Removed Successfully']);
         } else {
             ScholarshipRequirementCategory::firstOrCreate([

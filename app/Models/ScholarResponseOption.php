@@ -16,6 +16,7 @@ class ScholarResponseOption extends Model
      */
     protected $fillable = [
         'response_id',
+        'item_id',
         'option_id',
     ];
 

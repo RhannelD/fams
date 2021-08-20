@@ -15,8 +15,8 @@ class ResponseFileUploadLivewire extends Component
 {
     use WithFileUploads;
 
-    public $requirement_item;
-    public $response;
+    public $requirement_item_id;
+    public $response_id;
     public $file;
     
 
@@ -32,10 +32,25 @@ class ResponseFileUploadLivewire extends Component
         }
         return false;
     }
+
+    protected function verifyItemAndResponse()
+    {
+        $requirement_item = ScholarshipRequirementItem::find($this->requirement_item_id);
+        $response = ScholarResponse::find($this->response_id);
+        if ( is_null($requirement_item) || is_null($response) ){
+            $this->emitUp('refresh');
+            return true;
+        }
+        return false;
+    }
  
     protected function verifyUserResponse()
     {
-        $access = $this->response->user_id != Auth::id();
+        $response = ScholarResponse::find($this->response_id);
+        if ( is_null($response) ) 
+            return true;
+
+        $access = $response->user_id != Auth::id();
 
         if ($access) {
             redirect()->route('index');
@@ -43,21 +58,28 @@ class ResponseFileUploadLivewire extends Component
         return $access;
     }
 
-    public function mount(ScholarshipRequirementItem $id, ScholarResponse $response_id)
+    public function mount($requirement_item_id, $response_id)
     {
         if ($this->verifyUser()) return;
         
-        $this->requirement_item = $id;
-        $this->response = $response_id;
+        $this->requirement_item_id = $requirement_item_id;
+        $this->response_id = $response_id;
     }
 
     public function render()
     {
-        $response_file = ScholarResponseFile::where('response_id', $this->response->id)
-            ->where('item_id', $this->requirement_item->id)
+        $requirement_item = ScholarshipRequirementItem::find($this->requirement_item_id);
+        $response = ScholarResponse::find($this->response_id);
+
+        $response_file = ScholarResponseFile::where('response_id', $this->response_id)
+            ->where('item_id', $this->requirement_item_id)
             ->first();
 
-        return view('livewire.pages.response.response-file-upload-livewire', ['response_file' => $response_file]);
+        return view('livewire.pages.response.response-file-upload-livewire', [
+                'requirement_item' => $requirement_item,
+                'response' => $response,
+                'response_file' => $response_file
+            ]);
     }
 
     public function updated($propertyName)
@@ -81,13 +103,15 @@ class ResponseFileUploadLivewire extends Component
 
     public function save()
     {
+        if ($this->verifyItemAndResponse()) return;
+
         $orig_name  = $this->file->getClientOriginalName();
 
-        $user_id    = Auth::id();
-        $response_id= $this->response->id;
-        $requirement_item_id = $this->requirement_item->id;
-        $datetime   = Carbon::now()->format('Y-m-d_h-i-s');
-        $extension  = $this->get_file_extension();
+        $user_id        = Auth::id();
+        $response_id    = $this->response_id;
+        $requirement_item_id = $this->requirement_item_id;
+        $datetime       = Carbon::now()->format('Y-m-d_h-i-s');
+        $extension      = $this->get_file_extension();
 
         $filename = 'file_'.$user_id.'_'.$response_id.'_'.$requirement_item_id.'_'.$datetime.'.'.$extension;
 
@@ -116,6 +140,7 @@ class ResponseFileUploadLivewire extends Component
     {
         if ($this->verifyUser()) return;
         if ($this->verifyUserResponse()) return;
+        if ($this->verifyItemAndResponse()) return;
         
         if ( ScholarResponseFile::where('id', $id)->exists() ) {
             ScholarResponseFile::find($id)->delete();

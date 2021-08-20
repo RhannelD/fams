@@ -23,6 +23,7 @@ class ScholarResponseOptionFactory extends Factory
     {
         return [
             'response_id' => 1,
+            'item_id' => 1,
             'option_id' => 1,
         ];
     }

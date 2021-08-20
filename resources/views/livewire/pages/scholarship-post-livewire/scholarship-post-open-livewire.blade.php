@@ -61,7 +61,7 @@
                         @endif
                     </h5>
 
-                    @if ( $post->user_id == Auth::id() )
+                    @if ( $post->user_id == Auth::id() || Auth::user()->is_admin() )
                         @livewire('scholarship-post-livewire', [$post->scholarship_id, $post->id], key('scholarship-page-post-'.time().$post->scholarship_id))
                     @endif
 
