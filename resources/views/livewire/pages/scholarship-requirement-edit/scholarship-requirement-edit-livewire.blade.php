@@ -1,32 +1,6 @@
 <div>
 @if( isset($scholarship_requirement) )
-    <div class="row mt-1 p-1">
-        <div class="card col-12 bg-secondary text-white border-secondary">
-            <h2 class="m-2 row">
-                <strong class="my-auto">
-                    {{ $scholarship_requirement->scholarship->scholarship }} -  Requirement
-                </strong>
-                
-                <div class="mr-1 ml-auto">
-                    <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$scholarship_requirement->scholarship_id, 'home']) }}">
-                        <i class="fas fa-newspaper"></i>
-                        <strong>Home</strong>
-                    </a>
-                    <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$scholarship_requirement->scholarship_id, 'requirement']) }}">
-                        <i class="fas fa-file-alt"></i>
-                        <strong>Requirements</strong>
-                    </a>
-                    <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$scholarship_requirement->scholarship_id, 'requirement', $scholarship_requirement->id]) }}">
-                        <i class="fas fa-arrow-circle-left"></i>
-                        <strong>View</strong>
-                    </a>
-                </div>
-            </h2>
-        </div>
-    </div>
+    @livewire('scholarship-program-livewire', [$scholarship_requirement->scholarship_id], key('page-tabs-'.time().$scholarship_requirement->scholarship_id))
 
     <hr>
     <div class="row">

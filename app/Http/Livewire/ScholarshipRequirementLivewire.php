@@ -67,7 +67,8 @@ class ScholarshipRequirementLivewire extends Component
         $requirements = $requirements
             ->paginate($this->show_row);
 
-        return view('livewire.pages.scholarship-requirement.scholarship-requirement-livewire', ['requirements' => $requirements]);
+        return view('livewire.pages.scholarship-requirement.scholarship-requirement-livewire', ['requirements' => $requirements])
+            ->extends('livewire.main.main-livewire');
     }
 
     public function create_requirement()

@@ -1,4 +1,7 @@
 <div>
+    @livewire('scholarship-program-livewire', [$scholarship_id], key('page-tabs-'.time().$scholarship_id))
+
+    <hr>
     <div class="row mt-3">
         <div class="col-12">
             @if (Auth::user()->usertype != 'scholar')

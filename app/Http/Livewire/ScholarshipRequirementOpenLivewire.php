@@ -36,7 +36,8 @@ class ScholarshipRequirementOpenLivewire extends Component
     {
         $requirement = ScholarshipRequirement::find($this->requirement_id);
 
-        return view('livewire.pages.scholarship-requirement-open.scholarship-requirement-open-livewire', ['requirement' => $requirement]);
+        return view('livewire.pages.scholarship-requirement-open.scholarship-requirement-open-livewire', ['requirement' => $requirement])
+            ->extends('livewire.main.main-livewire');
     }
 
     public function delete_confirmation()

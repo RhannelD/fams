@@ -56,9 +56,10 @@ class ScholarshipPageLivewire extends Component
         $this->dispatchBrowserEvent('remove:modal-backdrop');
 
         return view('livewire.pages.scholarship-page-livewire.scholarship-page-livewire', [
-            'posts' => $posts,
-            'show_more' => $show_more
-        ]);
+                'posts' => $posts,
+                'show_more' => $show_more
+            ])
+            ->extends('livewire.main.main-livewire');
     }
 
     public function load_more()

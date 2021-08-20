@@ -66,11 +66,11 @@ class ResponseLivewire extends Component
         return false;
     }
 
-    public function mount($id)
+    public function mount($requirement_id)
     {
         if ($this->verifyUser()) return;
         
-        $this->requirement_id = $id;
+        $this->requirement_id = $requirement_id;
 
         if (!$this->verifyUserRequirementAccess()) return;
     }

@@ -80,6 +80,7 @@ class ScholarshipScholarLivewire extends Component
         return view('livewire.pages.scholarship-scholar.scholarship-scholar-livewire', [
                 'scholars' => $scholars,
                 'categories' => $categories,
-            ]);
+            ])
+            ->extends('livewire.main.main-livewire');
     }
 }

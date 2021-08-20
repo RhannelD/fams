@@ -9,47 +9,48 @@
                 @forelse ($requirements as $requirement)
                     <tr>
                         <td>
-                            <div class="shadow p-2 mx-2 bg-white rounded d-flex bd-highlight requirement-item
-                                @if ($loop->last)
-                                    mb-5 
-                                @else
-                                    mb-0 
-                                @endif    
-                                "
-                                wire:click="$emitUp('view_requirement', {{ $requirement->id }})"
-                                style="cursor: pointer;">
-                                <div class="mr-auto p-2 bd-highlight">
-                                    {{ $requirement->requirement }}
-                                </div>
-                                <div class="bd-highlight mx-1 my-auto">
-                                    <h5>
-                                        @if ($requirement->promote)
-                                            <span class="badge badge-pill badge-secondary">Application</span>
-                                        @else
-                                            <span class="badge badge-pill badge-primary">Renewal</span>
-                                        @endif
-                                    </h5>
-                                </div>
-                                <div class="bd-highlight mx-1 my-auto">
-                                    <h5>
-                                        
-                                        @switch( $requirement->can_be_accessed() )
-                                            @case('finished')
-                                                <span class="badge badge-pill badge-danger">Finished</span>
-                                                @break
+                            <a href="{{ route('scholarship.requirement.open', [$requirement->id]) }}">
+                                <div class="shadow p-2 mx-2 bg-white rounded d-flex requirement-item text-dark
+                                    @if ($loop->last)
+                                        mb-5 
+                                    @else
+                                        mb-0 
+                                    @endif    
+                                    "
+                                    style="cursor: pointer;">
+                                    <div class="mr-auto p-2 bd-highlight">
+                                        {{ $requirement->requirement }}
+                                    </div>
+                                    <div class="bd-highlight mx-1 my-auto">
+                                        <h5>
+                                            @if ($requirement->promote)
+                                                <span class="badge badge-pill badge-secondary">Application</span>
+                                            @else
+                                                <span class="badge badge-pill badge-primary">Renewal</span>
+                                            @endif
+                                        </h5>
+                                    </div>
+                                    <div class="bd-highlight mx-1 my-auto">
+                                        <h5>
+                                            
+                                            @switch( $requirement->can_be_accessed() )
+                                                @case('finished')
+                                                    <span class="badge badge-pill badge-danger">Finished</span>
+                                                    @break
 
-                                            @case('ongoing')
-                                                <span class="badge badge-pill badge-success">Ongoing</span>
-                                                @break
+                                                @case('ongoing')
+                                                    <span class="badge badge-pill badge-success">Ongoing</span>
+                                                    @break
 
-                                            @case('disabled')
-                                                <span class="badge badge-pill badge-dark">Disabled</span>
-                                                @break
-                                        @endswitch
+                                                @case('disabled')
+                                                    <span class="badge badge-pill badge-dark">Disabled</span>
+                                                    @break
+                                            @endswitch
 
-                                    </h5>
+                                        </h5>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </td>
                     </tr>
                 @empty

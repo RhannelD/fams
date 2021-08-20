@@ -22,7 +22,7 @@
                 </table>
             </div>
             <div class="card-footer">
-                <a href="{{ route('scholarship.program', [$scholarship_program->id, 'home']) }}"
+                <a href="{{ route('scholarship.home', [$scholarship_program->id]) }}"
                     class="btn btn-info text-white mb-1 mb-lg-0">
                     Open Scholarship
                 </a>

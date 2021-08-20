@@ -1,39 +1,6 @@
 <div>
 @if ( isset($post) )
-    <div class="row mt-1 p-1">
-        <div class="card col-12 bg-secondary text-white border-secondary">
-            <h2 class="m-2 row">
-                <strong class="my-auto">
-                    {{ $post->scholarship->scholarship }} -  Post
-                </strong>
-                
-                <div class="mr-1 ml-auto">
-                    <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$post->scholarship_id, 'home']) }}">
-                        <i class="fas fa-newspaper"></i>
-                        <strong>Home</strong>
-                    </a>
-                    <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$post->scholarship_id, 'scholar']) }}">
-                        <i class="fas fa-user-graduate"></i>
-                        <strong>Scholars</strong>
-                    </a>
-                    <a class="btn btn-light"
-                        href="{{ route('scholarship.program', [$post->scholarship_id, 'officer']) }}">
-                        <i class="fas fa-address-card"></i>
-                        <strong>Officers</strong>
-                    </a>
-                    @if (Auth::user()->usertype != 'scholar')
-                        <a class="btn btn-light"
-                            href="{{ route('scholarship.program', [$post->scholarship_id, 'requirement']) }}">
-                            <i class="fas fa-file-alt"></i>
-                            <strong>Requirements</strong>
-                        </a>
-                    @endif
-                </div>
-            </h2>
-        </div>
-    </div>
+    @livewire('scholarship-program-livewire', [$post->scholarship_id], key('page-tabs-'.time().$post->scholarship_id))
 
     <hr>
     <div class="row">
@@ -90,7 +57,7 @@
                                 @if ( Auth::user()->usertype == 'scholar' )
                                     href="{{ route('requirement.view', [$requirement_link->requirement->id]) }}"
                                 @else
-                                    href="{{ route('scholarship.program', [ $requirement_link->requirement->scholarship_id, 'requirement', $requirement_link->requirement->id]) }}"  
+                                    href="{{ route('scholarship.requirement.open', [$requirement_link->requirement->id]) }}"  
                                 @endif
                                 >
                             <div class="input-group mb-1  item-hover">

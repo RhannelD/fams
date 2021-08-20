@@ -1,4 +1,7 @@
 <div>
+    @livewire('scholarship-program-livewire', [$scholarship_id], key('page-tabs-'.time().$scholarship_id))
+
+    <hr class="mb-2">
 	<div class="row mb-1">
 		<div class="input-group col-md-5 mt-2">
 
