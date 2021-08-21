@@ -15,8 +15,8 @@
             </thead>
 
             <tbody>
-                @forelse($responses as $response)
-                    <tr class="rows">
+                @forelse($responses as $key_index => $response)
+                    <tr class="rows" wire:click='view_response({{ $key_index }})'>
                         <td class="text-nowrap">{{ $response->user->flname() }}</td>
                         <td class="text-nowrap">{{ $response->user->email }}</td>
                         <td class="text-nowrap">{{ $response->submit_at }}</td>

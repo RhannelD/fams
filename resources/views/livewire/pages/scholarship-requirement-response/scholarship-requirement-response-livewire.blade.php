@@ -36,7 +36,8 @@
                     <select wire:model="approval" class="form-control" id="category">
                         <option value="">All</option>
                         <option value="1">Approved</option>
-                        <option value="0">Denied</option>
+                        <option value="2">Denied</option>
+                        <option value="3">Pending</option>
                     </select>
                 </div>
                 <div class="input-group col-md-4 col-6 mb-0 mt-1">
@@ -71,7 +72,11 @@
 
 	<div class="row">
 		<div class="contents-container col-12 mb-2 table_responses">
-			@include('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-search-livewire')
+            @if ( is_null($index))
+			    @include('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-search-livewire')
+            @else
+			    @include('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-view-livewire')
+            @endif
 		</div>
 	</div>
 @endisset    

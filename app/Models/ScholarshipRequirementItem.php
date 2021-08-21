@@ -27,6 +27,16 @@ class ScholarshipRequirementItem extends Model
         return $this->hasMany(ScholarshipRequirementItemOption::class, 'item_id', 'id');
     }
 
+    public function response_files()
+    {
+        return $this->hasMany(ScholarResponseFile::class, 'item_id', 'id');
+    }
+
+    public function response_answer()
+    {
+        return $this->hasMany(ScholarResponseAnswer::class, 'item_id', 'id');
+    }
+
     public function requirement()
     {
         return $this->belongsTo(ScholarshipRequirement::class, 'requirement_id', 'id');

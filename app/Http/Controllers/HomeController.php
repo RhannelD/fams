@@ -42,7 +42,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return is_null(ScholarshipPost::find(3002));
+        return empty('');
+        // return ScholarResponse::find(1)->requirement->items[0]->response_files->where('response_id', 1)->first();
+
+        // return is_null(ScholarshipPost::find(3002));
 
         // $comment = ScholarshipPostComment::select('scholarship_post_comments.*', 'users.firstname', 'users.lastname')
         //     ->leftJoin('users', 'scholarship_post_comments.user_id', '=', 'users.id')

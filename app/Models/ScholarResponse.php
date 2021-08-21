@@ -36,4 +36,9 @@ class ScholarResponse extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function requirement()
+    {
+        return $this->belongsTo(ScholarshipRequirement::class, 'requirement_id', 'id');
+    }
 }
