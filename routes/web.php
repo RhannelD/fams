@@ -13,6 +13,7 @@ use App\Http\Livewire\ScholarshipScholarLivewire;
 use App\Http\Livewire\ScholarshipRequirementLivewire;
 use App\Http\Livewire\ScholarshipRequirementOpenLivewire;
 use App\Http\Livewire\ScholarshipRequirementEditLivewire;
+use App\Http\Livewire\ScholarshipRequirementResponseLivewire;
 use App\Http\Livewire\ScholarshipPostOpenLivewire;
 use App\Http\Livewire\ScholarshipCategoryLivewire;
 use App\Http\Livewire\RequirementPreviewLivewire;
@@ -49,6 +50,7 @@ Route::get('/scholarship/{scholarship_id}/requirement', ScholarshipRequirementLi
 Route::get('/scholarship/{scholarship_id}/category', ScholarshipCategoryLivewire::class)->name('scholarship.category')->middleware('auth.main');
 Route::get('/scholarship/requirement/{requirement_id}', ScholarshipRequirementOpenLivewire::class)->name('scholarship.requirement.open')->middleware('auth.main');
 Route::get('/scholarship/requirement/{requirement_id}/edit', ScholarshipRequirementEditLivewire::class)->name('requirement.edit')->middleware('auth.main');
+Route::get('/scholarship/requirement/{requirement_id}/response', ScholarshipRequirementResponseLivewire::class)->name('requirement.response')->middleware('auth.main');
 Route::get('/scholarship/post/{post_id}', ScholarshipPostOpenLivewire::class)->name('post.show')->middleware('auth.main');
 
 Route::get('/requirement/{requirement_id}', RequirementPreviewLivewire::class)->name('requirement.view')->middleware('auth.main');

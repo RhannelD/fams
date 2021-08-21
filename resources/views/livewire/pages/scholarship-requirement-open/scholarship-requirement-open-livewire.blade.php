@@ -11,7 +11,9 @@
 
             <div class="card shadow mb-2 requirement-item-hover">
                 <div class="card-body">
-                    <button class="btn btn-success btn-block">View Responds</button>
+                    <a href="{{ route('requirement.response', [$requirement->id]) }}" class="btn btn-success btn-block">
+                        View Responds
+                    </a>
                 </div>
             </div>
 

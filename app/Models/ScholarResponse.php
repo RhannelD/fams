@@ -31,4 +31,9 @@ class ScholarResponse extends Model
     {
         return $this->hasMany(ScholarResponseComment::class, 'response_id', 'id');
     }
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

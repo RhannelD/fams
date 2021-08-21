@@ -32,7 +32,7 @@
                     @endif
                     <a class="btn btn-light"
                         href="{{ route('scholarship.category', [$scholarship->id]) }}">
-                        <i class="fas fa-file-alt"></i>
+                        <i class="fas fa-money-check-alt"></i>
                         <strong>Category</strong>
                     </a>
                 </div>
