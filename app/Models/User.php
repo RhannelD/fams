@@ -49,6 +49,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function scholarship_scholars()
+    {
+        return $this->hasMany(ScholarshipScholar::class, 'user_id', 'id');
+    }
+
     public function flname()
     {
         return $this->firstname .' '. $this->lastname;
@@ -57,5 +62,24 @@ class User extends Authenticatable
     public function is_admin()
     {
         return ( $this->usertype == 'admin' );
+    }
+    
+    public function is_scholar($scholarship_id)
+    {
+        return ScholarshipScholar::where('user_id', $this->id)
+            ->with('category')
+            ->whereHas('category', function ($query) use ($scholarship_id) {
+                $query->where('scholarship_id', $scholarship_id);
+            })
+            ->exists();
+    }
+
+    public function get_scholarship_scholar($scholarship_id)
+    {
+        return ScholarshipScholar::where('user_id', $this->id)
+            ->whereHas('category', function ($query) use ($scholarship_id) {
+                $query->where('scholarship_id', $scholarship_id);
+            })
+            ->first();
     }
 }

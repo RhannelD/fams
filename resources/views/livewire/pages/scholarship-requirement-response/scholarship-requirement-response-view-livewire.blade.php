@@ -242,6 +242,21 @@
               }
             });
         });
+
+        window.addEventListener('swal:confirm:approve', event => { 
+            swal({
+              title: event.detail.message,
+              text: event.detail.text,
+              icon: event.detail.type,
+              buttons: true,
+              dangerMode: false,
+            })
+            .then((willDelete) => {
+              if (willDelete) {
+                @this.call(event.detail.function)
+              }
+            });
+        });
 	</script>
 @endisset  
 </div>

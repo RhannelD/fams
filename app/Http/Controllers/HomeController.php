@@ -42,8 +42,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $agent = new \Jenssegers\Agent\Agent();
-        return $agent->isDesktop();
+        return ScholarResponse::find(21)->requirement->categories->first();
+
+        // return User::find(30)->get_scholarship_scholar(1);
+
+        // $agent = new \Jenssegers\Agent\Agent();
+        // return $agent->isDesktop();
         
         // return ScholarResponse::find(1)->requirement->items[0]->response_files->where('response_id', 1)->first();
 
