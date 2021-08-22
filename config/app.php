@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         UxWeb\SweetAlert\SweetAlertServiceProvider::class,
+        Jenssegers\Agent\AgentServiceProvider::class,
 
     ],
 
@@ -231,6 +232,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Alert' => UxWeb\SweetAlert\SweetAlert::class,
+        'Agent' => Jenssegers\Agent\Facades\Agent::class,
     ],
 
 ];

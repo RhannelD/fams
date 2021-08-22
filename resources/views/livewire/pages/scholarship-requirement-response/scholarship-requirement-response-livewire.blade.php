@@ -40,20 +40,26 @@
                         <option value="3">Pending</option>
                     </select>
                 </div>
-                <div class="input-group col-md-4 col-6 mb-0 mt-1">
-                    <div class="input-group-prepend">
-                    <label class="input-group-text" for="rows">Rows</label>
+
+                @if ( is_null($index) )    
+                    <div class="input-group col-md-4 col-6 mb-0 mt-1">
+                        <div class="input-group-prepend">
+                        <label class="input-group-text" for="rows">Rows</label>
+                        </div>
+                        <select wire:model="show_row" class="form-control" id="rows">
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="150">150</option>
+                            <option value="200">200</option>
+                        </select>
                     </div>
-                    <select wire:model="show_row" class="form-control" id="rows">
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="150">150</option>
-                        <option value="200">200</option>
-                    </select>
-                </div>
+                @else
+                    <div class="col-md-4 col-6 mb-0 mt-1"></div>
+                @endif
+
                 <div class="input-group col-md-4 col-sm-12 mb-0 mt-1 d-flex">
                     <div class="btn-group mr-0 ml-auto">
                         <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -71,13 +77,59 @@
 	</div>
 
 	<div class="row">
-		<div class="contents-container col-12 mb-2 table_responses">
-            @if ( is_null($index))
-			    @include('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-search-livewire')
-            @else
-			    @include('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-view-livewire')
-            @endif
-		</div>
+		
+        @if ( is_null($index))
+            <div class="contents-container col-12 mb-2 table_responses">
+                @include('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-search-livewire')
+            </div>
+        @else
+            @isset( $responses )
+            <div class="contents-container col-12 mb-2 table_responses px-0">
+                <div class="d-flex my-1 mx-3">
+                    <div class="ml-0 mr-auto">
+                        <button class="btn btn-info mx-1 text-white" wire:click="unview_response">
+                            View Table
+                        </button>
+                    </div>
+                    <div class="my-auto" wire:loading wire:target="change_index">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                    <div class="card mx-1">
+                        <div class="card-body pb-1 pt-2 px-2">
+                            {{ $index+1 }} /{{ $responses->count() }}
+                        </div>
+                    </div>
+                    <div class="mr-0">
+                        @if ( $index > 0 )
+                            <button class="btn btn-info mx-1 text-white" wire:click="change_index(-1)" wire:loading.attr="disabled">
+                                <i class="fas fa-chevron-circle-left"></i> Previous
+                            </button>
+                        @else
+                            <button class="btn btn-dark mx-1" disabled wire:click="change_index(0)">
+                                <i class="fas fa-chevron-circle-left"></i> Previous
+                            </button>
+                        @endif
+
+                        @if ( $index < $responses->count()-1 )
+                            <button class="btn btn-info mx-1 text-white" wire:click="change_index(1)" wire:loading.attr="disabled">
+                                Next <i class="fas fa-chevron-circle-right"></i>
+                            </button>
+                        @else
+                            <button class="btn btn-dark mx-1" disabled wire:click="change_index(0)">
+                                Next <i class="fas fa-chevron-circle-right"></i>
+                            </button>
+                        @endif
+                    </div>
+                </div> 
+
+                <hr class="my-1 mx-3">
+                @isset($responses[$index]->id)
+                    @livewire('scholarship-requirement-response-view-livewire', [$responses[$index]->id], key('response-view-'.time().$requirement->scholarship_id))
+                @endisset  
+            </div>
+            @endisset
+        @endif
+		
 	</div>
 @endisset    
 </div>

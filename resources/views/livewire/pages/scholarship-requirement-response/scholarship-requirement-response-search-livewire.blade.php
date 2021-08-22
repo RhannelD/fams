@@ -22,7 +22,7 @@
                         <td class="text-nowrap">{{ $response->submit_at }}</td>
                         <td class="text-nowrap text-center">
                             @if ( is_null($response->approval) )
-                                <span class="badge badge-pill badge-info">Pending</span>
+                                <span class="badge badge-pill badge-info text-white">Pending</span>
                             @elseif ($response->approval)
                                 <span class="badge badge-pill badge-success">Approved</span>
                             @else

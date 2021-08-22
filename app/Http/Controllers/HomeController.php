@@ -42,7 +42,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return empty('');
+        $agent = new \Jenssegers\Agent\Agent();
+        return $agent->isDesktop();
+        
         // return ScholarResponse::find(1)->requirement->items[0]->response_files->where('response_id', 1)->first();
 
         // return is_null(ScholarshipPost::find(3002));
