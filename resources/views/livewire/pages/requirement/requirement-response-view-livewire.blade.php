@@ -39,7 +39,7 @@
                 <td>Approval:</td>
                 <td class="pl-2">
                     @if ( is_null($scholar_response->approval) )
-                        <span class="badge badge-pill badge-dark">Not Yet Submitted</span>
+                        <span class="badge badge-pill badge-info text-white">Pending</span>
                     @elseif ($scholar_response->approval)
                         <span class="badge badge-pill badge-success">Approved</span>
                     @else

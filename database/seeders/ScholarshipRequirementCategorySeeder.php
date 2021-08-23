@@ -26,13 +26,6 @@ class ScholarshipRequirementCategorySeeder extends Seeder
                 'requirement_id' => $requirement->id,
                 'category_id' => $categories[$random]->id
             ]);
-
-            if (rand(1, 4) == 1 && $random > 0) {
-                ScholarshipRequirementCategory::factory()->create([   
-                    'requirement_id' => $requirement->id,
-                    'category_id' => $categories[($random-1)]->id
-                ]);
-            }
         }
     }
 }

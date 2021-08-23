@@ -149,19 +149,18 @@ class ScholarshipRequirementEditLivewire extends Component
     public function toggle_category($category_id)
     {
         if ($this->verifyUser()) return;
-        
-        $requirement_catergory = ScholarshipRequirementCategory::where('requirement_id', $this->requirement_id)
-            ->where('category_id', $category_id)
-            ->first();
 
-        if ( isset($requirement_catergory) && $requirement_catergory->delete() ) {
-            $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Category Removed Successfully']);
-        } else {
-            ScholarshipRequirementCategory::firstOrCreate([
-                'requirement_id' =>  $this->requirement_id,
-                'category_id' => $category_id
-            ]);
-            $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Category Added Successfully']);
+        $requirement_category = ScholarshipRequirementCategory::updateOrCreate(
+            ['requirement_id' =>  $this->requirement_id],
+            ['category_id' => $category_id]
+        );
+
+        if($requirement_category->wasRecentlyCreated){
+            $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Category added successfully']);
+            return;
+        } elseif (!$requirement_category->wasRecentlyCreated && $requirement_category->wasChanged()){
+            $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Category change successfully']);
+            return;
         }
     }
 }

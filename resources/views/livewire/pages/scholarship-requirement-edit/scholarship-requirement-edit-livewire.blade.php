@@ -48,7 +48,7 @@
                             <div class="input-group mb-1">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">
-                                        <input type="checkbox"
+                                        <input type="radio"
                                             @isset($category->category_id)
                                                 checked
                                             @endisset
