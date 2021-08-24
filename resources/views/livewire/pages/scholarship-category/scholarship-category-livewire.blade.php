@@ -7,9 +7,11 @@
             <h3 class="ml-3 my-auto py-1">
                 <strong>Categories</strong>
             </h3>
-            <button wire:click="$emit('unset_category')" class="btn btn-success ml-auto mr-0" type="button" data-toggle="modal" data-target="#category_form">
-                Create Category
-            </button>
+            @if ( Auth::user()->usertype != 'scholar' )
+                <button wire:click="$emit('unset_category')" class="btn btn-success ml-auto mr-0" type="button" data-toggle="modal" data-target="#category_form">
+                    Create Category
+                </button>
+            @endif
         </div>
 	</div>
 
@@ -20,21 +22,24 @@
                     <div class="card-body">
                         <div class="d-flex">
                             <h3 class="my-0">{{ $category->category }}</h3>
-                            <div class="dropdown mr-0 ml-auto">
-                                <span id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </span>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a wire:click="$emit('set_category', {{ $category->id }})" class="dropdown-item" type="button" data-toggle="modal" data-target="#category_form">
-                                        <i class="fas fa-pen-square mr-1"></i>
-                                        Edit Category
-                                    </a>
-                                    <a wire:click="delete_category_confirmation({{ $category->id }})" class="dropdown-item">
-                                        <i class="fas fa-trash mr-1"></i>
-                                        Delete Category
-                                    </a>
+
+                            @if ( Auth::user()->usertype != 'scholar' )    
+                                <div class="dropdown mr-0 ml-auto">
+                                    <span id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </span>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a wire:click="$emit('set_category', {{ $category->id }})" class="dropdown-item" type="button" data-toggle="modal" data-target="#category_form">
+                                            <i class="fas fa-pen-square mr-1"></i>
+                                            Edit Category
+                                        </a>
+                                        <a wire:click="delete_category_confirmation({{ $category->id }})" class="dropdown-item">
+                                            <i class="fas fa-trash mr-1"></i>
+                                            Delete Category
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                         <table class="col-12">
                             <tr>

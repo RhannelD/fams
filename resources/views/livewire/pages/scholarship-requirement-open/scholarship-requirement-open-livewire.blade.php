@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-12 col-md-3 mb-2">
 
-            @isset($requirement->categories)
+            @isset($requirement->categories->first()->category)
                 <div class="card shadow mb-2 requirement-item-hover">
                     <div class="card-body">
                         <h5>Category</h5>

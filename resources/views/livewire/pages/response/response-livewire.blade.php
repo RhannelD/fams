@@ -7,6 +7,14 @@
 
             <div class="card shadow mb-2 requirement-item-hover">
                 <div class="card-body">
+                    <a href="{{ route('requirement.view', [$requirement->id]) }}" class="btn btn-dark btn-block">
+                        Back
+                    </a>
+                </div>
+            </div> 
+
+            <div class="card shadow mb-2 requirement-item-hover">
+                <div class="card-body">
 
                     @if ( $user_response->cant_be_edit() )
                         <div class="alert alert-info mb-2">

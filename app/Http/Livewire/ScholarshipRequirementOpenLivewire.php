@@ -56,14 +56,14 @@ class ScholarshipRequirementOpenLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
-        ScholarshipRequirement::find($this->requirement_id)->delete();
+        $requirement = ScholarshipRequirement::find($this->requirement_id);
+        if ( is_null($requirement) )
+            return;
         
-        $this->dispatchBrowserEvent('swal:modal', [
-            'type' => 'success',  
-            'message' => 'Requirement Deleted', 
-            'text' => 'Scholarship\'s Requirement has been successfully deleted'
-        ]);
-
-        $this->emitUp('changetab', 'requirement');
+        $scholarship_id = $requirement->scholarship_id;
+        if ($requirement->delete()) {
+            session()->flash('deleted', 'Requirement successfully deleted.');
+            redirect()->route('scholarship.requirement', [$scholarship_id]);
+        }
     }
 }

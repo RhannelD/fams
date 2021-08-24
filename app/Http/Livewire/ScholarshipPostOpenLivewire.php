@@ -112,7 +112,7 @@ class ScholarshipPostOpenLivewire extends Component
         $scholarship_id = $post->scholarship_id;
 
         if ($post->delete()) {
-            redirect()->route('scholarship.program', [$scholarship_id, 'home']);
+            redirect()->route('scholarship.home', [$scholarship_id]);
         }
     }
 }

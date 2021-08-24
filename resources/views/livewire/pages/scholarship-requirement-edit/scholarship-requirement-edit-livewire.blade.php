@@ -65,6 +65,14 @@
                 </div>
             </div>
 
+            <div class="card shadow mb-2 requirement-item-hover">
+                <div class="card-body">
+                    <a href="{{ route('scholarship.requirement.open', [$scholarship_requirement->id]) }}" class="btn btn-block btn-info text-white">
+                        Requirement View
+                    </a>
+                </div>
+            </div>
+
             <hr>
         </div>
 

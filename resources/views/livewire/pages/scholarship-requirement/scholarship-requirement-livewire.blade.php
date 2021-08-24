@@ -43,7 +43,13 @@
             </div>
 		</div>
 	</div>
-
+    <div>
+        @if (session()->has('deleted'))
+            <div class="alert alert-info mt-2 mb-0">
+                {{ session('deleted') }}
+            </div>
+        @endif
+    </div>
 	<div class="row">
 
 		<div class="contents-container col-12 mb-2 px-0">
