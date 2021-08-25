@@ -42,7 +42,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return ScholarResponse::find(21)->requirement->categories->first();
+        $name_email = 'Celia';
+        return User::with('scholarship_officers')
+            ->whereNameOrEmail($name_email)
+            // ->whereNotOfficerOf(1)
+            ->get();
+
+        // return ScholarResponse::find(21)->requirement->categories->first();
 
         // return User::find(30)->get_scholarship_scholar(1);
 

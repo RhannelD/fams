@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -52,6 +53,35 @@ class User extends Authenticatable
     public function scholarship_scholars()
     {
         return $this->hasMany(ScholarshipScholar::class, 'user_id', 'id');
+    }
+
+    public function scholarship_officers()
+    {
+        return $this->hasMany(ScholarshipOfficer::class, 'user_id', 'id');
+    }
+    
+    public function scopeWhereOfficer($query)
+    {
+        return $query->where('usertype', 'officer');
+    }
+
+    public function scopeWhereNameOrEmail($query, $search)
+    {
+        return $query->where(function ($query) use ($search) {
+                $query->where('firstname', 'like', "%$search%")
+                    ->orWhere('middlename', 'like', "%$search%")
+                    ->orWhere('lastname', 'like', "%$search%")
+                    ->orWhere(DB::raw('CONCAT(firstname, " ", lastname)'), 'like', "%$search%")
+                    ->orWhere(DB::raw('CONCAT(firstname, " ", middlename, " ", lastname)'), 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%");
+            });
+    }
+
+    public function scopeWhereNotOfficerOf($query, $scholarship_id)
+    {
+        return $query->whereHas('scholarship_officers', function ($query) use ($scholarship_id) {
+                $query->where('scholarship_id', '!=', $scholarship_id);
+            });
     }
 
     public function flname()

@@ -42,9 +42,17 @@
                 </div>
                 @if (Auth::user()->usertype != 'scholar')    
                     <div class="form-group col-3  my-0">
-                        <button class="form-control btn btn-success">
+                        <button class="form-control btn btn-success" type="button" data-toggle="modal" data-target="#officer_invite">
                             Invite
                         </button>
+                    </div>
+
+                    <div>
+                        <div wire:ignore.self class="modal fade officer_invite" id="officer_invite" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                                @livewire('scholarship-officer-invite-livewire', [$scholarship_id]))
+                            </div>
+                        </div>
                     </div>
                 @endif
             </div>
