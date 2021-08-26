@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Scholarship;
 use App\Models\ScholarshipScholar;
 use App\Models\ScholarshipOfficer;
+use App\Models\ScholarshipOfficerInvite;
 use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementItem;
 use App\Models\ScholarshipRequirementItemOption;
@@ -21,6 +22,7 @@ use App\Models\ScholarResponseAnswer;
 use App\Models\ScholarResponseFile;
 use App\Models\ScholarResponseComment;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -42,11 +44,35 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $name_email = 'Celia';
-        return User::with('scholarship_officers')
-            ->whereNameOrEmail($name_email)
-            // ->whereNotOfficerOf(1)
-            ->get();
+        return ScholarshipOfficerInvite::where('email', 'kaylin12@example.net')->where('scholarship_id', 1)->exists();
+
+        // return User::with('scholarship_invites')
+        //     ->whereOfficer('usertype', 'officer')
+        //     ->whereNotOfficerOf(1)
+        //     ->doesntHave('scholarship_invites')
+        //     ->whereDoesntHave('scholarship_invites', function ($query) {
+        //         $query->where('scholarship_id', 1);
+        //     })
+        //     // ->whereHas('scholarship_invites', function($query) {
+        //     //     $query->whereNotIn('scholarship_id', [1])
+        //     //         ->orWhereNull('scholarship_id');
+        //     // })
+        //     ->get();
+
+        // return User::with('scholarship_invites')
+        //     ->leftJoin(with(new ScholarshipOfficerInvite)->getTable(),  'scholarship_officer_invites.email', '=', 'users.email')
+        //     ->whereOfficer('usertype', 'officer')
+        //     ->whereNotOfficerOf(1)
+        //     ->whereNull('scholarship_officer_invites.email')
+        //     ->get();
+
+        // return Str::random(200);
+
+        // $name_email = 'Celia';
+        // return User::with('scholarship_officers')
+        //     ->whereNameOrEmail($name_email)
+        //     // ->whereNotOfficerOf(1)
+        //     ->get();
 
         // return ScholarResponse::find(21)->requirement->categories->first();
 

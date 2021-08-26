@@ -20,16 +20,19 @@
                     <div class="input-group-prepend">
                       <label class="input-group-text" for="position">Position</label>
                     </div>
+                    
                     <select wire:model="position" class="form-control" id="position">
                         <option value="">All</option>
                         <option value="1">Admin</option>
                         <option value="2">Officer</option>
                     </select>
                 </div>
+
                 <div class="input-group col-4 my-0">
                     <div class="input-group-prepend">
                       <label class="input-group-text" for="rows">Rows</label>
                     </div>
+
                     <select wire:model="show_row" class="form-control" id="rows">
                         <option value="10">10</option>
                         <option value="15">15</option>
@@ -40,6 +43,7 @@
                         <option value="200">200</option>
                     </select>
                 </div>
+
                 @if (Auth::user()->usertype != 'scholar')    
                     <div class="form-group col-3  my-0">
                         <button class="form-control btn btn-success" type="button" data-toggle="modal" data-target="#officer_invite">
@@ -60,10 +64,8 @@
 	</div>
 
 	<div class="row">
-
 		<div class="contents-container col-12 mb-2">
 			@include('livewire.pages.scholarship-officer.scholarship-officer-search-livewire')
 		</div>
-
 	</div>
 </div>

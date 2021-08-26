@@ -10,7 +10,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="name_email">Enter name or email</label>
-                    <input wire:model.lazy="name_email" type="text" class="form-control" placeholder="Enter name or email" id="name_email">
+                    <input wire:model.debounce.1000ms="name_email" type="text" class="form-control" placeholder="Enter name or email" id="name_email">
                 </div>
         
                 @if(!$errors->has('name_email') && !empty($name_email) )
@@ -19,7 +19,7 @@
                     <div class="input-group mb-3">
                         <input type="text" class="form-control bg-white border-success" value="{{ $name_email }}" readonly>
                         <div class="input-group-append">
-                            <button class="btn btn-success" type="button">
+                            <button wire:click="invite_email('{{ $name_email }}')" class="btn btn-success" type="button">
                                 Invite
                             </button>
                         </div>
@@ -33,7 +33,7 @@
                         <div class="input-group mb-1">
                             <input type="text" class="form-control bg-white border-success" value="{{ $officer->flname() }} / {{ $officer->email }}" readonly>
                             <div class="input-group-append">
-                                <button class="btn btn-success" type="button">
+                                <button wire:click="invite_email('{{ $officer->email }}')" class="btn btn-success" type="button">
                                     Invite
                                 </button>
                             </div>
@@ -43,19 +43,49 @@
                     @endforelse
                 @endisset
             </div>
-        </div>
 
+            <div class="col-md-6">
+                <h6 class="mt-1">Pending invites</h6>
+                @forelse ($invites as $invite)
+                    <div class="input-group mb-1">
+                        <input type="text" class="form-control bg-white border-info" value="{{ $invite->email }}" readonly>
+                        <div class="input-group-append">
+                            <button class="btn btn-info text-white copy_link" type="button"
+                                {{-- value="{{ route('scholarship.scholar', [$scholarship->id]) }}" --}}
+                                >
+                                <i class="fas fa-link"></i>
+                            </button>
+                            <button wire:click="cancel_invite({{ $invite->id }})" wire:loading.attr="disabled" class="btn btn-danger" type="button">
+                                <span wire:loading.remove wire:target="cancel_invite({{ $invite->id }})">Cancel</span>
+                                <i wire:loading wire:target="cancel_invite({{ $invite->id }})" class="fas fa-spinner fa-spin"></i>
+                            </button>
+                        </div>
+                    </div>
+                @empty
+                    <input type="text" class="form-control bg-white border-info" value="None" readonly>
+                @endforelse
+            </div>
+        </div>
     </div>
+
     <div class="modal-footer">
         <button type="submit" class="btn btn-success">
             <i class="fas fa-save" wire:loading.remove wire:target="save"></i>
             <i class="fas fa-spinner fa-spin" wire:loading wire:target="save"></i>
             Save
         </button>
+
         <button type="button" data-dismiss="modal" class="btn btn-secondary" id="cancel_edit">
             <i class="fas fa-times"></i>
             Cancel
         </button>
     </div>
+
+    <script>
+        $('.copy_link').click(function() {
+            var val = $(this).val();
+            alert( val );
+        });
+    </script>
 </form>
 

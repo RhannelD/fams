@@ -59,6 +59,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(ScholarshipOfficer::class, 'user_id', 'id');
     }
+
+    public function scholarship_invites()
+    {
+        return $this->hasMany(ScholarshipOfficerInvite::class, 'email', 'email');
+    }
     
     public function scopeWhereOfficer($query)
     {
@@ -73,7 +78,7 @@ class User extends Authenticatable
                     ->orWhere('lastname', 'like', "%$search%")
                     ->orWhere(DB::raw('CONCAT(firstname, " ", lastname)'), 'like', "%$search%")
                     ->orWhere(DB::raw('CONCAT(firstname, " ", middlename, " ", lastname)'), 'like', "%$search%")
-                    ->orWhere('email', 'like', "%$search%");
+                    ->orWhere('users.email', 'like', "%$search%");
             });
     }
 
