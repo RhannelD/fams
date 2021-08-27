@@ -54,3 +54,7 @@
 .nounderline:hover{ 
     text-decoration:none; 
 }
+
+.mw1k{
+    max-width: 1000px;
+}

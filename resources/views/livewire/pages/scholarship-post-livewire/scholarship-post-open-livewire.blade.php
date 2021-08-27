@@ -10,7 +10,7 @@
                     <h5 class="d-flex">
                         {{ $post->title }} 
                         @if ( $post->user_id == Auth::id() || Auth::user()->is_admin() )
-                            <div class="dropdown mr-0 ml-auto">
+                            <div wire:ignore class="dropdown mr-0 ml-auto">
                                 <span id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-ellipsis-h"></i>
                                 </span>
@@ -116,11 +116,15 @@
                 </div>
             @endif
             
-            @foreach ($comments as $comment)
-                @livewire('scholarship-post-open-comment-livewire', [$comment->id], key('scholarship-page-post-comment-open-'.time().$post->id))
-            @endforeach
+            <div wire:poll.8000ms>
+                @foreach ($comments as $comment)
+                    @livewire('scholarship-post-open-comment-livewire', [$comment->id], key('scholarship-page-post-comment-open-'.time().$post->id))
+                @endforeach
+            </div>
 
-            @livewire('scholarship-post-comment-livewire', [$post->id], key('scholarship-page-post-comment-'.time().$post->id))
+            <div wire:ignore>
+                @livewire('scholarship-post-comment-livewire', [$post->id], key('scholarship-page-post-comment-'.time().$post->id))
+            </div>
             
             <hr class="mb-5" style="max-width: 760px">
         </div>

@@ -43,7 +43,11 @@
 
             <div class="form-group">
                 <label for="c_email">Email Address</label>
-                <input type="email" wire:model.lazy="user.email" class="form-control" id="c_email" placeholder="juan.delacruz.@g.batstate-u-edu.ph">
+                <input type="email" wire:model.lazy="user.email" class="form-control" id="c_email" placeholder="juan.delacruz.@g.batstate-u-edu.ph"
+                    @isset($disable_email)
+                        readonly
+                    @endisset
+                    >
                 @error('user.email') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
 

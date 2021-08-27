@@ -21,8 +21,21 @@ class ScholarshipOfficerInvite extends Model
     ];
 
     
+    public function scholarship()
+    {
+        return $this->belongsTo(Scholarship::class, 'scholarship_id', 'id');
+    }
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'email', 'email');
+    }
+
+    
     public function scopeWhereToken($query, $token)
     {
         return $query->where('token', $token);
     }
+
+
 }
