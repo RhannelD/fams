@@ -1,6 +1,6 @@
 <form class="modal-content" wire:submit.prevent="save()">
     <div class="modal-header bg-dark text-white">
-    <h5 class="modal-title" id="exampleModalCenterTitle">Officer Invite</h5>
+    <h5 class="modal-title" id="exampleModalCenterTitle">Scholar Invite</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true"><i class="fas fa-times-circle text-white"></i></span>
         </button>
@@ -50,9 +50,6 @@
                     <div class="input-group mb-1">
                         <input type="text" class="form-control bg-white border-info" value="{{ $invite->email }}" readonly>
                         <div class="input-group-append">
-                            <button class="btn btn-info text-white copy_link" value="{{ route('invite.officer', [$invite->token]) }}" type="button">
-                                <i class="fas fa-link"></i>
-                            </button>
                             <button wire:click="cancel_invite({{ $invite->id }})" wire:loading.attr="disabled" class="btn btn-danger" type="button">
                                 <span wire:loading.remove wire:target="cancel_invite({{ $invite->id }})">Cancel</span>
                                 <i wire:loading wire:target="cancel_invite({{ $invite->id }})" class="fas fa-spinner fa-spin"></i>
@@ -65,11 +62,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        $('.copy_link').click(function() {
-            navigator.clipboard.writeText($(this).val());
-        });
-    </script>
 </form>
-

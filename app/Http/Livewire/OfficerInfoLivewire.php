@@ -107,7 +107,7 @@ class OfficerInfoLivewire extends Component
 
         $this->dispatchBrowserEvent('swal:modal', [
             'type' => 'success',  
-            'message' => 'Scholar Account Deleted', 
+            'message' => 'Officer\'s Account Deleted', 
             'text' => 'Officer\'s account has been successfully deleted'
         ]);
 

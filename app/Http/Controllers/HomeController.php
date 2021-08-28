@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Scholarship;
 use App\Models\ScholarshipScholar;
+use App\Models\ScholarshipScholarInvite;
 use App\Models\ScholarshipOfficer;
 use App\Models\ScholarshipOfficerInvite;
 use App\Models\ScholarshipRequirement;
@@ -39,12 +40,23 @@ class HomeController extends Controller
 
     /**
      * Show the application dashboard.
+     * 
+     * DB::enableQueryLog();
+     * dd(DB::getQueryLog());
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
     {
-        return ScholarshipOfficerInvite::where('email', 'kaylin12@example.net')->where('scholarship_id', 1)->exists();
+        DB::enableQueryLog();
+        return User::whereScholar()
+            ->whereNotScholarOf(1)
+            ->get();
+        dd(DB::getQueryLog());
+
+        // return ScholarshipScholarInvite::whereScholarship(1)->get();
+
+        // return ScholarshipOfficerInvite::where('email', 'kaylin12@example.net')->where('scholarship_id', 1)->exists();
 
         // return User::with('scholarship_invites')
         //     ->whereOfficer('usertype', 'officer')

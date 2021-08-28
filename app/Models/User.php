@@ -50,6 +50,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+
     public function scholarship_scholars()
     {
         return $this->hasMany(ScholarshipScholar::class, 'user_id', 'id');
@@ -65,9 +66,20 @@ class User extends Authenticatable
         return $this->hasMany(ScholarshipOfficerInvite::class, 'email', 'email');
     }
     
+    public function scholars_invites()
+    {
+        return $this->hasMany(ScholarshipScholarInvite::class, 'email', 'email');
+    }
+    
+
     public function scopeWhereOfficer($query)
     {
         return $query->where('usertype', 'officer');
+    }
+
+    public function scopeWhereScholar($query)
+    {
+        return $query->where('usertype', 'scholar');
     }
 
     public function scopeWhereNameOrEmail($query, $search)
@@ -84,10 +96,20 @@ class User extends Authenticatable
 
     public function scopeWhereNotOfficerOf($query, $scholarship_id)
     {
-        return $query->whereHas('scholarship_officers', function ($query) use ($scholarship_id) {
-                $query->where('scholarship_id', '!=', $scholarship_id);
+        return $query->whereDoesntHave('scholarship_officers', function ($query) use ($scholarship_id) {
+                $query->where('scholarship_id', '=', $scholarship_id);
             });
     }
+
+    public function scopeWhereNotScholarOf($query, $scholarship_id)
+    {
+        return $query->whereDoesntHave('scholarship_scholars', function ($query) use ($scholarship_id) {
+                $query->whereHas('category', function ($query) use ($scholarship_id) {
+                        $query->where('scholarship_id', '=', $scholarship_id);
+                    });
+            });
+    }
+
 
     public function flname()
     {
