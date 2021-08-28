@@ -5,7 +5,7 @@
             <span aria-hidden="true"><i class="fas fa-times-circle text-white"></i></span>
         </button>
     </div>
-    <div class="modal-body student_creating">
+    <div class="modal-body student_creating" style="min-height: 300px;">
         <div class="row"> 
             <div class="col-md-6">
                 <div class="form-group">
@@ -54,7 +54,7 @@
                                 <i class="fas fa-link"></i>
                             </button>
                             <button wire:click="cancel_invite({{ $invite->id }})" wire:loading.attr="disabled" class="btn btn-danger" type="button">
-                                <span wire:loading.remove wire:target="cancel_invite({{ $invite->id }})">Cancel</span>
+                                <i wire:loading.remove wire:target="cancel_invite({{ $invite->id }})" class="fas fa-times-circle"></i>
                                 <i wire:loading wire:target="cancel_invite({{ $invite->id }})" class="fas fa-spinner fa-spin"></i>
                             </button>
                         </div>

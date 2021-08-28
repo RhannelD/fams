@@ -15,7 +15,7 @@ class ScholarshipOfficerInviteLivewire extends Component
     public $name_email;
 
     protected $rules = [
-        'name_email' => 'required|email',
+        'name_email' => 'required|email|unique:users,email',
     ];
     
     protected function verifyUser()

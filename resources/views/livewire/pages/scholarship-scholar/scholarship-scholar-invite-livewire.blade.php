@@ -5,12 +5,30 @@
             <span aria-hidden="true"><i class="fas fa-times-circle text-white"></i></span>
         </button>
     </div>
-    <div class="modal-body student_creating">
+    <div class="modal-body student_creating" style="min-height: 300px;">
         <div class="row"> 
             <div class="col-md-6">
-                <div class="form-group">
-                    <label for="name_email">Enter name or email</label>
-                    <input wire:model.debounce.1000ms="name_email" type="text" class="form-control" placeholder="Enter name or email" id="name_email">
+                <div class="form-row">
+                    <div class="col-md-4 order-md-last"> 
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select  wire:model="category_id" class="form-control" id="category">
+                                @forelse ($categories as $category)
+                                    <option value="{{ $category->id }}">
+                                        {{ $category->category }}
+                                    </option>
+                                @empty
+                                    <option>None</option>
+                                @endforelse
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="name_email">Enter name or email</label>
+                            <input wire:model.debounce.1000ms="name_email" type="text" class="form-control" placeholder="Enter name or email" id="name_email">
+                        </div>
+                    </div>
                 </div>
         
                 @if(!$errors->has('name_email') && !empty($name_email) )
@@ -50,8 +68,11 @@
                     <div class="input-group mb-1">
                         <input type="text" class="form-control bg-white border-info" value="{{ $invite->email }}" readonly>
                         <div class="input-group-append">
+                            <span class="input-group-text">
+                                {{ $invite->category->category }}
+                            </span>
                             <button wire:click="cancel_invite({{ $invite->id }})" wire:loading.attr="disabled" class="btn btn-danger" type="button">
-                                <span wire:loading.remove wire:target="cancel_invite({{ $invite->id }})">Cancel</span>
+                                <i wire:loading.remove wire:target="cancel_invite({{ $invite->id }})" class="fas fa-times-circle"></i>
                                 <i wire:loading wire:target="cancel_invite({{ $invite->id }})" class="fas fa-spinner fa-spin"></i>
                             </button>
                         </div>
