@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\User;
+use App\Models\ScholarshipOfficer;
 use App\Models\ScholarshipCategory;
 use App\Models\ScholarshipScholarInvite;
 use Illuminate\Support\Facades\DB;
@@ -28,12 +29,28 @@ class ScholarshipScholarInviteLivewire extends Component
         }
         return false;
     }
+
+    protected function verifyUserIfOfficer()
+    {
+        if ( Auth::user()->is_admin() )
+            return false;
+
+        $if_officer = ScholarshipOfficer::where('user_id', Auth::id())
+            ->where('scholarship_id', $this->scholarship_id)
+            ->exists();
+
+        if (!$if_officer) 
+            redirect()->route('index');
+        
+        return !$if_officer;
+    }
     
     public function mount($scholarship_id)
     {
         if ($this->verifyUser()) return;
         
         $this->scholarship_id = $scholarship_id;
+        if ( $this->verifyUserIfOfficer() ) return;
 
         $categories = $this->get_categories();
         if ( isset($categories[0]->id) ) {
@@ -107,6 +124,9 @@ class ScholarshipScholarInviteLivewire extends Component
 
     public function invite_email($email)
     {
+        if ($this->verifyUser()) return;
+        if ( $this->verifyUserIfOfficer() ) return;
+
         $this->validateOnly('category_id');
 
         $invite = ScholarshipScholarInvite::updateOrCreate([
@@ -122,6 +142,9 @@ class ScholarshipScholarInviteLivewire extends Component
 
     public function cancel_invite($invite_id)
     {
+        if ($this->verifyUser()) return;
+        if ( $this->verifyUserIfOfficer() ) return;
+        
         ScholarshipScholarInvite::where('id', $invite_id)->delete();
     }
     
@@ -137,6 +160,9 @@ class ScholarshipScholarInviteLivewire extends Component
     
     public function cancel_all_invites()
     {
+        if ($this->verifyUser()) return;
+        if ( $this->verifyUserIfOfficer() ) return;
+
         ScholarshipScholarInvite::whereScholarship($this->scholarship_id)
             ->whereNull('respond')
             ->delete();
@@ -154,6 +180,9 @@ class ScholarshipScholarInviteLivewire extends Component
 
     public function clear_all_accepted_invite()
     {
+        if ($this->verifyUser()) return;
+        if ( $this->verifyUserIfOfficer() ) return;
+        
         ScholarshipScholarInvite::whereScholarship($this->scholarship_id)
             ->where('respond', true)
             ->delete();
@@ -171,6 +200,9 @@ class ScholarshipScholarInviteLivewire extends Component
 
     public function clear_all_rejected_invite()
     {
+        if ($this->verifyUser()) return;
+        if ( $this->verifyUserIfOfficer() ) return;
+        
         ScholarshipScholarInvite::whereScholarship($this->scholarship_id)
             ->where('respond', false)
             ->delete();
@@ -188,6 +220,9 @@ class ScholarshipScholarInviteLivewire extends Component
 
     public function resend_all_rejected_invite()
     {
+        if ($this->verifyUser()) return;
+        if ( $this->verifyUserIfOfficer() ) return;
+
         ScholarshipScholarInvite::whereScholarship($this->scholarship_id)
             ->where('respond', false)
             ->update(['respond' => null]);
@@ -195,6 +230,9 @@ class ScholarshipScholarInviteLivewire extends Component
 
     public function resend_rejected_invite($invite_id)
     {
+        if ($this->verifyUser()) return;
+        if ( $this->verifyUserIfOfficer() ) return;
+        
         ScholarshipScholarInvite::where('id', $invite_id)
             ->where('respond', false)
             ->update(['respond' => null]);
