@@ -10,28 +10,12 @@
                             <div class="card-header py-1 bg-white">
                                 <h4 class="my-2">
                                     <strong>
-                                        {{ $invite->category->scholarship->scholarship }}
+                                        {{ $invite->scholarship->scholarship }}
                                     </strong>
                                 </h4>
                             </div>
                             <div class="card-body py-2">
                                 <table>
-                                    <tr>
-                                        <td>
-                                            Category:
-                                        </td>
-                                        <td>
-                                            {{ $invite->category->category }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Amount:
-                                        </td>
-                                        <td>
-                                            Php {{ $invite->category->amount }}
-                                        </td>
-                                    </tr>
                                     <tr>
                                         <td>
                                             Invited Date:

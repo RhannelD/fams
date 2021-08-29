@@ -82,7 +82,7 @@
                             @if ( !Auth::user()->is_admin() )
                                 <a class="dropdown-item" 
                                     @if ( Auth::user()->is_officer() )
-                                        href="#"
+                                        href="{{ route('invite.officer') }}"
                                     @else
                                         href="{{ route('invite.scholar') }}"
                                     @endif
