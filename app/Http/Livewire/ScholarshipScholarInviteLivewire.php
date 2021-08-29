@@ -45,7 +45,9 @@ class ScholarshipScholarInviteLivewire extends Component
     {
         return view('livewire.pages.scholarship-scholar.scholarship-scholar-invite-livewire', [
                 'categories' => $this->get_categories(),
-                'invites' => $this->get_scholarship_invites(),
+                'pending_invites' => $this->get_pending_invites(),
+                'accepted_invites' => $this->get_accepted_invites(),
+                'rejected_invites' => $this->get_rejected_invites(),
                 'search_officers' => $this->get_search_name_email(),
             ]);
     }
@@ -55,9 +57,19 @@ class ScholarshipScholarInviteLivewire extends Component
         return ScholarshipCategory::where('scholarship_id', $this->scholarship_id)->get();
     }
 
-    protected function get_scholarship_invites()
+    protected function get_pending_invites()
     {
-        return ScholarshipScholarInvite::whereScholarship($this->scholarship_id)->get();
+        return ScholarshipScholarInvite::whereScholarship($this->scholarship_id)->whereNull('respond')->get();
+    }
+
+    protected function get_accepted_invites()
+    {
+        return ScholarshipScholarInvite::whereScholarship($this->scholarship_id)->where('respond', true)->get();
+    }
+
+    protected function get_rejected_invites()
+    {
+        return ScholarshipScholarInvite::whereScholarship($this->scholarship_id)->where('respond', false)->get();
     }
 
     protected function get_search_name_email()
@@ -98,14 +110,94 @@ class ScholarshipScholarInviteLivewire extends Component
         $this->validateOnly('category_id');
 
         $invite = ScholarshipScholarInvite::updateOrCreate([
-                'email' => $email  
-            ], [
+                'email' => $email,
                 'category_id' => $this->category_id,
+            ], [
             ]);
+
+        if ( $invite->wasRecentlyCreated ) {
+            session()->flash('message-success', "$email has been added to pending invites");
+        }
     }
 
     public function cancel_invite($invite_id)
     {
         ScholarshipScholarInvite::where('id', $invite_id)->delete();
     }
+    
+    public function cancel_all_invite_confirm()
+    {
+        $this->dispatchBrowserEvent('swal:confirm:delete_something', [
+            'type' => 'warning',
+            'message' => 'Cancel all invites?', 
+            'text' => '',
+            'function' => 'cancel_all_invites'
+        ]);
+    }
+    
+    public function cancel_all_invites()
+    {
+        ScholarshipScholarInvite::whereScholarship($this->scholarship_id)
+            ->whereNull('respond')
+            ->delete();
+    }
+    
+    public function clear_all_accepted_invite_confirm()
+    {
+        $this->dispatchBrowserEvent('swal:confirm:delete_something', [
+            'type' => 'info',
+            'message' => 'Clear accepted invites list?', 
+            'text' => 'This will only clear the list.',
+            'function' => 'clear_all_accepted_invite'
+        ]);
+    }
+
+    public function clear_all_accepted_invite()
+    {
+        ScholarshipScholarInvite::whereScholarship($this->scholarship_id)
+            ->where('respond', true)
+            ->delete();
+    }
+    
+    public function clear_all_rejected_invite_confirm()
+    {
+        $this->dispatchBrowserEvent('swal:confirm:delete_something', [
+            'type' => 'info',
+            'message' => 'Clear rejected invites list?', 
+            'text' => 'This will only clear the list.',
+            'function' => 'clear_all_rejected_invite'
+        ]);
+    }
+
+    public function clear_all_rejected_invite()
+    {
+        ScholarshipScholarInvite::whereScholarship($this->scholarship_id)
+            ->where('respond', false)
+            ->delete();
+    }
+    
+    public function resend_all_rejected_invite_confirm()
+    {
+        $this->dispatchBrowserEvent('swal:confirm:delete_something', [
+            'type' => 'info',
+            'message' => 'Resend all rejected invites?', 
+            'text' => 'This will appear at pending invites.',
+            'function' => 'resend_all_rejected_invite'
+        ]);
+    }
+
+    public function resend_all_rejected_invite()
+    {
+        ScholarshipScholarInvite::whereScholarship($this->scholarship_id)
+            ->where('respond', false)
+            ->update(['respond' => null]);
+    }
+
+    public function resend_rejected_invite($invite_id)
+    {
+        ScholarshipScholarInvite::where('id', $invite_id)
+            ->where('respond', false)
+            ->update(['respond' => null]);
+    }
+
 }

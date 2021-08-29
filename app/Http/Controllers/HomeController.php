@@ -48,11 +48,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        DB::enableQueryLog();
-        return User::whereScholar()
-            ->whereNotScholarOf(1)
-            ->get();
-        dd(DB::getQueryLog());
+        return User::find(Auth::id())->scholars_invites;
+
+        // DB::enableQueryLog();
+        // return User::whereScholar()
+        //     ->whereNotScholarOf(1)
+        //     ->get();
+        // dd(DB::getQueryLog());
 
         // return ScholarshipScholarInvite::whereScholarship(1)->get();
 

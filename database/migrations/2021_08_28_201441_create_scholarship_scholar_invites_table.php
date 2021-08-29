@@ -17,6 +17,7 @@ class CreateScholarshipScholarInvitesTable extends Migration
             $table->id();
             $table->foreignId('category_id');
             $table->string('email');
+            $table->boolean('respond')->nullable();
             $table->timestamps();
             
             $table->foreign('category_id')->references('id')->on('scholarship_categories')->onDelete('cascade');

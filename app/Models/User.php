@@ -120,8 +120,18 @@ class User extends Authenticatable
     {
         return ( $this->usertype == 'admin' );
     }
+
+    public function is_officer()
+    {
+        return ( $this->usertype == 'officer' );
+    }
     
-    public function is_scholar($scholarship_id)
+    public function is_scholar()
+    {
+        return ( $this->usertype == 'scholar' );
+    }
+
+    public function is_scholar_of($scholarship_id)
     {
         return ScholarshipScholar::where('user_id', $this->id)
             ->with('category')

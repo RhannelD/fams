@@ -19,6 +19,7 @@ use App\Http\Livewire\ScholarshipCategoryLivewire;
 use App\Http\Livewire\ScholarshipOfficerInviteLinkLivewire;
 use App\Http\Livewire\RequirementPreviewLivewire;
 use App\Http\Livewire\ResponseLivewire;
+use App\Http\Livewire\InviteScholarLivewire;
 
 use App\Http\Controllers\HomeController;
 
@@ -38,6 +39,7 @@ Route::get('/', function () {
 })->name('index');
 
 Route::get('/login', LoginLivewire::class)->name('login.index')->middleware('auth.login');
+Route::get('/invite/officer/{invite_token}', ScholarshipOfficerInviteLinkLivewire::class)->name('invite');
 
 Route::get('/dashboard', DashboardLivewire::class)->name('dashboard')->middleware('auth.main');
 Route::get('/officer', OfficerLivewire::class)->name('officer')->middleware('auth.main');
@@ -54,7 +56,7 @@ Route::get('/scholarship/requirement/{requirement_id}/edit', ScholarshipRequirem
 Route::get('/scholarship/requirement/{requirement_id}/response', ScholarshipRequirementResponseLivewire::class)->name('requirement.response')->middleware('auth.main');
 Route::get('/scholarship/post/{post_id}', ScholarshipPostOpenLivewire::class)->name('post.show')->middleware('auth.main');
 
-Route::get('/invite/officer/{invite_token}', ScholarshipOfficerInviteLinkLivewire::class)->name('invite.officer');
+Route::get('/invite/scholar', InviteScholarLivewire::class)->name('invite.scholar')->middleware('auth.main');
 
 Route::get('/requirement/{requirement_id}', RequirementPreviewLivewire::class)->name('requirement.view')->middleware('auth.main');
 Route::get('/requirement/{requirement_id}/response', ResponseLivewire::class)->name('reponse')->middleware('auth.main');

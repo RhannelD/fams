@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Auth;
 
 class NavbarScholarshipLivewire extends Component
 {
+    protected $listeners = [
+        'refresh' => '$refresh',
+    ];
+
     public function render()
     {
         $scholarships = [];

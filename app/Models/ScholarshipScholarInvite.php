@@ -17,6 +17,7 @@ class ScholarshipScholarInvite extends Model
     protected $fillable = [
         'category_id',
         'email',
+        'respond',
     ];
     
     public function category()

@@ -35,7 +35,7 @@ class ScholarshipRequirementResponseViewLivewire extends Component
 
     protected function is_scholar($scholar_response)
     {
-        return $scholar_response->user->is_scholar($scholar_response->requirement->scholarship_id);
+        return $scholar_response->user->is_scholar_of($scholar_response->requirement->scholarship_id);
     }
 
     public function response_approve()

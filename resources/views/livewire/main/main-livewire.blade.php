@@ -79,7 +79,19 @@
                                 <i class="fas fa-user-circle"></i>
                                 My account
                             </a>
-							<livewire:logout-livewire />
+                            @if ( !Auth::user()->is_admin() )
+                                <a class="dropdown-item" 
+                                    @if ( Auth::user()->is_officer() )
+                                        href="#"
+                                    @else
+                                        href="{{ route('invite.scholar') }}"
+                                    @endif
+                                    >
+                                    <i class="fas fa-envelope"></i>
+                                    Invites
+                                </a>
+                            @endif
+                            @livewire('logout-livewire')
 						</div>
 					</li>
 				</ul>

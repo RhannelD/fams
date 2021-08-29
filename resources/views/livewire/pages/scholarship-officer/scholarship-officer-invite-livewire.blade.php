@@ -50,7 +50,7 @@
                     <div class="input-group mb-1">
                         <input type="text" class="form-control bg-white border-info" value="{{ $invite->email }}" readonly>
                         <div class="input-group-append">
-                            <button class="btn btn-info text-white copy_link" value="{{ route('invite.officer', [$invite->token]) }}" type="button">
+                            <button class="btn btn-info text-white copy_link" value="{{ route('invite', [$invite->token]) }}" type="button">
                                 <i class="fas fa-link"></i>
                             </button>
                             <button wire:click="cancel_invite({{ $invite->id }})" wire:loading.attr="disabled" class="btn btn-danger" type="button">
