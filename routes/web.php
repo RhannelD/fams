@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Livewire\LoginLivewire;
+use App\Http\Livewire\SignUpLivewire;
 use App\Http\Livewire\DashboardLivewire;
 use App\Http\Livewire\ScholarLivewire;
 use App\Http\Livewire\OfficerLivewire;
@@ -40,6 +41,7 @@ Route::get('/', function () {
 })->name('index');
 
 Route::get('/login', LoginLivewire::class)->name('login.index')->middleware('auth.login');
+Route::get('/sign-up', SignUpLivewire::class)->name('sign-up.index')->middleware('auth.login');
 Route::get('/invite/officer/{invite_token}', ScholarshipOfficerInviteLinkLivewire::class)->name('invite');
 
 Route::get('/dashboard', DashboardLivewire::class)->name('dashboard')->middleware('auth.main');
