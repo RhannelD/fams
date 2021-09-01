@@ -13,7 +13,6 @@ class SignUpLivewire extends Component
     public $password;
     public $password_confirm;
 
-    public $tab = 'form';
     public $verification_code; // Temporary public
     public $code;
 
@@ -51,8 +50,8 @@ class SignUpLivewire extends Component
     {
         $this->validate();
 
-        $this->tab = 'verify';
-        $this->change_tab();
+        $tab = 'verify';
+        $this->change_tab($tab);
         $this->verification_code = rand(111111, 999999);
         $this->send_code();
         session()->flash('message-success', 'The verification code has been sent on your email.');
@@ -60,14 +59,14 @@ class SignUpLivewire extends Component
 
     public function back()
     {
-        $this->tab = 'form';
-        $this->change_tab();
+        $tab = 'form';
+        $this->change_tab($tab);
     }
 
-    protected function change_tab()
+    protected function change_tab($tab)
     {
         $this->dispatchBrowserEvent('change:tab', [
-            'tab' => $this->tab,  
+            'tab' => $tab,  
         ]);  
     }
     

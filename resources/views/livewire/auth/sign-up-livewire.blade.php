@@ -31,7 +31,7 @@
             <div class="card-body">
                 <ul wire:ignore class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active disabled" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">
+                        <a class="nav-link active" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">
                             Sign-Up Form
                         </a>
                     </li>
@@ -85,7 +85,7 @@
                         <label for="">Enter verification code </label>
                         <div class="form-row align-items-center">
                             <div class="col-auto">
-                                <input wire:model='code' type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Enter verification code">
+                                <input wire:model.lazy='code' type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Enter verification code">
                             </div>
                             <div class="col-auto">
                                 <button wire:click='save' class="btn btn-success mb-2">Submit</button>
@@ -110,10 +110,10 @@
 
     <script>
         window.addEventListener('change:tab', event => {
-            $('.nav-tabs .nav-item .nav-link').removeClass('disabled');
+            $('#verify-tab').removeClass('disabled');
             var tab = '#' + event.detail.tab + '-tab';
             $(tab).tab('show');
-            $('.nav-tabs .nav-item .nav-link').addClass('disabled');
+            $('#verify-tab').addClass('disabled');
         });
     </script>
 </div>

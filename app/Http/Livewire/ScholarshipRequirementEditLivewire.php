@@ -21,6 +21,10 @@ class ScholarshipRequirementEditLivewire extends Component
         'requirement.promote' => 'required',
     ];
 
+    protected $listeners = [
+        'refresh' => '$refresh',
+    ];
+    
     protected function verifyUser()
     {
         if (!Auth::check()) {

@@ -48,7 +48,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return User::find(Auth::id())->scholars_invites;
+        $req = ScholarshipRequirement::find(34);
+
+        // $req2 = $req->replicate();
+        // $req2->id = 10;
+        // return $req2;
+
+        foreach ($req->items as $item) {
+            $temp = $item->replicate();
+            return $temp;
+        }
 
         // DB::enableQueryLog();
         // return User::whereScholar()

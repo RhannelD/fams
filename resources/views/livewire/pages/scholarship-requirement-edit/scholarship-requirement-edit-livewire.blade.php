@@ -29,6 +29,15 @@
                 </div>
             </div>
 
+            <div class="card shadow mb-2 requirement-item-hover">
+                <div class="card-body">
+                    <a href="{{ route('scholarship.requirement.open', [$scholarship_requirement->id]) }}" class="btn btn-block btn-info text-white">
+                        Requirement View
+                    </a>
+                </div>
+            </div>
+            <hr>
+            
             @livewire('scholarship-requirement-activate-livewire', [$scholarship_requirement->id], key('activate-livewire-'.time().$requirement->id))
 
             <div class="card shadow mb-2 requirement-item-hover">
@@ -64,16 +73,12 @@
                     </div>
                 </div>
             </div>
-
-            <div class="card shadow mb-2 requirement-item-hover">
-                <div class="card-body">
-                    <a href="{{ route('scholarship.requirement.open', [$scholarship_requirement->id]) }}" class="btn btn-block btn-info text-white">
-                        Requirement View
-                    </a>
-                </div>
-            </div>
-
             <hr>
+
+            <div wire:ignore>
+                @livewire('scholarship-requirement-edit-duplicate-livewire', [$requirement_id, $scholarship_requirement->scholarship_id], key('duplicate-modal-'.time().$requirement_id))
+            </div>
+            
         </div>
 
         <div class="col-12 col-md-9 order-md-first">
