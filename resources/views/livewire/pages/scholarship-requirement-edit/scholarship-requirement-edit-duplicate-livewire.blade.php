@@ -116,7 +116,7 @@
                                     </h4>
                                     <label class="mb-1">Desciption:</label>
                                     <p class="mb-1">
-                                        {{ $duplicate_requirement->description }}
+                                        {!! Purify::clean($duplicate_requirement->description) !!}
                                     </p>
                                     <hr class="my-1">
                                     @isset($duplicate_requirement->categories->first()->category->category)    

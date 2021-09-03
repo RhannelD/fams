@@ -48,16 +48,17 @@
         </div>
 
         <div class="col-12 col-md-9 order-md-first">
-            <div class="card bg-primary border-primary mb-4 shadow">
-                <div class="card-body text-white border-primary">
-                    <h2>
+            <div class="card border-primary mb-4 shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="my-auto">
                         @isset( $requirement->requirement )
                             <strong>{{ $requirement->requirement }}</strong>
                         @endisset
                     </h2>
+                </div>
+                <div class="card-body border-primary">
                     <p class="mb-0">
                         @isset( $requirement->description )
-                            <hr class="border-white my-2">
                             {!! Purify::clean($requirement->description) !!}
                         @endisset
                     </p>
