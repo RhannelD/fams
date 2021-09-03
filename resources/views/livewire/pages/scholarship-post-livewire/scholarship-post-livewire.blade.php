@@ -23,7 +23,9 @@
                         </div>
                         <div class="form-group">
                             <label for="post_post">Post</label>
-                            <textarea wire:model.lazy="post.post" class="form-control" id="post_post" rows="5" placeholder="Post something..."></textarea>
+                            <div wire:ignore>
+                                <textarea wire:model.lazy="post.post" class="form-control" id="post_post" rows="5" placeholder="Post something..."></textarea>
+                            </div>
                             @error('post.post') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
@@ -106,6 +108,46 @@
     <script>
         window.addEventListener('close_post_modal', event => { 
             $('.close_post_modal').click();
+        });
+
+        $( document ).ready(function() {
+            ClassicEditor.create( document.querySelector( '#post_post' ), {
+                toolbar: {
+                    items: [
+                        'heading',
+                        '|',
+                        'bold',
+                        'italic',
+                        'link',
+                        'bulletedList',
+                        'numberedList',
+                        '|',
+                        'outdent',
+                        'indent',
+                        '|',
+                        'undo',
+                        'redo',
+                    ]
+                },
+                language: 'en',
+                    licenseKey: '',
+                } )
+                .then( editor => {
+                    editor.ui.focusTracker.on( 'change:isFocused', ( evt, name, isFocused ) => {
+                        if ( !isFocused ) {
+                            @this.set('post.post', editor.getData());
+                        }
+                    } );
+                } )
+                .catch( error => {
+                    console.error( error );
+                } );
+
+                $.fn.modal.Constructor.prototype._enforceFocus = function() {
+                    $( '#post_something' ).modal( {
+                        focus: false
+                    } );
+                };
         });
     </script>
 </div>

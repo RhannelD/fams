@@ -43,7 +43,8 @@
 
                         <div class="card-body bg-light">
                             <p class="mb-0">
-                                {!! nl2br(e($post->post)) !!}
+                                {{-- {!! nl2br(e($post->post)) !!} --}}
+                                {!! $post->post !!}
                             </p>
 
                             @if ( $post->link_count > 0 )

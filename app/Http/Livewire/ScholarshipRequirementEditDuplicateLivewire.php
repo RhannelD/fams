@@ -38,6 +38,7 @@ class ScholarshipRequirementEditDuplicateLivewire extends Component
     {
         $search = $this->search;
         return ScholarshipRequirement::where('scholarship_id', $this->scholarship_id)
+            ->where('id', '!=', $this->requirement_id)
             ->where('scholarship_requirements.requirement', 'like', "%$search%")
             ->take($this->show_row)
             ->get();

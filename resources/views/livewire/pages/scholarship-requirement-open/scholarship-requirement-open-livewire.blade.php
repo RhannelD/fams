@@ -57,7 +57,8 @@
                     </h2>
                     <p class="mb-0">
                         @isset( $requirement->description )
-                            {{ $requirement->description }}
+                            <hr class="border-white my-2">
+                            {!! $requirement->description !!}
                         @endisset
                     </p>
                 </div>

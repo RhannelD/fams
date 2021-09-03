@@ -22,7 +22,7 @@ class ScholarshipRequirementEditLivewire extends Component
     ];
 
     protected $listeners = [
-        'refresh' => '$refresh',
+        'refresh' => 'refreshing',
     ];
     
     protected function verifyUser()
@@ -36,7 +36,7 @@ class ScholarshipRequirementEditLivewire extends Component
 
     protected function verifyScholarship()
     {
-        $scholarship_requirement = ScholarshipRequirement::find($this->requirement_id);
+        $scholarship_requirement = $this->get_scholarship_requirement();
         if ( is_null($scholarship_requirement) ) {
             redirect()->route('index');
             return true;
@@ -56,7 +56,7 @@ class ScholarshipRequirementEditLivewire extends Component
 
     public function render()
     {
-        $scholarship_requirement = ScholarshipRequirement::find($this->requirement_id);
+        $scholarship_requirement = $this->get_scholarship_requirement();
 
         if ( isset($scholarship_requirement) ) {
             $this->requirement->requirement = $scholarship_requirement->requirement;
@@ -80,6 +80,11 @@ class ScholarshipRequirementEditLivewire extends Component
             ->extends('livewire.main.main-livewire');
     }
 
+    protected function get_scholarship_requirement()
+    {
+        return ScholarshipRequirement::find($this->requirement_id);
+    }
+
     public function updated($propertyName)
     {
         if ($this->verifyUser()) return;
@@ -93,6 +98,15 @@ class ScholarshipRequirementEditLivewire extends Component
                 $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Requirement type changed for Old Scholars']);
             }
         }
+    }
+
+    public function refreshing()
+    {
+        $scholarship_requirement = $this->get_scholarship_requirement();
+        if ( is_null($scholarship_requirement) )
+            return;
+        
+        $this->dispatchBrowserEvent('refreshing', ['description' => $scholarship_requirement->description]);
     }
 
     public function add_item()
@@ -129,7 +143,7 @@ class ScholarshipRequirementEditLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
-        $scholarship_requirement = ScholarshipRequirement::find($this->requirement_id);
+        $scholarship_requirement = $this->get_scholarship_requirement();
         if ( is_null($scholarship_requirement) ) {
             return;
         }

@@ -58,3 +58,8 @@
 .mw1k{
     max-width: 1000px;
 }
+
+body {
+    --ck-z-default: 100;
+    --ck-z-modal: calc( var(--ck-z-default) + 999);
+}

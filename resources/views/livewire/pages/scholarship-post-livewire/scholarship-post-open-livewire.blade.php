@@ -1,6 +1,8 @@
 <div>
 @if ( isset($post) )
-    @livewire('scholarship-program-livewire', [$post->scholarship_id], key('page-tabs-'.time().$post->scholarship_id))
+    <div wire:ignore>
+        @livewire('scholarship-program-livewire', [$post->scholarship_id], key('page-tabs-'.time().$post->scholarship_id))
+    </div>
 
     <hr>
     <div class="row">
@@ -29,7 +31,9 @@
                     </h5>
 
                     @if ( $post->user_id == Auth::id() || Auth::user()->is_admin() )
-                        @livewire('scholarship-post-livewire', [$post->scholarship_id, $post->id], key('scholarship-page-post-'.time().$post->scholarship_id))
+                        <div wire:ignore>
+                            @livewire('scholarship-post-livewire', [$post->scholarship_id, $post->id], key('scholarship-page-post-'.time().$post->scholarship_id))
+                        </div>
                     @endif
 
                     <div class="d-flex">
@@ -47,7 +51,8 @@
                 </div>
                 <div class="card-body bg-light">
                     <p class="mb-3">
-                        {!! nl2br(e($post->post)) !!}
+                        {{-- {!! nl2br(e($post->post)) !!} --}}
+                        {!! $post->post !!}
                     </p>
 
                     @if ( count($post->requirement_links) != 0 )
@@ -116,7 +121,7 @@
                 </div>
             @endif
             
-            <div wire:poll.8000ms>
+            <div wire:poll.10000ms>
                 @foreach ($comments as $comment)
                     @livewire('scholarship-post-open-comment-livewire', [$comment->id], key('scholarship-page-post-comment-open-'.time().$post->id))
                 @endforeach
@@ -150,8 +155,7 @@
               }
             });
         });
-    </script>
-        
+    </script>    
 @else
     <div class="alert alert-info mt-5 m-md-5">
         This post doesn't exist.

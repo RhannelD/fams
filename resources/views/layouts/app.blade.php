@@ -19,11 +19,11 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">
 
     <script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
     <script src="{{ asset('js/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('js/ckeditor.js') }}"></script>
     
     @yield('styles')
 </head>
@@ -39,8 +39,6 @@
     </div>
     
     @yield('scripts')
-
-    {{-- <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v0.x.x/dist/livewire-sortable.js"></script> --}}
     
     <script src="{{ asset('js/livewire-sortable.js') }}"></script>
     <script>

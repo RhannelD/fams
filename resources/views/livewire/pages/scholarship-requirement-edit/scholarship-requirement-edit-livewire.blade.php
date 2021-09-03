@@ -92,7 +92,9 @@
                     </div>
                     <div class="form-group mb-0">
                         <label for="description">Description</label>
-                        <textarea wire:model.lazy="requirement.description" class="form-control" id="description" rows="3"></textarea>
+                        <div wire:ignore>
+                            <textarea wire:model.lazy="requirement.description" class="form-control" id="description" rows="3"></textarea>
+                        </div>
                         @error('requirement.description') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>  
                 </div>
@@ -142,6 +144,46 @@
                 $('.saving_loading .saved_state').show();
             })
         }
+        
+        $( document ).ready(function() {
+            let EditorInstance;
+            ClassicEditor.create( document.querySelector( '#description' ), {
+                toolbar: {
+                    items: [
+                        'heading',
+                        '|',
+                        'bold',
+                        'italic',
+                        'link',
+                        'bulletedList',
+                        'numberedList',
+                        '|',
+                        'outdent',
+                        'indent',
+                        '|',
+                        'undo',
+                        'redo',
+                    ]
+                },
+                language: 'en',
+                    licenseKey: '',
+                } )
+                .then( editor => {
+                    EditorInstance = editor;
+                    editor.ui.focusTracker.on( 'change:isFocused', ( evt, name, isFocused ) => {
+                        if ( !isFocused ) {
+                            @this.set('requirement.description', editor.getData());
+                        }
+                    } );
+                } )
+                .catch( error => {
+                    console.error( error );
+                } );
+
+            window.addEventListener('refreshing', event => { 
+                EditorInstance.setData(event.detail.description);
+            });
+        });
     </script>
 @else
     <div class="alert alert-info mt-5 m-md-5">
