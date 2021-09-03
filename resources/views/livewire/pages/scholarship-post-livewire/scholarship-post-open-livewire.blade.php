@@ -51,8 +51,7 @@
                 </div>
                 <div class="card-body bg-light">
                     <p class="mb-3">
-                        {{-- {!! nl2br(e($post->post)) !!} --}}
-                        {!! $post->post !!}
+                        {!! Purify::clean($post->post) !!}
                     </p>
 
                     @if ( count($post->requirement_links) != 0 )

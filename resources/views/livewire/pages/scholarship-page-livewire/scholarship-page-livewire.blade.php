@@ -43,8 +43,7 @@
 
                         <div class="card-body bg-light">
                             <p class="mb-0">
-                                {{-- {!! nl2br(e($post->post)) !!} --}}
-                                {!! $post->post !!}
+                                {!! Purify::clean($post->post) !!}
                             </p>
 
                             @if ( $post->link_count > 0 )

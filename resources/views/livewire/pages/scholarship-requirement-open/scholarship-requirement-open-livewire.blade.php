@@ -58,7 +58,7 @@
                     <p class="mb-0">
                         @isset( $requirement->description )
                             <hr class="border-white my-2">
-                            {!! $requirement->description !!}
+                            {!! Purify::clean($requirement->description) !!}
                         @endisset
                     </p>
                 </div>
