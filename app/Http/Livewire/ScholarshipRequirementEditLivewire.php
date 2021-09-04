@@ -7,6 +7,7 @@ use App\Models\Scholarship;
 use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementItem;
 use App\Models\ScholarshipRequirementCategory;
+use App\Models\ScholarshipRequirementAgreement;
 use App\Models\ScholarshipCategory;
 use Illuminate\Support\Facades\Auth;
 
@@ -187,5 +188,23 @@ class ScholarshipRequirementEditLivewire extends Component
             $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Category change successfully']);
             return;
         }
+    }
+
+    public function add_agreement()
+    {
+        if ($this->verifyUser()) return;
+
+        $scholarship_requirement = $this->get_scholarship_requirement();
+        if ( is_null($scholarship_requirement) ) {
+            return;
+        }
+        if ( is_null($scholarship_requirement->agreements) )
+            return;
+        
+        ScholarshipRequirementAgreement::firstOrCreate([
+                'requirement_id' => $this->requirement_id
+            ],[
+                'agreement' => 'This is an agreement!'
+            ]);
     }
 }

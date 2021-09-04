@@ -104,6 +104,18 @@
                             </div>
                         </div>
                     </div>
+                    <hr>
+                @endif
+
+                @if ( $scholarship_requirement->agreements->count() == 0 )
+                    <div class="card shadow mb-2 requirement-item-hover">
+                        <div class="card-body">
+                            <button wire:click="add_agreement" class="btn btn-primary btn-block">
+                                Add Terms and Conditions
+                            </button>
+                        </div>
+                    </div>
+                    <hr>
                 @endif
             </div>
 
@@ -141,6 +153,7 @@
                             </div>
                         @endforeach
                     </div>
+
                     <div class="col-sm-12 offset-sm-0 col-md-10 offset-md-1">
                         <div class="card mb-3 shadow requirement-item-hover">
                             <div class="card-body">
@@ -150,6 +163,12 @@
                             </div>
                         </div>
                     </div>
+
+                    @if( $scholarship_requirement->agreements->count() )
+                        <div class="col-12">
+                            @livewire('scholarship-requirement-edit-agreement-livewire', [$scholarship_requirement->agreements->first()->id], key('agreement-'.time().$scholarship_requirement->agreements->first()->id))
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

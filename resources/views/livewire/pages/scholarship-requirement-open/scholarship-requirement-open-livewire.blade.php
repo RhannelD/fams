@@ -152,6 +152,18 @@
                             </div>
                         @endforeach
                         @endisset
+
+                        @if ( $requirement->agreements->count() )
+                            <div class="card mb-3 shadow requirement-item-hover">
+                                <div class="card-body">
+                                    <h4>Terms and Conditions</h4>
+                                    <hr class="my-2">
+                                    <p>
+                                        {!! Purify::clean($requirement->agreements->first()->agreement) !!}
+                                    </p>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

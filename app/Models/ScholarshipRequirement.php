@@ -77,6 +77,11 @@ class ScholarshipRequirement extends Model
         return $this->hasMany(ScholarshipRequirementItem::class, 'requirement_id', 'id')->orderBy('position');
     }
 
+    public function agreements()
+    {
+        return $this->hasMany(ScholarshipRequirementAgreement::class, 'requirement_id', 'id');
+    }
+
     public function scholarship()
     {
         return $this->belongsTo(Scholarship::class, 'scholarship_id', 'id');
