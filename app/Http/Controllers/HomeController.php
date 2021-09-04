@@ -49,12 +49,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $input = '<h2>head1</h2><h3>head</h3><h4>head</h4><p><strong>bold</strong></p><p><i>italic</i></p><p><a href="http://localhost:8000/scholarship/requirement/6/edit"><i>http://localhost:8000/scholarship/requirement/6/edit</i></a></p><ul><li><i>1</i></li><li><i>2</i></li></ul><ol><li>3<ol><li>4</li></ol></li></ol><p>indentasdasd asdasd asdasd</p>
-        <img src="http://localhost:8000/img/scholarship-icon.png" alt="" height="80px" class="mx-auto d-block mb-2">';
+        return ScholarshipRequirement::find(38)->responses->count()? 'yes': 'no';
 
-        $cleaned = Purify::clean($input);
+        // $input = '<h2>head1</h2><h3>head</h3><h4>head</h4><p><strong>bold</strong></p><p><i>italic</i></p><p><a href="http://localhost:8000/scholarship/requirement/6/edit"><i>http://localhost:8000/scholarship/requirement/6/edit</i></a></p><ul><li><i>1</i></li><li><i>2</i></li></ul><ol><li>3<ol><li>4</li></ol></li></ol><p>indentasdasd asdasd asdasd</p>
+        // <img src="http://localhost:8000/img/scholarship-icon.png" alt="" height="80px" class="mx-auto d-block mb-2">';
+
+        // $cleaned = Purify::clean($input);
     
-        echo $cleaned;
+        // echo $cleaned;
 
         // $req = ScholarshipRequirement::find(34);
 

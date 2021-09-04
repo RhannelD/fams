@@ -43,40 +43,55 @@
 
                 <div class="card shadow mb-2 requirement-item-hover">
                     <div class="card-body">
-                        <div class="form-group">
-                            <label for="promote_{{ $scholarship_requirement->id }}">Requirement for</label>
-                            <select wire:model.lazy="requirement.promote" class="form-control" id="promote_{{ $scholarship_requirement->id }}">
-                                <option value="1">Applicatants</option>
-                                <option value="0">Old Scholars</option>
-                            </select>
-                            @error('requirement.promote') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
-                        
-                        <div class="form-group mb-0">
-                            <label for="">Requirement for category</label>
-                            @foreach ($categories as $category)
-                                <div class="input-group mb-1">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">
-                                            <input type="radio"
-                                                @isset($category->category_id)
-                                                    checked
-                                                @endisset
-                                                wire:click="toggle_category({{ $category->id }})"
-                                                >
+                        @if ( $scholarship_requirement->get_submitted_responses_count() )   
+                            <div class="alert alert-info">
+                                You can't edit this section anymore.<br>
+                                This requirement has scholars' responses already.
+                            </div>
+                            <div class="form-group">
+                                <label>Requirement for</label>
+                                <input type="text" class="form-control bg-white border-info" readonly value="{{ $requirement->promote? 'Old Scholars': 'Applicatants' }}">
+                            </div>
+                            <div class="form-group mb-2">
+                                <label>Requirement for category</label>
+                                <input type="text" class="form-control bg-white border-info" readonly value="{{ $scholarship_requirement->categories->first()->category->category }}">
+                            </div>
+                        @else
+                            <div class="form-group">
+                                <label for="promote_{{ $scholarship_requirement->id }}">Requirement for</label>
+                                <select wire:model.lazy="requirement.promote" class="form-control" id="promote_{{ $scholarship_requirement->id }}">
+                                    <option value="1">Applicatants</option>
+                                    <option value="0">Old Scholars</option>
+                                </select>
+                                @error('requirement.promote') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            
+                            <div class="form-group mb-0">
+                                <label for="">Requirement for category</label>
+                                @foreach ($categories as $category)
+                                    <div class="input-group mb-1">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <input type="radio"
+                                                    @isset($category->category_id)
+                                                        checked
+                                                    @endisset
+                                                    wire:click="toggle_category({{ $category->id }})"
+                                                    >
+                                            </div>
                                         </div>
+                                        <input type="text" class="form-control bg-white" readonly
+                                            value="{{ $category->category }}"
+                                            >
                                     </div>
-                                    <input type="text" class="form-control bg-white" readonly
-                                        value="{{ $category->category }}"
-                                        >
-                                </div>
-                            @endforeach
-                        </div>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <hr>
 
-                @if ($scholarship_requirement->responses->count() == 0)    
+                @if ($scholarship_requirement->get_submitted_responses_count() == 0)    
                     <div wire:ignore>
                         @livewire('scholarship-requirement-edit-duplicate-livewire', [$requirement_id, $scholarship_requirement->scholarship_id], key('duplicate-modal-'.time().$requirement_id))
                     </div>
@@ -112,6 +127,13 @@
                 </div>
             
                 <div class="row">
+                    @if ($scholarship_requirement->get_submitted_responses_count())
+                        <div class="alert alert-danger col-sm-12 offset-sm-0 col-md-10 offset-md-1">
+                            Editing the items will affect the submitted responses.<br>
+                            Proceed with caution.
+                        </div>
+                    @endif
+
                     <div class="col-12"  wire:sortable="update_requirement_order">
                         @foreach ($scholarship_requirement->items as $item)
                             <div wire:sortable.item="{{ $item->id }}" wire:key="item-{{ $item->id }}" class="div_item_id_sort_{{ $item->id }}">

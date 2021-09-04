@@ -7,9 +7,9 @@
         <div class="row">
             <div class="col-12 col-md-3 mb-2">
 
-                @isset($requirement->categories->first()->category)
-                    <div class="card shadow mb-2 requirement-item-hover">
-                        <div class="card-body">
+                <div class="card shadow mb-2 requirement-item-hover">
+                    <div class="card-body">
+                        @if ( isset($requirement->categories->first()->category) )
                             <h5>Category</h5>
                             <table>
                                 <tr>
@@ -20,14 +20,20 @@
                                     <td>Amount:</td>
                                     <td>Php {{ $requirement->categories->first()->category->amount }}</td>
                                 </tr>
+                                <tr>
+                                    <td>For:</td>
+                                    <td>{{ $requirement->promote? 'Old Scholars': 'Applicatants' }}</td>
+                                </tr>
                             </table>
-                        </div>
+                        @else
+                            <div class="alert alert-info my-auto">
+                                The requirement’s category is not set!
+                            </div>
+                        @endif
                     </div>
-                @endisset
+                </div>
                     
-                @isset($requirement->id)
-                    @livewire('scholarship-requirement-activate-livewire', [$requirement->id], key('activate-livewire-'.time().$requirement->id))
-                @endisset
+                @livewire('scholarship-requirement-activate-livewire', [$requirement->id], key('activate-livewire-'.time().$requirement->id))
 
                 <div class="card shadow mb-2 requirement-item-hover">
                     <div class="card-body">
@@ -39,9 +45,16 @@
 
                 <div class="card shadow requirement-item-hover">
                     <div class="card-body">
-                        @isset($requirement->id)
+                        @if ( $requirement->get_submitted_responses_count() )   
+                            <div class="alert alert-danger">
+                                This requirement has scholars' responses.
+                            </div>
+                            <button wire:click='edit_confirm' class="btn btn-info btn-block text-white">
+                                Edit
+                            </button>
+                        @else
                             <a href="{{ route('requirement.edit', [$requirement->id]) }}" class="btn btn-info btn-block text-white">Edit</a>
-                        @endisset
+                        @endif
                         <button wire:click="delete_confirmation"  class="btn btn-danger btn-block">Delete</button>
                     </div>
                 </div>
@@ -157,6 +170,21 @@
               icon: event.detail.type,
               buttons: true,
               dangerMode: true,
+            })
+            .then((willDelete) => {
+              if (willDelete) {
+                @this.call(event.detail.function)
+              }
+            });
+        });
+
+        window.addEventListener('swal:confirm:edit_requirement', event => { 
+            swal({
+              title: event.detail.message,
+              text: event.detail.text,
+              icon: event.detail.type,
+              buttons: true,
+              dangerMode: false,
             })
             .then((willDelete) => {
               if (willDelete) {

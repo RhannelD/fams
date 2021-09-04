@@ -57,6 +57,11 @@ class ScholarshipRequirement extends Model
         return ( $date_now>$date_start && $date_now<$date_end );
     }
 
+    public function get_submitted_responses_count()
+    {
+        return $this->responses->whereNotNull('submit_at')->count();
+    }
+
     public function categories()
     {
         return $this->hasMany(ScholarshipRequirementCategory::class, 'requirement_id', 'id');

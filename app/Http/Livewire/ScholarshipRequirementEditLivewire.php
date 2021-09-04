@@ -155,10 +155,11 @@ class ScholarshipRequirementEditLivewire extends Component
 
         $scholarship_requirement->requirement = $this->requirement->requirement;
         $scholarship_requirement->description = $this->requirement->description;
-        $scholarship_requirement->promote     = $this->requirement->promote;
+        if ( $scholarship_requirement->get_submitted_responses_count() == 0 ) 
+            $scholarship_requirement->promote     = $this->requirement->promote;
         $scholarship_requirement->save();
     }
-    
+
     public function save_all()
     {
         if ($this->verifyUser()) return;
@@ -170,6 +171,9 @@ class ScholarshipRequirementEditLivewire extends Component
     public function toggle_category($category_id)
     {
         if ($this->verifyUser()) return;
+        $scholarship_requirement = $this->get_scholarship_requirement();
+        if ( is_null($scholarship_requirement) || $scholarship_requirement->get_submitted_responses_count() )
+            return;
 
         $requirement_category = ScholarshipRequirementCategory::updateOrCreate(
             ['requirement_id' =>  $this->requirement_id],
