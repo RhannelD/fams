@@ -26,7 +26,7 @@ class ScholarshipPost extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-    
+
     public function scholarship()
     {
         return $this->belongsTo(Scholarship::class, 'scholarship_id', 'id');
@@ -35,5 +35,10 @@ class ScholarshipPost extends Model
     public function requirement_links()
     {
         return $this->hasMany(ScholarshipPostLinkRequirement::class, 'post_id', 'id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(ScholarshipPostComment::class, 'post_id', 'id');
     }
 }

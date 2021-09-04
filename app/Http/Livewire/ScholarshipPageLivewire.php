@@ -36,30 +36,24 @@ class ScholarshipPageLivewire extends Component
     
     public function render()
     {
-        $posts = ScholarshipPost::select('scholarship_posts.*', 'users.firstname', 'users.lastname')
-            ->addSelect(['comment_count' => ScholarshipPostComment::select(DB::raw("count(scholarship_post_comments.id)"))
-                ->whereColumn('scholarship_post_comments.post_id', 'scholarship_posts.id')
-            ])
-            ->addSelect(['link_count' => ScholarshipPostLinkRequirement::select(DB::raw("count(scholarship_post_link_requirements.id)"))
-                ->whereColumn('scholarship_post_link_requirements.post_id', 'scholarship_posts.id')
-            ])
-            ->where('scholarship_id', $this->scholarship_id)
-            ->leftJoin('users', 'scholarship_posts.user_id', '=', 'users.id')
-            ->orderBy('id', 'desc')
-            ->take($this->post_count)
-            ->get();
-
         $count = ScholarshipPost::where('scholarship_id', $this->scholarship_id)->count();
-
-        $show_more = ($count > count($posts));
+        $show_more = ($count > $this->post_count);
 
         $this->dispatchBrowserEvent('remove:modal-backdrop');
 
         return view('livewire.pages.scholarship-page-livewire.scholarship-page-livewire', [
-                'posts' => $posts,
+                'posts' => $this->get_posts(),
                 'show_more' => $show_more
             ])
             ->extends('livewire.main.main-livewire');
+    }
+
+    protected function get_posts()
+    {
+        return ScholarshipPost::where('scholarship_id', $this->scholarship_id)
+            ->orderBy('id', 'desc')
+            ->take($this->post_count)
+            ->get();
     }
 
     public function load_more()

@@ -31,9 +31,11 @@
                             </h5>
                             <div class="d-flex">
                                 <div class="mr-auto bd-highlight my-0">
-                                    <h6 class="my-0">
-                                        {{ $post->firstname }} {{ $post->lastname }}
-                                    </h6>
+                                    @isset($post->user)
+                                        <h6 class="my-0">
+                                            {{ $post->user->flname() }}
+                                        </h6>
+                                    @endisset
                                 </div>
                                 <h6 class="ml-auto mr-1 bd-highlight my-0">
                                     {{ date('d-m-Y h:i A', strtotime($post->created_at)) }}
@@ -46,11 +48,11 @@
                                 {!! Purify::clean($post->post) !!}
                             </p>
 
-                            @if ( $post->link_count > 0 )
+                            @if ( $post->requirement_links->count() > 0 )
                                 <h6 class="mt-2">
                                     <i class="fas fa-link"></i>
                                     Requirement links: 
-                                    <span class="badge badge-primary mr-2 pt-1">{{ $post->link_count }}</span>
+                                    <span class="badge badge-primary mr-2 pt-1">{{ $post->requirement_links->count() }}</span>
                                 </h6>
                             @endif
                         </div>
@@ -58,7 +60,7 @@
                         <div class="card-footer d-flex justify-content-end">
                             <a href="{{ route('post.show', [$post->id]) }}" class=" text-dark">
                                 Comment
-                                <span class="badge badge-primary pt-1">{{ $post->comment_count }}</span>
+                                <span class="badge badge-primary pt-1">{{ $post->comments->count() }}</span>
                             </a>
                         </div>
                     </a>

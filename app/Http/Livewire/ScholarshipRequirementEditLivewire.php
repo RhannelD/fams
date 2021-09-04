@@ -64,18 +64,9 @@ class ScholarshipRequirementEditLivewire extends Component
             $this->requirement->promote     = $scholarship_requirement->promote;
         }
 
-        $categories = ScholarshipCategory::select('scholarship_categories.*', 'scholarship_requirement_categories.category_id')
-            ->join('scholarship_requirements', 'scholarship_categories.scholarship_id', '=', 'scholarship_requirements.scholarship_id')
-            ->leftJoin('scholarship_requirement_categories', function($join) {
-                    $join->on('scholarship_categories.id', '=', 'scholarship_requirement_categories.category_id');
-                    $join->on('scholarship_requirements.id', '=', 'scholarship_requirement_categories.requirement_id');
-                })
-            ->where('scholarship_requirements.id', $this->requirement_id)
-            ->get();
-
         return view('livewire.pages.scholarship-requirement-edit.scholarship-requirement-edit-livewire', [
                 'scholarship_requirement' => $scholarship_requirement,
-                'categories' => $categories
+                'categories' => $this->get_categories()
             ])
             ->extends('livewire.main.main-livewire');
     }
@@ -83,6 +74,18 @@ class ScholarshipRequirementEditLivewire extends Component
     protected function get_scholarship_requirement()
     {
         return ScholarshipRequirement::find($this->requirement_id);
+    }
+
+    protected function get_categories()
+    {
+        return ScholarshipCategory::select('scholarship_categories.*', 'scholarship_requirement_categories.category_id')
+            ->join('scholarship_requirements', 'scholarship_categories.scholarship_id', '=', 'scholarship_requirements.scholarship_id')
+            ->leftJoin('scholarship_requirement_categories', function($join) {
+                    $join->on('scholarship_categories.id', '=', 'scholarship_requirement_categories.category_id');
+                    $join->on('scholarship_requirements.id', '=', 'scholarship_requirement_categories.requirement_id');
+                })
+            ->where('scholarship_requirements.id', $this->requirement_id)
+            ->get();
     }
 
     public function updated($propertyName)
