@@ -2,17 +2,29 @@
 @isset($agreement_id)
     <div class="col-sm-12 offset-sm-0 col-md-1 px-0">
         <hr class="d-block d-md-none">
-        <button class="btn btn-info float-right text-white ml-1 rounded-circle shadow mb-1 requirement-item-hover"
-            style="min-width: 39px; min-height: 39px; max-width: 39px; max-height: 39px;">
-            <i class="fas fa-chevron-circle-down"></i>
-        </button>
+        <div class="dropleft">
+            <button type="button" class="btn btn-info float-right text-white ml-1 rounded-circle shadow mb-1 requirement-item-hover" 
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                style="min-width: 39px; min-height: 39px; max-width: 39px; max-height: 39px;"
+                >
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item"
+                    type="button" data-toggle="modal" data-target="#agreementDuplicationModal">
+                    Duplicate
+                </a>
+            </div>
+        </div>
         <button class="btn btn-danger float-right ml-1 rounded-circle shadow mb-1 requirement-item-hover"
             wire:click="delete_confirmation"
             style="min-width: 39px; min-height: 39px; max-width: 39px; max-height: 39px;">
             <i class="fas fa-trash"></i>
-        </button>
+        </button>     
     </div>
     
+    @livewire('scholarship-requirement-edit-agreement-duplicate-livewire', [$agreement_id], key('agreement-duplicate-'.time()))
+
     <div class="card mb-5 shadow requirement-item-hover col-sm-12 offset-sm-0 col-md-10 offset-md-1 order-md-first">
         <div class="card-body mx-0 px-0">
             <div class="form-group mb-0">

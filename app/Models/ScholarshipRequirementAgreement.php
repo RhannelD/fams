@@ -18,4 +18,9 @@ class ScholarshipRequirementAgreement extends Model
         'requirement_id',
         'agreement',
     ];
+
+    public function requirement()
+    {
+        return $this->belongsTo(ScholarshipRequirement::class, 'requirement_id', 'id');
+    }
 }

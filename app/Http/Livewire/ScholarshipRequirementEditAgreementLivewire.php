@@ -65,7 +65,7 @@ class ScholarshipRequirementEditAgreementLivewire extends Component
         $agreement->agreement = $this->agreement;
         $agreement->save();
     }
-    
+
     public function save_all()
     {
         $this->save();
@@ -82,7 +82,7 @@ class ScholarshipRequirementEditAgreementLivewire extends Component
             'function' => "delete_agreement"
         ]);
     }
-    
+
     public function delete_agreement()
     {
         if ($this->verifyUser()) return;
