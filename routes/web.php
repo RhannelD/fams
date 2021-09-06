@@ -18,7 +18,7 @@ use App\Http\Livewire\ScholarshipRequirementResponse\ScholarshipRequirementRespo
 use App\Http\Livewire\ScholarshipPost\ScholarshipPostOpenLivewire;
 use App\Http\Livewire\ScholarshipCategory\ScholarshipCategoryLivewire;
 use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerInviteLinkLivewire;
-use App\Http\Livewire\RequirementPreviewLivewire;
+use App\Http\Livewire\Requirement\RequirementPreviewLivewire;
 use App\Http\Livewire\ResponseLivewire;
 use App\Http\Livewire\Invite\InviteScholarLivewire;
 use App\Http\Livewire\Invite\InviteOfficerLivewire;
