@@ -8,7 +8,7 @@
             <thead>
                 <tr>
                     @if ( !(Auth::user()->usertype == 'scholar') )
-                        <th>ID</th>
+                        <th>#</th>
                         <th>Name</th>
                         @empty($category_id)
                             <th>Category</th>
@@ -37,22 +37,38 @@
                         @endif
                         >
                         @if (Auth::user()->usertype != 'scholar')
-                            <th scope="row">{{ $scholar->user_id }}</th>
-                            <td>{{ $scholar->firstname }} {{ $scholar->middlename }} {{ $scholar->lastname }}</td>
+                            <th scope="row">
+                                {{ ( ($loop->index + 1) + ( ($show_row * $page ) - $show_row) ) }}
+                            </th>
+                            <td>
+                                {{ $scholar->user->fmlname() }}
+                            </td>
                             @empty($category_id)
-                                <td>{{ $scholar->category }}</td>
+                                <td>
+                                    {{ $scholar->category->category }}
+                                </td>
                             @endempty
-                            <td>{{ $scholar->email }}</td>
-                            <td>{{ $scholar->phone }}</td>
+                            <td>
+                                {{ $scholar->user->email }}
+                            </td>
+                            <td>
+                                {{ $scholar->user->phone }}
+                            </td>
                             <td>
                                 <i class="fa" aria-hidden="true"></i>
                             </td>
                         @else  
-                            <td>{{ $scholar->firstname }} {{ $scholar->middlename }} {{ $scholar->lastname }}</td>
+                            <td>
+                                {{ $scholar->user->fmlname() }}
+                            </td>
                             @empty($category_id)
-                                <td>{{ $scholar->category }}</td>
+                                <td>
+                                    {{ $scholar->category->category }}
+                                </td>
                             @endempty
-                            <td>{{ $scholar->email }}</td>
+                            <td>
+                                {{ $scholar->user->email }}
+                            </td>
                         @endif
                     </tr>
                     @if (Auth::user()->usertype != 'scholar')
@@ -73,61 +89,102 @@
                                                     <tbody>
                                                         <tr>
                                                             <td>ID:</td>
-                                                            <td>{{ $scholar->user_id }}</td>
+                                                            <td>
+                                                                {{ $scholar->user_id }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Full Name:</td>
-                                                            <td>{{ $scholar->firstname }} {{ $scholar->middlename }} {{ $scholar->lastname }}</td>
+                                                            <td>
+                                                                {{ $scholar->user->fmlname() }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Phonenumber:</td>
-                                                            <td>{{ $scholar->phone }}</td>
+                                                            <td>
+                                                                {{ $scholar->user->phone }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Email:</td>
-                                                            <td>{{ $scholar->email }}</td>
+                                                            <td>
+                                                                {{ $scholar->user->email }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Gender:</td>
-                                                            <td>{{ $scholar->gender }}</td>
+                                                            <td>
+                                                                {{ $scholar->user->gender }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Religion:</td>
-                                                            <td>{{ $scholar->religion }}</td>
+                                                            <td>
+                                                                {{ $scholar->user->religion }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Birth Date:</td>
-                                                            <td>{{ $scholar->birthday }}</td>
+                                                            <td>
+                                                                {{ $scholar->user->birthday }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Birth Place:</td>
-                                                            <td>{{ $scholar->birthplace }}</td>
+                                                            <td>
+                                                                {{ $scholar->user->birthplace }}
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                             <div class="col-md-6 pb-0">
                                                 <table class="table table-borderless table-sm m-0">
-                                                    <thead>
+                                                    <tbody>
                                                         <tr>
                                                             <th colspan="2">
                                                                 Scholarship
                                                             </th>
                                                         </tr>
-                                                    </thead>
-                                                    <tbody>
                                                         <tr>
                                                             <td>Category:</td>
-                                                            <td>{{ $scholar->category }}</td>
+                                                            <td>
+                                                                {{ $scholar->category->category }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Amount:</td>
-                                                            <td>{{ $scholar->amount }}</td>
+                                                            <td>
+                                                                {{ $scholar->category->amount }}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Date Joined:</td>
-                                                            <td>{{ date_format(new DateTime($scholar->created_at),"M d, Y") }}</td>
+                                                            <td>
+                                                                {{ date_format(new DateTime($scholar->created_at),"M d, Y") }}
+                                                            </td>
                                                         </tr>
+                                                        @if ( $scholar->user->scholarship_scholars->count() > 1 )
+                                                            <tr>
+                                                                <th colspan="2">
+                                                                    Other Scholarships: 
+                                                                    <span class="badge badge-primary pt-1 my-auto">
+                                                                        {{ $scholar->user->scholarship_scholars->count()-1 }}
+                                                                    </span>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2">
+                                                                    <ul class="my-auto">
+                                                                        @foreach ($scholar->user->scholarship_scholars->where('category_id', '!=', $scholar->category_id) as $scholarship_scholar)
+                                                                            <li>
+                                                                                {{ $scholarship_scholar->category->scholarship->scholarship }}
+                                                                            </li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                        @endif
                                                     </tbody>
                                                 </table>
                                             </div>

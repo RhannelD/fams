@@ -49,12 +49,27 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return ScholarshipRequirement::with('agreements')
-            ->has('agreements')
-            ->whereHas('agreements', function ( $query) {
-                $query->where('id', '!=', 4);
+        $search = '';
+        return ScholarshipScholar::whereScholarshipId(1)
+            ->with('user', 'category')
+            ->whereHas('user', function ($query) use ($search) {
+                $query->whereNameOrEmail($search);
             })
             ->get();
+
+        // $ScholarshipScholar = ScholarshipScholar::with('category')
+        //     ->whereScholarshipId(1)->get();
+
+        // foreach ($ScholarshipScholar as  $value) {
+        //     echo $value->user->scholarship_scholars.'<br>';
+        // }
+
+        // return ScholarshipRequirement::with('agreements')
+        //     ->has('agreements')
+        //     ->whereHas('agreements', function ( $query) {
+        //         $query->where('id', '!=', 4);
+        //     })
+        //     ->get();
 
         // return ScholarshipRequirement::find(38)->responses->count()? 'yes': 'no';
 

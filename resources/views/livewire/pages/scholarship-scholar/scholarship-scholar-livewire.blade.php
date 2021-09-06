@@ -16,18 +16,7 @@
 
         <div class="col-md-7 mt-2">
             <div class="form-row">
-                <div class="input-group col-6 my-0">
-                    <div class="input-group-prepend">
-                    <label class="input-group-text" for="category">Category</label>
-                    </div>
-                    <select wire:model="category_id" class="form-control" id="category">
-                        <option value="">All Categories</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category['id'] }}">{{ $category['category'] }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="input-group col-4 my-0">
+                <div class="input-group col-6 col-md-4 my-0">
                     <div class="input-group-prepend">
                     <label class="input-group-text" for="rows">Rows</label>
                     </div>
@@ -41,8 +30,11 @@
                         <option value="200">200</option>
                     </select>
                 </div>
-                @if (Auth::user()->usertype != 'scholar')    
-                    <div class="form-group col-2  my-0">
+                @if (Auth::user()->is_admin() || Auth::user()->is_officer())    
+                    <div class="form-group col-3 my-0">
+                        @include('livewire.pages.scholarship-scholar.scholarship-scholar-filter-livewire')
+                    </div>
+                    <div class="form-group col-3 col-md-2 offset-md-3 my-0">
                         <button class="form-control btn btn-success" type="button" data-toggle="modal" data-target="#officer_invite">
                             Invite
                         </button>

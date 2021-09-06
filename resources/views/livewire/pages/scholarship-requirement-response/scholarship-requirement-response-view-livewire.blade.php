@@ -40,7 +40,7 @@
                         <hr class="my-2">
                         @foreach ($scholar_response->comments as $comment)
                             @if ( $comment->user_id == Auth::id() ) 
-                                @livewire('requirement-response-open-comment-livewire', [$comment->id], key('response-comment-open-'.time().$comment->id))
+                                @livewire('requirement.requirement-response-open-comment-livewire', [$comment->id], key('response-comment-open-'.time().$comment->id))
             
                             @else
                                 <div class="my-1">
@@ -62,7 +62,7 @@
                         @endisset
                     </div>
                     <div class="card-footer bg-white">
-                        @livewire('requirement-response-comment-livewire', [$response_id], key('response-comment-'.time().$response_id))
+                        @livewire('requirement.requirement-response-comment-livewire', [$response_id], key('response-comment-'.time().$response_id))
                     </div>
                 </div>
             </div>

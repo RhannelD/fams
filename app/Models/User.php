@@ -116,6 +116,11 @@ class User extends Authenticatable
         return $this->firstname .' '. $this->lastname;
     }
 
+    public function fmlname()
+    {
+        return $this->firstname .' '. $this->middlename .' '. $this->lastname;
+    }
+
     public function is_admin()
     {
         return ( $this->usertype == 'admin' );

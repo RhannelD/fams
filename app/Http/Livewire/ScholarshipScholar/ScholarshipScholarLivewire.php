@@ -17,8 +17,12 @@ class ScholarshipScholarLivewire extends Component
     public $scholarship_id;
     public $search;
     public $show_row = 10;
-    
+
+    public $comparision = '';
+    public $num_scholarship = 1;
     public $category_id = '';
+    public $order_by = 'firstname';
+    public $order = 'asc';
 
     protected $listeners = [
         'refresh' => '$refresh',
@@ -35,7 +39,9 @@ class ScholarshipScholarLivewire extends Component
     
     public function getQueryString()
     {
-        return [];
+        return [
+            'search' => ['except' => ''],
+        ];
     }
     
     public function mount($scholarship_id)
@@ -47,40 +53,68 @@ class ScholarshipScholarLivewire extends Component
     
     public function updated($name)
     {
-        if ('show_row') {
-            $this->page = 1;
+        $this->page = 1;
+
+        if ( !in_array($this->comparision, ['', '=', '<', '>', '<=', '>=']) ) {
+            $this->comparision = '';
+        }
+        if ( $this->num_scholarship < 1 || $this->num_scholarship > 20 ) {
+            $this->num_scholarship = 1;
+        }
+        if ( !in_array($this->order_by, ['firstname', 'lastname', 'email', 'phone']) ) {
+            $this->order_by = 'firstname';
+        }
+        if ( !in_array($this->order, ['asc', 'desc']) ) {
+            $this->order_by = 'asc';
         }
     }
 
     public function render()
     {
-        if ($this->verifyUser()) 
-            return view('livewire.pages.scholarship-scholar.scholarship-scholar-livewire');
-
-        $categories = ScholarshipCategory::where('scholarship_id', $this->scholarship_id)->get();
-
-        $search = $this->search;
-        $scholars = DB::table('scholarship_scholars')->select(DB::raw('DISTINCT(scholarship_scholars.user_id)'), 'users.*', 'scholarship_categories.*')
-            ->join('users', 'users.id', '=', 'scholarship_scholars.user_id')
-            ->join('scholarship_categories', 'scholarship_scholars.category_id', '=', 'scholarship_categories.id')
-            ->where('usertype', 'scholar')
-            ->where('scholarship_categories.scholarship_id', $this->scholarship_id)
-            ->where(function ($query) use ($search) {
-                $query->where('firstname', 'like', "%$search%")
-                    ->orWhere('middlename', 'like', "%$search%")
-                    ->orWhere('lastname', 'like', "%$search%")
-                    ->orWhere(DB::raw('CONCAT(firstname, " ", lastname)'), 'like', "%$search%");
-            });
-        if ($this->category_id != '') {
-            $scholars = $scholars->where('scholarship_scholars.category_id', $this->category_id);
-        }
-        $scholars = $scholars
-            ->paginate($this->show_row);
-
         return view('livewire.pages.scholarship-scholar.scholarship-scholar-livewire', [
-                'scholars' => $scholars,
-                'categories' => $categories,
+                'scholars' => $this->get_scholars(),
+                'categories' => $this->get_categories(),
             ])
             ->extends('livewire.main.main-livewire');
+    }
+
+    protected function get_categories()
+    {
+        return ScholarshipCategory::where('scholarship_id', $this->scholarship_id)->get();
+    }
+
+    protected function get_scholars()
+    {
+        $search = $this->search;
+        $category_id = $this->category_id;
+        $comparision = $this->comparision;
+        $num_scholarship = $this->num_scholarship;
+        $order_by = $this->order_by;
+        $order = $this->order;
+        return ScholarshipScholar::whereScholarshipId($this->scholarship_id)
+            ->whereHas('user', function ($query) use ($search, $comparision, $num_scholarship) {
+                $query->whereNameOrEmail($search)
+                    ->where('usertype', 'scholar')
+                    ->when((in_array($comparision, ['=', '<', '>', '<=', '>=']) && ($num_scholarship >= 1 || $num_scholarship <= 20) ), 
+                    function ($query) use ($comparision, $num_scholarship) {
+                        $query->has('scholarship_scholars', $comparision, $num_scholarship+1);
+                    });
+            })
+            ->when(!empty($category_id), function ($query) use ($category_id) {
+                $query->where('category_id', $category_id);
+            })
+            ->when((in_array($this->order_by, ['firstname', 'lastname', 'email', 'phone']) && in_array($order, ['asc', 'desc'])), function ($query) use ($order_by, $order) {
+                $query->join('users', 'users.id', '=', 'scholarship_scholars.user_id')
+                    ->select('scholarship_scholars.*')
+                    ->orderBy($order_by, $order);
+            })
+            ->paginate($this->show_row);
+    }
+
+    public function clear_filter()
+    {
+        $this->comparision = '';
+        $this->num_scholarship = 1;
+        $this->category_id = '';
     }
 }
