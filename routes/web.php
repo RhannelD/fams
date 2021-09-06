@@ -6,7 +6,7 @@ use App\Http\Livewire\LoginLivewire;
 use App\Http\Livewire\SignUpLivewire;
 use App\Http\Livewire\DashboardLivewire;
 use App\Http\Livewire\Scholar\ScholarLivewire;
-use App\Http\Livewire\OfficerLivewire;
+use App\Http\Livewire\Officer\OfficerLivewire;
 use App\Http\Livewire\ScholarshipLivewire;
 use App\Http\Livewire\ScholarshipPageLivewire;
 use App\Http\Livewire\ScholarshipOfficerLivewire;

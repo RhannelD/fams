@@ -42,7 +42,7 @@
                 </table>
             </div>
             <div class="card-footer">
-                <button wire:click="$emitTo('officer-edit-livewire', 'edit', {{ $user->id }})" type="button" class="btn btn-info text-white mb-1 mb-lg-0" data-toggle="modal" data-target="#officer_form">
+                <button wire:click="$emitTo('officer.officer-edit-livewire', 'edit', {{ $user->id }})" type="button" class="btn btn-info text-white mb-1 mb-lg-0" data-toggle="modal" data-target="#officer_form">
                     <i class="fas fa-edit"></i>
                     Edit Info
                 </button>
@@ -59,7 +59,7 @@
             </div>
         </div>
 
-        @livewire('officer-scholarship-livewire', [$user->id], key('officer-scholarships-'.time().$user->id))
+        @livewire('officer.officer-scholarship-livewire', [$user->id], key('officer-scholarships-'.time().$user->id))
 
 
 		<div>

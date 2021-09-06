@@ -14,7 +14,7 @@
 		<div class="col-md-6 mt-2">
 
 			<div class="input-group rounded">
-				<button wire:click="$emitTo('officer-edit-livewire', 'create')" class="btn btn-info ml-auto mr-0 text-white" type="button" data-toggle="modal" data-target="#officer_form">
+				<button wire:click="$emitTo('officer.officer-edit-livewire', 'create')" class="btn btn-info ml-auto mr-0 text-white" type="button" data-toggle="modal" data-target="#officer_form">
 					<i class="fas fa-plus"></i>
 					Create Officer
 				</button>
@@ -35,7 +35,7 @@
 			@endisset
 			">
 			@isset($user)
-				@livewire('officer-info-livewire', [$user], key('officer-info-'.time().$user))
+				@livewire('officer.officer-info-livewire', [$user], key('officer-info-'.time().$user))
 			@endisset
 		</div>
 
@@ -44,7 +44,7 @@
 	<div>
         <div wire:ignore.self class="modal fade officer_form" id="officer_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-                @livewire('officer-edit-livewire'))
+                @livewire('officer.officer-edit-livewire'))
             </div>
         </div>
     </div>

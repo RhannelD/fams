@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Officer;
 
 use Livewire\Component;
 use App\Models\User;
@@ -106,7 +106,7 @@ class OfficerEditLivewire extends Component
 
             if ( is_null($user) ) {
                 $this->dispatchBrowserEvent('officer-form', ['action' => 'hide']);
-                $this->emitTo('officer-info-livewire', 'refresh');
+                $this->emitTo('officer.officer-info-livewire', 'refresh');
                 return;
             }
             $user->firstname    = $this->user->firstname;
@@ -150,7 +150,7 @@ class OfficerEditLivewire extends Component
                 'message' => 'Officer\'s Account Updated', 
                 'text' => 'Officer\'s account has been successfully updated'
             ]);
-            $this->emitTo('officer-info-livewire', 'refresh');
+            $this->emitTo('officer.officer-info-livewire', 'refresh');
             $this->unset_user();
             $this->dispatchBrowserEvent('officer-form', ['action' => 'hide']);
             return;

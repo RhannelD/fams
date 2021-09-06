@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Officer;
 
 use Livewire\Component;
 use App\Models\User;
@@ -75,7 +75,7 @@ class OfficerInfoLivewire extends Component
             return;
         }
         
-        $this->emitTo('officer-edit-livewire', 'create');
+        $this->emitTo('officer.officer-edit-livewire', 'create');
 
         $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_officer', [
             'type' => 'warning',  
