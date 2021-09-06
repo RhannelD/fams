@@ -54,7 +54,7 @@
                     <div>
                         <div wire:ignore.self class="modal fade officer_invite" id="officer_invite" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                                @livewire('scholarship-officer-invite-livewire', [$scholarship_id]))
+                                @livewire('scholarship-officer.scholarship-officer-invite-livewire', [$scholarship_id]))
                             </div>
                         </div>
                     </div>

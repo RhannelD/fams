@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\ScholarshipOfficer;
 
 use Livewire\Component;
 use Livewire\WithPagination;
