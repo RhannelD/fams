@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Scholar;
 
 use Livewire\Component;
 use App\Models\User;
@@ -75,7 +75,7 @@ class ScholarInfoLivewire extends Component
             return;
         }
         
-        $this->emitTo('scholar-edit-livewire', 'create');
+        $this->emitTo('scholar.scholar-edit-livewire', 'create');
 
         $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_scholar', [
             'type' => 'warning',  

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Scholar;
 
 use Livewire\Component;
 use App\Models\User;
@@ -106,7 +106,7 @@ class ScholarEditLivewire extends Component
 
             if ( is_null($user) ) {
                 $this->dispatchBrowserEvent('scholar-form', ['action' => 'hide']);
-                $this->emitTo('scholar-info-livewire', 'refresh');
+                $this->emitTo('scholar.scholar-info-livewire', 'refresh');
                 return;
             }
             $user->firstname    = $this->user->firstname;
@@ -150,7 +150,7 @@ class ScholarEditLivewire extends Component
                 'message' => 'Scholar\'s Account Updated', 
                 'text' => 'Scholar\'s account has been successfully updated'
             ]);
-            $this->emitTo('scholar-info-livewire', 'refresh');
+            $this->emitTo('scholar.scholar-info-livewire', 'refresh');
             $this->unset_user();
             $this->dispatchBrowserEvent('scholar-form', ['action' => 'hide']);
             return;

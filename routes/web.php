@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\LoginLivewire;
 use App\Http\Livewire\SignUpLivewire;
 use App\Http\Livewire\DashboardLivewire;
-use App\Http\Livewire\ScholarLivewire;
+use App\Http\Livewire\Scholar\ScholarLivewire;
 use App\Http\Livewire\OfficerLivewire;
 use App\Http\Livewire\ScholarshipLivewire;
 use App\Http\Livewire\ScholarshipPageLivewire;

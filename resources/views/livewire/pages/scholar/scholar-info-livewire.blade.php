@@ -42,7 +42,7 @@
                 </table>
             </div>
             <div class="card-footer">
-                <button wire:click="$emitTo('scholar-edit-livewire', 'edit', {{ $user->id }})" type="button" 
+                <button wire:click="$emitTo('scholar.scholar-edit-livewire', 'edit', {{ $user->id }})" type="button" 
                     class="btn btn-info mb-1 mb-lg-0 text-white" data-toggle="modal" data-target="#scholar_form">
                     <i class="fas fa-edit"></i>
                     Edit Info
@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        @livewire('scholar-scholarship-livewire', [$user->id], key('scholar-scholarships-'.time().$user->id))
+        @livewire('scholar.scholar-scholarship-livewire', [$user->id], key('scholar-scholarships-'.time().$user->id))
 
 		<div>
 			<div wire:ignore.self class="modal fade" id="change_password_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
