@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Response;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;

@@ -102,21 +102,21 @@
                                     @case('file')
                                     @case('cor')
                                     @case('grade')
-                                        @livewire('response-file-upload-livewire', [$requirement_item->id, $user_response->id], key('response-file-livewire-'.time().$requirement_item->id))
+                                        @livewire('response.response-file-upload-livewire', [$requirement_item->id, $user_response->id], key('response-file-livewire-'.time().$requirement_item->id))
                                         @break
 
                                     @case('question')
-                                        @livewire('response-answer-livewire', [$requirement_item->id, $user_response->id], key('response-answer-livewire-'.time().$requirement_item->id))
+                                        @livewire('response.response-answer-livewire', [$requirement_item->id, $user_response->id], key('response-answer-livewire-'.time().$requirement_item->id))
                                         @break
 
                                     @case('radio')
-                                        @livewire('response-radio-livewire', [$requirement_item->id, $user_response->id], key('response-radio-livewire-'.time().$requirement_item->id))
+                                        @livewire('response.response-radio-livewire', [$requirement_item->id, $user_response->id], key('response-radio-livewire-'.time().$requirement_item->id))
                                         @break
 
                                     @case('check')
                                         @isset($requirement_item->options)
                                             @foreach ($requirement_item->options as $option)
-                                                @livewire('response-checkbox-livewire', [$requirement_item->id, $user_response->id, $option->id], key('response-checkbox-livewire-'.time().$requirement_item->id.'_'.$option->id))
+                                                @livewire('response.response-checkbox-livewire', [$requirement_item->id, $user_response->id, $option->id], key('response-checkbox-livewire-'.time().$requirement_item->id.'_'.$option->id))
                                             @endforeach
                                         @endisset
                                         @break
