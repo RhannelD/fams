@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\ScholarshipPost;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +34,7 @@ class ScholarshipPostOpenCommentLivewire extends Component
             ->where('scholarship_post_comments.id', $this->comment_id)
             ->first();
         
-        return view('livewire.pages.scholarship-post-livewire.scholarship-post-open-comment-livewire', ['comment' => $comment]);
+        return view('livewire.pages.scholarship-post.scholarship-post-open-comment-livewire', ['comment' => $comment]);
     }
 
     public function delete_comment_confirmation()

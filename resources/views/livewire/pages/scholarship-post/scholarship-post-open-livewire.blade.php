@@ -32,7 +32,7 @@
 
                     @if ( $post->user_id == Auth::id() || Auth::user()->is_admin() )
                         <div wire:ignore>
-                            @livewire('scholarship-post-livewire', [$post->scholarship_id, $post->id], key('scholarship-page-post-'.time().$post->scholarship_id))
+                            @livewire('scholarship-post.scholarship-post-livewire', [$post->scholarship_id, $post->id], key('scholarship-page-post-'.time().$post->scholarship_id))
                         </div>
                     @endif
 
@@ -122,12 +122,12 @@
             
             <div wire:poll.10000ms>
                 @foreach ($comments as $comment)
-                    @livewire('scholarship-post-open-comment-livewire', [$comment->id], key('scholarship-page-post-comment-open-'.time().$post->id))
+                    @livewire('scholarship-post.scholarship-post-open-comment-livewire', [$comment->id], key('scholarship-page-post-comment-open-'.time().$post->id))
                 @endforeach
             </div>
 
             <div wire:ignore>
-                @livewire('scholarship-post-comment-livewire', [$post->id], key('scholarship-page-post-comment-'.time().$post->id))
+                @livewire('scholarship-post.scholarship-post-comment-livewire', [$post->id], key('scholarship-page-post-comment-'.time().$post->id))
             </div>
             
             <hr class="mb-5" style="max-width: 760px">

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\ScholarshipPost;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
@@ -63,7 +63,7 @@ class ScholarshipPostOpenLivewire extends Component
 
         $show_more = ($comment_count > count($comments));
 
-        return view('livewire.pages.scholarship-post-livewire.scholarship-post-open-livewire', [
+        return view('livewire.pages.scholarship-post.scholarship-post-open-livewire', [
                 'post' => $post,
                 'comments' => $comments,
                 'comment_count' => $comment_count,

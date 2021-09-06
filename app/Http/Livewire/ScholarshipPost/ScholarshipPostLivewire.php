@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\ScholarshipPost;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
@@ -69,7 +69,7 @@ class ScholarshipPostLivewire extends Component
 
     public function render()
     {
-        return view('livewire.pages.scholarship-post-livewire.scholarship-post-livewire');
+        return view('livewire.pages.scholarship-post.scholarship-post-livewire');
     }
     
     public function updated($propertyName)

@@ -19,7 +19,7 @@
                         </a>
                     </div>
                 </div>
-                @livewire('scholarship-post-livewire', [$scholarship_id], key('scholarship-page-post-'.time().$scholarship_id))
+                @livewire('scholarship-post.scholarship-post-livewire', [$scholarship_id], key('scholarship-page-post-'.time().$scholarship_id))
             @endif
 
             @foreach ($posts as $post)
