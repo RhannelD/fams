@@ -124,7 +124,7 @@
 
                 <hr class="my-1 mx-3">
                 @isset($responses[$index]->id)
-                    @livewire('scholarship-requirement-response-view-livewire', [$responses[$index]->id], key('response-view-'.time().$requirement->scholarship_id))
+                    @livewire('scholarship-requirement-response.scholarship-requirement-response-view-livewire', [$responses[$index]->id], key('response-view-'.time().$requirement->scholarship_id))
                 @endisset  
             </div>
             @endisset
