@@ -57,7 +57,7 @@ class InviteOfficerLivewire extends Component
                 'scholarship_id' => $invite->scholarship_id,
                 'position_id' => 2,
             ]);
-            $this->emitTo('navbar-scholarship-livewire', 'refresh');
+            $this->emitTo('add-ins.navbar-scholarship-livewire', 'refresh');
         }
     }
 

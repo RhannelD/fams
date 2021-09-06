@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\AddIns;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;

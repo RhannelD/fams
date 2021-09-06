@@ -1,5 +1,5 @@
 <div>
-    @livewire('scholarship-program-livewire', [$scholarship_id], key('page-tabs-'.time().$scholarship_id))
+    @livewire('add-ins.scholarship-program-livewire', [$scholarship_id], key('page-tabs-'.time().$scholarship_id))
     
     <hr class="mb-2">
 	<div class="mb-1">

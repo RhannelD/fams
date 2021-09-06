@@ -1,6 +1,6 @@
 <div>
 @isset($requirement)
-    @livewire('scholarship-program-livewire', [$requirement->scholarship_id], key('page-tabs-'.time().$requirement->scholarship_id))
+    @livewire('add-ins.scholarship-program-livewire', [$requirement->scholarship_id], key('page-tabs-'.time().$requirement->scholarship_id))
 
     <hr>
     <div class="mx-auto mxw-1300px">

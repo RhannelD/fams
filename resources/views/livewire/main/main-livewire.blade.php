@@ -48,7 +48,7 @@
                         Scholarship
                     @endif
                 </strong>
-                @livewire('navbar-scholarship-livewire', key('sidebar-scholarship-'.time().$scholarship->id))
+                @livewire('add-ins.navbar-scholarship-livewire', key('sidebar-scholarship-'.time().$scholarship->id))
             @endif
         </div>
     </div>
@@ -91,7 +91,7 @@
                                     Invites
                                 </a>
                             @endif
-                            @livewire('logout-livewire')
+                            @livewire('add-ins.logout-livewire')
 						</div>
 					</li>
 				</ul>

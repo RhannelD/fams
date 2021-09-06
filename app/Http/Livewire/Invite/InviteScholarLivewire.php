@@ -56,7 +56,7 @@ class InviteScholarLivewire extends Component
                 'user_id' => Auth::id(),
                 'category_id' => $invite->category_id
             ]);
-            $this->emitTo('navbar-scholarship-livewire', 'refresh');
+            $this->emitTo('add-ins.navbar-scholarship-livewire', 'refresh');
         }
     }
 

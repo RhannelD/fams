@@ -1,7 +1,7 @@
 <div>
 @if ( isset($post) )
     <div wire:ignore>
-        @livewire('scholarship-program-livewire', [$post->scholarship_id], key('page-tabs-'.time().$post->scholarship_id))
+        @livewire('add-ins.scholarship-program-livewire', [$post->scholarship_id], key('page-tabs-'.time().$post->scholarship_id))
     </div>
 
     <hr>
