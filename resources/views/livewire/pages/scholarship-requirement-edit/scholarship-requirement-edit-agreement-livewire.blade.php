@@ -23,7 +23,9 @@
         </button>     
     </div>
     
-    @livewire('scholarship-requirement-edit-agreement-duplicate-livewire', [$agreement_id], key('agreement-duplicate-'.time()))
+    <div wire:ignore>
+        @livewire('scholarship-requirement-edit-agreement-duplicate-livewire', [$agreement_id], key('agreement-duplicate-'.time()))
+    </div>
 
     <div class="card mb-5 shadow requirement-item-hover col-sm-12 offset-sm-0 col-md-10 offset-md-1 order-md-first">
         <div class="card-body mx-0 px-0">
@@ -34,11 +36,6 @@
                 </div>
                 @error('agreement') <span class="text-danger">{{ $message }}</span> @enderror
             </div>  
-            <div class="d-flex justify-content-end mt-2">
-                <button class="btn btn-info text-white">
-                    Duplicate Another Terms and Conditions
-                </button>
-            </div>
         </div>
     </div>
 

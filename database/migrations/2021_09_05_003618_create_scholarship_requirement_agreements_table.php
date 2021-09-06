@@ -31,8 +31,8 @@ class CreateScholarshipRequirementAgreementsTable extends Migration
     public function down()
     {
         Schema::table('scholarship_requirement_agreements', function (Blueprint $table) {
-            $table->dropForeign(['scholarship_id']);
-            $table->dropColumn(['scholarship_id']);
+            $table->dropForeign(['requirement_id']);
+            $table->dropColumn(['requirement_id']);
         });
         
         Schema::dropIfExists('scholarship_requirement_agreements');

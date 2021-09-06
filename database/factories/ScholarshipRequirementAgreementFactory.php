@@ -21,8 +21,16 @@ class ScholarshipRequirementAgreementFactory extends Factory
      */
     public function definition()
     {
+        $paragraphs = $this->faker->paragraphs(rand(2, 6));
+        $title = $this->faker->realText(50);
+        $post = "<h3>{$title}</h3>";
+        foreach ($paragraphs as $para) {
+            $post .= "<p>{$para}</p>";
+        }
+
         return [
-            //
+            'requirement_id' => 1,
+            'agreement' => $post,
         ];
     }
 }

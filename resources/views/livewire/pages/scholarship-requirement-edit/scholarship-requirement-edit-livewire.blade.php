@@ -165,7 +165,7 @@
                     </div>
 
                     @if( $scholarship_requirement->agreements->count() )
-                        <div class="col-12">
+                        <div wire:ignore class="col-12">
                             @livewire('scholarship-requirement-edit-agreement-livewire', [$scholarship_requirement->agreements->first()->id], key('agreement-'.time().$scholarship_requirement->agreements->first()->id))
                         </div>
                     @endif
