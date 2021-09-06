@@ -20,8 +20,8 @@ use App\Http\Livewire\ScholarshipCategory\ScholarshipCategoryLivewire;
 use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerInviteLinkLivewire;
 use App\Http\Livewire\RequirementPreviewLivewire;
 use App\Http\Livewire\ResponseLivewire;
-use App\Http\Livewire\InviteScholarLivewire;
-use App\Http\Livewire\InviteOfficerLivewire;
+use App\Http\Livewire\Invite\InviteScholarLivewire;
+use App\Http\Livewire\Invite\InviteOfficerLivewire;
 
 use App\Http\Controllers\HomeController;
 

@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Invite;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Models\ScholarshipScholar;
-use App\Models\ScholarshipScholarInvite;
+use App\Models\ScholarshipOfficer;
+use App\Models\ScholarshipOfficerInvite;
 
-class InviteScholarLivewire extends Component
+class InviteOfficerLivewire extends Component
 {
     public $invite_id;
-    
+
     protected function verifyUser()
     {
-        if (!Auth::check() || !Auth::user()->is_scholar() ) {
+        if (!Auth::check() || !Auth::user()->is_officer() ) {
             redirect()->route('index');
             return true;
         }
@@ -23,7 +23,7 @@ class InviteScholarLivewire extends Component
 
     protected function verifyInvite($invite_id)
     {
-        return ScholarshipScholarInvite::where('id', $invite_id)
+        return ScholarshipOfficerInvite::where('id', $invite_id)
             ->where('email', Auth::user()->email )
             ->whereNull('respond')
             ->first();
@@ -31,15 +31,15 @@ class InviteScholarLivewire extends Component
 
     public function render()
     {
-        return view('livewire.pages.invite-scholar.invite-scholar-livewire', [
+        return view('livewire.pages.invite-officer.invite-officer-livewire', [
                 'invites' => $this->get_invites()
             ])
             ->extends('livewire.main.main-livewire');
     }
-
+    
     protected function get_invites()
     {
-        return User::find(Auth::id())->scholars_invites;
+        return User::find(Auth::id())->scholarship_invites;
     }
 
     public function approve($invite_id)
@@ -52,9 +52,10 @@ class InviteScholarLivewire extends Component
         
         $invite->respond = true;
         if ( $invite->save() ) {
-            ScholarshipScholar::firstOrCreate([
+            ScholarshipOfficer::firstOrCreate([
                 'user_id' => Auth::id(),
-                'category_id' => $invite->category_id
+                'scholarship_id' => $invite->scholarship_id,
+                'position_id' => 2,
             ]);
             $this->emitTo('navbar-scholarship-livewire', 'refresh');
         }
