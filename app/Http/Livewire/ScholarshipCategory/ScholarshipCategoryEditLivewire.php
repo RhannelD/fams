@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\ScholarshipCategory;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Scholarship;
 use App\Models\ScholarshipCategory;
