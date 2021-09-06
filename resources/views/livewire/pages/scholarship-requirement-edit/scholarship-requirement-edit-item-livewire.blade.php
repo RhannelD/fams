@@ -86,7 +86,7 @@
                                 <div class="form-group col-sm-12 col-md-11 mb-1">
                                     @foreach ($requirement_item->options as $option)
 
-                                        @livewire('scholarship-requirement-edit-item-option-livewire', [$option->id, $requirement_item->type], key('item-option-'.time().$option->id))
+                                        @livewire('scholarship-requirement-edit.scholarship-requirement-edit-item-option-livewire', [$option->id, $requirement_item->type], key('item-option-'.time().$option->id))
 
                                     @endforeach
                                     

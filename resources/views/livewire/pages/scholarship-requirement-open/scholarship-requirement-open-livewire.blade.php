@@ -33,7 +33,7 @@
                     </div>
                 </div>
                     
-                @livewire('scholarship-requirement-activate-livewire', [$requirement->id], key('activate-livewire-'.time().$requirement->id))
+                @livewire('scholarship-requirement-edit.scholarship-requirement-activate-livewire', [$requirement->id], key('activate-livewire-'.time().$requirement->id))
 
                 <div class="card shadow mb-2 requirement-item-hover">
                     <div class="card-body">

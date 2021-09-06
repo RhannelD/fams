@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\ScholarshipRequirementEdit;
 
 use Livewire\Component;
 use App\Models\ScholarshipRequirementItem;

@@ -13,7 +13,7 @@ use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerLivewire;
 use App\Http\Livewire\ScholarshipScholar\ScholarshipScholarLivewire;
 use App\Http\Livewire\ScholarshipRequirement\ScholarshipRequirementLivewire;
 use App\Http\Livewire\ScholarshipRequirement\ScholarshipRequirementOpenLivewire;
-use App\Http\Livewire\ScholarshipRequirementEditLivewire;
+use App\Http\Livewire\ScholarshipRequirementEdit\ScholarshipRequirementEditLivewire;
 use App\Http\Livewire\ScholarshipRequirementResponse\ScholarshipRequirementResponseLivewire;
 use App\Http\Livewire\ScholarshipPost\ScholarshipPostOpenLivewire;
 use App\Http\Livewire\ScholarshipCategory\ScholarshipCategoryLivewire;

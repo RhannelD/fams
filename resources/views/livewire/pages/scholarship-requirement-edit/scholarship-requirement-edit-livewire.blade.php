@@ -39,7 +39,7 @@
                 </div>
                 <hr>
                 
-                @livewire('scholarship-requirement-activate-livewire', [$scholarship_requirement->id], key('activate-livewire-'.time().$requirement->id))
+                @livewire('scholarship-requirement-edit.scholarship-requirement-activate-livewire', [$scholarship_requirement->id], key('activate-livewire-'.time().$requirement->id))
 
                 <div class="card shadow mb-2 requirement-item-hover">
                     <div class="card-body">
@@ -93,7 +93,7 @@
 
                 @if ($scholarship_requirement->get_submitted_responses_count() == 0)    
                     <div wire:ignore>
-                        @livewire('scholarship-requirement-edit-duplicate-livewire', [$requirement_id, $scholarship_requirement->scholarship_id], key('duplicate-modal-'.time().$requirement_id))
+                        @livewire('scholarship-requirement-edit.scholarship-requirement-edit-duplicate-livewire', [$requirement_id, $scholarship_requirement->scholarship_id], key('duplicate-modal-'.time().$requirement_id))
                     </div>
                 @else
                     <div class="card shadow mb-2 requirement-item-hover">
@@ -149,7 +149,7 @@
                     <div class="col-12"  wire:sortable="update_requirement_order">
                         @foreach ($scholarship_requirement->items as $item)
                             <div wire:sortable.item="{{ $item->id }}" wire:key="item-{{ $item->id }}" class="div_item_id_sort_{{ $item->id }}">
-                                @livewire('scholarship-requirement-edit-item-livewire', [$item->id], key('item-'.time().$item->id))
+                                @livewire('scholarship-requirement-edit.scholarship-requirement-edit-item-livewire', [$item->id], key('item-'.time().$item->id))
                             </div>
                         @endforeach
                     </div>
@@ -166,7 +166,7 @@
 
                     @if( $scholarship_requirement->agreements->count() )
                         <div wire:ignore class="col-12">
-                            @livewire('scholarship-requirement-edit-agreement-livewire', [$scholarship_requirement->agreements->first()->id], key('agreement-'.time().$scholarship_requirement->agreements->first()->id))
+                            @livewire('scholarship-requirement-edit.scholarship-requirement-edit-agreement-livewire', [$scholarship_requirement->agreements->first()->id], key('agreement-'.time().$scholarship_requirement->agreements->first()->id))
                         </div>
                     @endif
                 </div>

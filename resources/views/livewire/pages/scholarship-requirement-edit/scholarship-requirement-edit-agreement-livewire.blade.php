@@ -24,7 +24,7 @@
     </div>
     
     <div wire:ignore>
-        @livewire('scholarship-requirement-edit-agreement-duplicate-livewire', [$agreement_id], key('agreement-duplicate-'.time()))
+        @livewire('scholarship-requirement-edit.scholarship-requirement-edit-agreement-duplicate-livewire', [$agreement_id], key('agreement-duplicate-'.time()))
     </div>
 
     <div class="card mb-5 shadow requirement-item-hover col-sm-12 offset-sm-0 col-md-10 offset-md-1 order-md-first">
