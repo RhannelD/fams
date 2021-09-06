@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Livewire\LoginLivewire;
-use App\Http\Livewire\SignUpLivewire;
+use App\Http\Livewire\Auth\LoginLivewire;
+use App\Http\Livewire\Auth\SignUpLivewire;
 use App\Http\Livewire\Dashboard\DashboardLivewire;
 use App\Http\Livewire\Scholar\ScholarLivewire;
 use App\Http\Livewire\Officer\OfficerLivewire;
