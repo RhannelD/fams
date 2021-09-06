@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\ScholarshipPage;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class ScholarshipPageLivewire extends Component
 {
-
     public $scholarship_id;
     public $post_count = 10;
     
@@ -41,7 +40,7 @@ class ScholarshipPageLivewire extends Component
 
         $this->dispatchBrowserEvent('remove:modal-backdrop');
 
-        return view('livewire.pages.scholarship-page-livewire.scholarship-page-livewire', [
+        return view('livewire.pages.scholarship-page.scholarship-page-livewire', [
                 'posts' => $this->get_posts(),
                 'show_more' => $show_more
             ])

@@ -8,7 +8,7 @@ use App\Http\Livewire\Dashboard\DashboardLivewire;
 use App\Http\Livewire\Scholar\ScholarLivewire;
 use App\Http\Livewire\Officer\OfficerLivewire;
 use App\Http\Livewire\Scholarship\ScholarshipLivewire;
-use App\Http\Livewire\ScholarshipPageLivewire;
+use App\Http\Livewire\ScholarshipPage\ScholarshipPageLivewire;
 use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerLivewire;
 use App\Http\Livewire\ScholarshipScholar\ScholarshipScholarLivewire;
 use App\Http\Livewire\ScholarshipRequirement\ScholarshipRequirementLivewire;
