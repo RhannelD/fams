@@ -50,12 +50,25 @@ class HomeController extends Controller
     public function index()
     {
         $search = '';
-        return ScholarshipScholar::whereScholarshipId(1)
-            ->with('user', 'category')
-            ->whereHas('user', function ($query) use ($search) {
-                $query->whereNameOrEmail($search);
+        $position = '';
+        return User::where('usertype', 'officer')
+            ->whereNameOrEmail($search)
+            ->with('scholarship_officers')
+            ->whereHas('scholarship_officers', function ($query) use ($position) {
+                $query->where('scholarship_id', 1)
+                    ->when(in_array($position, ['1', '2']), function ($query) use ($position) {
+                        $query->where('position_id', $position);
+                    });
             })
             ->get();
+
+
+        // return ScholarshipScholar::whereScholarshipId(1)
+        //     ->with('user', 'category')
+        //     ->whereHas('user', function ($query) use ($search) {
+        //         $query->whereNameOrEmail($search);
+        //     })
+        //     ->get();
 
         // $ScholarshipScholar = ScholarshipScholar::with('category')
         //     ->whereScholarshipId(1)->get();

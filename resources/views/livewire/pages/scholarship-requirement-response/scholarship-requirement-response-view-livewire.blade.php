@@ -143,15 +143,15 @@
                                             
                                             @if (isset($file_extension) && $is_desktop)   
                                                 <button class="btn btn-primary rounded" type="button" data-toggle="collapse" 
-                                                    data-target="#collapsefile{{ $response_file->id }}" 
-                                                    aria-expanded="false" aria-controls="collapsefile{{ $response_file->id }}">
+                                                    data-target="#collapsefile_{{ $response_file->id }}" 
+                                                    aria-expanded="false" aria-controls="collapsefile_{{ $response_file->id }}">
                                                     <i class="fas fa-caret-down"></i>
                                                 </button>
                                             @endif
                                         </div>
                                         
                                         @if (isset($file_extension) && $is_desktop && $file_extension == 'pdf')
-                                            <div class="collapse"  id="collapsefile{{ $response_file->id }}">
+                                            <div class="collapse"  id="collapsefile_{{ $response_file->id }}">
                                                 <hr class="mb-1 mt-2">
                                                 <iframe src="{{ Storage::disk('files')->url($response_file->file_url) }}" frameborder="0"
                                                     class="btn-block" style="height: 800px;">

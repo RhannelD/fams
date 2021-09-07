@@ -16,7 +16,7 @@
             <div class="form-row">
                 <div class="input-group col-5 my-0">
                     <select wire:model="promote" class="form-control" id="category">
-                        <option value="">All Requirements</option>
+                        <option value="null">All Requirements</option>
                         <option value="1">Application</option>
                         <option value="0">Renewal</option>
                     </select>
@@ -52,7 +52,7 @@
     </div>
 	<div class="row">
 
-		<div class="contents-container col-12 mb-2 px-0">
+		<div class="contents-container col-12 mb-2">
 			@include('livewire.pages.scholarship-requirement.scholarship-requirement-search-livewire')
 		</div>
 

@@ -51,29 +51,31 @@ class ScholarshipOfficerLivewire extends Component
 
     public function getQueryString()
     {
-        return [];
+        return [
+            'search' => ['except' => ''],
+        ];
     }
 
     public function render()
     {
-        $search = $this->search;
-
-        $officers = User::where('usertype', 'officer')
-            ->join('scholarship_officers', 'users.id', '=', 'scholarship_officers.user_id')
-            ->join('officer_positions', 'scholarship_officers.position_id', '=', 'officer_positions.id')
-            ->where('scholarship_id', $this->scholarship_id)
-            ->where(function ($query) use ($search) {
-                $query->where('firstname', 'like', "%$search%")
-                    ->orWhere('middlename', 'like', "%$search%")
-                    ->orWhere('lastname', 'like', "%$search%")
-                    ->orWhere(DB::raw('CONCAT(firstname, " ", lastname)'), 'like', "%$search%");
-            });
-        if ($this->position != '') {
-            $officers = $officers->where('scholarship_officers.position_id', $this->position);
-        }
-        $officers = $officers->paginate($this->show_row);
-
-        return view('livewire.pages.scholarship-officer.scholarship-officer-livewire', ['officers' => $officers])
+        return view('livewire.pages.scholarship-officer.scholarship-officer-livewire', [
+                'officers' => $this->get_officers()
+            ])
             ->extends('livewire.main.main-livewire');
+    }
+
+    protected function get_officers()
+    {
+        $search = $this->search;
+        $position = $this->position;
+        return User::where('usertype', 'officer')
+            ->whereNameOrEmail($search)
+            ->whereHas('scholarship_officers', function ($query) use ($position) {
+                $query->where('scholarship_id', $this->scholarship_id)
+                    ->when(in_array($position, ['1', '2']), function ($query) use ($position) {
+                        $query->where('position_id', $position);
+                    });
+            })
+            ->paginate($this->show_row);
     }
 }

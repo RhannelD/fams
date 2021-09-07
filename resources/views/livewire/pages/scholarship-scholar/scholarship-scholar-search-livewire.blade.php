@@ -126,7 +126,7 @@
                                                         <tr>
                                                             <td>Birth Date:</td>
                                                             <td>
-                                                                {{ $scholar->user->birthday }}
+                                                                {{ date_format(new DateTime($scholar->user->birthday),"M d, Y") }}
                                                             </td>
                                                         </tr>
                                                         <tr>

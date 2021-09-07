@@ -18,9 +18,9 @@ class ScholarshipScholarLivewire extends Component
     public $search;
     public $show_row = 10;
 
+    public $category_id = '';
     public $comparision = '';
     public $num_scholarship = 1;
-    public $category_id = '';
     public $order_by = 'firstname';
     public $order = 'asc';
 
@@ -55,18 +55,46 @@ class ScholarshipScholarLivewire extends Component
     {
         $this->page = 1;
 
+        $this->valid_comparision();
+        $this->valid_num_scholarship();
+        $this->valid_order_by();
+        $this->valid_order();
+    }
+
+    protected function valid_comparision()
+    {
         if ( !in_array($this->comparision, ['', '=', '<', '>', '<=', '>=']) ) {
             $this->comparision = '';
+            return false;
         }
+        return $this->comparision != '';
+    }
+
+    protected function valid_num_scholarship()
+    {
         if ( $this->num_scholarship < 1 || $this->num_scholarship > 20 ) {
-            $this->num_scholarship = 1;
+            $this->num_scholarship = 1; 
+            return false;
         }
+        return true;
+    }
+
+    protected function valid_order_by()
+    {
         if ( !in_array($this->order_by, ['firstname', 'lastname', 'email', 'phone']) ) {
             $this->order_by = 'firstname';
+            return false;
         }
-        if ( !in_array($this->order, ['asc', 'desc']) ) {
-            $this->order_by = 'asc';
+        return true;
+    }
+
+    protected function valid_order()
+    {
+        if ( !in_array($this->order, ['asc', 'desc']) ){
+            $this->order = 'asc';
+            return false;
         }
+        return true;
     }
 
     public function render()
@@ -95,15 +123,14 @@ class ScholarshipScholarLivewire extends Component
             ->whereHas('user', function ($query) use ($search, $comparision, $num_scholarship) {
                 $query->whereNameOrEmail($search)
                     ->where('usertype', 'scholar')
-                    ->when((in_array($comparision, ['=', '<', '>', '<=', '>=']) && ($num_scholarship >= 1 || $num_scholarship <= 20) ), 
-                    function ($query) use ($comparision, $num_scholarship) {
+                    ->when(($this->valid_comparision() && $this->valid_num_scholarship()), function ($query) use ($comparision, $num_scholarship) {
                         $query->has('scholarship_scholars', $comparision, $num_scholarship+1);
                     });
             })
             ->when(!empty($category_id), function ($query) use ($category_id) {
                 $query->where('category_id', $category_id);
             })
-            ->when((in_array($this->order_by, ['firstname', 'lastname', 'email', 'phone']) && in_array($order, ['asc', 'desc'])), function ($query) use ($order_by, $order) {
+            ->when(($this->valid_order_by() && $this->valid_order()), function ($query) use ($order_by, $order) {
                 $query->join('users', 'users.id', '=', 'scholarship_scholars.user_id')
                     ->select('scholarship_scholars.*')
                     ->orderBy($order_by, $order);
@@ -113,8 +140,10 @@ class ScholarshipScholarLivewire extends Component
 
     public function clear_filter()
     {
+        $this->category_id = '';
         $this->comparision = '';
         $this->num_scholarship = 1;
-        $this->category_id = '';
+        $this->order_by = 'firstname';
+        $this->order = 'asc';
     }
 }

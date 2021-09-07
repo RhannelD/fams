@@ -18,7 +18,7 @@ class ScholarshipRequirementLivewire extends Component
     public $scholarship_id;
     public $search;
     public $show_row = 10;
-    public $promote = '';
+    public $promote = 'null';
 
     protected $listeners = [
         'refresh' => '$refresh',
@@ -37,38 +37,38 @@ class ScholarshipRequirementLivewire extends Component
     {
         return [];
     }
-    
+
     public function mount($scholarship_id)
     {
         if ($this->verifyUser()) return;
 
         $this->scholarship_id = $scholarship_id;
     }
-    
+
     public function updated($name)
     {
-        if ('show_row') {
-            $this->page = 1;
-        }
+        $this->page = 1;
     }
 
     public function render()
     {
-        if ($this->verifyUser()) 
-            return view('livewire.pages.scholarship-requirement.scholarship-requirement-livewire');
-
-        $search = $this->search;
-        $requirements = ScholarshipRequirement::where('scholarship_requirements.requirement', 'like', "%$search%")
-            ->where('scholarship_requirements.scholarship_id', $this->scholarship_id)
-            ->orderBy('scholarship_requirements.id', 'desc');
-        if ($this->promote != '') {
-            $requirements = $requirements->where('scholarship_requirements.promote', $this->promote);
-        }
-        $requirements = $requirements
-            ->paginate($this->show_row);
-
-        return view('livewire.pages.scholarship-requirement.scholarship-requirement-livewire', ['requirements' => $requirements])
+        return view('livewire.pages.scholarship-requirement.scholarship-requirement-livewire', [
+                'requirements' => $this->get_requirements()
+            ])
             ->extends('livewire.main.main-livewire');
+    }
+
+    protected function get_requirements()
+    {
+        $search = $this->search;
+        $promote = $this->promote;
+        return ScholarshipRequirement::where('requirement', 'like', "%$search%")
+            ->where('scholarship_id', $this->scholarship_id)
+            ->when(($promote != 'null'), function ($query) use ($promote) {
+                $query->where('promote', $promote);
+            })
+            ->orderBy('id', 'desc')
+            ->paginate($this->show_row);
     }
 
     public function create_requirement()

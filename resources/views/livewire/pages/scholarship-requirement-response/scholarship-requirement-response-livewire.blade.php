@@ -18,7 +18,7 @@
     </div>
 
 	<div class="row mb-1">
-		<div class="input-group col-md-5 mt-2">
+		<div class="input-group col-md-4 mt-2">
 			<div class="input-group rounded mt-1">
 				<input type="search" class="form-control rounded" placeholder="Search Scholar Response" wire:model.debounce.1000ms='search'/>
 				<span wire:click="$emitSelf('refresh')" class="input-group-text border-0">
@@ -27,57 +27,53 @@
 			</div>
 		</div>
 
-        <div class="col-md-7 mt-2">
+        <div class="col-md-8 mt-2">
             <div class="form-row">
-                <div class="input-group col-md-4 col-6 mb-0 mt-1">
-                    <div class="input-group-prepend">
-                    <label class="input-group-text" for="category">Approval</label>
+                <div class="col-9 col-md-9 col-xl-11 d-flex">
+                    <div class="mt-1 mr-1">
+                        @include('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-filter-livewire')
                     </div>
-                    <select wire:model="approval" class="form-control" id="category">
-                        <option value="">All</option>
-                        <option value="1">Approved</option>
-                        <option value="2">Denied</option>
-                        <option value="3">Pending</option>
-                    </select>
-                </div>
-
-                @if ( is_null($index) )    
-                    <div class="input-group col-md-4 col-6 mb-0 mt-1">
-                        <div class="input-group-prepend">
-                        <label class="input-group-text" for="rows">Rows</label>
-                        </div>
-                        <select wire:model="show_row" class="form-control" id="rows">
-                            <option value="10">10</option>
-                            <option value="15">15</option>
-                            <option value="20">20</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="150">150</option>
-                            <option value="200">200</option>
-                        </select>
-                    </div>
-                @else
-                    <div class="col-md-4 col-6 mb-0 mt-1"></div>
-                @endif
-
-                <div class="input-group col-md-4 col-sm-12 mb-0 mt-1 d-flex">
-                    <div class="btn-group mr-0 ml-auto">
-                        <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            More Actions
+                    <div class="btn-group mt-1 mr-1">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            More
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <button class="dropdown-item" type="button">Action</button>
-                            <button class="dropdown-item" type="button">Another action</button>
-                            <button class="dropdown-item" type="button">Something else here</button>
+                            <button class="dropdown-item" type="button">
+                                Another action
+                            </button>
+                            <button class="dropdown-item" type="button">
+                                Something else here
+                            </button>
                         </div>
                     </div>
+                    @if ( is_null($index) )    
+                        <div class="input-group mt-1">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text rounded-left d-none d-lg-block" for="rows">Rows</label>
+                                <label class="input-group-text rounded-left d-block d-lg-none" for="rows">#</label>
+                            </div>
+                            <select wire:model="show_row" class="form-control" id="rows" style="max-width: 100px;">
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="150">150</option>
+                                <option value="200">200</option>
+                            </select>
+                        </div>
+                    @endif
+                </div>
+                <div class="col-3 col-md-3 col-xl-1 d-flex">
+                    <a href="{{ route('scholarship.requirement.open', [$requirement_id]) }}" class="btn btn-dark mt-1 mr-1 ml-auto">
+                        Back
+                    </a>
                 </div>
             </div>
         </div>
 	</div>
 
 	<div class="row">
-		
         @if ( is_null($index))
             <div class="contents-container col-12 mb-2 table_responses">
                 @include('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-search-livewire')

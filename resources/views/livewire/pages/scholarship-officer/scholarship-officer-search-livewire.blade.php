@@ -8,7 +8,7 @@
             <thead>
                 <tr>
                     @if (Auth::user()->usertype != 'scholar')
-                        <th>ID</th>
+                        <th>#</th>
                         <th>Name</th>
                         <th>Position</th>
                         <th>Email</th>
@@ -26,30 +26,46 @@
                     <tr 
                         @if (Auth::user()->usertype != 'scholar')    
                             data-toggle="collapse" 
-                            data-target="#collapse{{ $officer->user_id }}" 
+                            data-target="#collapse{{ $officer->id }}" 
                             aria-expanded="true" 
-                            aria-controls="collapse{{ $officer->user_id }}" 
+                            aria-controls="collapse{{ $officer->id }}" 
                             aria-expanded="false"
                         @endif
                         >
                         @if (Auth::user()->usertype != 'scholar')    
-                            <th scope="row">{{ $officer->user_id }}</th>
-                            <td>{{ $officer->firstname }} {{ $officer->middlename }} {{ $officer->lastname }}</td>
-                            <td>{{ $officer->position }}</td>
-                            <td>{{ $officer->email }}</td>
-                            <td>{{ $officer->phone }}</td>
+                            <th>
+                                {{ ( ($loop->index + 1) + ( ($show_row * $page ) - $show_row) ) }}
+                            </th>
+                            <td>
+                                {{ $officer->fmlname() }}
+                            </td>
+                            <td>
+                                {{ $officer->scholarship_officers->where('scholarship_id', $scholarship_id)->first()->position->position }}
+                            </td>
+                            <td>
+                                {{ $officer->email }}
+                            </td>
+                            <td>
+                                {{ $officer->phone }}
+                            </td>
                             <td>
                                 <i class="fa" aria-hidden="true"></i>
                             </td>
                         @else
-                            <td>{{ $officer->firstname }} {{ $officer->middlename }} {{ $officer->lastname }}</td>
-                            <td>{{ $officer->position }}</td>
-                            <td>{{ $officer->email }}</td>
+                            <td>
+                                {{ $officer->fmlname() }}
+                            </td>
+                            <td>
+                                {{ $officer->scholarship_officers->where('scholarship_id', $scholarship_id)->first()->position->position }}
+                            </td>
+                            <td>
+                                {{ $officer->email }}
+                            </td>
                         @endif
                     </tr>
                     @if (Auth::user()->usertype != 'scholar')
                         <tr>
-                            <td colspan="6" id="collapse{{ $officer->user_id }}" data-parent="#accordions" class="collapse acc p-1" >
+                            <td colspan="6" id="collapse{{ $officer->id }}" data-parent="#accordions" class="collapse acc p-1" >
                                 <div class="card mb-3 shadow-sm">
                                     <div class="card-body p-2">
                                         <div class="row">
@@ -58,11 +74,11 @@
                                                     <tbody>
                                                         <tr>
                                                             <td>ID:</td>
-                                                            <td>{{ $officer->user_id }}</td>
+                                                            <td>{{ $officer->id }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td>Full Name:</td>
-                                                            <td>{{ $officer->firstname }} {{ $officer->middlename }} {{ $officer->lastname }}</td>
+                                                            <td>{{ $officer->fmlname() }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td>Phonenumber:</td>
@@ -88,7 +104,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>Birth Date:</td>
-                                                            <td>{{ $officer->birthday }}</td>
+                                                            <td>{{ date_format(new DateTime($officer->birthday),"M d, Y") }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td>Birth Place:</td>

@@ -39,6 +39,14 @@
                     <div class="card-body">
                         <a href="{{ route('requirement.response', [$requirement->id]) }}" class="btn btn-success btn-block">
                             View Responds
+                            <span class="badge badge-dark">
+                                <strong>
+                                    {{ $requirement->responses->whereNotNull('submit_at')->count() }}
+                                </strong>
+                                @if ( !$requirement->promote && $requirement->categories->count() > 0 )
+                                    /{{ $requirement->categories->first()->category->scholars->count() }}
+                                @endif
+                            </span>
                         </a>
                     </div>
                 </div>

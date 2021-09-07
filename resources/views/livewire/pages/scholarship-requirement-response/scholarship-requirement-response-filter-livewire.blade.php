@@ -1,5 +1,5 @@
 <div>
-    <button class="form-control btn btn-primary d-flex" type="button" data-toggle="modal" data-target="#filter-modal">
+    <button class="form-control btn btn-primary btn-block d-flex" type="button" data-toggle="modal" data-target="#filter-modal">
         <i class="fas fa-filter my-auto ml-auto mr-auto mr-md-1"></i>
         <span class="d-none d-sm-block ml-1 mr-auto">
             Filter
@@ -17,41 +17,25 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="category">Category</label>
-                        <select wire:model="category_id" class="form-control" id="category">
-                            <option value="">All Categories</option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category['id'] }}">{{ $category['category'] }}</option>
-                            @endforeach
+                        <label for="category">Approval</label>
+                        <select wire:model="approval" class="form-control" id="category">
+                            <option value="">All</option>
+                            <option value="1">Approved</option>
+                            <option value="2">Denied</option>
+                            <option value="3">Pending</option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="category"># of other scholarship</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <select wire:model='comparision' class="form-control rounded-0">
-                                    <option value="">None</option>
-                                    <option value="=">=</option>
-                                    <option value="<"><</option>
-                                    <option value=">">></option>
-                                    <option value="<="><=</option>
-                                    <option value=">=">>=</option>
-                                </select>
-                            </div>
-                            <input wire:model.lazy='num_scholarship' type="number" class="form-control" min="1" max="20" value="1">
-                        </div>
                     </div>
                     <div class="form-group">
                         <label for="order_by">Order By</label>
                         <div class="input-group mb-3">
-                            <select wire:model='order_by' class="form-control" id="order_by">
+                            <select wire:model='order_by' class="form-control mr-1 rounded" id="order_by">
                                 <option value="firstname">First name</option>
                                 <option value="lastname">Last name</option>
                                 <option value="email">Email</option>
-                                <option value="phone">Phone</option>
+                                <option value="submit_at">Submitted Date</option>
                             </select>
                             <div class="input-group-append">
-                                <select wire:model='order' class="form-control" id="order_by">
+                                <select wire:model='order' class="form-control rounded" id="order_by">
                                     <option value="asc">A-Z</option>
                                     <option value="desc">Z-A</option>
                                 </select>

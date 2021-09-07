@@ -18,7 +18,8 @@
             <div class="form-row">
                 <div class="input-group col-6 col-md-4 my-0">
                     <div class="input-group-prepend">
-                    <label class="input-group-text" for="rows">Rows</label>
+                        <label class="input-group-text d-none d-sm-block" for="rows">Rows</label>
+                        <label class="input-group-text d-block d-sm-none" for="rows">#</label>
                     </div>
                     <select wire:model="show_row" class="form-control" id="rows">
                         <option value="10">10</option>
