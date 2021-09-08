@@ -14,6 +14,7 @@ use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementItem;
 use App\Models\ScholarshipRequirementItemOption;
 use App\Models\ScholarshipRequirementCategory;
+use App\Models\ScholarshipRequirementAgreement;
 use App\Models\ScholarshipCategory;
 use App\Models\ScholarshipPost;
 use App\Models\ScholarshipPostComment;
@@ -49,18 +50,93 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $search = '';
-        $position = '';
-        return User::where('usertype', 'officer')
-            ->whereNameOrEmail($search)
-            ->with('scholarship_officers')
-            ->whereHas('scholarship_officers', function ($query) use ($position) {
-                $query->where('scholarship_id', 1)
-                    ->when(in_array($position, ['1', '2']), function ($query) use ($position) {
-                        $query->where('position_id', $position);
+        $response_id = 262;
+        return ScholarshipRequirement::where('id', 37)
+            ->where(function ($query) use ($response_id) {
+                $query->whereHas('items', function ($query) use ($response_id) {
+                        $query->whereIn('type', ['cor', 'grade', 'file'])
+                            ->whereDoesntHave('response_files', function ($query) use ($response_id) {
+                                $query->where('response_id', $response_id);
+                            });
+                    })
+                    ->orWhereHas('items', function ($query) use ($response_id) {
+                        $query->where('type', 'question')
+                            ->whereDoesntHave('response_answer', function ($query) use ($response_id) {
+                                $query->where('response_id', $response_id);
+                            });
+                    })
+                    ->orWhereHas('items', function ($query) use ($response_id) {
+                        $query->whereIn('type', ['radio', 'check'])
+                            ->whereDoesntHave('options', function ($query) use ($response_id) {
+                                $query->whereHas('responses', function ($query) use ($response_id) {
+                                    $query->where('response_id', $response_id);
+                                });
+                            });
                     });
             })
             ->get();
+
+        // return ScholarshipRequirement::where('id', 37)
+        //     ->with(['items' => function ($query) {
+        //         $query->whereIn('type', ['radio', 'check'])
+        //             ->with(['options' => function ($query) {
+        //                 $query->with(['responses' => function ($query) {
+        //                     $query->where('response_id', 262);
+        //                 }]);
+        //             }]);
+        //     }])
+        //     ->whereHas('items', function ($query) {
+        //         $query->whereIn('type', ['radio', 'check'])
+        //             ->whereDoesntHave('options', function ($query) {
+        //                 $query->whereHas('responses', function ($query) {
+        //                     $query->where('response_id', 262);
+        //                 });
+        //             });
+        //     })
+        //     ->get();
+
+        // return ScholarshipRequirement::where('id', 37)
+        //     ->with(['items' => function ($query) {
+        //         $query->where('type', 'question')
+        //             ->with('response_answer');
+        //     }])
+        //     ->whereHas('items', function ($query) {
+        //         $query->where('type', 'question')
+        //             ->whereDoesntHave('response_answer', function ($query) {
+        //                 $query->where('response_id', 262);
+        //             });
+        //     })
+        //     ->get();
+
+        // return ScholarshipRequirement::where('id', 37)
+        //     ->with(['items' => function ($query) {
+        //         $query->whereIn('type', ['cor', 'grade', 'file'])->with('response_files');
+        //     }])
+        //     ->whereHas('items', function ($query) {
+        //         $query->whereIn('type', ['cor', 'grade', 'file'])
+        //             ->whereDoesntHave('response_files', function ($query) {
+        //                 $query->where('response_id', 262);
+        //             });
+        //     })
+        //     ->get();
+
+        // return ScholarshipRequirement::with(['items' => function ($query) {
+        //         $query->where('position', 3);
+        //     }])
+        //     ->where('id', 37)->first();
+
+        // $search = '';
+        // $position = '';
+        // return User::where('usertype', 'officer')
+        //     ->whereNameOrEmail($search)
+        //     ->with('scholarship_officers')
+        //     ->whereHas('scholarship_officers', function ($query) use ($position) {
+        //         $query->where('scholarship_id', 1)
+        //             ->when(in_array($position, ['1', '2']), function ($query) use ($position) {
+        //                 $query->where('position_id', $position);
+        //             });
+        //     })
+        //     ->get();
 
 
         // return ScholarshipScholar::whereScholarshipId(1)

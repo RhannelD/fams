@@ -125,11 +125,14 @@
                             </div>
                         </div>
                     @endforeach
+                    @if($requirement->agreements->count())
+                        @livewire('response.response-agreement-livewire', [$requirement->agreements->first()->id, $user_response->id], key('response-agreement-'.time()))
+                    @endif
                 </div>
             </div>
         </div>
     </div>
-    
+
     <script>
         $(".requirement-item-hover").hover(function () {
             $(this).toggleClass("shadow-lg");

@@ -121,24 +121,25 @@
                                     @isset($response_file)
                                         <div class="d-flex">
                                             <div class="mr-1 bd-highlight my-0 btn-block">
-                                                <a href="{{ Storage::disk('files')->url($response_file->file_url) }}" target="blank">
-                                                    <div class="input-group item-hover">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text bg-primary text-white border-primary">
-                                                                @if ( $response_file->if_file_exist() )
-                                                                    @php
-                                                                        $file_extension = $response_file->get_file_extension();
-                                                                    @endphp
-                                                                    @include('livewire.pages.response.response-file-upload-icon-type-livewire')
-                                                                @else
-                                                                    <i class="fas fa-exclamation-circle"></i>
-                                                                @endif
-                                                            </span>
-                                                        </div>
-                                                        <input type="text" class="form-control bg-white border-primary rounded-right mr-1" 
-                                                            value="{{ $response_file->file_name }}" readonly>
+                                                <div class="input-group item-hover">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text bg-primary text-white border-primary">
+                                                            @if ( $response_file->if_file_exist() )
+                                                                @php
+                                                                    $file_extension = $response_file->get_file_extension();
+                                                                @endphp
+                                                                @include('livewire.pages.response.response-file-upload-icon-type-livewire')
+                                                            @else
+                                                                <i class="fas fa-exclamation-circle"></i>
+                                                            @endif
+                                                        </span>
                                                     </div>
-                                                </a>
+                                                    <div class="form-control text-nowrap overflow-auto bg-white border-primary rounded-right mr-1">
+                                                        <a href="{{ Storage::disk('files')->url($response_file->file_url) }}" target="blank" class="text-dark">
+                                                            {{ $response_file->file_name }}
+                                                        </a>
+                                                    </div>
+                                                </div>
                                             </div>
                                             
                                             @if (isset($file_extension) && $is_desktop)   
@@ -178,7 +179,9 @@
                                                         <i class="fas fa-check-circle"></i>
                                                     </div>
                                                 </div>
-                                                <input type="text" class="form-control bg-white border-primary" value="{{ $option->option }}" readonly>
+                                                <div class="form-control text-nowrap overflow-auto">
+                                                    {{ $option->option }}
+                                                </div>
                                             </div>
                                         @else
                                             <div class="input-group mb-1">
@@ -187,7 +190,9 @@
                                                         <i class="far fa-circle"></i>
                                                     </div>
                                                 </div>
-                                                <input type="text" class="form-control bg-white" value="{{ $option->option }}" readonly>
+                                                <div class="form-control text-nowrap overflow-auto">
+                                                    {{ $option->option }}
+                                                </div>
                                             </div>
                                         @endif
                                     @endforeach
@@ -202,7 +207,9 @@
                                                         <i class="fas fa-check-square"></i>
                                                     </div>
                                                 </div>
-                                                <input type="text" class="form-control bg-white border-primary" value="{{ $option->option }}" readonly>
+                                                <div class="form-control text-nowrap overflow-auto">
+                                                    {{ $option->option }}
+                                                </div>
                                             </div>
                                         @else
                                             <div class="input-group mb-1">
@@ -211,7 +218,9 @@
                                                         <i class="far fa-square"></i>
                                                     </div>
                                                 </div>
-                                                <input type="text" class="form-control bg-white" value="{{ $option->option }}" readonly>
+                                                <div class="form-control text-nowrap overflow-auto">
+                                                    {{ $option->option }}
+                                                </div>
                                             </div>
                                         @endif
                                     @endforeach
@@ -221,11 +230,39 @@
                         </div>
                     </div>
                 @endforeach
-
+                
+                @if ($scholar_response->requirement->agreements->count())
+                    <div class="card mb-3 shadow requirement-item-hover">
+                        <div class="card-body">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text border-primary bg-primary text-white">
+                                        @if ($scholar_response->requirement->agreements->first()->response_agreements->where('response_id', $response_id)->count())
+                                            <i class="fas fa-check-square"></i>
+                                        @else
+                                            <i class="far fa-square"></i>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="form-control text-nowrap overflow-auto">
+                                    I agree with the 
+                                    <a data-toggle="collapse" href="#agreement-collapse" role="button" aria-expanded="false" aria-controls="agreement-collapse">
+                                        Terms and Conditions
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="collapse" id="agreement-collapse">
+                                <hr class="my-2">
+                                <p>
+                                    {!! Purify::clean($scholar_response->requirement->agreements->first()->agreement) !!}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
-
     
 	<script>
         window.addEventListener('swal:confirm:response_delete', event => { 

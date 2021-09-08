@@ -23,4 +23,9 @@ class ScholarshipRequirementAgreement extends Model
     {
         return $this->belongsTo(ScholarshipRequirement::class, 'requirement_id', 'id');
     }
+    
+    public function response_agreements()
+    {
+        return $this->hasMany(ScholarResponseAgreement::class, 'agreement_id', 'id');
+    }
 }

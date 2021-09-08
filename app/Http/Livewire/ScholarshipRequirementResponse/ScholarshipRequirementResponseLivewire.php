@@ -55,6 +55,7 @@ class ScholarshipRequirementResponseLivewire extends Component
         $order      = $this->order;
 
         $responses_temp = ScholarResponse::where('requirement_id', $this->requirement_id)
+            ->whereNotNull('submit_at')
             ->whereHas('user', function ($query) use ($search) {
                 $query->whereNameOrEmail($search);
             })

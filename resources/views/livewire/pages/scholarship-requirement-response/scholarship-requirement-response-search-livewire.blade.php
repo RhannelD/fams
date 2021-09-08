@@ -35,12 +35,15 @@
                     <th class="text-center">
                         Approval
                     </th>
+                    <th class="text-center">
+                        Action
+                    </th>
                 </tr>
             </thead>
 
             <tbody>
                 @forelse($responses as $key_index => $response)
-                    <tr class="rows" wire:click='view_response({{ $key_index }})'>
+                    <tr class="rows">
                         <th>
                             {{ ( ($loop->index + 1) + ( ($show_row * $page ) - $show_row) ) }}
                         </th>
@@ -64,6 +67,11 @@
                             @else
                                 <span class="badge badge-pill badge-danger">Denied</span>
                             @endif
+                        </td>
+                        <td class="text-center py-1">
+                            <button wire:click='view_response({{ $key_index }})' class="btn btn-primary btn-sm">
+                                View
+                            </button>
                         </td>
                     </tr>
                 @empty
