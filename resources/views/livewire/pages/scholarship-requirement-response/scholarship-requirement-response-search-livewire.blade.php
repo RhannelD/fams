@@ -11,41 +11,25 @@
                     <th>
                         Firstname
                         @if ( $order_by == 'firstname' )
-                            @if ( $order == 'asc' )
-                                <i class="fas fa-arrow-alt-circle-down"></i>
-                            @else
-                                <i class="fas fa-arrow-alt-circle-up"></i>
-                            @endif
+                            @include('livewire.main.table-thead-order-livewiwre')
                         @endif
                     </th>
                     <th>
                         Lastname
                         @if ( $order_by == 'lastname' )
-                            @if ( $order == 'asc' )
-                                <i class="fas fa-arrow-alt-circle-down"></i>
-                            @else
-                                <i class="fas fa-arrow-alt-circle-up"></i>
-                            @endif
+                            @include('livewire.main.table-thead-order-livewiwre')
                         @endif
                     </th>
                     <th>
                         Email
                         @if ( $order_by == 'email' )
-                            @if ( $order == 'asc' )
-                                <i class="fas fa-arrow-alt-circle-down"></i>
-                            @else
-                                <i class="fas fa-arrow-alt-circle-up"></i>
-                            @endif
+                            @include('livewire.main.table-thead-order-livewiwre')
                         @endif
                     </th>
                     <th>
                         Submitted Date
                         @if ( $order_by == 'submit_at' )
-                            @if ( $order == 'asc' )
-                                <i class="fas fa-arrow-alt-circle-down"></i>
-                            @else
-                                <i class="fas fa-arrow-alt-circle-up"></i>
-                            @endif
+                            @include('livewire.main.table-thead-order-livewiwre')
                         @endif
                     </th>
                     <th class="text-center">

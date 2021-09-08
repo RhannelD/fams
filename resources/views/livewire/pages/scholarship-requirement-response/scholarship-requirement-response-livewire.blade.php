@@ -29,7 +29,7 @@
 
         <div class="col-md-8 mt-2">
             <div class="form-row">
-                <div class="col-9 col-md-9 col-xl-11 d-flex">
+                <div class="col-9 col-md-9 col-xl-10 d-flex">
                     <div class="mt-1 mr-1">
                         @include('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-filter-livewire')
                     </div>
@@ -38,8 +38,8 @@
                             More
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <button class="dropdown-item" type="button">
-                                Another action
+                            <button class="dropdown-item" type="button" data-toggle="modal" data-target="#unsubmitted-response">
+                                Unsubmitted
                             </button>
                             <button class="dropdown-item" type="button">
                                 Something else here
@@ -64,14 +64,18 @@
                         </div>
                     @endif
                 </div>
-                <div class="col-3 col-md-3 col-xl-1 d-flex">
+                <div class="col-3 col-md-3 col-xl-2 d-flex">
                     <a href="{{ route('scholarship.requirement.open', [$requirement_id]) }}" class="btn btn-dark mt-1 mr-1 ml-auto">
-                        Back
+                        Preview
                     </a>
                 </div>
             </div>
         </div>
 	</div>
+
+    <div wire:ignore>
+        @livewire('scholarship-requirement-response.scholarship-requirement-response-unsubmitted-livewire', [$requirement_id], key('unsubmitted-response-'.time()))
+    </div>
 
 	<div class="row">
         @if ( is_null($index))
