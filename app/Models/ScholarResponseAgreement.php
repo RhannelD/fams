@@ -19,4 +19,8 @@ class ScholarResponseAgreement extends Model
         'agreement_id',
     ];
 
+    public function response()
+    {
+        return $this->belongsTo(ScholarResponse::class, 'response_id', 'id');
+    }
 }

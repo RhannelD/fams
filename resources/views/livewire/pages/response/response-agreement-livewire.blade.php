@@ -4,14 +4,20 @@
         <div class="card-body">
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <div class="input-group-text">
-                        <input type="checkbox" 
-                            wire:click='toggle_check'
-                            @if ($agreement->response_agreements->count())
-                                checked
-                            @endif
-                            >
-                    </div>
+                    @if ( isset($agreement->response_agreements->first()->response->submit_at) )
+                        <div class="input-group-text border-primary bg-primary text-white">
+                            <i class="fas fa-check-square"></i>
+                        </div>
+                    @else    
+                        <div class="input-group-text">
+                            <input type="checkbox" 
+                                wire:click='toggle_check'
+                                @if ($agreement->response_agreements->count())
+                                    checked
+                                @endif
+                                >
+                        </div>
+                    @endif
                 </div>
                 <div class="form-control text-nowrap overflow-auto">
                     I agree with the 

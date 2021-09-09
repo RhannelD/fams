@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Response;
 
 use Livewire\Component;
 use App\Models\ScholarshipRequirementAgreement;
+use App\Models\ScholarResponse;
 use App\Models\ScholarResponseAgreement;
 
 class ResponseAgreementLivewire extends Component
@@ -35,6 +36,10 @@ class ResponseAgreementLivewire extends Component
 
     public function toggle_check()
     {
+        $response = ScholarResponse::find($this->response_id);
+        if ( is_null($response) || isset($response->submit_at) ) 
+            return;
+
         $agreement = ScholarResponseAgreement::where('response_id', $this->response_id)
             ->where('agreement_id', $this->agreement_id)
             ->first();

@@ -1,13 +1,18 @@
 <div>
     @foreach ($options as $option_item)
         <div class="form-check">
-            <input wire:model="option_id" class="form-check-input" type="radio" 
+            <input class="form-check-input" type="radio" 
                 name="option_{{ $requirement_item_id }}" id="option_{{ $option_item->id }}" value="{{ $option_item->id }}"
-                @isset( $response->submit_at )
+                @if( isset($response->submit_at) )
                     disabled
-                @endisset
+                    @if ($option_item->responses->count() > 0)
+                        checked
+                    @endif
+                @else
+                    wire:model="option_id"
+                @endif
                 >
-            @if ( isset($response->submit_at) && $option_id == $option_item->id)
+            @if ( isset($response->submit_at) && $option_item->responses->count() > 0 )
                 <label  for="option_{{ $option_item->id }}" class="form-check-label text-dark">
                     <strong>{{ $option_item->option }}</strong>
                 </label>

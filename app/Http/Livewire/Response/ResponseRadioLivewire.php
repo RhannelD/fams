@@ -68,15 +68,18 @@ class ResponseRadioLivewire extends Component
     {
         $response = ScholarResponse::find($this->response_id);
 
+        $response_id = $this->response_id;
         $options = ScholarshipRequirementItemOption::select('id', 'option')
             ->where('item_id', $this->requirement_item_id)
+            ->with(['responses' => function ($query) use ($response_id) {
+                $query->where('response_id', $response_id);
+            }])
             ->get();
 
-        $response_option = ScholarResponseOption::firstOrNew([
-                'response_id' => $this->response_id,
-                'item_id' => $this->requirement_item_id
-            ]);
-        $this->option_id = ($response_option)? $response_option->option_id: null;
+        $response_option = ScholarResponseOption::where('response_id', $this->response_id)
+            ->where('item_id', $this->requirement_item_id)
+            ->first();
+        $this->option_id = (isset($response_option))? $response_option->option_id: null;
 
         return view('livewire.pages.response.response-radio-livewire', [
                 'response' => $response,

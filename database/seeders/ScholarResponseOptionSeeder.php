@@ -38,6 +38,7 @@ class ScholarResponseOptionSeeder extends Seeder
 
                     ScholarResponseOption::factory()->create([   
                         'response_id' => $response->id,
+                        'item_id' => $item->id,
                         'option_id' => $option->id,
                     ]);
                 }
