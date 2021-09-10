@@ -19,6 +19,7 @@ class ScholarshipOfficerInvite extends Model
         'email',
         'token',
         'respond',
+        'code',
     ];
 
     

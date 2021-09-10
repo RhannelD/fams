@@ -59,13 +59,24 @@
                                 {{ session('message-success') }}
                             </div>
                         @endif
+                        @empty($name_email)
+                            <div class="alert alert-info">
+                                Please enter the scholar's name or email.
+                            </div>
+                            <div class="alert alert-info">
+                                Inviting a non-registered email will be requested for signing-up before accepting.
+                            </div>
+                        @endempty
                         @if(!$errors->has('name_email') && !empty($name_email) )
                             <h6 class="mb-1">Invite via email</h6>
                             <hr class="my-1">
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control bg-white border-success" value="{{ $name_email }}" readonly>
                                 <div class="input-group-append">
-                                    <button wire:click="invite_email('{{ $name_email }}')" class="btn btn-success" type="button">
+                                    <button class="btn btn-success" type="button"
+                                        wire:click="invite_email('{{ $name_email }}')" 
+                                        wire:loading.attr='disabled'
+                                        >
                                         Invite
                                     </button>
                                 </div>
@@ -79,7 +90,10 @@
                                 <div class="input-group mb-1">
                                     <input type="text" class="form-control bg-white border-success" value="{{ $officer->flname() }} / {{ $officer->email }}" readonly>
                                     <div class="input-group-append">
-                                        <button wire:click="invite_email('{{ $officer->email }}')" class="btn btn-success" type="button">
+                                        <button class="btn btn-success" type="button"
+                                            wire:click="invite_email('{{ $officer->email }}')" 
+                                            wire:loading.attr='disabled'
+                                            >
                                             Invite
                                         </button>
                                     </div>
@@ -92,7 +106,16 @@
                     <div wire:ignore.self class="tab-pane fade pt-1" id="pending" role="tabpanel" aria-labelledby="pending-tab">
                         @isset($pending_invites[0])
                             <div class="d-flex justify-content-end">
-                                <button wire:click='cancel_all_invite_confirm' class="btn btn-danger text-white">
+                                <button class="btn btn-danger text-white"
+                                    wire:click='cancel_all_invite_confirm'
+                                    wire:loading.attr='disabled'
+                                    wire:target='cancel_all_invites'
+                                    >
+                                    <i class="fas fa-spinner fa-spin"
+                                        wire:loading
+                                        wire:target='cancel_all_invites'
+                                        >
+                                    </i>
                                     Cancel all
                                 </button>
                             </div>
@@ -104,9 +127,11 @@
                                     <span class="input-group-text border-info bg-white rounded-right">
                                         {{ $invite->category->category }}
                                     </span>
-                                    <button wire:click="cancel_invite({{ $invite->id }})" wire:loading.attr="disabled" class="btn btn-danger ml-1 rounded" type="button">
-                                        <i wire:loading.remove wire:target="cancel_invite({{ $invite->id }})" class="fas fa-times-circle"></i>
-                                        <i wire:loading wire:target="cancel_invite({{ $invite->id }})" class="fas fa-spinner fa-spin"></i>
+                                    <button class="btn btn-danger ml-1 rounded" type="button"
+                                        wire:click="cancel_invite({{ $invite->id }})" 
+                                        wire:loading.attr="disabled"
+                                        >
+                                        <i class="fas fa-times-circle"></i>
                                     </button>
                                 </div>
                             </div>
@@ -116,8 +141,17 @@
                     </div>
                     <div wire:ignore.self class="tab-pane fade pt-1" id="accepted" role="tabpanel" aria-labelledby="accepted-tab">
                         @isset($accepted_invites[0])
-                            <div wire:click='clear_all_accepted_invite_confirm' class="d-flex justify-content-end">
-                                <button class="btn btn-info text-white">
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-info text-white"
+                                    wire:click='clear_all_accepted_invite_confirm'
+                                    wire:loading.attr='disabled'
+                                    wire:target='clear_all_accepted_invite'
+                                    >
+                                    <i class="fas fa-spinner fa-spin"
+                                        wire:loading
+                                        wire:target='clear_all_accepted_invite'
+                                        >
+                                    </i>
                                     Clear all
                                 </button>
                             </div>
@@ -129,9 +163,11 @@
                                     <span class="input-group-text border-success bg-white rounded-right">
                                         {{ $invite->category->category }}
                                     </span>
-                                    <button wire:click="cancel_invite({{ $invite->id }})" wire:loading.attr="disabled" class="btn btn-dark rounded ml-1" type="button">
-                                        <i wire:loading.remove wire:target="cancel_invite({{ $invite->id }})" class="fas fa-minus-circle"></i>
-                                        <i wire:loading wire:target="cancel_invite({{ $invite->id }})" class="fas fa-spinner fa-spin"></i>
+                                    <button class="btn btn-dark rounded ml-1" type="button"
+                                        wire:click="cancel_invite({{ $invite->id }})" 
+                                        wire:loading.attr="disabled" 
+                                        >
+                                        <i class="fas fa-minus-circle"></i>
                                     </button>
                                 </div>
                             </div>
@@ -142,10 +178,28 @@
                     <div wire:ignore.self class="tab-pane fade pt-1" id="rejected" role="tabpanel" aria-labelledby="rejected-tab">
                         @isset($rejected_invites[0])
                             <div class="d-flex justify-content-end">
-                                <button wire:click='resend_all_rejected_invite_confirm' class="btn btn-success text-white">
+                                <button class="btn btn-success text-white"
+                                    wire:click='resend_all_rejected_invite_confirm'
+                                    wire:loading.attr='disabled' 
+                                    wire:target='resend_all_rejected_invite'
+                                    >
+                                    <i class="fas fa-spinner fa-spin"
+                                        wire:loading
+                                        wire:target='resend_all_rejected_invite'
+                                        >
+                                    </i>
                                     Resend all
                                 </button>
-                                <button wire:click='clear_all_rejected_invite_confirm' class="btn btn-info text-white ml-1">
+                                <button class="btn btn-info text-white ml-1"
+                                    wire:click='clear_all_rejected_invite_confirm'
+                                    wire:loading.attr='disabled' 
+                                    wire:target='clear_all_rejected_invite'
+                                    >
+                                    <i class="fas fa-spinner fa-spin"
+                                        wire:loading
+                                        wire:target='clear_all_rejected_invite'
+                                        >
+                                    </i>
                                     Clear all
                                 </button>
                             </div>
@@ -157,12 +211,17 @@
                                     <span class="input-group-text border-dark bg-white rounded-right">
                                         {{ $invite->category->category }}
                                     </span>
-                                    <button wire:click='resend_rejected_invite({{ $invite->id }})' class="btn btn-success rounded-left ml-1" type="button">
+                                    <button class="btn btn-success rounded-left ml-1" type="button"
+                                        wire:click='resend_rejected_invite({{ $invite->id }})' 
+                                        wire:loading.attr="disabled"
+                                        >
                                         Resend
                                     </button>
-                                    <button wire:click="cancel_invite({{ $invite->id }})" wire:loading.attr="disabled" class="btn btn-dark" type="button">
-                                        <i wire:loading.remove wire:target="cancel_invite({{ $invite->id }})" class="fas fa-minus-circle"></i>
-                                        <i wire:loading wire:target="cancel_invite({{ $invite->id }})" class="fas fa-spinner fa-spin"></i>
+                                    <button class="btn btn-dark" type="button"
+                                        wire:click="cancel_invite({{ $invite->id }})" 
+                                        wire:loading.attr="disabled" 
+                                        >
+                                        <i class="fas fa-minus-circle"></i>
                                     </button>
                                 </div>
                             </div>

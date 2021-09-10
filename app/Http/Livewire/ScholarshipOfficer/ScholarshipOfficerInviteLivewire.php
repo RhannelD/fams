@@ -3,12 +3,14 @@
 namespace App\Http\Livewire\ScholarshipOfficer;
 
 use Livewire\Component;
+use App\Mail\OfficerInvitationMail;
 use App\Models\User;
 use App\Models\ScholarshipOfficer;
 use App\Models\ScholarshipOfficerInvite;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 
 class ScholarshipOfficerInviteLivewire extends Component
 {
@@ -95,10 +97,14 @@ class ScholarshipOfficerInviteLivewire extends Component
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
-
+        $this->if_invited();
+    }
+    
+    protected function if_invited()
+    {
         if ( ScholarshipOfficerInvite::where('email', $this->name_email)->where('scholarship_id', $this->scholarship_id)->exists() ) {
             $this->addError('name_email', '.');
-        }
+        }  
     }
 
     public function invite_email($email)
@@ -119,8 +125,10 @@ class ScholarshipOfficerInviteLivewire extends Component
             ]);
         
         if ( $invite->wasRecentlyCreated ) {
+            $this->send_mail($invite->id);
             session()->flash('message-success', "$email has been added to pending invites");
         }
+        $this->if_invited();
     }
 
     public function cancel_invite($invite_id)
@@ -206,9 +214,16 @@ class ScholarshipOfficerInviteLivewire extends Component
         if ($this->verifyUser()) return;
         if ( $this->verifyUserIfOfficer() ) return;
         
-        ScholarshipOfficerInvite::where('scholarship_id', $this->scholarship_id)
+        $invites = ScholarshipOfficerInvite::where('scholarship_id', $this->scholarship_id)
             ->where('respond', false)
-            ->update(['respond' => null]);
+            ->get();
+
+        foreach ($invites as $invite) {
+            $invite->respond = null;
+            if ( $invite->save() ) {
+                $this->send_mail($invite->id);
+            }
+        }
     }
 
     public function resend_rejected_invite($invite_id)
@@ -219,5 +234,21 @@ class ScholarshipOfficerInviteLivewire extends Component
         ScholarshipOfficerInvite::where('id', $invite_id)
             ->where('respond', false)
             ->update(['respond' => null]);
+        
+        $this->send_mail($invite_id);
+    }
+    
+    protected function send_mail($invite_id)
+    {
+        $invitation = ScholarshipOfficerInvite::find($invite_id);
+        if ( is_null($invitation) || isset($invitation->respond) )
+            return;
+        
+        $details = [
+            'scholarship' => $invitation->scholarship->scholarship,
+            'token' => $invitation->token
+        ];
+
+        Mail::to($invitation->email)->send(new OfficerInvitationMail((object) $details));
     }
 }

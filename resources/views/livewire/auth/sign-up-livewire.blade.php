@@ -63,7 +63,15 @@
                         </div>
                         <hr class="my-2">
                         <div class="d-flex justify-content-end">
-                            <button wire:click='next' class="btn btn-success">
+                            <button class="btn btn-success"
+                                wire:click='next' 
+                                wire:loading.attr='disabled'
+                                >
+                                <i class="fas fa-spinner fa-spin"
+                                    wire:loading
+                                    wire:target='next'
+                                    >
+                                </i>
                                 Next
                             </button>
                         </div>
@@ -72,7 +80,6 @@
                         @if (session()->has('message-success'))
                             <div class="alert alert-success">
                                 {{ session('message-success') }}
-                                {{ $verification_code }}
                             </div>
                         @endif
                         <h5>
@@ -88,10 +95,30 @@
                                 <input wire:model.lazy='code' type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Enter verification code">
                             </div>
                             <div class="col-auto">
-                                <button wire:click='save' class="btn btn-success mb-2">Submit</button>
+                                <button class="btn btn-success mb-2"
+                                    wire:click='save' 
+                                    wire:loading.attr='disabled'
+                                    >
+                                    <i class="fas fa-spinner fa-spin"
+                                        wire:loading
+                                        wire:target='save'
+                                        >
+                                    </i>
+                                    Submit
+                                </button>
                             </div>
                             <div class="col-auto">
-                                <button wire:click='resend_code' class="btn btn-primary mb-2">Resend Code</button>
+                                <button class="btn btn-primary mb-2"
+                                    wire:click='resend_code' 
+                                    wire:loading.attr='disabled'
+                                    >
+                                    <i class="fas fa-spinner fa-spin"
+                                        wire:loading
+                                        wire:target='resend_code'
+                                        >
+                                    </i>
+                                    Resend Code
+                                </button>
                             </div>
                         </div>
                         @error('code') <span class="text-danger">{{ $message }}</span> @enderror

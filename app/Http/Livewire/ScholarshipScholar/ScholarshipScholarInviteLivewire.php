@@ -3,12 +3,14 @@
 namespace App\Http\Livewire\ScholarshipScholar;
 
 use Livewire\Component;
+use App\Mail\ScholarInvitationMail;
 use App\Models\User;
 use App\Models\ScholarshipOfficer;
 use App\Models\ScholarshipCategory;
 use App\Models\ScholarshipScholarInvite;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class ScholarshipScholarInviteLivewire extends Component
 {
@@ -136,6 +138,7 @@ class ScholarshipScholarInviteLivewire extends Component
             ]);
 
         if ( $invite->wasRecentlyCreated ) {
+            $this->send_mail($invite->id);
             session()->flash('message-success', "$email has been added to pending invites");
         }
     }
@@ -223,9 +226,16 @@ class ScholarshipScholarInviteLivewire extends Component
         if ($this->verifyUser()) return;
         if ( $this->verifyUserIfOfficer() ) return;
 
-        ScholarshipScholarInvite::whereScholarship($this->scholarship_id)
+        $invites = ScholarshipScholarInvite::whereScholarship($this->scholarship_id)
             ->where('respond', false)
-            ->update(['respond' => null]);
+            ->get();
+
+        foreach ($invites as $invite) {
+            $invite->respond = null;
+            if ( $invite->save() ) {
+                $this->send_mail($invite->id);
+            }
+        }
     }
 
     public function resend_rejected_invite($invite_id)
@@ -236,6 +246,20 @@ class ScholarshipScholarInviteLivewire extends Component
         ScholarshipScholarInvite::where('id', $invite_id)
             ->where('respond', false)
             ->update(['respond' => null]);
-    }
 
+        $this->send_mail($invite_id);
+    }
+    
+    protected function send_mail($invite_id)
+    {
+        $invitation = ScholarshipScholarInvite::find($invite_id);
+        if ( is_null($invitation) || isset($invitation->respond) )
+            return;
+        
+        $details = [
+            'scholarship' => $invitation->category->scholarship->scholarship
+        ];
+
+        Mail::to($invitation->email)->send(new ScholarInvitationMail((object) $details));
+    }
 }

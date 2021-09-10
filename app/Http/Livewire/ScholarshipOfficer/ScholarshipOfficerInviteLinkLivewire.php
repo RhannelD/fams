@@ -3,17 +3,18 @@
 namespace App\Http\Livewire\ScholarshipOfficer;
 
 use Livewire\Component;
+use App\Mail\OfficerVerificationCodeMail;
 use App\Models\User;
 use App\Models\ScholarshipOfficerInvite;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class ScholarshipOfficerInviteLinkLivewire extends Component
 {
     public $invite_token;
 
     public $is_verify_email = false;
-    public $verification_code; // Temporary public
     public $code;
 
     public $user_id = false;
@@ -42,12 +43,24 @@ class ScholarshipOfficerInviteLinkLivewire extends Component
         $this->invite_token = $invite_token;
         $this->user = new User;
         $this->user->gender = 'male';
-        $this->verification_code = rand(111111, 999999);
+        $this->set_code();
+        $this->resend_code();
+    }
+
+    protected function set_code()
+    {
+        $invitation =  $this->get_invite();
+        if ( is_null($invitation) ) 
+            return;
+
+        $invitation->code = strval(rand(111111, 999999));
+        $invitation->save();
     }
 
     public function hydrate()
     {
-        $this->user->email = $this->get_invite()? $this->get_invite()->email: null;
+        $invite =  $this->get_invite();
+        $this->user->email = $invite? $invite->email: null;
         $this->user->usertype = 'officer';
     }
 
@@ -72,7 +85,16 @@ class ScholarshipOfficerInviteLinkLivewire extends Component
 
     public function resend_code()
     {
-        // Resend code via email
+        $invitation =  $this->get_invite();
+        if ( is_null($invitation) )
+            return;
+            
+        $details = [
+            'scholarship' => $invitation->scholarship->scholarship,
+            'code' => $invitation->code,
+        ];
+
+        Mail::to($invitation->email)->send(new OfficerVerificationCodeMail((object) $details));
     }
 
     public function verify_code()
@@ -86,7 +108,11 @@ class ScholarshipOfficerInviteLinkLivewire extends Component
             ]
         );
 
-        if ( $this->verification_code == $this->code ) {
+        $invite = ScholarshipOfficerInvite::whereToken($this->invite_token)
+            ->where('code', $this->code)
+            ->first();
+
+        if ( isset($invite) ) {
             $this->is_verify_email = !$this->is_verify_email;
             return;
         }

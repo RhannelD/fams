@@ -63,9 +63,17 @@
                            <div class="input-group mb-0">
                               <input wire:model.defer='code' type="text" pattern="\d*" maxlength="6" class="form-control" placeholder="Code">
                               <div class="input-group-append">
-                                <button wire:click='verify_code' wire:loading.attr='disabled' class="btn btn-success" type="button">
-                                   Confirm
-                                </button>
+                                 <button wire:loading.attr='disabled' class="btn btn-success" type="button"
+                                    wire:click='verify_code' 
+                                    wire:loading.attr='disabled'
+                                    >
+                                    <i class="fas fa-spinner fa-spin"
+                                        wire:loading
+                                        wire:target='verify_code'
+                                        >
+                                    </i>
+                                    Confirm
+                                 </button>
                               </div>
                             </div>
                             @error('code') <span class="text-danger">{{ $message }}</span> @enderror
@@ -73,11 +81,19 @@
                      </div> 
                      
                      <div class="col-12 my-0 d-md-flex">
-                        <button wire:click='resend_code' class="btn btn-info text-white mr-2 my-1" type="button">
+                        <button class="btn btn-info text-white mr-2 my-1" type="button"
+                           wire:click='resend_code'
+                           wire:loading.attr='disabled'
+                           >
+                           <i class="fas fa-spinner fa-spin"
+                               wire:loading
+                               wire:target='resend_code'
+                               >
+                           </i>
                            Re-send Code
                         </button>
                         <div class="alert alert-success py-2 my-1">
-                           Verification code succcessfully been sent  {{ $verification_code }}
+                           Verification code has been succcessfully sent on your email.
                         </div>
                      </div> 
                   </div>

@@ -3,8 +3,11 @@
 namespace App\Http\Livewire\Auth;
 
 use Livewire\Component;
+use App\Mail\ScholarVerificationCodeMail;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 class SignUpLivewire extends Component
 {
@@ -13,7 +16,7 @@ class SignUpLivewire extends Component
     public $password;
     public $password_confirm;
 
-    public $verification_code; // Temporary public
+    public $verification_code;
     public $code;
 
     protected $rules = [
@@ -78,7 +81,13 @@ class SignUpLivewire extends Component
 
     protected function send_code()
     {
-        // Resend code via email
+        $this->validateOnly('user.email');
+
+        $details = [
+            'code' => $this->verification_code,
+        ];
+
+        Mail::to($this->user->email)->send(new ScholarVerificationCodeMail((object) $details));
     }
 
     public function save()
@@ -98,11 +107,23 @@ class SignUpLivewire extends Component
             return;
         }
 
+        $email = $this->user->email;
+
         $this->user->password = Hash::make($this->password);
         $this->user->usertype = 'scholar';
         $this->user->save();
         $this->user = new User;
         $this->user->gender = 'male';
+
+        if (Auth::attempt(['email' => $email, 'password' => $this->password])) {
+            if (Auth::user()->usertype == 'scholar') {
+                redirect()->route('scholarship');
+            } else {
+                redirect()->route('dashboard');
+            }
+            return;
+        }
+
         redirect()->route('index');
     }
 }

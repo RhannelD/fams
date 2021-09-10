@@ -18,6 +18,7 @@ class CreateScholarshipOfficerInvitesTable extends Migration
             $table->foreignId('scholarship_id');
             $table->string('email');
             $table->string('token');
+            $table->string('code', 6)->nullable();
             $table->boolean('respond')->nullable();
             $table->timestamps();
             
