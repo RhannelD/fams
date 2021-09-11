@@ -24,4 +24,9 @@ class Scholarship extends Model
                 $query->where('scholarship_id', $this->id);
             })->count();
     }
+    
+    public function officers()
+    {
+        return $this->hasMany(ScholarshipOfficer::class, 'scholarship_id', 'id');
+    }
 }

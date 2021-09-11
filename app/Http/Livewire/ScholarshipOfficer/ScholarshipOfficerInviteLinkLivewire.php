@@ -9,6 +9,7 @@ use App\Models\ScholarshipOfficerInvite;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
 
 class ScholarshipOfficerInviteLinkLivewire extends Component
 {
@@ -123,6 +124,7 @@ class ScholarshipOfficerInviteLinkLivewire extends Component
     {
         $this->validate();
 
+        $this->user->password = Hash::make($this->password);
         if ( $this->user->save() ) {
             $this->user = new User;
             $this->user_id = true;

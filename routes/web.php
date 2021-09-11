@@ -22,6 +22,7 @@ use App\Http\Livewire\Requirement\RequirementPreviewLivewire;
 use App\Http\Livewire\Response\ResponseLivewire;
 use App\Http\Livewire\Invite\InviteScholarLivewire;
 use App\Http\Livewire\Invite\InviteOfficerLivewire;
+use App\Http\Controllers\FilePreviewController;
 
 use App\Http\Controllers\HomeController;
 
@@ -64,5 +65,7 @@ Route::get('/invite/officer', InviteOfficerLivewire::class)->name('invite.office
 
 Route::get('/requirement/{requirement_id}', RequirementPreviewLivewire::class)->name('requirement.view')->middleware('auth.main');
 Route::get('/requirement/{requirement_id}/response', ResponseLivewire::class)->name('reponse')->middleware('auth.main');
+
+Route::get('/file/preview/{id}', [FilePreviewController::class, 'show'])->name('file.preview');
 
 Route::get('/try', [HomeController::class, 'index'])->name('try');

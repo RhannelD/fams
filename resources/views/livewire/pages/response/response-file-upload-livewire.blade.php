@@ -42,7 +42,7 @@
 
         <div class="d-flex">
             <div class="mr-1 bd-highlight my-0 btn-block">
-                <a href="{{ Storage::disk('files')->url($response_file->file_url) }}" target="blank">   
+                <a href="{{ route('file.preview', [$response_file->id]) }}" target="blank">   
                     <div class="input-group mb-1 item-hover">
                         <div class="input-group-prepend">
                             <span class="input-group-text bg-primary text-white border-primary">

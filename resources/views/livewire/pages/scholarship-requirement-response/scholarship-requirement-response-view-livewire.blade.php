@@ -135,7 +135,7 @@
                                                         </span>
                                                     </div>
                                                     <div class="form-control text-nowrap overflow-auto bg-white border-primary rounded-right mr-1">
-                                                        <a href="{{ Storage::disk('files')->url($response_file->file_url) }}" target="blank" class="text-dark">
+                                                        <a href="{{ route('file.preview', [$response_file->id]) }}" target="blank" class="text-dark">
                                                             {{ $response_file->file_name }}
                                                         </a>
                                                     </div>
