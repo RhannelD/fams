@@ -87,7 +87,7 @@ class SignUpLivewire extends Component
             'code' => $this->verification_code,
         ];
 
-        Mail::to($this->user->email)->send(new ScholarVerificationCodeMail((object) $details));
+        Mail::to($this->user->email)->send(new ScholarVerificationCodeMail($details));
     }
 
     public function save()

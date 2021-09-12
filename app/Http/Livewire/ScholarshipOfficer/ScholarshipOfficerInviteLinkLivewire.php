@@ -91,11 +91,10 @@ class ScholarshipOfficerInviteLinkLivewire extends Component
             return;
             
         $details = [
-            'scholarship' => $invitation->scholarship->scholarship,
             'code' => $invitation->code,
         ];
 
-        Mail::to($invitation->email)->send(new OfficerVerificationCodeMail((object) $details));
+        Mail::to($invitation->email)->send(new OfficerVerificationCodeMail($details));
     }
 
     public function verify_code()

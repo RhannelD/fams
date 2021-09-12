@@ -249,6 +249,6 @@ class ScholarshipOfficerInviteLivewire extends Component
             'token' => $invitation->token
         ];
 
-        Mail::to($invitation->email)->send(new OfficerInvitationMail((object) $details));
+        Mail::to($invitation->email)->send(new OfficerInvitationMail($details));
     }
 }

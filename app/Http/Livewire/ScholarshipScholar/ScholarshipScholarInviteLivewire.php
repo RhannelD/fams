@@ -260,6 +260,6 @@ class ScholarshipScholarInviteLivewire extends Component
             'scholarship' => $invitation->category->scholarship->scholarship
         ];
 
-        Mail::to($invitation->email)->send(new ScholarInvitationMail((object) $details));
+        Mail::to($invitation->email)->send(new ScholarInvitationMail($details));
     }
 }

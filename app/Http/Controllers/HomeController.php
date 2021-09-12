@@ -28,6 +28,10 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Stevebauman\Purify\Facades\Purify;
 use Illuminate\Support\Facades\Storage;
+use App\Mail\OfficerInvitationMail;
+use App\Mail\ScholarInvitationMail;
+use App\Mail\OfficerVerificationCodeMail;
+use App\Mail\ScholarVerificationCodeMail;
 
 class HomeController extends Controller
 {
@@ -51,28 +55,36 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if (!Auth::check()) {
-            return abort(401);
-        }
+         
+        $details = [
+            'code' => strval(rand(111111, 999999)),
+        ];
 
-        return ScholarResponseFile::where('id', 7)
-            ->when(!Auth::user()->is_admin(), function ($query) {
-                $query->where(function ($query) {
-                    $query->whereHas('response', function ($query) {
-                        $query->whereHas('requirement', function ($query) {
-                            $query->whereHas('scholarship', function ($query) {
-                                $query->whereHas('officers', function ($query) {
-                                    $query->where('user_id', 3);
-                                });
-                            });
-                        });
-                    })
-                    ->orWhereHas('response', function ($query) {
-                        $query->where('user_id', 3);
-                    });
-                });
-            })
-            ->first();
+        return new ScholarVerificationCodeMail($details);
+
+
+        // if (!Auth::check()) {
+        //     return abort(401);
+        // }
+
+        // return ScholarResponseFile::where('id', 7)
+        //     ->when(!Auth::user()->is_admin(), function ($query) {
+        //         $query->where(function ($query) {
+        //             $query->whereHas('response', function ($query) {
+        //                 $query->whereHas('requirement', function ($query) {
+        //                     $query->whereHas('scholarship', function ($query) {
+        //                         $query->whereHas('officers', function ($query) {
+        //                             $query->where('user_id', 3);
+        //                         });
+        //                     });
+        //                 });
+        //             })
+        //             ->orWhereHas('response', function ($query) {
+        //                 $query->where('user_id', 3);
+        //             });
+        //         });
+        //     })
+        //     ->first();
 
         // $is_desktop = new \Jenssegers\Agent\Agent();
         // $is_desktop = $is_desktop->isDesktop();

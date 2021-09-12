@@ -1,17 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <h1>{{ $details->scholarship }}</h1>
-    <p>
-        <a href="{{ route('invite', [$details->token]) }}">
-            {{ route('invite', [$details->token]) }}
-        </a>
-    </p>
-</body>
-</html>
+@component('mail::message')
+# Scholarship Officer Invitation
+
+You have been invited to become an officer of <strong>{{ $details->scholarship }}</strong>.
+
+@component('mail::panel')
+Open the link to respond.
+@endcomponent
+
+@component('mail::button', ['url' => route('invite', [$details->token])])
+Open
+@endcomponent
+
+Thanks,
+<strong>
+    {{ config('app.name') }}
+</strong>
+@endcomponent

@@ -19,7 +19,7 @@ class ScholarVerificationCodeMail extends Mailable
      */
     public function __construct($details)
     {
-        $this->details = $details;
+        $this->details = (object) $details;
     }
 
     /**
@@ -29,6 +29,6 @@ class ScholarVerificationCodeMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Verification Code')->view('email.scholar-verification-code-mail');
+        return $this->subject('Verification Code')->markdown('email.scholar-verification-code-mail');
     }
 }

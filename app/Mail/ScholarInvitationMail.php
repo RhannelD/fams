@@ -19,7 +19,7 @@ class ScholarInvitationMail extends Mailable
      */
     public function __construct($details)
     {
-        $this->details = $details;
+        $this->details = (object) $details;
     }
 
     /**
@@ -29,6 +29,6 @@ class ScholarInvitationMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Scholarship Scholar Invitation')->view('email.scholar-invitation-mail');
+        return $this->subject('Scholarship Scholar Invitation')->markdown('email.scholar-invitation-mail');
     }
 }
