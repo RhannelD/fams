@@ -25,7 +25,7 @@ class ScholarEditLivewire extends Component
             'user.lastname' => 'required|regex:/^[a-z ,.\'-]+$/i',
             'user.gender' => 'required|in:male,female',
             'user.phone' => "required|unique:users,phone".((isset($this->user_id))?",".$this->user_id:'')."|regex:/(09)[0-9]{9}/",
-            'user.birthday' => 'required|before:5 years ago',
+            'user.birthday' => 'required|before:10 years ago|after:100 years ago',
             'user.birthplace' => 'max:200',
             'user.religion' => 'max:200',
             'user.email' => "required|unique:users,email".((isset($this->user_id))?",".$this->user_id:''),

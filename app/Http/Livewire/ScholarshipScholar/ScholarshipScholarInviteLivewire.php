@@ -112,7 +112,11 @@ class ScholarshipScholarInviteLivewire extends Component
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
+        $this->if_invited();
+    }
 
+    protected function if_invited()
+    {
         $scholarship_id = $this->scholarship_id;
         $invite = ScholarshipScholarInvite::where('email', $this->name_email)
             ->whereHas('category', function($query) use ($scholarship_id) {
@@ -139,8 +143,9 @@ class ScholarshipScholarInviteLivewire extends Component
 
         if ( $invite->wasRecentlyCreated ) {
             $this->send_mail($invite->id);
-            session()->flash('message-success', "$email has been added to pending invites");
+            session()->flash('message-success', "$email has been added to pending invites.");
         }
+        $this->if_invited();
     }
 
     public function cancel_invite($invite_id)
@@ -260,6 +265,10 @@ class ScholarshipScholarInviteLivewire extends Component
             'scholarship' => $invitation->category->scholarship->scholarship
         ];
 
-        Mail::to($invitation->email)->send(new ScholarInvitationMail($details));
+        try {
+            Mail::to($invitation->email)->send(new ScholarInvitationMail($details));
+        } catch (\Exception $e) {
+            session()->flash('message-error', "Email has not been sent!");
+        }
     }
 }

@@ -31,7 +31,7 @@ class ScholarshipOfficerInviteLinkLivewire extends Component
         'user.lastname' => 'required|regex:/^[a-z ,.\'-]+$/i',
         'user.gender' => 'required|in:male,female',
         'user.phone' => "required|unique:users,phone|regex:/(09)[0-9]{9}/",
-        'user.birthday' => 'required|before:5 years ago',
+        'user.birthday' => 'required|before:10 years ago|after:100 years ago',
         'user.birthplace' => 'required|max:200',
         'user.religion' => 'max:200',
         'user.email' => "required|unique:users,email",
@@ -42,6 +42,9 @@ class ScholarshipOfficerInviteLinkLivewire extends Component
     public function mount($invite_token)
     {
         $this->invite_token = $invite_token;
+        if ( is_null($this->get_invite()) ) 
+            return redirect()->route('index');
+        
         $this->user = new User;
         $this->user->gender = 'male';
         $this->set_code();
@@ -94,7 +97,12 @@ class ScholarshipOfficerInviteLinkLivewire extends Component
             'code' => $invitation->code,
         ];
 
-        Mail::to($invitation->email)->send(new OfficerVerificationCodeMail($details));
+        try {
+            Mail::to($invitation->email)->send(new OfficerVerificationCodeMail($details));
+            session()->flash('message-success', 'The verification code has been sent on your email.');
+        } catch (\Exception $e) {
+            session()->flash('message-error', "Email has not been sent!");
+        }
     }
 
     public function verify_code()
@@ -125,6 +133,15 @@ class ScholarshipOfficerInviteLinkLivewire extends Component
 
         $this->user->password = Hash::make($this->password);
         if ( $this->user->save() ) {
+            if (Auth::attempt(['email' => $this->user->email, 'password' => $this->password])) {
+                if (Auth::user()->usertype == 'scholar') {
+                    redirect()->route('scholarship');
+                } else {
+                    redirect()->route('dashboard');
+                }
+                return;
+            }    
+
             $this->user = new User;
             $this->user_id = true;
         }

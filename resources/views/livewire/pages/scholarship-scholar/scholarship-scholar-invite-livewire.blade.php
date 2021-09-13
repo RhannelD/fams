@@ -59,6 +59,11 @@
                                 {{ session('message-success') }}
                             </div>
                         @endif
+                        @if (session()->has('message-error'))
+                            <div class="alert alert-danger mt-0">
+                                {{ session('message-error') }}
+                            </div>
+                        @endif
                         @empty($name_email)
                             <div class="alert alert-info">
                                 Please enter the scholar's name or email.

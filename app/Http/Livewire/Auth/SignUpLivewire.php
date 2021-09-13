@@ -25,7 +25,7 @@ class SignUpLivewire extends Component
         'user.lastname' => 'required|regex:/^[a-z ,.\'-]+$/i',
         'user.gender' => 'required|in:male,female',
         'user.phone' => "required|unique:users,phone|regex:/(09)[0-9]{9}/",
-        'user.birthday' => 'required|before:5 years ago',
+        'user.birthday' => 'required|before:10 years ago|after:100 years ago',
         'user.birthplace' => 'required|max:200',
         'user.religion' => 'max:200',
         'user.email' => "required|unique:users,email",
@@ -57,7 +57,6 @@ class SignUpLivewire extends Component
         $this->change_tab($tab);
         $this->verification_code = rand(111111, 999999);
         $this->send_code();
-        session()->flash('message-success', 'The verification code has been sent on your email.');
     }
 
     public function back()
@@ -76,7 +75,6 @@ class SignUpLivewire extends Component
     public function resend_code()
     {
         $this->send_code();
-        session()->flash('message-success', 'The verification code has been re-sent on your email.');
     }
 
     protected function send_code()
@@ -87,7 +85,12 @@ class SignUpLivewire extends Component
             'code' => $this->verification_code,
         ];
 
-        Mail::to($this->user->email)->send(new ScholarVerificationCodeMail($details));
+        try {
+            Mail::to($this->user->email)->send(new ScholarVerificationCodeMail($details));
+            session()->flash('message-success', 'The verification code has been sent on your email.');
+        } catch (\Exception $e) {
+            session()->flash('message-error', "Email has not been sent!");
+        }
     }
 
     public function save()

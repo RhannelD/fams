@@ -77,11 +77,6 @@
                         </div>
                     </div>
                     <div wire:ignore.self class="tab-pane pt-3 fade" id="verify" role="tabpanel" aria-labelledby="verify-tab">
-                        @if (session()->has('message-success'))
-                            <div class="alert alert-success">
-                                {{ session('message-success') }}
-                            </div>
-                        @endif
                         <h5>
                             Email: 
                             <strong>
@@ -122,7 +117,18 @@
                             </div>
                         </div>
                         @error('code') <span class="text-danger">{{ $message }}</span> @enderror
-
+                        <div class="d-flex py-0">
+                            @if (session()->has('message-success'))
+                                <div class="alert alert-success ">
+                                    {{ session('message-success') }}
+                                </div>
+                            @endif
+                            @if (session()->has('message-error'))
+                                <div class="alert alert-danger">
+                                    {{ session('message-error') }}
+                                </div>
+                            @endif
+                        </div>
                         <hr class="my-2">
                         <div class="d-flex justify-content-end">
                             <button wire:click='back' class="btn btn-dark mx-1">

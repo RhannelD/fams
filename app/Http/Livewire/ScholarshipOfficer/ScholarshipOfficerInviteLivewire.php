@@ -249,6 +249,10 @@ class ScholarshipOfficerInviteLivewire extends Component
             'token' => $invitation->token
         ];
 
-        Mail::to($invitation->email)->send(new OfficerInvitationMail($details));
+        try {
+            Mail::to($invitation->email)->send(new OfficerInvitationMail($details));
+        } catch (\Exception $e) {
+            session()->flash('message-error', "Email has not been sent!");
+        }
     }
 }
