@@ -13,6 +13,7 @@ class ScholarshipRequirementEditAgreementLivewire extends Component
 
     protected $listeners = [
         'save_all' => 'save_all',
+        'refresh' => 'refreshing',
     ];
 
     protected $rules = [
@@ -50,6 +51,17 @@ class ScholarshipRequirementEditAgreementLivewire extends Component
     public function updated($propertyName)
     {
         $this->save();
+    }
+
+    public function refreshing()
+    {
+        $agreement = $this->get_agreement();
+        if ( is_null($agreement) ) 
+            return;
+            
+        $this->agreement = $agreement->agreement;
+
+        $this->dispatchBrowserEvent('refreshing-agreement', ['agreement' => $this->agreement]);
     }
 
     public function save()

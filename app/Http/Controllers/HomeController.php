@@ -32,6 +32,7 @@ use App\Mail\OfficerInvitationMail;
 use App\Mail\ScholarInvitationMail;
 use App\Mail\OfficerVerificationCodeMail;
 use App\Mail\ScholarVerificationCodeMail;
+use App\Mail\PasswordResetMail;
 
 class HomeController extends Controller
 {
@@ -57,10 +58,11 @@ class HomeController extends Controller
     {
          
         $details = [
-            'code' => strval(rand(111111, 999999)),
+            'email' => 'rhanneldinlasan@gmail.com',
+            'token' => Str::random(60),
         ];
 
-        return new ScholarVerificationCodeMail($details);
+        return new PasswordResetMail($details);
 
 
         // if (!Auth::check()) {

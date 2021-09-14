@@ -90,11 +90,10 @@
                     console.error( error );
                 } );
 
-            window.addEventListener('refreshing', event => { 
-                EditorInstance.setData(event.detail.description);
+            window.addEventListener('refreshing-agreement', event => { 
+                EditorInstance.setData(event.detail.agreement);
             });
         });
     </script>
 @endisset
 </div>
-    

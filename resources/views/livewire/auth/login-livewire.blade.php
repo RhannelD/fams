@@ -20,8 +20,6 @@
                                 @error('password') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
 
-                            <hr>
-                        
                             <div class="form-group row mb-0">
                                 <div class="col-md-8 offset-md-2">
                                     <button type="submit" class="btn btn-primary btn-block">
@@ -32,6 +30,12 @@
                                 </div>
                             </div>
 
+                            <div wire:ignore>
+                                @livewire('auth.forgot-password', key('forgot-password-'.time()))
+                            </div>
+                            
+                            <hr class="my-2">
+                        
                             <div class="d-flex justify-content-center mt-3">
                                 <h6>
                                     Don't have an account?

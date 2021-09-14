@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Livewire\Auth\LoginLivewire;
 use App\Http\Livewire\Auth\SignUpLivewire;
+use App\Http\Livewire\Auth\PasswordResetLivewire;
 use App\Http\Livewire\Dashboard\DashboardLivewire;
 use App\Http\Livewire\Scholar\ScholarLivewire;
 use App\Http\Livewire\Officer\OfficerLivewire;
@@ -43,6 +44,7 @@ Route::get('/', function () {
 
 Route::get('/login', LoginLivewire::class)->name('login.index')->middleware('auth.login');
 Route::get('/sign-up', SignUpLivewire::class)->name('sign-up.index')->middleware('auth.login');
+Route::get('/password-reset/{token}/{email}', PasswordResetLivewire::class)->name('password.reset')->middleware('auth.login');
 Route::get('/invite/officer/{invite_token}', ScholarshipOfficerInviteLinkLivewire::class)->name('invite');
 
 Route::get('/dashboard', DashboardLivewire::class)->name('dashboard')->middleware('auth.main');
@@ -66,6 +68,6 @@ Route::get('/invite/officer', InviteOfficerLivewire::class)->name('invite.office
 Route::get('/requirement/{requirement_id}', RequirementPreviewLivewire::class)->name('requirement.view')->middleware('auth.main');
 Route::get('/requirement/{requirement_id}/response', ResponseLivewire::class)->name('reponse')->middleware('auth.main');
 
-Route::get('/file/preview/{id}', [FilePreviewController::class, 'show'])->name('file.preview');
+Route::get('/file/preview/{id}', [FilePreviewController::class, 'show'])->name('file.preview')->middleware('auth.login');
 
 Route::get('/try', [HomeController::class, 'index'])->name('try');
