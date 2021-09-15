@@ -8,7 +8,7 @@ Your new password will apply to all our services.
 Click the link below to proceed.
 @endcomponent
 
-@component('mail::button', ['url' => route('index')])
+@component('mail::button', ['url' => route('password.reset', [$details->token, $details->email])])
 Reset Password
 @endcomponent
 

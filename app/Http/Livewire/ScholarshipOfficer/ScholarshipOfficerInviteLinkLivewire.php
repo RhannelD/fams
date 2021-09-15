@@ -48,7 +48,9 @@ class ScholarshipOfficerInviteLinkLivewire extends Component
         $this->user = new User;
         $this->user->gender = 'male';
         $this->set_code();
-        $this->resend_code();
+        if (!Auth::check()) {
+            $this->resend_code();
+        }
     }
 
     protected function set_code()

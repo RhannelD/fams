@@ -24,4 +24,9 @@ class ScholarResponseComment extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+    
+    public function response()
+    {
+        return $this->belongsTo(ScholarResponse::class, 'response_id', 'id');
+    }
 }

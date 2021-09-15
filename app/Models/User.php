@@ -66,6 +66,11 @@ class User extends Authenticatable
         return $this->hasMany(ScholarResponse::class, 'user_id', 'id');
     }
 
+    public function response_comments()
+    {
+        return $this->hasMany(ScholarResponseComment::class, 'user_id', 'id');
+    }
+
     public function scholarship_invites()
     {
         return $this->hasMany(ScholarshipOfficerInvite::class, 'email', 'email');
@@ -109,6 +114,15 @@ class User extends Authenticatable
     public function scopeWhereNotScholarOf($query, $scholarship_id)
     {
         return $query->whereDoesntHave('scholarship_scholars', function ($query) use ($scholarship_id) {
+                $query->whereHas('category', function ($query) use ($scholarship_id) {
+                        $query->where('scholarship_id', '=', $scholarship_id);
+                    });
+            });
+    }
+
+    public function scopeWhereScholarOf($query, $scholarship_id)
+    {
+        return $query->whereHas('scholarship_scholars', function ($query) use ($scholarship_id) {
                 $query->whereHas('category', function ($query) use ($scholarship_id) {
                         $query->where('scholarship_id', '=', $scholarship_id);
                     });

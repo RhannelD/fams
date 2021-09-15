@@ -33,6 +33,8 @@ use App\Mail\ScholarInvitationMail;
 use App\Mail\OfficerVerificationCodeMail;
 use App\Mail\ScholarVerificationCodeMail;
 use App\Mail\PasswordResetMail;
+use App\Notifications\ScholarshipPostNotification;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class HomeController extends Controller
 {
@@ -56,13 +58,53 @@ class HomeController extends Controller
      */
     public function index()
     {
-         
-        $details = [
-            'email' => 'rhanneldinlasan@gmail.com',
-            'token' => Str::random(60),
+        // $comment = ScholarResponseComment::with('user')
+        //     ->with(['response' => function ($query) {
+        //         $query->with('comments');
+        //     }])
+        //     ->first();
+
+        // // return $comment;
+
+        // $response_id = $comment->response_id;
+        // $user_id = $comment->user_id;
+        // return User::whereHas('response_comments', function ($query) use ($response_id, $user_id) {
+        //         $query->where('response_id', $response_id)
+        //             ->where('user_id', $user_id);
+        //     })
+        //     ->get();
+
+        $details = (object) [
+            'body_message' => 'This is the body yeahhhhh',
+            'url' => 'https://www.google.com/',
+            'commenter' => 'Juan dela Cruz',
+            'comment' => 'This is the freidking comment',
         ];
 
-        return new PasswordResetMail($details);
+        return (new MailMessage)->markdown('email.scholar-response-comment-notification', ['details' => $details]);
+
+        // return route('index', ['index'=>1, 'search' => 'angel.rowe@example.net']);
+
+        // return ScholarResponseComment::first();
+
+        // return User::whereScholarOf(1)->take(2)->get();
+
+        // $user = User::first();
+
+        // $details = [
+        //     'scholarship' => 'Scholarship Name',
+        //     'url' => 'https://www.google.com/',
+        //     'poster' => 'Juan dela Cruz',
+        // ];
+
+        // $user->notify(new ScholarshipPostNotification($details));
+        
+        // $details = [
+        //     'email' => 'rhanneldinlasan@gmail.com',
+        //     'token' => Str::random(60),
+        // ];
+
+        // return new PasswordResetMail($details);
 
 
         // if (!Auth::check()) {

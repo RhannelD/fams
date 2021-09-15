@@ -60,7 +60,7 @@ class ForgotPassword extends Component
             Mail::to($this->email)->send(new PasswordResetMail($details));
             session()->flash('message-success', 'Password reset link has been sent to your email.');
         } catch (\Exception $e) {
-            session()->flash('message-error', "Email has not been sent!".route('password.reset', [$token, $this->email]));
+            session()->flash('message-error', "Email has not been sent!");
         }
     }
 }
