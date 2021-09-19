@@ -3,7 +3,9 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="change-password-modal-label">Change Password</h5>
+                    <h5 class="modal-title" id="change-password-modal-label">
+                        <strong>Change Password</strong>
+                    </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -39,15 +41,27 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     @if (!$verified)
-                        <button type="button" class="btn btn-success"
+                        <button type="button" class="btn btn-success" id='update_password_button'
                             wire:click='verify'
+                            wire:loading.attr='disabled'
                             >
+                            <i id="update_password_load" class="fas fa-spinner fa-spin"
+                                wire:loading
+                                wire:target='verify'
+                                >
+                            </i>
                             Verify
                         </button>
                     @else
-                        <button type="button" class="btn btn-success"
+                        <button type="button" class="btn btn-success" id='change_password_button'
                             wire:click='change_password'
+                            wire:loading.attr='disabled'
                             >
+                            <i id="change_password_load" class="fas fa-spinner fa-spin" 
+                                wire:loading
+                                wire:target='change_password'
+                                >
+                            </i>
                             Save
                         </button>
                     @endif

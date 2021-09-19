@@ -43,6 +43,10 @@
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div wire:ignore.self class="tab-pane fade show active pt-3" id="form" role="tabpanel" aria-labelledby="form-tab">
+                        <div class="alert alert-info">
+                            Please fill-up the form carefully and truthfully. 
+                            This will be reflected on scholarship personnel's evaluation.
+                        </div>
                         @include('livewire.form.user-form-livewire')
                         <hr class="my-2">
                         <div class="row">

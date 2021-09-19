@@ -11,7 +11,7 @@
             </strong>
         </h5>
         <div class="row">
-            <div class="col-auto col-md-6">
+            <div class="col-auto">
                 <table>
                     <tr>
                         <td>
@@ -35,7 +35,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="col-auto col-md-6">
+            <div class="col-auto">
                 <table>
                     <tr>
                         <td>
@@ -62,16 +62,34 @@
         </div>
     </div>
     <hr>
+    @if ( $user->is_scholar() && $user->scholarship_scholars->count()>0 )
+        @include('livewire.pages.user.my-account-scholarship-scholar-livewire')
+        <hr>
+    @endif
+    @if ( $user->is_officer() && $user->scholarship_officers->count()>0 )
+        @include('livewire.pages.user.my-account-scholarship-officer-livewire')
+        <hr>
+    @endif
     <div class="d-flex justify-content-end">
-        <button class="btn btn-primary" data-toggle="modal" data-target="#change-password-modal">
+        <button class="btn btn-primary mx-1" data-toggle="modal" data-target="#update-email-modal">
+            Update Email
+        </button>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#change-password-modal"
+            wire:click="$emitTo('user.change-password-livewire', 'reset_values')"
+            >
             Change Password
         </button>
     </div>
+
     @livewire('user.change-password-livewire')
+    @livewire('user.change-email-livewire')
 
     <script>
 		window.addEventListener('change-password-form', event => {
 			$("#change-password-modal").modal(event.detail.action);
+		});
+		window.addEventListener('update-email-form', event => {
+			$("#update-email-modal").modal(event.detail.action);
 		});
     </script>
 @endisset

@@ -15,6 +15,10 @@ class ChangePasswordLivewire extends Component
     public $new_password;
     public $confirm_password;
 
+    protected $listeners = [
+        'reset_values' => 'reset_values',
+    ];
+
     protected $rules = [
         'password' => 'required|min:9',
         'new_password' => 'required|min:9|different:password',
@@ -78,7 +82,7 @@ class ChangePasswordLivewire extends Component
         }
     }
 
-    protected function reset_values()
+    public function reset_values()
     {
         $this->password         = '';
         $this->new_password     = '';
