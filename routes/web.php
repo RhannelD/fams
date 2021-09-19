@@ -1,31 +1,30 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\HomeController;
 use App\Http\Livewire\Auth\LoginLivewire;
 use App\Http\Livewire\Auth\SignUpLivewire;
+use App\Http\Livewire\User\MyAccountLivewire;
+use App\Http\Livewire\Officer\OfficerLivewire;
+use App\Http\Livewire\Scholar\ScholarLivewire;
+use App\Http\Controllers\FilePreviewController;
+use App\Http\Livewire\Response\ResponseLivewire;
 use App\Http\Livewire\Auth\PasswordResetLivewire;
 use App\Http\Livewire\Dashboard\DashboardLivewire;
-use App\Http\Livewire\Scholar\ScholarLivewire;
-use App\Http\Livewire\Officer\OfficerLivewire;
+use App\Http\Livewire\Invite\InviteOfficerLivewire;
+use App\Http\Livewire\Invite\InviteScholarLivewire;
 use App\Http\Livewire\Scholarship\ScholarshipLivewire;
+use App\Http\Livewire\Requirement\RequirementPreviewLivewire;
 use App\Http\Livewire\ScholarshipPage\ScholarshipPageLivewire;
+use App\Http\Livewire\ScholarshipPost\ScholarshipPostOpenLivewire;
 use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerLivewire;
 use App\Http\Livewire\ScholarshipScholar\ScholarshipScholarLivewire;
+use App\Http\Livewire\ScholarshipCategory\ScholarshipCategoryLivewire;
 use App\Http\Livewire\ScholarshipRequirement\ScholarshipRequirementLivewire;
+use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerInviteLinkLivewire;
 use App\Http\Livewire\ScholarshipRequirement\ScholarshipRequirementOpenLivewire;
 use App\Http\Livewire\ScholarshipRequirementEdit\ScholarshipRequirementEditLivewire;
 use App\Http\Livewire\ScholarshipRequirementResponse\ScholarshipRequirementResponseLivewire;
-use App\Http\Livewire\ScholarshipPost\ScholarshipPostOpenLivewire;
-use App\Http\Livewire\ScholarshipCategory\ScholarshipCategoryLivewire;
-use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerInviteLinkLivewire;
-use App\Http\Livewire\Requirement\RequirementPreviewLivewire;
-use App\Http\Livewire\Response\ResponseLivewire;
-use App\Http\Livewire\Invite\InviteScholarLivewire;
-use App\Http\Livewire\Invite\InviteOfficerLivewire;
-use App\Http\Controllers\FilePreviewController;
-
-use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +66,8 @@ Route::get('/invite/officer', InviteOfficerLivewire::class)->name('invite.office
 
 Route::get('/requirement/{requirement_id}', RequirementPreviewLivewire::class)->name('requirement.view')->middleware('auth.main');
 Route::get('/requirement/{requirement_id}/response', ResponseLivewire::class)->name('reponse')->middleware('auth.main');
+
+Route::get('/my-account', MyAccountLivewire::class)->name('my.account')->middleware('auth.main');
 
 Route::get('/file/preview/{id}', [FilePreviewController::class, 'show'])->name('file.preview')->middleware('auth.login');
 

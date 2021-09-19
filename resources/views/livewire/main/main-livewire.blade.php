@@ -75,7 +75,7 @@
                             <strong>{{ Auth::user()->firstname . ' ' . Auth::user()->lastname }} </strong>
                         </a>
 						<div class="dropdown-menu dropdown-menu-right dropdown-cyan" aria-labelledby="navbarDropdownMenuLink-4">
-							<a class="dropdown-item" href="#">
+							<a class="dropdown-item" href="{{ route('my.account') }}">
                                 <i class="fas fa-user-circle"></i>
                                 My account
                             </a>
