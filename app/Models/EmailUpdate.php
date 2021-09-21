@@ -15,7 +15,7 @@ class EmailUpdate extends Model
      * @var array
      */
     protected $fillable = [
-        'email',
-        'token',
+        'user_id',
+        'code',
     ];
 }

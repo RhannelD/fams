@@ -33,6 +33,7 @@ use App\Mail\ScholarInvitationMail;
 use App\Mail\OfficerVerificationCodeMail;
 use App\Mail\ScholarVerificationCodeMail;
 use App\Mail\PasswordResetMail;
+use App\Mail\UpdateEmailVerificationCodeMail;
 use App\Notifications\ScholarshipPostNotification;
 use Illuminate\Notifications\Messages\MailMessage;
 
@@ -58,6 +59,16 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $details = [
+            'code' => rand(111111, 999999)
+        ];
+
+        return new UpdateEmailVerificationCodeMail($details);
+
+        // return User::with('email_update')
+        //     ->take(4)
+        //     ->get();
+
         // $comment = ScholarResponseComment::with('user')
         //     ->with(['response' => function ($query) {
         //         $query->with('comments');
@@ -74,14 +85,14 @@ class HomeController extends Controller
         //     })
         //     ->get();
 
-        $details = (object) [
-            'body_message' => 'This is the body yeahhhhh',
-            'url' => 'https://www.google.com/',
-            'commenter' => 'Juan dela Cruz',
-            'comment' => 'This is the freidking comment',
-        ];
+        // $details = (object) [
+        //     'body_message' => 'This is the body yeahhhhh',
+        //     'url' => 'https://www.google.com/',
+        //     'commenter' => 'Juan dela Cruz',
+        //     'comment' => 'This is the freidking comment',
+        // ];
 
-        return (new MailMessage)->markdown('email.scholar-response-comment-notification', ['details' => $details]);
+        // return (new MailMessage)->markdown('email.scholar-response-comment-notification', ['details' => $details]);
 
         // return route('index', ['index'=>1, 'search' => 'angel.rowe@example.net']);
 

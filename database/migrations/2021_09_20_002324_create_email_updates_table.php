@@ -15,9 +15,11 @@ class CreateEmailUpdatesTable extends Migration
     {
         Schema::create('email_updates', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->index();
-            $table->string('token');
+            $table->foreignId('user_id');
+            $table->string('code', 6);
             $table->timestamps();
+            
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -28,6 +30,11 @@ class CreateEmailUpdatesTable extends Migration
      */
     public function down()
     {
+        Schema::table('email_updates', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropColumn(['user_id']);
+        });
+        
         Schema::dropIfExists('email_updates');
     }
 }

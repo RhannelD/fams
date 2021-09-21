@@ -20,15 +20,48 @@
                                 @error('password') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
-                    @else
+                    @elseif ($verified && !$valid_email )
                         <h4>Update Email</h4>
                         <div>
                             <div class="form-group">
                                 <label for="email_address">Email address</label>
-                                <input wire:model.lazy='email' type="email" class="form-control" id="email_address" aria-describedby="emailHelp">
+                                <input wire:model.lazy='email' type="email" class="form-control" id="email_address">
                                 @error('email') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
+                    @else
+                        <h4>Verify Email</h4>
+                        <div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-auto">
+                                <div class="form-group">
+                                    <label for="email_address">Verification Code</label>
+                                    <input wire:model.lazy='code' type="text" class="form-control" id="code">
+                                    @error('code') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary"
+                            wire:click='send_code'
+                            >
+                            <i id="send_code_load" class="fas fa-spinner fa-spin"
+                                wire:loading
+                                wire:target='send_code'
+                                >
+                            </i>
+                            Re-send Code
+                        </button>
+                        @if (session()->has('message-success'))
+                           <div class="alert alert-success my-1">
+                                {{ session('message-success') }}
+                            </div>
+                        @endif
+                        @if (session()->has('message-error'))
+                           <div class="alert alert-danger my-1">
+                                {{ session('message-error') }}
+                            </div>
+                        @endif
                     @endif
                 </div>
                 <div class="modal-footer">
@@ -37,18 +70,34 @@
                         <button type="button" class="btn btn-success"
                             wire:click='verify'
                             >
-                            <i id="update_email_load" class="fas fa-spinner fa-spin"
+                            <i id="verify_password_load" class="fas fa-spinner fa-spin"
                                 wire:loading
                                 wire:target='verify'
                                 >
                             </i>
                             Verify
                         </button>
-                    @else
+                    @elseif ($verified && !$valid_email )
                         <button type="button" class="btn btn-success"
                             wire:click='save'
                             >
+                            <i id="update_email_load" class="fas fa-spinner fa-spin"
+                                wire:loading
+                                wire:target='save'
+                                >
+                            </i>
                             Save
+                        </button>
+                    @else
+                        <button type="button" class="btn btn-success"
+                            wire:click='verify_email'
+                            >
+                            <i id="verify_code_load" class="fas fa-spinner fa-spin"
+                                wire:loading
+                                wire:target='verify_email'
+                                >
+                            </i>
+                            Verify
                         </button>
                     @endif
                 </div>

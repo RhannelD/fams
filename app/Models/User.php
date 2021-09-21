@@ -81,6 +81,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(ScholarshipScholarInvite::class, 'email', 'email');
     }
+
+    public function email_update()
+    {
+        return $this->hasOne(EmailUpdate::class, 'user_id', 'id');
+    }
     
 
     public function scopeWhereOfficer($query)

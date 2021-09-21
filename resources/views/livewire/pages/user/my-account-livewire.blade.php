@@ -71,7 +71,9 @@
         <hr>
     @endif
     <div class="d-flex justify-content-end">
-        <button class="btn btn-primary mx-1" data-toggle="modal" data-target="#update-email-modal">
+        <button class="btn btn-primary mx-1" data-toggle="modal" data-target="#update-email-modal"
+            wire:click="$emitTo('user.change-email-livewire', 'reset_values')"
+            >
             Update Email
         </button>
         <button class="btn btn-primary" data-toggle="modal" data-target="#change-password-modal"
