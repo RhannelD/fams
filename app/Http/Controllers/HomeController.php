@@ -59,11 +59,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $details = [
-            'code' => rand(111111, 999999)
-        ];
-
-        return new UpdateEmailVerificationCodeMail($details);
+        return User::whereScholar()->get();
 
         // return User::with('email_update')
         //     ->take(4)

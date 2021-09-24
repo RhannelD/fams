@@ -46,6 +46,7 @@ class UserFactory extends Factory
             'password' => Hash::make('123123123'),
             'birthday' => $this->faker->date($format = 'Y-m-d', $max = '2015-12-01'),
             'birthplace' => $this->faker->address,
+            'address' => $this->faker->address,
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
         ];

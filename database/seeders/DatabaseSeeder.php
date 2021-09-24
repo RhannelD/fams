@@ -35,6 +35,9 @@ class DatabaseSeeder extends Seeder
             ScholarResponseOptionSeeder::class,
             ScholarResponseFileSeeder::class,
             ScholarResponseCommentSeeder::class,
+            ScholarCourseSeeder::class,
+            ScholarSchoolSeeder::class,
+            ScholarInfoSeeder::class,
         ]);
     }
 }

@@ -15,22 +15,16 @@ class OfficerPositionSeeder extends Seeder
      */
     public function run()
     {
-        OfficerPosition::insert([   
-            'position'      => 'Admin',
-            'created_at'    => Carbon::now(),
-            'updated_at'    => Carbon::now(),
-        ]);
-        
-        OfficerPosition::insert([   
-            'position'      => 'Officer',
-            'created_at'    => Carbon::now(),
-            'updated_at'    => Carbon::now(),
-        ]);
-
-        OfficerPosition::insert([   
-            'position'      => 'None',
-            'created_at'    => Carbon::now(),
-            'updated_at'    => Carbon::now(),
+        OfficerPosition::insert([
+            [   
+                'position'      => 'Admin',
+                'created_at'    => Carbon::now(),
+                'updated_at'    => Carbon::now(),
+            ],[   
+                'position'      => 'Officer',
+                'created_at'    => Carbon::now(),
+                'updated_at'    => Carbon::now(),
+            ]
         ]);
     }
 }
