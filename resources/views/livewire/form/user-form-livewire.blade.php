@@ -37,6 +37,14 @@
                 @error('user.birthday') <span class="text-danger">{{ $message }}</span> @enderror	
             </div>
 
+            @if (!isset($user_id))
+                <div class="form-group mt-3">
+                    <label for="c_address">Address</label>
+                    <input type="text" wire:model.lazy="user.address" class="form-control" id="c_address" placeholder="Address">
+                    @error('user.address') <span class="text-danger">{{ $message }}</span> @enderror	
+                </div>
+            @endif
+
         </div>
 
         <div class="col-lg-6">
@@ -56,6 +64,14 @@
                 <input type="text" wire:model.lazy="user.phone" class="form-control" id="c_phone" placeholder="09*********">
                 @error('user.phone') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
+
+            @isset($user_id)
+                <div class="form-group mt-3">
+                    <label for="c_address">Address</label>
+                    <input type="text" wire:model.lazy="user.address" class="form-control" id="c_address" placeholder="Address">
+                    @error('user.address') <span class="text-danger">{{ $message }}</span> @enderror	
+                </div>
+            @endisset
 
             <div class="form-group">
                 <label for="c_religion">Religion</label>

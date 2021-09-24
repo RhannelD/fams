@@ -69,7 +69,7 @@
                                 <div class="card mb-3 shadow-sm">
                                     <div class="card-body p-2">
                                         <div class="row">
-                                            <div class="col-md-6 pb-0">
+                                            <div class="col-auto pb-0">
                                                 <table class="table table-borderless table-sm m-0">
                                                     <tbody>
                                                         <tr>
@@ -88,10 +88,14 @@
                                                             <td>Email:</td>
                                                             <td>{{ $officer->email }}</td>
                                                         </tr>
+                                                        <tr>
+                                                            <td>Address:</td>
+                                                            <td>{{ $officer->address }}</td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class="col-md-6 pb-0">
+                                            <div class="col-auto pb-0">
                                                 <table class="table table-borderless table-sm m-0">
                                                     <tbody>
                                                         <tr>

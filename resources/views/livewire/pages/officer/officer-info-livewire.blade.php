@@ -27,6 +27,10 @@
                             <td class="pl-sm-1 pl-md-2">{{ $user->gender }}</td>
                         </tr>
                         <tr>
+                            <td>Address:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->address }}</td>
+                        </tr>
+                        <tr>
                             <td>Religion:</td>
                             <td class="pl-sm-1 pl-md-2">{{ $user->religion }}</td>
                         </tr>

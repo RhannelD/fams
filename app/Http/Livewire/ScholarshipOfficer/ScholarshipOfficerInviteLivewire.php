@@ -250,7 +250,7 @@ class ScholarshipOfficerInviteLivewire extends Component
         ];
 
         try {
-            Mail::to($invitation->email)->send(new OfficerInvitationMail($details));
+            // Mail::to($invitation->email)->send(new OfficerInvitationMail($details));
         } catch (\Exception $e) {
             session()->flash('message-error', "Email has not been sent!");
         }

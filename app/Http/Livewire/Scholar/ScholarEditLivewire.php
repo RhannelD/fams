@@ -27,6 +27,7 @@ class ScholarEditLivewire extends Component
             'user.phone' => "required|unique:users,phone".((isset($this->user_id))?",".$this->user_id:'')."|regex:/(09)[0-9]{9}/",
             'user.birthday' => 'required|before:10 years ago|after:100 years ago',
             'user.birthplace' => 'max:200',
+            'user.address' => 'max:200',
             'user.religion' => 'max:200',
             'user.email' => "required|unique:users,email".((isset($this->user_id))?",".$this->user_id:''),
             'password' => 'required|min:9',
@@ -67,6 +68,7 @@ class ScholarEditLivewire extends Component
         $this->user->middlename   = $user->middlename;
         $this->user->lastname     = $user->lastname;
         $this->user->gender       = $user->gender;
+        $this->user->address      = $user->address;
         $this->user->birthday     = $user->birthday;
         $this->user->birthplace   = $user->birthplace;
         $this->user->religion     = $user->religion;
@@ -113,6 +115,7 @@ class ScholarEditLivewire extends Component
             $user->middlename   = $this->user->middlename;
             $user->lastname     = $this->user->lastname;
             $user->gender       = $this->user->gender;
+            $user->address      = $this->user->address;
             $user->birthday     = $this->user->birthday;
             $user->birthplace   = $this->user->birthplace;
             $user->religion     = $this->user->religion;

@@ -34,6 +34,7 @@ class ScholarshipOfficerInviteLinkLivewire extends Component
         'user.birthday' => 'required|before:10 years ago|after:100 years ago',
         'user.birthplace' => 'required|max:200',
         'user.religion' => 'max:200',
+        'user.address' => 'max:200',
         'user.email' => "required|unique:users,email",
         'password' => 'required|min:9',
         'password_confirm' => 'required|min:9|same:password',

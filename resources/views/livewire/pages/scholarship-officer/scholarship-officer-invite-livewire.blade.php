@@ -64,6 +64,15 @@
                                         wire:click="invite_email('{{ $name_email }}')" 
                                         wire:loading.attr='disabled'
                                         >
+                                        <i class="fas fa-envelope" id="invite_email_icon_{{ $name_email }}"
+                                            wire:loading.remove 
+                                            wire:target="invite_email('{{ $name_email }}')"
+                                            >
+                                        </i>
+                                        <i class="fas fa-spinner fa-spin" id="invite_email_load_{{ $name_email }}"
+                                            wire:loading 
+                                            wire:target="invite_email('{{ $name_email }}')">
+                                        </i>
                                         Invite
                                     </button>
                                 </div>
@@ -80,6 +89,15 @@
                                             wire:click="invite_email('{{ $officer->email }}')" 
                                             wire:loading.attr='disabled'
                                             >
+                                            <i class="fas fa-envelope" id="invite_email_icon_{{ $officer->email }}"
+                                                wire:loading.remove 
+                                                wire:target="invite_email('{{ $officer->email }}')"
+                                                >
+                                            </i>
+                                            <i class="fas fa-spinner fa-spin" id="invite_email_load_{{ $officer->email }}"
+                                                wire:loading 
+                                                wire:target="invite_email('{{ $officer->email }}')">
+                                            </i>
                                             Invite
                                         </button>
                                     </div>
@@ -119,7 +137,14 @@
                                         wire:click="cancel_invite({{ $invite->id }})" 
                                         wire:loading.attr="disabled" 
                                         >
-                                        <i class="fas fa-times-circle"></i>
+                                        <i class="fas fa-times-circle" id="cancel_invite_icon_{{ $invite->id }}"
+                                            wire:loading.remove
+                                            wire:target="cancel_invite('{{ $invite->id }}')">
+                                        </i>
+                                        <i class="fas fa-spinner fa-spin" id="cancel_invite_load_{{ $invite->id }}"
+                                            wire:loading 
+                                            wire:target="cancel_invite('{{ $invite->id }}')">
+                                        </i>
                                     </button>
                                 </div>
                             </div>
@@ -152,7 +177,14 @@
                                         wire:click="cancel_invite({{ $invite->id }})" 
                                         wire:loading.attr="disabled" 
                                         >
-                                        <i class="fas fa-minus-circle"></i>
+                                        <i class="fas fa-minus-circle" id="cancel_invite_icon_{{ $invite->id }}"
+                                            wire:loading.remove
+                                            wire:target="cancel_invite('{{ $invite->id }}')">
+                                        </i>
+                                        <i class="fas fa-spinner fa-spin" id="cancel_invite_load_{{ $invite->id }}"
+                                            wire:loading 
+                                            wire:target="cancel_invite('{{ $invite->id }}')">
+                                        </i>
                                     </button>
                                 </div>
                             </div>
@@ -203,7 +235,15 @@
                                         wire:click="cancel_invite({{ $invite->id }})" 
                                         wire:loading.attr="disabled" 
                                         >
-                                        <i class="fas fa-minus-circle"></i>
+                                        <i class="fas fa-minus-circle" id="cancel_invite_icon_{{ $invite->id }}"
+                                            wire:loading.remove
+                                            wire:target="cancel_invite('{{ $invite->id }}')"
+                                            >
+                                        </i>
+                                        <i class="fas fa-spinner fa-spin" id="cancel_invite_load_{{ $invite->id }}"
+                                            wire:loading 
+                                            wire:target="cancel_invite('{{ $invite->id }}')">
+                                        </i>
                                     </button>
                                 </div>
                             </div>
