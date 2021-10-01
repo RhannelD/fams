@@ -144,6 +144,88 @@
                                             </div>
                                             <div class="col-auto pb-0">
                                                 <table class="table table-borderless table-sm m-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="2">
+                                                                Family Information
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Mother's Name:</td>
+                                                            <td>{{ $scholar->user->scholar_info->mother_name }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Mother's Occupation:</td>
+                                                            <td>{{ $scholar->user->scholar_info->mother_occupation }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Mother's Birth Date:</td>
+                                                            <td>{{ $scholar->user->scholar_info->mother_birthday }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Mother's Educational Attainment:</td>
+                                                            <td>{{ $scholar->user->scholar_info->mother_educational_attainment }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Living:</td>
+                                                            <td>{{ $scholar->user->scholar_info->mother_living? 'Yes': 'No' }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Father's Name:</td>
+                                                            <td>{{ $scholar->user->scholar_info->father_name }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Father's Occupation:</td>
+                                                            <td>{{ $scholar->user->scholar_info->father_occupation }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Father's Birth Date:</td>
+                                                            <td>{{ $scholar->user->scholar_info->father_birthday }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Father's Educational Attainment:</td>
+                                                            <td>{{ $scholar->user->scholar_info->father_educational_attainment }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Living:</td>
+                                                            <td>{{ $scholar->user->scholar_info->father_living? 'Yes': 'No' }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-auto pb-0">
+                                                <table class="table table-borderless table-sm m-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="2">
+                                                                Educational Information
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>School:</td>
+                                                            <td>{{ $scholar->user->scholar_info->school->school }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Course:</td>
+                                                            <td>{{ $scholar->user->scholar_info->course->course }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Year:</td>
+                                                            <td>{{ $scholar->user->scholar_info->year }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Semester</td>
+                                                            <td>{{ $scholar->user->scholar_info->semester }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-auto pb-0">
+                                                <table class="table table-borderless table-sm m-0">
                                                     <tbody>
                                                         <tr>
                                                             <th colspan="2">

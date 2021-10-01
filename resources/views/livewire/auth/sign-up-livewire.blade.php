@@ -139,11 +139,11 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="form-check form-check-inline">
-                                        <input wire:model.lazy="user_info.mother_living" class="form-check-input" type="radio" name="c_living" id="c_mother_living_1" value="1">
+                                        <input wire:model.lazy="user_info.mother_living" class="form-check-input" type="radio" name="c_mother_living" id="c_mother_living_1" value="1">
                                         <label class="form-check-label" for="c_mother_living_1">Living</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input wire:model.lazy="user_info.mother_living" class="form-check-input" type="radio" name="c_living" id="c_mother_living_2" value="0">
+                                        <input wire:model.lazy="user_info.mother_living" class="form-check-input" type="radio" name="c_mother_living" id="c_mother_living_2" value="0">
                                         <label class="form-check-label" for="c_mother_living_2">Deceased</label>
                                     </div>
                                     @error('user_info.mother_living') <span class="text-danger">{{ $message }}</span> @enderror
@@ -154,32 +154,33 @@
                                 <div class="form-group">
                                     <label for="c_father_name">Father's Name</label>
                                     <input wire:model.lazy="user_info.father_name" type="text" class="form-control" id="c_father_name" placeholder="Father's Name">
-                                    {{-- @error('user.firstname') <span class="text-danger">{{ $message }}</span> @enderror --}}
+                                    @error('user_info.father_name') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group mt-3">
                                     <label for="c_father_birthday">Father's Birth Date</label>
                                     <input wire:model.lazy="user_info.father_birthday" type="date" class="date form-control" id="c_father_birthday">
-                                    {{-- @error('user.birthday') <span class="text-danger">{{ $message }}</span> @enderror	 --}}
+                                    @error('user_info.father_birthday') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group">
                                     <label for="c_father_occupation">Father's Occupation</label>
                                     <input wire:model.lazy="user_info.father_occupation" type="text" class="form-control" id="c_father_occupation" placeholder="Father's Occupation">
-                                    {{-- @error('user.firstname') <span class="text-danger">{{ $message }}</span> @enderror --}}
+                                    @error('user_info.father_occupation') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group">
                                     <label for="c_father_educational_attainment">Father's Educational Attainment</label>
                                     <input wire:model.lazy="user_info.father_educational_attainment" type="text" class="form-control" id="c_father_occupation" placeholder="Father's Educational Attainment">
-                                    {{-- @error('user.firstname') <span class="text-danger">{{ $message }}</span> @enderror --}}
+                                    @error('user_info.father_educational_attainment') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group">
                                     <div class="form-check form-check-inline">
-                                        <input wire:model="user_info.father_living" class="form-check-input" type="radio" name="c_living" id="c_father_living_1" value="1">
+                                        <input wire:model="user_info.father_living" class="form-check-input" type="radio" name="c_father_living" id="c_father_living_1" value="1">
                                         <label class="form-check-label" for="c_father_living_1">Living</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input wire:model="user_info.father_living" class="form-check-input" type="radio" name="c_living" id="c_father_living_2" value="0">
+                                        <input wire:model="user_info.father_living" class="form-check-input" type="radio" name="c_father_living" id="c_father_living_2" value="0">
                                         <label class="form-check-label" for="c_father_living_2">Deceased</label>
                                     </div>
+                                    @error('user_info.father_living') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
                         </div>

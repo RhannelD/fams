@@ -2,15 +2,19 @@
 
 namespace App\Http\Livewire\Scholar;
 
-use Livewire\Component;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Livewire\Component;
+use App\Models\ScholarInfo;
+use App\Models\ScholarCourse;
+use App\Models\ScholarSchool;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ScholarEditLivewire extends Component
 {
     public $user_id;
     public $user;
+    public $user_info;
     public $password;
 
     protected $listeners = [
@@ -31,6 +35,21 @@ class ScholarEditLivewire extends Component
             'user.religion' => 'max:200',
             'user.email' => "required|unique:users,email".((isset($this->user_id))?",".$this->user_id:''),
             'password' => 'required|min:9',
+
+            'user_info.school_id' => 'exists:scholar_schools,id',
+            'user_info.course_id' => 'exists:scholar_courses,id',
+            'user_info.year' => 'required|max:10|min:1',
+            'user_info.semester' => 'required|max:3|min:1',
+            'user_info.mother_name' => 'required|regex:/^[a-z ,.\'-]+$/i',
+            'user_info.mother_birthday' => 'required|before:20 years ago|after:100 years ago',
+            'user_info.mother_occupation' => 'required|max:200',
+            'user_info.mother_living' => 'required',
+            'user_info.mother_educational_attainment' => 'required|max:200',
+            'user_info.father_name' => 'required|regex:/^[a-z ,.\'-]+$/i',
+            'user_info.father_birthday' => 'required|before:20 years ago|after:100 years ago',
+            'user_info.father_occupation' => 'required|max:200',
+            'user_info.father_living' => 'required',
+            'user_info.father_educational_attainment' => 'required|max:200',
         ];
     }
 
@@ -52,6 +71,7 @@ class ScholarEditLivewire extends Component
     {
         $this->user = new User;
         $this->user->gender = 'male';
+        $this->user_info = new ScholarInfo;
     }
     
     public function set_user($user_id)
@@ -75,6 +95,24 @@ class ScholarEditLivewire extends Component
         $this->user->phone        = $user->phone;
         $this->user->email        = $user->email;
         $this->password           = $user->password;
+
+        $user_info = ScholarInfo::where('user_id', $user_id)->first();
+        if ( isset($user_info) ) {
+            $this->user_info->school_id                     = $user_info->school_id;
+            $this->user_info->course_id                     = $user_info->course_id;
+            $this->user_info->year                          = $user_info->year;
+            $this->user_info->semester                      = $user_info->semester;
+            $this->user_info->mother_name                   = $user_info->mother_name;
+            $this->user_info->mother_birthday               = $user_info->mother_birthday;
+            $this->user_info->mother_occupation             = $user_info->mother_occupation;
+            $this->user_info->mother_living                 = $user_info->mother_living;
+            $this->user_info->mother_educational_attainment = $user_info->mother_educational_attainment;
+            $this->user_info->father_name                   = $user_info->father_name;
+            $this->user_info->father_birthday               = $user_info->father_birthday;
+            $this->user_info->father_occupation             = $user_info->father_occupation;
+            $this->user_info->father_living                 = $user_info->father_living;
+            $this->user_info->father_educational_attainment = $user_info->father_educational_attainment;
+        }
         
         $this->resetErrorBag();
         $this->resetValidation();
@@ -87,6 +125,7 @@ class ScholarEditLivewire extends Component
         $this->user_id = null;
         $this->user = new User;
         $this->user->gender = 'male';
+        $this->user_info = new ScholarInfo;
         $this->password = null;
         $this->resetErrorBag();
         $this->resetValidation();
@@ -94,9 +133,22 @@ class ScholarEditLivewire extends Component
     
     public function render()
     {
-        return view('livewire.pages.scholar.scholar-edit-livewire');
+        return view('livewire.pages.scholar.scholar-edit-livewire', [
+            'schools' => $this->get_schools(),
+            'courses' => $this->get_courses(),
+        ]);
     }
 
+    protected function get_schools()
+    {
+        return ScholarSchool::orderBy('school')->get();
+    }
+
+    protected function get_courses()
+    {
+        return ScholarCourse::orderBy('course')->get();
+    }
+    
     public function save()
     {
         if ($this->verifyUser()) return;
@@ -133,7 +185,32 @@ class ScholarEditLivewire extends Component
             $this->user->password = Hash::make($this->password);
         }
 
-        $this->user->save();
+        $user_info = null;
+        if ($this->user->save()) {
+            $user_info = $this->user_info;
+            $user_info = ScholarInfo::updateOrCreate(
+                [
+                    'user_id' => $this->user_id
+                ],
+                [
+                    'school_id'                     => $user_info->school_id,
+                    'course_id'                     => $user_info->course_id,
+                    'year'                          => $user_info->year,
+                    'semester'                      => $user_info->semester,
+                    'mother_name'                   => $user_info->mother_name,
+                    'mother_birthday'               => $user_info->mother_birthday,
+                    'mother_occupation'             => $user_info->mother_occupation,
+                    'mother_living'                 => $user_info->mother_living,
+                    'mother_educational_attainment' => $user_info->mother_educational_attainment,
+                    'father_name'                   => $user_info->father_name,
+                    'father_birthday'               => $user_info->father_birthday,
+                    'father_occupation'             => $user_info->father_occupation,
+                    'father_living'                 => $user_info->father_living,
+                    'father_educational_attainment' => $user_info->father_educational_attainment,
+                ]
+            );
+        }
+
         $this->password = '';
 
         if( $create && $this->user){
@@ -147,7 +224,7 @@ class ScholarEditLivewire extends Component
             $this->dispatchBrowserEvent('scholar-form', ['action' => 'hide']);
             return;
 
-        } elseif (!$create && $this->user->wasChanged()){
+        } elseif (!$create && $this->user->wasChanged() || $user_info->wasChanged()){
             $this->dispatchBrowserEvent('swal:modal', [
                 'type' => 'success',  
                 'message' => 'Scholar\'s Account Updated', 
@@ -164,6 +241,8 @@ class ScholarEditLivewire extends Component
                 'message' => 'Nothing has been changed', 
                 'text' => ''
             ]);
+            $this->unset_user();
+            $this->dispatchBrowserEvent('scholar-form', ['action' => 'hide']);
             return;
         }
  

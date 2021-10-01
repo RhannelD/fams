@@ -31,4 +31,15 @@ class ScholarInfo extends Model
         'father_living',
         'father_educational_attainment',
     ];
+
+    
+    public function school()
+    {
+        return $this->belongsTo(ScholarSchool::class, 'school_id', 'id');
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(ScholarCourse::class, 'course_id', 'id');
+    }
 }

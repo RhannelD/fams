@@ -44,6 +44,72 @@
                         </tr>
                     </tbody>
                 </table>
+                <hr class="my-2">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>School:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->school->school }}</td>
+                        </tr>
+                        <tr>
+                            <td>Course:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->course->course }}</td>
+                        </tr>
+                        <tr>
+                            <td>Year:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->year }}</td>
+                        </tr>
+                        <tr>
+                            <td>Semester:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->semester }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr class="my-2">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Mother's Name:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->mother_name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Mother's Occupation:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->mother_occupation }}</td>
+                        </tr>
+                        <tr>
+                            <td>Mother's Birth Date:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->mother_birthday }}</td>
+                        </tr>
+                        <tr>
+                            <td>Mother's Educational Attainment:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->mother_educational_attainment }}</td>
+                        </tr>
+                        <tr>
+                            <td>Living:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->mother_living? 'Yes': 'No' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Father's Name:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->father_name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Father's Occupation:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->father_occupation }}</td>
+                        </tr>
+                        <tr>
+                            <td>Father's Birth Date:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->father_birthday }}</td>
+                        </tr>
+                        <tr>
+                            <td>Father's Educational Attainment:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->father_educational_attainment }}</td>
+                        </tr>
+                        <tr>
+                            <td>Living:</td>
+                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->father_living? 'Yes': 'No' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="card-footer">
                 <button wire:click="$emitTo('scholar.scholar-edit-livewire', 'edit', {{ $user->id }})" type="button" 

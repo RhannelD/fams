@@ -60,7 +60,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return ScholarSchool::orderBy('school')->get();
+        // return ScholarSchool::orderBy('school')->get();
 
         // return User::with('email_update')
         //     ->take(4)
