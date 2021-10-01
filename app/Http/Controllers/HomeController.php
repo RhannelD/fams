@@ -2,38 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Scholarship;
-use App\Models\ScholarshipScholar;
-use App\Models\ScholarshipScholarInvite;
-use App\Models\ScholarshipOfficer;
-use App\Models\ScholarshipOfficerInvite;
-use App\Models\ScholarshipRequirement;
-use App\Models\ScholarshipRequirementItem;
-use App\Models\ScholarshipRequirementItemOption;
-use App\Models\ScholarshipRequirementCategory;
-use App\Models\ScholarshipRequirementAgreement;
-use App\Models\ScholarshipCategory;
-use App\Models\ScholarshipPost;
-use App\Models\ScholarshipPostComment;
-use App\Models\ScholarResponse;
-use App\Models\ScholarResponseOption;
-use App\Models\ScholarResponseAnswer;
-use App\Models\ScholarResponseFile;
-use App\Models\ScholarResponseComment;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Carbon\Carbon;
-use Stevebauman\Purify\Facades\Purify;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use App\Models\ScholarSchool;
+use App\Mail\PasswordResetMail;
+use App\Models\ScholarResponse;
+use App\Models\ScholarshipPost;
+use App\Models\ScholarshipOfficer;
+use App\Models\ScholarshipScholar;
+use Illuminate\Support\Facades\DB;
 use App\Mail\OfficerInvitationMail;
 use App\Mail\ScholarInvitationMail;
+use App\Models\ScholarResponseFile;
+use App\Models\ScholarshipCategory;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ScholarResponseAnswer;
+use App\Models\ScholarResponseOption;
+use App\Models\ScholarResponseComment;
+use App\Models\ScholarshipPostComment;
+use App\Models\ScholarshipRequirement;
+use Stevebauman\Purify\Facades\Purify;
+use Illuminate\Support\Facades\Storage;
+use App\Models\ScholarshipOfficerInvite;
+use App\Models\ScholarshipScholarInvite;
 use App\Mail\OfficerVerificationCodeMail;
 use App\Mail\ScholarVerificationCodeMail;
-use App\Mail\PasswordResetMail;
+use App\Models\ScholarshipRequirementItem;
 use App\Mail\UpdateEmailVerificationCodeMail;
+use App\Models\ScholarshipRequirementCategory;
+use App\Models\ScholarshipRequirementAgreement;
+use App\Models\ScholarshipRequirementItemOption;
 use App\Notifications\ScholarshipPostNotification;
 use Illuminate\Notifications\Messages\MailMessage;
 
@@ -59,7 +60,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return User::whereScholar()->get();
+        return ScholarSchool::orderBy('school')->get();
 
         // return User::with('email_update')
         //     ->take(4)

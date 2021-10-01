@@ -29,8 +29,7 @@ class ScholarInfoSeeder extends Seeder
                 'user_id'   => $scholar->id,
                 'school_id' => $schools[rand(0, $schools_count)]->id,
                 'course_id' => $courses[rand(0, $courses_count)]->id,
-                'mother_address' => $scholar->address,
-                'father_address' => $scholar->address,
+                'semester' => 1,
             ]);
         }
     }

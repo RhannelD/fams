@@ -19,15 +19,14 @@ class CreateScholarInfosTable extends Migration
             $table->foreignId('school_id');
             $table->foreignId('course_id');
             $table->integer('year');
+            $table->integer('semester');
             $table->string('mother_name', 1000);
             $table->date('mother_birthday');
-            $table->string('mother_address');
             $table->string('mother_occupation');
             $table->string('mother_educational_attainment');
             $table->boolean('mother_living');
             $table->string('father_name', 1000);
             $table->date('father_birthday');
-            $table->string('father_address');
             $table->string('father_occupation');
             $table->string('father_educational_attainment');
             $table->boolean('father_living');

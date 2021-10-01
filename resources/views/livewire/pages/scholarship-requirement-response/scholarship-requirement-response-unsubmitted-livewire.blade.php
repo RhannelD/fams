@@ -61,9 +61,11 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="py-1 bd-highlight">
-                            {{ $scholars->links() }}
-                        </div>
+                        @if (count($scholars))
+                            <div class="py-1 bd-highlight">
+                                {{ $scholars->links() }}
+                            </div>
+                        @endif
                     </div>
 
                     <div class="table-responsive">

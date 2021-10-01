@@ -2,17 +2,21 @@
 
 namespace App\Http\Livewire\Auth;
 
-use Livewire\Component;
-use App\Mail\ScholarVerificationCodeMail;
 use App\Models\User;
+use Livewire\Component;
+use App\Models\ScholarInfo;
+use App\Models\ScholarCourse;
+use App\Models\ScholarSchool;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Auth;
+use App\Mail\ScholarVerificationCodeMail;
 
 class SignUpLivewire extends Component
 {
     public $user_id = false;
     public $user;
+    public $user_info;
     public $password;
     public $password_confirm;
 
@@ -32,17 +36,57 @@ class SignUpLivewire extends Component
         'user.email' => "required|unique:users,email",
         'password' => 'required|min:9',
         'password_confirm' => 'required|min:9|same:password',
+
+        'user_info.school_id' => 'exists:scholar_schools,id',
+        'user_info.course_id' => 'exists:scholar_courses,id',
+        'user_info.year' => 'required|max:10|min:1',
+        'user_info.semester' => 'required|max:3|min:1',
+        'user_info.mother_name' => 'required|regex:/^[a-z ,.\'-]+$/i',
+        'user_info.mother_birthday' => 'required|before:20 years ago|after:100 years ago',
+        'user_info.mother_occupation' => 'required|max:200',
+        'user_info.mother_living' => 'required',
+        'user_info.mother_educational_attainment' => 'required|max:200',
+        'user_info.father_name' => 'required|regex:/^[a-z ,.\'-]+$/i',
+        'user_info.father_birthday' => 'required|before:20 years ago|after:100 years ago',
+        'user_info.father_occupation' => 'required|max:200',
+        'user_info.father_living' => 'required',
+        'user_info.father_educational_attainment' => 'required|max:200',
     ];
 
+    protected $messages = [
+        'user_info.school_id.exists' => 'The selected School is invalid.',
+        'user_info.course_id.exists' => 'The selected Course is invalid.',
+        'user_info.year.required' => 'Invalid year level.',
+        'user_info.year.min' => 'Invalid year level.',
+        'user_info.year.max' => 'Invalid year level.',
+        'user_info.semester.required' => 'Invalid semester.',
+        'user_info.semester.min' => 'Invalid semester.',
+        'user_info.semester.max' => 'Invalid semester.',
+    ];
+ 
     public function mount(){
         $this->user = new User;
+        $this->user_info = new ScholarInfo;
         $this->user->gender = 'male';
     }
 
     public function render()
     {
-        return view('livewire.auth.sign-up-livewire')
+        return view('livewire.auth.sign-up-livewire', [
+                'schools' => $this->get_schools(),
+                'courses' => $this->get_courses(),
+            ])
             ->extends('layouts.empty');
+    }
+
+    protected function get_schools()
+    {
+        return ScholarSchool::orderBy('school')->get();
+    }
+
+    protected function get_courses()
+    {
+        return ScholarCourse::orderBy('course')->get();
     }
     
     public function updated($propertyName)
@@ -115,9 +159,17 @@ class SignUpLivewire extends Component
 
         $this->user->password = Hash::make($this->password);
         $this->user->usertype = 'scholar';
-        $this->user->save();
+
+        if ( !$this->user->save() ) 
+            return;
+        
+        $user_id = $this->user->id;
+        $this->user_info->user_id = $user_id;
+        $this->user_info->save();
+        
         $this->user = new User;
         $this->user->gender = 'male';
+        $this->user_info = new ScholarInfo;
 
         if (Auth::attempt(['email' => $email, 'password' => $this->password])) {
             if (Auth::user()->usertype == 'scholar') {
