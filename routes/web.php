@@ -21,6 +21,7 @@ use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerLivewire;
 use App\Http\Livewire\ScholarshipScholar\ScholarshipScholarLivewire;
 use App\Http\Livewire\ScholarshipCategory\ScholarshipCategoryLivewire;
 use App\Http\Livewire\ScholarshipRequirement\ScholarshipRequirementLivewire;
+use App\Http\Livewire\ScholarshipScholar\ScholarshipScholarInviteImportExcel;
 use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerInviteLinkLivewire;
 use App\Http\Livewire\ScholarshipRequirement\ScholarshipRequirementOpenLivewire;
 use App\Http\Livewire\ScholarshipRequirementEdit\ScholarshipRequirementEditLivewire;
@@ -54,6 +55,7 @@ Route::get('/scholarship', ScholarshipLivewire::class)->name('scholarship')->mid
 Route::get('/scholarship/{scholarship_id}/home', ScholarshipPageLivewire::class)->name('scholarship.home')->middleware('auth.main');
 Route::get('/scholarship/{scholarship_id}/officer', ScholarshipOfficerLivewire::class)->name('scholarship.officer')->middleware('auth.main');
 Route::get('/scholarship/{scholarship_id}/scholar', ScholarshipScholarLivewire::class)->name('scholarship.scholar')->middleware('auth.main');
+Route::get('/scholarship/{scholarship_id}/scholar/invite', ScholarshipScholarInviteImportExcel::class)->name('scholarship.scholar.invite')->middleware('auth.main');
 Route::get('/scholarship/{scholarship_id}/requirement', ScholarshipRequirementLivewire::class)->name('scholarship.requirement')->middleware('auth.main');
 Route::get('/scholarship/{scholarship_id}/category', ScholarshipCategoryLivewire::class)->name('scholarship.category')->middleware('auth.main');
 Route::get('/scholarship/requirement/{requirement_id}', ScholarshipRequirementOpenLivewire::class)->name('scholarship.requirement.open')->middleware('auth.main');
@@ -69,6 +71,6 @@ Route::get('/requirement/{requirement_id}/response', ResponseLivewire::class)->n
 
 Route::get('/my-account', MyAccountLivewire::class)->name('my.account')->middleware('auth.main');
 
-Route::get('/file/preview/{id}', [FilePreviewController::class, 'show'])->name('file.preview')->middleware('auth.login');
+Route::get('/file/preview/{id}', [FilePreviewController::class, 'show'])->name('file.preview')->middleware('auth.main');
 
 Route::get('/try', [HomeController::class, 'index'])->name('try');

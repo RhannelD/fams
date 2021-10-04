@@ -124,6 +124,13 @@
                                 <input type="text" class="form-control bg-white" value="No results..." readonly>
                             @endforelse
                         @endisset
+
+                        <div class="alert alert-success my-3">
+                            You may also 
+                            <a href="{{ route('scholarship.scholar.invite', [$scholarship_id]) }}">
+                                import excel file
+                            </a>.
+                        </div>
                     </div>
                     <div wire:ignore.self class="tab-pane fade pt-1" id="pending" role="tabpanel" aria-labelledby="pending-tab">
                         @isset($pending_invites[0])

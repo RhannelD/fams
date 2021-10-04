@@ -178,6 +178,7 @@ return [
         UxWeb\SweetAlert\SweetAlertServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
         NotificationChannels\Messagebird\MessagebirdServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         
     ],
 
@@ -234,6 +235,7 @@ return [
 
         'Alert' => UxWeb\SweetAlert\SweetAlert::class,
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];
