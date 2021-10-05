@@ -65,20 +65,78 @@
         <div class="row mt-2">
             <div class="col-12">
                 @isset($dataset[0])
-                    <h3>Valid Information</h3>
+                    <h3 class="my-auto">Valid Information [{{ count($dataset) }}]</h3>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-success my-1"
+                            wire:click='confirm_invite_all' 
+                            wire:loading.attr='disabled'
+                            wire:target='invite_all'
+                            >
+                            <i class="fas fa-spinner fa-spin"
+                                wire:loading 
+                                wire:target='invite_all'
+                                >
+                            </i>
+                            Invite All
+                        </button>
+                        <button class="btn btn-danger my-1 ml-1"
+                            wire:click="confirm_cancel_all"
+                            wire:loading.attr='disabled'
+                            wire:target='cancel_all'
+                            >
+                            <i class="fas fa-spinner fa-spin"
+                                wire:loading 
+                                wire:target='cancel_all'
+                                >
+                            </i>
+                            Cancel All
+                        </button>
+                        <button class="btn btn-info text-white my-1 ml-1"
+                            wire:click="refreshing"
+                            wire:loading.attr='disabled'
+                            >
+                            <i class="fas fa-spinner fa-spin"
+                                wire:loading 
+                                wire:target="refreshing"
+                                >
+                            </i>
+                            Refresh
+                        </button>
+                    </div>
                     <table class="table table-sm table-bordered">
                         <tr>
                             <th>#</th>
                             <th>Email</th>
                             <th>Category</th>
                             <th>Account</th>
+                            <th>Invite</th>
                         </tr>
                         @foreach ($dataset as $row)
                             <tr>
-                                <td>{{ $loop->index }}</td>
+                                <td>{{ $loop->index+1 }}</td>
                                 <td>{{ $row['email'] }}</td>
                                 <td>{{ $row['category'] }}</td>
-                                <td></td>
+                                <td>
+                                    @if ( isset($row['account']) )
+                                        <a>
+                                            {{ $row['account'] }}
+                                        </a>
+                                    @else
+                                        <span class="badge badge-secondary">Not Yet Registered</span>
+                                    @endif    
+                                </td>
+                                <td>
+                                    @if ( !isset($row['invite']) )
+                                        ...
+                                    @elseif ($row['invite'])
+                                        <span class="badge badge-pill badge-success">Invited</span>
+                                        @if ( isset($row['invite_send']) && !$row['invite_send'] )
+                                            <span class="badge badge-pill badge-danger">Email not sent!</span>
+                                        @endif
+                                    @else
+                                        <span class="badge badge-pill badge-danger">Failed</span>
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                     </table>
@@ -102,7 +160,7 @@
                             </tr>
                             @foreach ($dataset_invalid as $row)
                                 <tr>
-                                    <td rowspan="2">{{ $loop->index }}</td>
+                                    <td rowspan="2">{{ $loop->index+1 }}</td>
                                     <td>{{ $row['email'] }}</td>
                                     <td>{{ $row['category'] }}</td>
                                 </tr>
@@ -123,4 +181,37 @@
             </div>
         </div>
     </div>
+    
+    <script>
+
+        window.addEventListener('swal:confirm:invite_all', event => { 
+            swal({
+                title: event.detail.message,
+                text: event.detail.text,
+                icon: event.detail.type,
+                buttons: true,
+            })
+            .then((willConfirm) => {
+                if (willConfirm) {
+                    @this.call(event.detail.function)
+                }
+            });
+        });
+
+        window.addEventListener('swal:confirm:cancel_all', event => { 
+            swal({
+                title: event.detail.message,
+                text: event.detail.text,
+                icon: event.detail.type,
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    @this.call(event.detail.function)
+                }
+            });
+        });
+
+    </script>
 </div>
