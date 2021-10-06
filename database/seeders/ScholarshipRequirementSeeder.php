@@ -2,10 +2,14 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\Scholarship;
-use App\Models\ScholarshipRequirement;
 use Carbon\Carbon;
+use App\Models\Scholarship;
+use App\Models\ScholarshipPost;
+use Illuminate\Database\Seeder;
+use App\Models\ScholarshipCategory;
+use App\Models\ScholarshipRequirement;
+use App\Models\ScholarshipPostLinkRequirement;
+use App\Models\ScholarshipRequirementCategory;
 
 class ScholarshipRequirementSeeder extends Seeder
 {
@@ -18,22 +22,70 @@ class ScholarshipRequirementSeeder extends Seeder
     {
         $scholarships = Scholarship::all();
 
+        // Requirements for Renewal
         foreach ($scholarships as $scholarship) {
-            $not_promoted_yet = true;
-            for ($i=0; $i < rand(5,8); $i++) { 
-                $to_promote = false;
+            $categories = ScholarshipCategory::where('scholarship_id', $scholarship->id)->get();
+            $posts = ScholarshipPost::where('scholarship_id', $scholarship->id)
+                ->where('title', 'like', 'Scholarship Renewal for%')
+                ->get();
 
-                if ($not_promoted_yet) {
-                    $not_promoted_yet = (rand(0,5) != 4);
-                    if (!$not_promoted_yet) {
-                        $to_promote = true;
-                    }
-                }
+            foreach ($posts as $post) {
+                $post_created_at = Carbon::parse($post->created_at);
+                $date = $post_created_at->format('Y-m-d h:i:s');
 
-                ScholarshipRequirement::factory()->create([   
-                    'scholarship_id' => $scholarship->id,
-                    'promote' => $to_promote,
-                ]);
+                foreach ($categories as $category) {
+                    $requirement = ScholarshipRequirement::factory()->create([   
+                        'scholarship_id' => $scholarship->id,
+                        'requirement' => "$category->category - {$post->title}",
+                        'description' => "<h1>$category->category Scholars</h1> You submit your requirements here.",
+                        'start_at' => $date,
+                        'end_at' => Carbon::parse($post->created_at)->addWeek(2)->format('Y-m-d h:i:s'),
+                    ]);
+
+                    ScholarshipPostLinkRequirement::factory()->create([   
+                        'post_id' => $post->id,
+                        'requirement_id' => $requirement->id,
+                    ]);
+                    
+                    ScholarshipRequirementCategory::factory()->create([   
+                        'requirement_id' => $requirement->id,
+                        'category_id' => $category->id,
+                    ]);
+                }           
+            }
+        }
+
+        // Requirements for Applicants
+        foreach ($scholarships as $scholarship) {
+            $categories = ScholarshipCategory::where('scholarship_id', $scholarship->id)->get();
+            $posts = ScholarshipPost::where('scholarship_id', $scholarship->id)
+                ->where('title', 'We are looking for new scholars!')
+                ->get();
+
+            foreach ($posts as $post) {
+                $post_created_at = Carbon::parse($post->created_at);
+                $date = $post_created_at->format('Y-m-d h:i:s');
+
+                foreach ($categories as $category) {
+                    $requirement = ScholarshipRequirement::factory()->create([   
+                        'scholarship_id' => $scholarship->id,
+                        'requirement' => "Application Form for $category->category",
+                        'description' => "<h3>$category->category Applicants</h3> You submit your requirements here.",
+                        'promote' => true,
+                        'start_at' => $date,
+                        'end_at' => Carbon::parse($post->created_at)->addWeek(2)->format('Y-m-d h:i:s'),
+                    ]);
+
+                    ScholarshipPostLinkRequirement::factory()->create([   
+                        'post_id' => $post->id,
+                        'requirement_id' => $requirement->id,
+                    ]);
+
+                    ScholarshipRequirementCategory::factory()->create([   
+                        'requirement_id' => $requirement->id,
+                        'category_id' => $category->id,
+                    ]);
+                }           
             }
         }
     }

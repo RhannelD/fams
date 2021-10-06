@@ -50,7 +50,7 @@ class ScholarshipPageLivewire extends Component
     protected function get_posts()
     {
         return ScholarshipPost::where('scholarship_id', $this->scholarship_id)
-            ->orderBy('id', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->take($this->post_count)
             ->get();
     }

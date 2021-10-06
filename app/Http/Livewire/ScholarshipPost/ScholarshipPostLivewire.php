@@ -22,6 +22,7 @@ class ScholarshipPostLivewire extends Component
     protected $rules = [
         'post.title' => 'max:200',
         'post.post' => 'required|string|min:1|max:16000000',
+        'post.promote' => 'boolean',
     ];
 
     protected function verifyUser()
@@ -51,6 +52,7 @@ class ScholarshipPostLivewire extends Component
     protected function set_post()
     {
         $this->post = new ScholarshipPost;
+        $this->post->promote = false;
         if ( isset($this->post_id) ) {
             $post = ScholarshipPost::find($this->post_id);
             if ( is_null($post) ) {

@@ -20,6 +20,7 @@ use App\Http\Livewire\ScholarshipPost\ScholarshipPostOpenLivewire;
 use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerLivewire;
 use App\Http\Livewire\ScholarshipScholar\ScholarshipScholarLivewire;
 use App\Http\Livewire\ScholarshipCategory\ScholarshipCategoryLivewire;
+use App\Http\Livewire\ScholarScholarship\ScholarScholarshipViewLivewire;
 use App\Http\Livewire\ScholarshipRequirement\ScholarshipRequirementLivewire;
 use App\Http\Livewire\ScholarshipScholar\ScholarshipScholarInviteImportExcel;
 use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerInviteLinkLivewire;
@@ -51,6 +52,7 @@ Route::get('/dashboard', DashboardLivewire::class)->name('dashboard')->middlewar
 Route::get('/officer', OfficerLivewire::class)->name('officer')->middleware('auth.main');
 Route::get('/scholar', ScholarLivewire::class)->name('scholar')->middleware('auth.main');
 Route::get('/scholarship', ScholarshipLivewire::class)->name('scholarship')->middleware('auth.main');
+Route::get('/scholarship/scholar', ScholarScholarshipViewLivewire::class)->name('scholar.scholarship')->middleware('auth.main');
 
 Route::get('/scholarship/{scholarship_id}/home', ScholarshipPageLivewire::class)->name('scholarship.home')->middleware('auth.main');
 Route::get('/scholarship/{scholarship_id}/officer', ScholarshipOfficerLivewire::class)->name('scholarship.officer')->middleware('auth.main');

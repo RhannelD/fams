@@ -41,4 +41,10 @@ class ScholarshipPost extends Model
     {
         return $this->hasMany(ScholarshipPostComment::class, 'post_id', 'id');
     }
+
+    
+    public function scopeWherePromote($query)
+    {
+        return $query->where('promote', true);
+    }
 }

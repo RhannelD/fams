@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Scholarship;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\ScholarCourse;
 use App\Models\ScholarSchool;
 use App\Mail\PasswordResetMail;
 use App\Models\ScholarResponse;
@@ -60,6 +61,54 @@ class HomeController extends Controller
      */
     public function index()
     {
+        return ScholarshipPost::where('scholarship_id', 1)
+        ->where('title', 'We are looking for new scholars!')
+        ->get();
+
+        // // Random between date
+        // $after  = Carbon::parse('2021-01-01 00:00:00');
+        // $before = Carbon::parse('2021-06-30 23:59:59');
+        // $diffInDays = $before->diffInDays($after);
+        // $randomDays = rand(0, $diffInDays);
+        // return $after->addDays($randomDays)->format('Y-m-d h:i:s');
+
+        // $year_now = Carbon::now()->format('Y');
+        // return $year_now < '2022';
+        
+
+        // $date = Carbon::parse('2022-01-01 00:00:00');
+        // return Carbon::now()->greaterThan($date);
+
+        // $date = strtotime('2019-01-01 00:00:01');
+        // return Carbon::parse($date)->format('Y-m-d h:i:s');
+
+        // $date = Carbon::parse('2019-01-01 00:00:00');
+        // return $date->addWeeks(4)->format('Y-m-d h:i:s');
+        // return $date->addMonths(6)->format('Y-m-d h:i:s');
+
+        // ScholarCourse::factory()->create([   
+        //     'course' => 'asdsdasd',
+        //     'created_at' => $date,
+        //     'updated_at' => $date,
+        // ]);
+
+        // return User::whereHas('scholarship_officers', function ($query) {
+        //         $query->where('scholarship_id', 1);
+        //     })
+        //     ->get();
+
+        // return ScholarshipPost::with('scholarship')
+        // ->wherePromote()
+        // ->whereHas('scholarship', function ($query) {
+        //     $query->whereHas('categories', function ($query) {
+        //         $query->whereDoesntHave('scholars', function ($query) {
+        //             $query->where('user_id', Auth::id());
+        //         });
+        //     });
+        // })
+        // ->orderBy('id', 'desc')
+        // ->get();
+
         // return ScholarSchool::orderBy('school')->get();
 
         // return User::with('email_update')

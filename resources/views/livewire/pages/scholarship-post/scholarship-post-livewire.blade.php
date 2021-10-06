@@ -28,6 +28,20 @@
                             </div>
                             @error('post.post') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
+                        <div class="form-group form-check">
+                            <input wire:model.lazy="post.promote" type="checkbox" class="form-check-input" id="exampleCheck1">
+                            <label class="form-check-label" for="exampleCheck1">
+                                Promote
+                                (
+                                    @if ($post->promote)
+                                        This will be visible to other scholar's
+                                    @else
+                                        This not visible to other scholar's
+                                    @endif
+                                )
+                            </label>
+                            @error('post.promote') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
 
                         @if ( count($requirements) != 0 )
                             <div class="form-group d-flex mb-1">

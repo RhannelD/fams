@@ -23,7 +23,13 @@
                 </a> 
             @endif
 
-            <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('scholarship') }}">
+            <a class="list-group-item list-group-item-action bg-light tabs" 
+                @if (Auth::user()->is_scholar())
+                    href="{{ route('scholar.scholarship') }}"
+                @else
+                    href="{{ route('scholarship') }}"
+                @endif
+                >
                 <i class="fas fa-file-invoice-dollar"></i>
                 Scholarships
             </a>
