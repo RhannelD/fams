@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use App\Models\Scholarship;
 use App\Models\ScholarResponse;
-use App\Models\ScholarshipRequirement;
+use Illuminate\Database\Seeder;
 use App\Models\ScholarshipScholar;
+use App\Models\ScholarshipRequirement;
+use App\Models\ScholarshipRequirementCategory;
 
 class ScholarResponseSeeder extends Seeder
 {
@@ -17,92 +19,111 @@ class ScholarResponseSeeder extends Seeder
      */
     public function run()
     {
-        $requirements = ScholarshipRequirement::with('categories')
+        // Response to Requirements for Scholars fake applications of first scholar
+        $requirements = ScholarshipRequirement::where('requirement', 'like', "Scholarship Application Form for%")
+            ->where('promote', true)
             ->get();
-
-
         foreach ($requirements as $requirement) {
-            // Create random responses from existing scholars
-            if (!$requirement->promote) {
-                foreach ($requirement->categories as $category) {
-                    $students = ScholarshipScholar::select('user_id')
-                        ->where('category_id', $category->category_id)
-                        ->get();
-    
-                    $min = strtotime($requirement->start_at);
-                    $max = strtotime($requirement->end_at);
-    
-                    foreach ($students as $student) {
-                        $val = rand($min, $max);
-                        
-                        ScholarResponse::factory()->create([   
-                            'user_id' => $student->user_id,
-                            'requirement_id' => $requirement->id,
-                            'approval' => (rand(1, 5) != 5),
-                            'submit_at' => date('Y-m-d H:i:s', $val)
-                        ]);
-                    }
+            $req_categories = ScholarshipRequirementCategory::where('requirement_id', $requirement->id)->get();
+            
+            foreach ($req_categories as $req_category) {
+                $students = ScholarshipScholar::select('user_id')
+                    ->where('category_id', $req_category->category_id)
+                    ->get();
+
+                $min = strtotime($requirement->start_at);
+                $max = strtotime($requirement->end_at);
+                $ran = rand($min, $max);
+                
+                foreach ($students as $student) {
+                    // Inserts all of the approved scholars
+                    $ran = rand($min, $max);
+                    
+                    ScholarResponse::factory()->create([   
+                        'user_id' => $student->user_id,
+                        'requirement_id' => $requirement->id,
+                        'approval' => true,
+                        'submit_at' => date('Y-m-d H:i:s', $ran),
+                    ]);
                 }
-                continue;
-            }
 
-            // Create random responses both from some of existing and not scholars
-            if ($requirement->categories->count() != 0) {
-                $categories = [];
+                $students = User::whereScholar()
+                    ->whereNotScholarOf($requirement->scholarship_id)
+                    ->get();
 
-                foreach ($requirement->categories as $category) {
-                    array_push($categories, $category->category_id);
-
-                    if (rand(1, 5) != 5) {
+                foreach ($students as $student) {
+                    // Inserts random denied response of other scholars
+                    if ( rand(0, 5) != 1 ) 
                         continue;
-                    }
-
-                    $students = ScholarshipScholar::select('user_id')
-                        ->where('category_id', $category->category_id)
-                        ->get();
-    
-                    $min = strtotime($requirement->start_at);
-                    $max = strtotime($requirement->end_at);
-    
-                    foreach ($students as $student) {
-                        $val = rand($min, $max);
-                        
-                        ScholarResponse::factory()->create([   
-                            'user_id' => $student->user_id,
-                            'requirement_id' => $requirement->id,
-                            'approval' => true,
-                            'submit_at' => date('Y-m-d H:i:s', $val)
-                        ]);
-                    }
+                    
+                    $ran = rand($min, $max);
+                    ScholarResponse::factory()->create([   
+                        'user_id' => $student->id,
+                        'requirement_id' => $requirement->id,
+                        'approval' => false,
+                        'submit_at' => date('Y-m-d H:i:s', $ran),
+                    ]);
                 }
-
-                if (count($categories) != 0) {
-                    $students = User::select('users.id')
-                        ->leftJoin(with(new ScholarshipScholar)->getTable(), 'scholarship_scholars.user_id', '=', 'users.id')
-                        ->where('usertype', 'scholar')
-                        ->whereNotIn('category_id', $categories)
-                        ->get();
-
-                    $min = strtotime($requirement->start_at);
-                    $max = strtotime($requirement->end_at);
-    
-                    foreach ($students as $student) {
-                        if (rand(1, 5) != 4) {
-                            continue;
-                        }
-
-                        $val = rand($min, $max);
-                        
-                        ScholarResponse::factory()->create([   
-                            'user_id' => $student->id,
-                            'requirement_id' => $requirement->id,
-                            'approval' => false,
-                            'submit_at' => date('Y-m-d H:i:s', $val)
-                        ]);
-                    }
-                }
-
             }
         }
+        // -------------------------------------------------------------
+
+        // Response to Requirements for renewals which are all approved
+        $requirements = ScholarshipRequirement::where('promote', false)->get();
+        foreach ($requirements as $requirement) {
+            $req_categories = ScholarshipRequirementCategory::where('requirement_id', $requirement->id)->get();
+
+            foreach ($req_categories as $req_category) { 
+                $students = ScholarshipScholar::select('user_id')
+                    ->where('category_id', $req_category->category_id)
+                    ->get();
+
+                $min = strtotime($requirement->start_at);
+                $max = strtotime($requirement->end_at);
+                $ran = rand($min, $max);
+
+                foreach ($students as $student) {
+                    // Inserts all of the approved scholar renewal
+                    $ran = rand($min, $max);
+                    
+                    ScholarResponse::factory()->create([   
+                        'user_id' => $student->user_id,
+                        'requirement_id' => $requirement->id,
+                        'approval' => true,
+                        'submit_at' => date('Y-m-d H:i:s', $ran),
+                    ]);
+                }
+            }
+        }
+        // -------------------------------------------------------------
+
+        // Response to Currrent Requirements for Scholars where is pending
+        $requirements = ScholarshipRequirement::where('requirement', 'like', "Application Form for%")
+            ->where('promote', true)
+            ->get();
+        foreach ($requirements as $requirement) {
+            $req_categories = ScholarshipRequirementCategory::where('requirement_id', $requirement->id)->get();
+            
+            foreach ($req_categories as $req_category) {
+                $students = User::whereScholar()
+                    ->whereNotScholarOf($requirement->scholarship_id)
+                    ->get();
+
+                foreach ($students as $student) {
+                    // Inserts random pending response of other scholars
+                    if ( rand(0, 5) != 1 ) 
+                        continue;
+                    
+                    $ran = rand($min, $max);
+                    ScholarResponse::factory()->create([   
+                        'user_id' => $student->id,
+                        'requirement_id' => $requirement->id,
+                        'approval' => null,
+                        'submit_at' => date('Y-m-d H:i:s', $ran),
+                    ]);
+                }
+            }
+        }
+        // -------------------------------------------------------------
     }
 }

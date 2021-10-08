@@ -34,7 +34,7 @@ class ScholarshipRequirementItemSeeder extends Seeder
             $item_Grade->position = 2;
             $item_Grade->save();
 
-            for ($items=0; $items < rand(5,8); $items++) { 
+            for ($items=0; $items < rand(2,8); $items++) { 
                 ScholarshipRequirementItem::factory()->create([   
                     'requirement_id' => $requirement->id,
                     'position' => ($items+3)

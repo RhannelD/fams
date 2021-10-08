@@ -41,4 +41,11 @@ class ScholarResponse extends Model
     {
         return $this->belongsTo(ScholarshipRequirement::class, 'requirement_id', 'id');
     }
+
+
+    public function submmited_on_time()
+    {
+        $requirement = ScholarshipRequirement::find($this->requirement_id);
+        return $requirement->end_at > $this->submit_at;
+    }
 }

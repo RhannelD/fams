@@ -61,9 +61,23 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return ScholarshipPost::where('scholarship_id', 1)
-        ->where('title', 'We are looking for new scholars!')
-        ->get();
+        $requirement = ScholarshipRequirement::get();
+
+        echo count($requirement);
+
+        // echo $requirement->start_at.'<br>';
+        // echo $requirement->end_at.'<br>';
+
+        // $min = strtotime($requirement->start_at);
+        // $max = strtotime($requirement->end_at);
+        // $val = rand($min, $max);
+        // echo date('Y-m-d H:i:s', $val);
+        
+    
+
+        // return ScholarshipPost::where('scholarship_id', 1)
+        // ->where('title', 'We are looking for new scholars!')
+        // ->get();
 
         // // Random between date
         // $after  = Carbon::parse('2021-01-01 00:00:00');

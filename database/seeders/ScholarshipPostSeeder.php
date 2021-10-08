@@ -37,6 +37,31 @@ class ScholarshipPostSeeder extends Seeder
             '2021',
         ];
 
+        // For new Scholars fake applications of firsy scholar
+        foreach ($scholarships as $scholarship) {
+            $scholarship_id =  $scholarship->id;
+            $officer = User::whereHas('scholarship_officers', function ($query) use ($scholarship_id) {
+                    $query->where('scholarship_id', $scholarship_id);
+                })->get();
+
+            $date = Carbon::parse('2018-01-01 00:00:00')
+                ->subMonths(rand(0, 2))
+                ->subDays(rand(3, 30))
+                ->addHours(rand(0, 23))
+                ->addMinutes(rand(0, 59))
+                ->format('Y-m-d h:i:s');
+
+            ScholarshipPost::factory()->create([   
+                'user_id' => $officer[(rand(0, (count($officer)-1)))],
+                'scholarship_id' => $scholarship_id,
+                'title' => "We are looking for new scholars!",
+                'post' => '<h4><strong>We have available slots</strong></h4><p>To those who are looking for scholarship, we have available slots for you. Just accomplish the forms linked down below to submit your requirements.&nbsp;</p><p>Thank you.</p>',
+                'promote' => true,
+                'created_at' => $date,
+                'updated_at' => $date,
+            ]);
+        }
+
         // For the Renewal Scholars
         foreach ($scholarships as $scholarship) {
             $scholarship_id =  $scholarship->id;
@@ -85,7 +110,7 @@ class ScholarshipPostSeeder extends Seeder
 
 
                     // Just a random post
-                    if (rand(0,1) == 0) {
+                    if (rand(0,2) != 1) {
                         $random_date = $after->addDays($random_days+rand(2,7))
                             ->addHours(rand(0, 10))
                             ->subHour(rand(0, 10))

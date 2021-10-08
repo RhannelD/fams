@@ -22,7 +22,7 @@
                                 </tr>
                                 <tr>
                                     <td>For:</td>
-                                    <td>{{ $requirement->promote? 'Old Scholars': 'Applicatants' }}</td>
+                                    <td>{{ $requirement->promote? 'Applicatants': 'Old Scholars' }}</td>
                                 </tr>
                             </table>
                         @else

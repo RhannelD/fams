@@ -33,6 +33,9 @@
                         @endif
                     </th>
                     <th class="text-center">
+                        Submited
+                    </th>
+                    <th class="text-center">
                         Approval
                     </th>
                     <th class="text-center">
@@ -58,6 +61,13 @@
                         </td>
                         <td class="text-nowrap">
                             {{ date('d-m-Y h:i A', strtotime($response->submit_at)) }}
+                        </td>
+                        <td class="text-nowrap text-center">
+                            @if ( $response->submmited_on_time() )
+                                <span class="badge badge-pill badge-success">On Time</span>
+                            @else
+                                <span class="badge badge-pill badge-danger">Late</span>
+                            @endif
                         </td>
                         <td class="text-nowrap text-center">
                             @if ( is_null($response->approval) )

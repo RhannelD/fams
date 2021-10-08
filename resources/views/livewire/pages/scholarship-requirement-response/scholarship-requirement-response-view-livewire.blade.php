@@ -75,7 +75,14 @@
                         <table>
                             <tr>
                                 <td>Submitted at:</td>
-                                <td>{{ $scholar_response->submit_at }}</td>
+                                <td>
+                                    {{ $scholar_response->submit_at }}         
+                                    @if ( $scholar_response->submmited_on_time() )
+                                        <span class="badge badge-pill badge-success">On Time</span>
+                                    @else
+                                        <span class="badge badge-pill badge-danger">Late</span>
+                                    @endif
+                                </td>
                             </tr>
                             <tr>
                                 <td>Approval:</td>
