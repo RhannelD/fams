@@ -93,6 +93,11 @@ class User extends Authenticatable
     }
     
 
+    public function scopeWhereAdmin($query)
+    {
+        return $query->where('usertype', 'admin');
+    }
+
     public function scopeWhereOfficer($query)
     {
         return $query->where('usertype', 'officer');
@@ -118,6 +123,13 @@ class User extends Authenticatable
     public function scopeWhereNotOfficerOf($query, $scholarship_id)
     {
         return $query->whereDoesntHave('scholarship_officers', function ($query) use ($scholarship_id) {
+                $query->where('scholarship_id', '=', $scholarship_id);
+            });
+    }
+
+    public function scopeWhereOfficerOf($query, $scholarship_id)
+    {
+        return $query->whereHas('scholarship_officers', function ($query) use ($scholarship_id) {
                 $query->where('scholarship_id', '=', $scholarship_id);
             });
     }

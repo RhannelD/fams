@@ -26,6 +26,32 @@ class ScholarshipPostCommentLivewire extends Component
         return false;
     }
 
+    protected function verifyAccess()
+    {
+        if ( ScholarshipPost::where('id', $this->post_id)->where('promote', true)->exists() ) 
+            return false;
+        
+        $access = ScholarshipPost::where('id', $this->post_id)
+            ->when(!Auth::user()->is_admin(), function ($query) {
+                $query->whereHas('scholarship', function ($query) {
+                    $query->whereHas('officers', function ($query) {
+                        $query->where('user_id', Auth::id());
+                    })
+                    ->orWhereHas('categories', function ($query) {
+                        $query->whereHas('scholars', function ($query) {
+                            $query->where('user_id', Auth::id());
+                        });
+                    });
+                });
+            })
+            ->exists();
+
+        if ( !$access ) 
+            redirect()->route('index');
+
+        return !$access;
+    }
+
     public function mount($post_id)
     {
         if ($this->verifyUser()) return;
@@ -48,6 +74,7 @@ class ScholarshipPostCommentLivewire extends Component
     public function comment()
     {
         if ($this->verifyUser()) return;
+        if ($this->verifyAccess()) return;
 
         $this->validate();
 

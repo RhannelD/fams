@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Auth;
 
 class ScholarScholarshipViewLivewire extends Component
 {
+    public $tab = '';
+
+    protected $queryString = [
+        'tab' => ['except' => ''],
+    ];
+
     public function render()
     {
         return view('livewire.pages.scholar-scholarship.scholar-scholarship-view-livewire', [

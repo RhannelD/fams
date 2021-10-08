@@ -1,14 +1,26 @@
 <div>
     <ul wire:ignore class="nav nav-tabs d-flex justify-content-end my-2" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="scholarship-tab" data-toggle="tab" href="#scholarship" role="tab" aria-controls="scholarship" aria-selected="true">Home</a>
+            <a id="scholarship-tab" data-toggle="tab" href="#scholarship" role="tab" aria-controls="scholarship"
+                wire:click="$set('tab', '')"
+                class="nav-link {{ $tab==''?'active':'' }}"
+                aria-selected="{{ $tab==''?'true':'' }}"
+                >
+                Home
+            </a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="scholarship-find-tab" data-toggle="tab" href="#scholarship-find" role="tab" aria-controls="scholarship-find" aria-selected="false">Find Scholarship</a>
+            <a id="scholarship-find-tab" data-toggle="tab" href="#scholarship-find" role="tab" aria-controls="scholarship-find"
+                wire:click="$set('tab', 'find')"
+                class="nav-link {{ $tab=='find'?'active':'' }}"
+                aria-selected="{{ $tab=='find'?'false':'' }}"
+                >
+                Find Scholarship
+            </a>
         </li>
     </ul>
     <div class="tab-content mt-3" id="pills-tabContent">
-        <div wire:ignore.self class="tab-pane fade show active" id="scholarship" role="tabpanel" aria-labelledby="scholarship-tab">
+        <div wire:ignore.self class="tab-pane fade {{ $tab==''?'show active':'' }}" id="scholarship" role="tabpanel" aria-labelledby="scholarship-tab">
             <div class="row">
                 @forelse ($scholarships as $scholarship)
                     <div class="col-12 col-sm-6 col-lg-4">
@@ -43,7 +55,7 @@
                 @endforelse
             </div>
         </div>
-        <div wire:ignore class="tab-pane fade" id="scholarship-find" role="tabpanel" aria-labelledby="scholarship-find-tab">
+        <div wire:ignore class="tab-pane fade {{ $tab=='find'?'show active':'' }}" id="scholarship-find" role="tabpanel" aria-labelledby="scholarship-find-tab">
             @livewire('scholar-scholarship.scholar-scholarship-find-livewire', key('scholar-scholarship-find-livewire-'.time()))
         </div>
     </div>

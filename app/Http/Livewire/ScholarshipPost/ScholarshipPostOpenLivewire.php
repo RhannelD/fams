@@ -39,36 +39,39 @@ class ScholarshipPostOpenLivewire extends Component
 
     public function render()
     {
-        $post = ScholarshipPost::find($this->post_id);
-
-        $comments = [];
-        if ( isset($this->post_count) ) {
-            $comments = ScholarshipPostComment::select('scholarship_post_comments.*')
-                ->where('post_id', $this->post_id)
-                ->latest('id')
-                ->take($this->post_count)
-                ->get()
-                ->reverse()
-                ->values();
-        } else {
-            $comments = ScholarshipPostComment::select('scholarship_post_comments.*')
-                ->where('post_id', $this->post_id)
-                ->latest('id')
-                ->get()
-                ->reverse()
-                ->values();
-        }
-
-        $comment_count = ScholarshipPostComment::where('post_id', $this->post_id)->count();
-
+        $comments = $this->get_comments();
+        $comment_count = $this->get_comment_count();
         $show_more = ($comment_count > count($comments));
 
         return view('livewire.pages.scholarship-post.scholarship-post-open-livewire', [
-                'post' => $post,
+                'post' => $this->get_post(),
                 'comments' => $comments,
                 'comment_count' => $comment_count,
                 'show_more' => $show_more,
             ])->extends('livewire.main.main-livewire');
+    }
+
+    protected function get_post()
+    {
+        return ScholarshipPost::find($this->post_id);
+    }
+
+    protected function get_comments()
+    {
+        return ScholarshipPostComment::select('scholarship_post_comments.*')
+            ->where('post_id', $this->post_id)
+            ->latest('id')
+            ->when(isset($this->post_count), function ($query) {
+                    $query->take($this->post_count);
+                })
+            ->get()
+            ->reverse()
+            ->values();
+    }
+
+    protected function get_comment_count()
+    {
+        return ScholarshipPostComment::where('post_id', $this->post_id)->count();
     }
 
     public function load_more()

@@ -19,6 +19,13 @@ class ScholarScholarshipFindLivewire extends Component
     {
         return ScholarshipPost::with('scholarship')
             ->wherePromote()
+            ->whereDoesntHave('scholarship', function ($query) {
+                $query->whereHas('categories', function ($query) {
+                    $query->whereHas('scholars', function ($query) {
+                        $query->where('user_id', Auth::id());
+                    });
+                });
+            })
             ->orderBy('updated_at', 'desc')
             ->get();
     }

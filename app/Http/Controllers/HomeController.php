@@ -61,9 +61,38 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $requirement = ScholarshipRequirement::get();
+        $post_id = 77;
+        return ScholarshipPost::where('id', $post_id)
+            ->when(!Auth::user()->is_admin(), function ($query) {
+                $query->whereHas('scholarship', function ($query) {
+                    $query->whereHas('officers', function ($query) {
+                        $query->where('user_id', Auth::id());
+                    })
+                    ->orWhereHas('categories', function ($query) {
+                        $query->whereHas('scholars', function ($query) {
+                            $query->where('user_id', Auth::id());
+                        });
+                    });
+                });
+            })
+            ->get();
 
-        echo count($requirement);
+        // $scholarship_id = 1;
+        // return User::where('id', Auth::id())
+        //     ->where(function($query) use ($scholarship_id) {
+        //         $query->whereAdmin()
+        //             ->orWhere(function($query) use ($scholarship_id) {
+        //                 $query->whereOfficerOf($scholarship_id);
+        //             })
+        //             ->orWhere(function($query) use ($scholarship_id) {
+        //                 $query->whereScholarOf($scholarship_id);
+        //             });
+        //     })
+        //     ->get();
+
+        // $requirement = ScholarshipRequirement::get();
+
+        // echo count($requirement);
 
         // echo $requirement->start_at.'<br>';
         // echo $requirement->end_at.'<br>';
@@ -112,16 +141,16 @@ class HomeController extends Controller
         //     ->get();
 
         // return ScholarshipPost::with('scholarship')
-        // ->wherePromote()
-        // ->whereHas('scholarship', function ($query) {
-        //     $query->whereHas('categories', function ($query) {
-        //         $query->whereDoesntHave('scholars', function ($query) {
-        //             $query->where('user_id', Auth::id());
+        //     ->wherePromote()
+        //     ->whereDoesntHave('scholarship', function ($query) {
+        //         $query->whereHas('categories', function ($query) {
+        //             $query->whereHas('scholars', function ($query) {
+        //                 $query->where('user_id', Auth::id());
+        //             });
         //         });
-        //     });
-        // })
-        // ->orderBy('id', 'desc')
-        // ->get();
+        //     })
+        //     ->orderBy('id', 'desc')
+        //     ->get();
 
         // return ScholarSchool::orderBy('school')->get();
 

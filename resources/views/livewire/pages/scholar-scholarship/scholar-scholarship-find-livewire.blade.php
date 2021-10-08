@@ -3,25 +3,26 @@
         <div class="col-12">
             @foreach ($posts as $post)
                 <div class="card mb-3 shadow requirement-item-hover mx-auto" style="max-width: 800px">
-                    <a href="{{ route('post.show', [$post->id]) }}" class="nounderline text-dark">
-                        <div class="card-header"> 
-                            <h5>
+                    <div class="card-header"> 
+                        <h5>
+                            <a href="{{ route('post.show', [$post->id]) }}" class="text-dark">
                                 {{ $post->title }} 
-                            </h5>
-                            <div class="d-flex">
-                                <div class="mr-auto bd-highlight my-0">
-                                    @isset($post->user)
-                                        <h6 class="my-0">
-                                            {{ $post->user->flname() }}
-                                        </h6>
-                                    @endisset
-                                </div>
-                                <h6 class="ml-auto mr-1 bd-highlight my-0">
-                                    {{ date('d-m-Y h:i A', strtotime($post->created_at)) }}
-                                </h6>
+                            </a>
+                        </h5>
+                        <div class="d-flex">
+                            <div class="mr-auto bd-highlight my-0">
+                                @isset($post->user)
+                                    <h6 class="my-0">
+                                        {{ $post->scholarship->scholarship }}
+                                    </h6>
+                                @endisset
                             </div>
+                            <h6 class="ml-auto mr-1 bd-highlight my-0">
+                                {{ date('d-m-Y h:i A', strtotime($post->created_at)) }}
+                            </h6>
                         </div>
-
+                    </div>
+                    <a href="{{ route('post.show', [$post->id]) }}" class="nounderline text-dark">
                         <div class="card-body bg-light">
                             <p class="mb-0">
                                 {!! Purify::clean($post->post) !!}
@@ -35,14 +36,13 @@
                                 </h6>
                             @endif
                         </div>
-
-                        <div class="card-footer d-flex justify-content-end">
-                            <a href="{{ route('post.show', [$post->id]) }}" class=" text-dark">
-                                Comment
-                                <span class="badge badge-primary pt-1">{{ $post->comments->count() }}</span>
-                            </a>
-                        </div>
                     </a>
+                    <div class="card-footer d-flex justify-content-end">
+                        <a href="{{ route('post.show', [$post->id]) }}" class=" text-dark">
+                            Comment
+                            <span class="badge badge-primary pt-1">{{ $post->comments->count() }}</span>
+                        </a>
+                    </div>
                 </div>
             @endforeach
         </div>
