@@ -4,7 +4,7 @@
     <hr>
     <div class="row mt-3">
         <div class="col-12">
-            @if (Auth::user()->usertype != 'scholar')
+            @can('create', [\App\Models\ScholarshipPost::class, $scholarship_id])
                 <div class="card mb-4 shadow requirement-item-hover mx-auto" style="max-width: 800px">
                     <div class="card-header">
                         <a data-toggle="modal" data-target="#post_something">
@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 @livewire('scholarship-post.scholarship-post-livewire', [$scholarship_id], key('scholarship-page-post-'.time().$scholarship_id))
-            @endif
+            @endcan
 
             @foreach ($posts as $post)
                 <div class="card mb-3 shadow requirement-item-hover mx-auto" style="max-width: 800px">

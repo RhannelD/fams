@@ -10,52 +10,45 @@ class ScholarshipPostOpenCommentLivewire extends Component
 {
     public $comment_id;
     
-    protected function verifyUser()
-    {
-        if (!Auth::check()) {
-            redirect()->route('index');
-            return true;
-        }
-        return false;
-    }
-
     public function mount($id)
     {
-        if ($this->verifyUser()) return;
-
         $this->comment_id = $id;
     }
 
+    public function hydrate()
+    {
+        $comment = $this->get_comment();
+        if ( Auth::guest() || Auth::user()->cannot('view', $comment->post) ) {
+            $this->emitUp('comment_updated');
+        }
+    }
 
     public function render()
     {
-        $comment = ScholarshipPostComment::select('scholarship_post_comments.*', 'users.firstname', 'users.lastname')
-            ->leftJoin('users', 'scholarship_post_comments.user_id', '=', 'users.id')
-            ->where('scholarship_post_comments.id', $this->comment_id)
-            ->first();
-        
-        return view('livewire.pages.scholarship-post.scholarship-post-open-comment-livewire', ['comment' => $comment]);
+        return view('livewire.pages.scholarship-post.scholarship-post-open-comment-livewire', ['comment' => $this->get_comment()]);
+    }
+
+    protected function get_comment()
+    {
+        return ScholarshipPostComment::find($this->comment_id);
     }
 
     public function delete_comment_confirmation()
     {
-        if ($this->verifyUser()) return;
-
-        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_comment_'.$this->comment_id, [
-            'type' => 'warning',  
-            'message' => 'Are you sure?', 
-            'text' => 'If deleted, you will not be able to recover this comment!',
-            'function' => "delete_comment"
-        ]);
+        if ( Auth::check() && Auth::user()->can('delete', $this->get_comment()) ) {
+            $this->dispatchBrowserEvent('swal:confirm:delete_comment_'.$this->comment_id, [
+                'type' => 'warning',  
+                'message' => 'Are you sure?', 
+                'text' => 'If deleted, you will not be able to recover this comment!',
+                'function' => "delete_comment"
+            ]);
+        }
     }
 
     public function delete_comment()
     {
-        if ($this->verifyUser()) return;
-
-        $comment = ScholarshipPostComment::find($this->comment_id);
-
-        if ( !$comment ) {
+        $comment = $this->get_comment();
+        if ( !$comment || Auth::guest() || Auth::user()->cannot('delete', $comment) ) {
             return;
         }
 

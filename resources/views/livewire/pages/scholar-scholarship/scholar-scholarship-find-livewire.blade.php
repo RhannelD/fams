@@ -1,12 +1,13 @@
 <div>
     <div class="row mt-3">
         <div class="col-12">
+            <button wire:click='try'>try</button>
             @foreach ($posts as $post)
                 <div class="card mb-3 shadow requirement-item-hover mx-auto" style="max-width: 800px">
                     <div class="card-header"> 
                         <h5>
                             <a href="{{ route('post.show', [$post->id]) }}" class="text-dark">
-                                {{ $post->title }} 
+                                {{ $post->title }} {{ $post->id }}
                             </a>
                         </h5>
                         <div class="d-flex">
@@ -45,6 +46,24 @@
                     </div>
                 </div>
             @endforeach
+            @if ($show_more)
+                <div class="card mb-3 shadow requirement-item-hover mx-auto" style="max-width: 800px">
+                    <div class="card-header">
+                        <button class="btn btn-block btn-primary"
+                            wire:click="load_more"
+                            wire:loading.remove
+                            wire:target="load_more"
+                            >
+                            Load more
+                        </button>
+                        <div wire:loading wire:target="load_more">
+                            <span class="spinner-grow spinner-grow-sm mx-1" role="status" aria-hidden="true"></span>
+                            <span class="spinner-grow spinner-grow-sm mx-1" role="status" aria-hidden="true"></span>
+                            <span class="spinner-grow spinner-grow-sm mx-1" role="status" aria-hidden="true"></span>
+                        </div>  
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </div>

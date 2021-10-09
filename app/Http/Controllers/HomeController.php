@@ -22,6 +22,7 @@ use App\Models\ScholarshipCategory;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarResponseAnswer;
 use App\Models\ScholarResponseOption;
+use Illuminate\Support\Facades\Route;
 use App\Models\ScholarResponseComment;
 use App\Models\ScholarshipPostComment;
 use App\Models\ScholarshipRequirement;
@@ -61,21 +62,59 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $post_id = 77;
-        return ScholarshipPost::where('id', $post_id)
-            ->when(!Auth::user()->is_admin(), function ($query) {
-                $query->whereHas('scholarship', function ($query) {
-                    $query->whereHas('officers', function ($query) {
-                        $query->where('user_id', Auth::id());
-                    })
-                    ->orWhereHas('categories', function ($query) {
-                        $query->whereHas('scholars', function ($query) {
-                            $query->where('user_id', Auth::id());
-                        });
-                    });
-                });
-            })
-            ->get();
+        // return Auth::id();
+        $comment = ScholarshipPostComment::find(457);
+        // return $comment;
+        return Auth::user()->can('delete', $comment);
+
+        // $scholarshipPost = ScholarshipPost::find(34);
+        // $user = Auth::user();
+        // return $scholarshipPost->scholarship
+        //     ->where(function ($query) use ($user) {
+        //         $query->whereHas('officers', function ($query) use ($user) {
+        //             $query->where('user_id',  $user->id);
+        //         })
+        //         ->orWhereHas('categories', function ($query) use ($user) {
+        //             $query->whereHas('scholars', function ($query) use ($user) {
+        //                 $query->where('user_id', $user->id);
+        //             });
+        //         });
+        //     })
+        //     ->exists();
+
+        // $user = Auth::user();
+        // return $user->scholarship_officers->where('scholarship_id', 2)->where('position_id', 2)->count() > 0;
+
+        // $post = ScholarshipPost::first();
+        // return $post->scholarship
+        //     ->where('id', 1)
+        //     ->where(function ($query) {
+        //         $query->whereHas('officers', function ($query) {
+        //             $query->where('user_id', 1);
+        //         })
+        //         ->orWhereHas('categories', function ($query) {
+        //             $query->whereHas('scholars', function ($query) {
+        //                 $query->where('user_id', 32);
+        //             });
+        //         });
+        //     })
+        //     ->first();
+
+        // $post_id = 77;
+        // return ScholarshipPost::where('id', $post_id)
+        //     ->when(!Auth::user()->is_admin(), function ($query) {
+        //         $query->whereHas('scholarship', function ($query) {
+        //             $query->whereHas('officers', function ($query) {
+        //                 $query->where('user_id', Auth::id());
+        //             })
+        //             ->orWhereHas('categories', function ($query) {
+        //                 $query->whereHas('scholars', function ($query) {
+        //                     $query->where('user_id', Auth::id());
+        //                 });
+        //             });
+        //         });
+        //     })
+        //     ->get();
 
         // $scholarship_id = 1;
         // return User::where('id', Auth::id())

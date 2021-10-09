@@ -3,13 +3,17 @@
 namespace App\Http\Livewire\ScholarshipPost;
 
 use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipPost;
-use App\Models\ScholarshipPostLinkRequirement;
+use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirement;
+use App\Models\ScholarshipPostLinkRequirement;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ScholarshipPostLivewire extends Component
 {
+    use AuthorizesRequests;
+    public $invalid_session = false;
+    
     public $scholarship_id;
     public $post_id;
     public $post;
@@ -25,19 +29,20 @@ class ScholarshipPostLivewire extends Component
         'post.promote' => 'boolean',
     ];
 
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check()) {
-            redirect()->route('dashboard');
-            return true;
+        if ( Auth::guest() 
+            || (isset($this->post_id) && Auth::user()->cannot('update', $this->get_post())) 
+            || (is_null($this->post_id) && Auth::user()->cannot('create', [ScholarshipPost::class, $this->scholarship_id]))
+            ) {
+            $this->invalid_session = true;
+            $this->emitUp('post_updated');
         }
-        return false;
+        $this->invalid_session = false;
     }
 
     public function mount($scholarship_id, $post_id = null)
     {
-        if ($this->verifyUser()) return;
-
         $this->scholarship_id = $scholarship_id;
 
         $this->requirements = ScholarshipRequirement::where('scholarship_requirements.scholarship_id', $this->scholarship_id)
@@ -54,7 +59,7 @@ class ScholarshipPostLivewire extends Component
         $this->post = new ScholarshipPost;
         $this->post->promote = false;
         if ( isset($this->post_id) ) {
-            $post = ScholarshipPost::find($this->post_id);
+            $post = $this->get_post();
             if ( is_null($post) ) {
                 $this->post_id = null;
                 return;
@@ -74,6 +79,11 @@ class ScholarshipPostLivewire extends Component
         return view('livewire.pages.scholarship-post.scholarship-post-livewire');
     }
     
+    protected function get_post()
+    {
+        return ScholarshipPost::find($this->post_id);
+    }
+
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
@@ -81,7 +91,7 @@ class ScholarshipPostLivewire extends Component
 
     public function save()
     {
-        if ($this->verifyUser()) return;
+        if ($this->invalid_session) return;
 
         $this->validate();
 
@@ -89,7 +99,7 @@ class ScholarshipPostLivewire extends Component
             $this->post->scholarship_id = $this->scholarship_id;
             $this->post->user_id = Auth::id();
         } else {
-            $post = ScholarshipPost::find($this->post_id);
+            $post = $this->get_post();
             if ( is_null($post) ) {
                 $this->dispatchBrowserEvent('close_post_modal');
                 $this->emitUp('post_updated');

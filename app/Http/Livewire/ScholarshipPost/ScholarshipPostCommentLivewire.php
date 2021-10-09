@@ -17,49 +17,18 @@ class ScholarshipPostCommentLivewire extends Component
         'comment.comment' => 'required|string|min:1|max:60000',
     ];
 
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check()) {
-            redirect()->route('index');
-            return true;
+        if ( Auth::guest() || Auth::user()->cannot('create', [ScholarshipPostComment::class, $this->post_id]) ) {
+            $this->emitUp('comment_updated');
         }
-        return false;
-    }
-
-    protected function verifyAccess()
-    {
-        if ( ScholarshipPost::where('id', $this->post_id)->where('promote', true)->exists() ) 
-            return false;
-        
-        $access = ScholarshipPost::where('id', $this->post_id)
-            ->when(!Auth::user()->is_admin(), function ($query) {
-                $query->whereHas('scholarship', function ($query) {
-                    $query->whereHas('officers', function ($query) {
-                        $query->where('user_id', Auth::id());
-                    })
-                    ->orWhereHas('categories', function ($query) {
-                        $query->whereHas('scholars', function ($query) {
-                            $query->where('user_id', Auth::id());
-                        });
-                    });
-                });
-            })
-            ->exists();
-
-        if ( !$access ) 
-            redirect()->route('index');
-
-        return !$access;
     }
 
     public function mount($post_id)
     {
-        if ($this->verifyUser()) return;
-
         $this->post_id = $post_id;
         $this->comment = new ScholarshipPostComment;
     }
-
 
     public function render()
     {
@@ -73,15 +42,11 @@ class ScholarshipPostCommentLivewire extends Component
 
     public function comment()
     {
-        if ($this->verifyUser()) return;
-        if ($this->verifyAccess()) return;
+        if ( Auth::user()->cannot('create', [ScholarshipPostComment::class, $this->post_id]) ) 
+            return;
 
         $this->validate();
 
-        if ( !ScholarshipPost::where('id', $this->post_id)->exists() ) {
-            return redirect()->route('index');
-        }
-        
         $this->comment->user_id = Auth::id();
         $this->comment->post_id = $this->post_id;
 

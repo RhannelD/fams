@@ -11,23 +11,25 @@
                 <div class="card-header"> 
                     <h5 class="d-flex">
                         {{ $post->title }} 
-                        @if ( $post->user_id == Auth::id() || Auth::user()->is_admin() )
+                        @canany(['update', 'delete'], $post)
                             <div wire:ignore class="dropdown mr-0 ml-auto">
                                 <span id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-ellipsis-h"></i>
                                 </span>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a wire:click="delete_post_confirmation" class="dropdown-item">
-                                        <i class="fas fa-trash mr-1"></i>
-                                        Delete Post
-                                    </a>
+                                    {{-- @can('delete', $post) --}}
+                                        <a wire:click="delete_post_confirmation" class="dropdown-item">
+                                            <i class="fas fa-trash mr-1"></i>
+                                            Delete Post
+                                        </a>
+                                    {{-- @endcan --}}
                                     <a class="dropdown-item" data-toggle="modal" data-target="#post_something">
                                         <i class="fas fa-pen-square mr-1"></i>
                                         Edit Post
                                     </a>
                                 </div>
                             </div>
-                        @endif
+                        @endcanany
                     </h5>
 
                     @if ( $post->user_id == Auth::id() || Auth::user()->is_admin() )
@@ -120,13 +122,13 @@
                 </div>
             @endif
             
-            <div wire:poll.10000ms>
+            <div wire:poll.10000ms id="scholarship-post-open-comment-content">
                 @foreach ($comments as $comment)
                     @livewire('scholarship-post.scholarship-post-open-comment-livewire', [$comment->id], key('scholarship-page-post-comment-open-'.time().$post->id))
                 @endforeach
             </div>
 
-            <div wire:ignore>
+            <div wire:ignore id="scholarship-page-post-comment-content">
                 @livewire('scholarship-post.scholarship-post-comment-livewire', [$post->id], key('scholarship-page-post-comment-'.time().$post->id))
             </div>
             
