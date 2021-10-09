@@ -29,6 +29,13 @@ class ScholarshipOfficer extends Model
     {
         return $this->belongsTo(OfficerPosition::class, 'position_id', 'id');
     }
+
+    
+    public function scopeWhereAdmin($query)
+    {
+        return $query->where('position_id', 1);
+    }
+
     
     public function is_admin()
     {

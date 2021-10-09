@@ -63,9 +63,11 @@ class HomeController extends Controller
     public function index()
     {
         // return Auth::id();
-        $comment = ScholarshipPostComment::find(457);
-        // return $comment;
-        return Auth::user()->can('delete', $comment);
+        return ScholarshipOfficer::where('user_id', 8)
+            ->where('scholarship_id', 2)
+            ->whereAdmin()
+            ->first();
+        
 
         // $scholarshipPost = ScholarshipPost::find(34);
         // $user = Auth::user();

@@ -7,11 +7,11 @@
             <h3 class="ml-3 my-auto py-1">
                 <strong>Categories</strong>
             </h3>
-            @if ( Auth::user()->usertype != 'scholar' )
+            @can( 'create', [\App\Models\ScholarshipCategory::class, $scholarship_id] )
                 <button wire:click="$emit('unset_category')" class="btn btn-success ml-auto mr-0" type="button" data-toggle="modal" data-target="#category_form">
                     Create Category
                 </button>
-            @endif
+            @endcan
         </div>
 	</div>
 
@@ -23,23 +23,27 @@
                         <div class="d-flex">
                             <h3 class="my-0">{{ $category->category }}</h3>
 
-                            @if ( Auth::user()->usertype != 'scholar' )    
-                                <div class="dropdown mr-0 ml-auto">
+                            @canany( ['update', 'delete'], $category )
+                                <div class="dropdown mr-0 ml-auto" id="dropdown-action-category-{{ $category->id }}">
                                     <span id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-ellipsis-v"></i>
                                     </span>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a wire:click="$emit('set_category', {{ $category->id }})" class="dropdown-item" type="button" data-toggle="modal" data-target="#category_form">
-                                            <i class="fas fa-pen-square mr-1"></i>
-                                            Edit Category
-                                        </a>
-                                        <a wire:click="delete_category_confirmation({{ $category->id }})" class="dropdown-item">
-                                            <i class="fas fa-trash mr-1"></i>
-                                            Delete Category
-                                        </a>
+                                        @can( 'update', $category )
+                                            <a wire:click="$emit('set_category', {{ $category->id }})" class="dropdown-item" type="button" data-toggle="modal" data-target="#category_form">
+                                                <i class="fas fa-pen-square mr-1"></i>
+                                                Edit Category
+                                            </a>
+                                        @endcan
+                                        @can( 'delete', $category )
+                                            <a wire:click="delete_category_confirmation({{ $category->id }})" class="dropdown-item">
+                                                <i class="fas fa-trash mr-1"></i>
+                                                Delete Category
+                                            </a>
+                                        @endcan
                                     </div>
                                 </div>
-                            @endif
+                            @endcanany
                         </div>
                         <table class="col-12">
                             <tr>
@@ -87,11 +91,13 @@
     </div>
 
 	<div>
-        <div wire:ignore.self class="modal fade category_form" id="category_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal" role="document">
-                @livewire('scholarship-category.scholarship-category-edit-livewire', [$scholarship_id]))
+        @can( 'create', [\App\Models\ScholarshipCategory::class, $scholarship_id] )    
+            <div wire:ignore.self class="modal fade category_form" id="category_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal" role="document">
+                    @livewire('scholarship-category.scholarship-category-edit-livewire', [$scholarship_id]))
+                </div>
             </div>
-        </div>
+        @endcan
     </div>
 
 

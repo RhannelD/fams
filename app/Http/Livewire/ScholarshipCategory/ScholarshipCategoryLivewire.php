@@ -3,13 +3,16 @@
 namespace App\Http\Livewire\ScholarshipCategory;
 
 use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Scholarship;
-use App\Models\ScholarshipCategory;
 use App\Models\ScholarshipOfficer;
+use App\Models\ScholarshipCategory;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ScholarshipCategoryLivewire extends Component
 {
+    use AuthorizesRequests;
+    
     public $scholarship_id;
     public $delete_category_id;
     
@@ -17,57 +20,42 @@ class ScholarshipCategoryLivewire extends Component
         'refresh' => '$refresh',
     ];
 
-    protected function verifyUser()
+    public function hydrate()
     {
-        if ( !Auth::check() ) {
-            redirect()->route('index');
-            return true;
+        if ( Auth::guest() || Auth::user()->cannot('viewAny', [ScholarshipCategory::class, $this->scholarship_id]) ) {
+            return redirect()->route('scholarship.category', [$this->scholarship_id]);
         }
-        return false;
-    }
-
-    protected function verifyUserAccess()
-    {
-        if ( Auth::user()->is_admin() ) {
-            return false;
-        }
-
-        $user = ScholarshipScholar::where('user_id', Auth::id())
-            ->where('scholarship_id', $this->scholarship_id)
-            ->first();
-
-        if ( is_null($user) || !$user->is_admin() ) {
-            redirect()->route('index');
-            return true;
-        }
-
-        return false;
     }
 
     public function mount($scholarship_id)
     {
         $this->scholarship_id = $scholarship_id;
+        $this->authorize('viewAny', [ScholarshipCategory::class, $scholarship_id]);
     }
     
     public function render()
     {
-        $scholarship = Scholarship::find($this->scholarship_id);
-
-        $categories = ScholarshipCategory::where('scholarship_id', $this->scholarship_id)->get();
-
         return view('livewire.pages.scholarship-category.scholarship-category-livewire', [
-                'scholarship' => $scholarship,
-                'categories' => $categories
+                'scholarship' => $this->get_scholarship(),
+                'categories' => $this->get_categories()
             ])
             ->extends('livewire.main.main-livewire');
     }
 
+    protected function get_scholarship()
+    {
+        return Scholarship::find($this->scholarship_id);
+    }
+
+    protected function get_categories()
+    {
+        return ScholarshipCategory::where('scholarship_id', $this->scholarship_id)->get();
+    }
+
     public function delete_category_confirmation($category_id)
     {
-        if ($this->verifyUser()) return;
-
         $category = ScholarshipCategory::find($category_id);
-        if ( is_null($category) ) {
+        if ( is_null($category) || Auth::guest() || Auth::user()->cannot('delete', $category) ) {
             $this->delete_category_id = null;
             return;
         }
@@ -75,8 +63,8 @@ class ScholarshipCategoryLivewire extends Component
 
         if ($this->cannotbedeleted()) return;
 
-        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_category', [
-            'type' => 'warning',  
+        $this->dispatchBrowserEvent('swal:confirm:delete_category', [
+            'type' => 'warning',
             'message' => 'Are you sure?', 
             'text' => 'If deleted, you will not be able to recover this category!',
             'function' => "delete"
@@ -85,18 +73,15 @@ class ScholarshipCategoryLivewire extends Component
 
     public function delete()
     {
-        if ($this->verifyUser()) return;
-        
         $category = ScholarshipCategory::find($this->delete_category_id);
-        if ( is_null($category) ) {
+        if ( is_null($category) || Auth::guest() || Auth::user()->cannot('delete', $category) ) 
             return;
-        }
 
-        if ($this->cannotbedeleted()) return;
-
-        if ( !$category->delete() ) {
+        if ($this->cannotbedeleted()) 
             return;
-        }
+
+        if ( !$category->delete() ) 
+            return;
         
         $this->dispatchBrowserEvent('swal:modal', [
             'type' => 'success',  

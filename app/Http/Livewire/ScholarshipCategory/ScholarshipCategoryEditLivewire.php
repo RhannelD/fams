@@ -1,14 +1,18 @@
 <?php
 
 namespace App\Http\Livewire\ScholarshipCategory;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Scholarship;
-use App\Models\ScholarshipCategory;
 
 use Livewire\Component;
+use App\Models\Scholarship;
+use App\Models\ScholarshipCategory;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ScholarshipCategoryEditLivewire extends Component
 {
+    use AuthorizesRequests;
+    public $invalid_session = false;
+
     public $scholarship_id;
     public $category_id;
     public $category;
@@ -22,6 +26,21 @@ class ScholarshipCategoryEditLivewire extends Component
         'unset_category' => 'unset_category',
         'set_category' => 'set_category',
     ];
+
+    public function hydrate()
+    {
+        if ( Auth::guest() 
+            || (isset($this->category_id) && Auth::user()->cannot('update', $this->get_category())) 
+            || (is_null($this->category_id) && Auth::user()->cannot('create', [ScholarshipCategory::class, $this->scholarship_id]))
+            ) {
+            $this->invalid_session = true;
+            $this->emitUp('refresh');
+            $this->dispatchBrowserEvent('remove:modal-backdrop');
+            $this->dispatchBrowserEvent('category-form', ['action' => 'hide']);
+        } else {
+            $this->invalid_session = false;
+        }
+    }
 
     public function mount($scholarship_id)
     {
@@ -56,6 +75,11 @@ class ScholarshipCategoryEditLivewire extends Component
     {
         return view('livewire.pages.scholarship-category.scholarship-category-edit-livewire');
     }
+
+    protected function get_category()
+    {
+        return ScholarshipCategory::find($this->category_id);
+    }
  
     public function updated($propertyName)
     {
@@ -64,15 +88,13 @@ class ScholarshipCategoryEditLivewire extends Component
 
     public function save()
     {
-        $this->validate();
+        if ($this->invalid_session) return;
 
-        if ( is_null(Scholarship::find($this->scholarship_id)) ) {
-            return;
-        }
+        $this->validate();
 
         $create = true;
         if ( isset($this->category_id) ) {
-            $category = ScholarshipCategory::find($this->category_id);
+            $category = $this->get_category();
             if ( is_null($category) ) {
                 return;
             }

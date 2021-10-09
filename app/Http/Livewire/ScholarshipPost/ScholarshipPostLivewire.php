@@ -37,8 +37,9 @@ class ScholarshipPostLivewire extends Component
             ) {
             $this->invalid_session = true;
             $this->emitUp('post_updated');
+        } else {
+            $this->invalid_session = false;
         }
-        $this->invalid_session = false;
     }
 
     public function mount($scholarship_id, $post_id = null)
