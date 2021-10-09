@@ -3,7 +3,7 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="agreementDuplicationModalLabel">Duplicate Another Terms and Conditions</h5>
+                    <h5 class="modal-title" id="agreementDuplicationModalLabel">Duplicate Another Agreements</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -99,7 +99,7 @@
                                 <h4>
                                     {{ $duplicate_agreement_requirement->requirement }}
                                 </h4>
-                                <label class="mb-1">Terms and Condition:</label>
+                                <label class="mb-1">Agreements:</label>
                                 <p class="mb-1">
                                     {!! Purify::clean($duplicate_agreement_requirement->agreements->first()->agreement) !!}
                                 </p>

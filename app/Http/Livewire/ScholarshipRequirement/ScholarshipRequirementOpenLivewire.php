@@ -3,33 +3,37 @@
 namespace App\Http\Livewire\ScholarshipRequirement;
 
 use Livewire\Component;
-use App\Models\ScholarshipRequirement;
-use App\Models\ScholarshipRequirementItem;
-use App\Models\ScholarshipRequirementItemOption;
-use App\Models\ScholarshipRequirementCategory;
-use App\Models\ScholarshipPostLinkRequirement;
 use App\Models\ScholarResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ScholarshipRequirement;
+use App\Models\ScholarshipRequirementItem;
+use App\Models\ScholarshipPostLinkRequirement;
+use App\Models\ScholarshipRequirementCategory;
+use App\Models\ScholarshipRequirementItemOption;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ScholarshipRequirementOpenLivewire extends Component
 {
+    use AuthorizesRequests;
+    
     public $requirement_id;
 
-    protected function verifyUser()
+    protected $listeners = [
+        'refresh' => '$refresh',
+    ];
+
+    public function hydrate()
     {
-        if ( !Auth::check() || Auth::user()->usertype=='scholar' ) {
-            redirect()->route('index');
-            return true;
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_scholarship_requirement()) ) {
+            return redirect()->route('scholarship.requirement.open', [$this->requirement_id]);
         }
-        return false;
     }
 
     public function mount($requirement_id)
     {
-        if ($this->verifyUser()) return;
-
         $this->requirement_id = $requirement_id;
+        $this->authorize('update', $this->get_scholarship_requirement());
     }
 
     public function render()
@@ -47,15 +51,17 @@ class ScholarshipRequirementOpenLivewire extends Component
 
     public function delete_confirmation()
     {
-        if ($this->verifyUser()) return;
-        if ($this->if_requirement_cant_be_deleted()) return;
+        if ( Auth::check() && Auth::user()->can('delete', $this->get_scholarship_requirement()) ) {
+            if ( $this->if_requirement_cant_be_deleted() ) 
+                return;
 
-        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_requirement', [
-            'type' => 'warning',  
-            'message' => 'Are you sure?', 
-            'text' => 'If deleted, you will not be able to recover this requirement!',
-            'function' => "delete_requirement"
-        ]);
+            $this->dispatchBrowserEvent('swal:confirm:delete_requirement', [
+                'type' => 'warning',  
+                'message' => 'Are you sure?', 
+                'text' => 'If deleted, you will not be able to recover this requirement!',
+                'function' => "delete_requirement"
+            ]);
+        }
     }
 
     protected function if_requirement_cant_be_deleted()
@@ -77,13 +83,13 @@ class ScholarshipRequirementOpenLivewire extends Component
 
     public function delete_requirement()
     {
-        if ($this->verifyUser()) return;
-        if ($this->if_requirement_cant_be_deleted()) return;
-
         $requirement = $this->get_scholarship_requirement();
-        if ( is_null($requirement) )
+        if ( Auth::guest() || Auth::user()->cannot('delete', $requirement) ) 
             return;
         
+        if ( $this->if_requirement_cant_be_deleted() ) 
+            return;
+
         $scholarship_id = $requirement->scholarship_id;
         if ($requirement->delete()) {
             session()->flash('deleted', 'Requirement successfully deleted.');
@@ -94,7 +100,7 @@ class ScholarshipRequirementOpenLivewire extends Component
     public function edit_confirm()
     {
         $requirement = $this->get_scholarship_requirement();
-        if ( is_null($requirement) )
+        if ( Auth::guest() || Auth::user()->cannot('update', $requirement) )
             return;
 
         if ( $requirement->get_submitted_responses_count() ) {
@@ -109,6 +115,9 @@ class ScholarshipRequirementOpenLivewire extends Component
 
     public function edit()
     {
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_scholarship_requirement()) )
+            return;
+
         return redirect()->route('requirement.edit', [$this->requirement_id]);
     }
 }

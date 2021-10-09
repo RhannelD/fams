@@ -38,17 +38,22 @@ class ScholarshipRequirementEditItemLivewire extends Component
         return is_null($requirement_item);
     }
 
+    public function hydrate()
+    {
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_scholarship_requirement()) ) {
+            $this->emitUp('refresh');
+        }
+    }
+
     public function mount($item_id)
     {
-        if ($this->verifyUser()) return;
-        
         $this->item = new ScholarshipRequirementItem;
         $this->item_id = $item_id;
     }
 
     public function render()
     {
-        $requirement_item = ScholarshipRequirementItem::find($this->item_id);
+        $requirement_item = $this->get_requirement_item();
 
         if ( isset($requirement_item) ) {
             $this->item->item = $requirement_item->item;
@@ -58,10 +63,16 @@ class ScholarshipRequirementEditItemLivewire extends Component
 
         return view('livewire.pages.scholarship-requirement-edit.scholarship-requirement-edit-item-livewire', ['requirement_item' => $requirement_item]);
     }
+
+    protected function get_requirement_item()
+    {
+        return ScholarshipRequirementItem::find($this->item_id);
+    }
     
     public function updated($propertyName)
     {
-        if ($this->verifyUser()) return;
+        if ( Auth::guest() || Auth::user()->cannot('update', $requirement) )
+            return;
 
         $this->validate();
 
@@ -75,7 +86,7 @@ class ScholarshipRequirementEditItemLivewire extends Component
     {
         if ($this->verifyUser()) return;
 
-        $requirement_item = ScholarshipRequirementItem::find($this->item_id);
+        $requirement_item = $this->get_requirement_item();
         if ( is_null($requirement_item) ) 
             return;
         
@@ -129,7 +140,7 @@ class ScholarshipRequirementEditItemLivewire extends Component
             return;
         }
         
-        $temp_item = ScholarshipRequirementItem::find($this->item_id);
+        $temp_item = $this->get_requirement_item();
         if (in_array($temp_item->type, array('radio', 'check'))) 
             return;
 

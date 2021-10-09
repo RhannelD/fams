@@ -2,16 +2,18 @@
 
 namespace App\Http\Livewire\ScholarshipRequirement;
 
+use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementItem;
-use Carbon\Carbon;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ScholarshipRequirementLivewire extends Component
 {
+    use AuthorizesRequests;
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
@@ -24,15 +26,6 @@ class ScholarshipRequirementLivewire extends Component
         'refresh' => '$refresh',
     ];
     
-    protected function verifyUser()
-    {
-        if (!Auth::check()) {
-            redirect()->route('index');
-            return true;
-        }
-        return false;
-    }
-    
     public function getQueryString()
     {
         return [];
@@ -40,9 +33,15 @@ class ScholarshipRequirementLivewire extends Component
 
     public function mount($scholarship_id)
     {
-        if ($this->verifyUser()) return;
-
         $this->scholarship_id = $scholarship_id;
+        $this->authorize('viewAny', [ScholarshipRequirement::class, $scholarship_id]);
+    }
+
+    public function hydrate()
+    {
+        if ( Auth::guest() || Auth::user()->cannot('viewAny', [ScholarshipRequirement::class, $this->scholarship_id]) ) {
+            return redirect()->route('scholarship.requirement', [$this->scholarship_id]);
+        }
     }
 
     public function updated($name)
@@ -73,6 +72,9 @@ class ScholarshipRequirementLivewire extends Component
 
     public function create_requirement()
     {
+        if ( Auth::guest() || Auth::user()->cannot('create', [ScholarshipRequirement::class, $this->scholarship_id]) ) 
+            return;
+
         $new_requirement = new ScholarshipRequirement;
         $new_requirement->scholarship_id = $this->scholarship_id;
         $new_requirement->requirement = 'Requirement Title';

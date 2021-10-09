@@ -19,25 +19,20 @@ class ScholarshipRequirementActivateLivewire extends Component
         'end_at' => 'required|date_format:Y-m-d\TH:i|after:requirement.start_at',
     ];
 
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check()) {
-            redirect()->route('index');
-            return true;
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_scholarship_requirement()) ) {
+            $this->emitUp('refresh');
         }
-        return false;
     }
-    
+
     public function updated($propertyName)
     {
-        if ($this->verifyUser()) return;
+        $requirement = $this->get_scholarship_requirement();
+        if ( Auth::guest() || Auth::user()->cannot('update', $requirement) )
+            return;
 
         $this->validate();
-
-        $requirement = ScholarshipRequirement::find($this->requirement_id);
-        if ( is_null($requirement) ) {
-            return;
-        }
 
         $requirement->start_at = Carbon::parse($this->start_at)->format('Y-m-d H:i:s');
         $requirement->end_at   = Carbon::parse($this->end_at)->format('Y-m-d H:i:s');
@@ -53,14 +48,12 @@ class ScholarshipRequirementActivateLivewire extends Component
 
     public function mount($requirement_id)
     {
-        if ($this->verifyUser()) return;
-
         $this->requirement_id = $requirement_id;
     }
 
     public function render()
     {
-        $requirement = ScholarshipRequirement::find($this->requirement_id);
+        $requirement = $this->get_scholarship_requirement();
 
         $this->start_at = Carbon::parse($requirement->start_at)->format('Y-m-d\TH:i');
         $this->end_at   = Carbon::parse($requirement->end_at)->format('Y-m-d\TH:i');
@@ -68,14 +61,16 @@ class ScholarshipRequirementActivateLivewire extends Component
         return view('livewire.pages.scholarship-requirement-edit.scholarship-requirement-activate-livewire', ['requirement' => $requirement]);
     }
     
+    protected function get_scholarship_requirement()
+    {
+        return ScholarshipRequirement::find($this->requirement_id);
+    }
+
     public function toggle_disable_at_end()
     {
-        if ($this->verifyUser()) return;
-
-        $requirement = ScholarshipRequirement::find($this->requirement_id);
-        if ( is_null($requirement) ) {
+        $requirement = $this->get_scholarship_requirement();
+        if ( Auth::guest() || Auth::user()->cannot('update', $requirement) )
             return;
-        }
 
         if ( isset($requirement->enable) ) {
             $requirement->enable = null;
@@ -90,12 +85,9 @@ class ScholarshipRequirementActivateLivewire extends Component
 
     public function toggle_enable_form()
     {
-        if ($this->verifyUser()) return;
-
-        $requirement = ScholarshipRequirement::find($this->requirement_id);
-        if ( is_null($requirement) ) {
+        $requirement = $this->get_scholarship_requirement();
+        if ( Auth::guest() || Auth::user()->cannot('update', $requirement) )
             return;
-        }
 
         $requirement->enable = (!$requirement->enable);
         $requirement->save();

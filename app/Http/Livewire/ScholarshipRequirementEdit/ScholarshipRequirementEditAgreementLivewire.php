@@ -29,6 +29,13 @@ class ScholarshipRequirementEditAgreementLivewire extends Component
         return false;
     }
 
+    public function hydrate()
+    {
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_agreement()) ) {
+            $this->emitUp('refresh');
+        }
+    }
+
     public function mount($agreement_id)
     {
         $this->agreement_id = $agreement_id;
@@ -56,26 +63,22 @@ class ScholarshipRequirementEditAgreementLivewire extends Component
     public function refreshing()
     {
         $agreement = $this->get_agreement();
-        if ( is_null($agreement) ) 
-            return;
-            
-        $this->agreement = $agreement->agreement;
+        if ( Auth::check() && Auth::user()->can('update', $agreement) ) {
+            $this->agreement = $agreement->agreement;
 
-        $this->dispatchBrowserEvent('refreshing-agreement', ['agreement' => $this->agreement]);
+            $this->dispatchBrowserEvent('refreshing-agreement', ['agreement' => $this->agreement]);
+        }
     }
 
     public function save()
     {
-        if ($this->verifyUser()) return;
-
         $agreement = $this->get_agreement();
-        if ( is_null($agreement) )
-            return;
+        if ( Auth::check() && Auth::user()->can('update', $agreement) ) {
+            $this->validate();
 
-        $this->validate();
-
-        $agreement->agreement = $this->agreement;
-        $agreement->save();
+            $agreement->agreement = $this->agreement;
+            $agreement->save();
+        }
     }
 
     public function save_all()
@@ -85,22 +88,20 @@ class ScholarshipRequirementEditAgreementLivewire extends Component
 
     public function delete_confirmation()
     {
-        if ($this->verifyUser()) return;
-
-        $this->dispatchBrowserEvent('swal:confirm:delete_agreement_confirmation', [
-            'type' => 'warning',  
-            'message' => 'Are you sure?', 
-            'text' => 'If deleted, you will not be able to recover this Terms and Conditions!',
-            'function' => "delete_agreement"
-        ]);
+        if ( Auth::check() && Auth::user()->can('delete', $this->get_agreement()) ) {
+            $this->dispatchBrowserEvent('swal:confirm:delete_agreement_confirmation', [
+                'type' => 'warning',  
+                'message' => 'Are you sure?', 
+                'text' => 'If deleted, you will not be able to recover this Terms and Conditions!',
+                'function' => "delete_agreement"
+            ]);
+        }
     }
 
     public function delete_agreement()
     {
-        if ($this->verifyUser()) return;
-
         $agreement = $this->get_agreement();
-        if ( $agreement ) {
+        if ( Auth::check() && Auth::user()->can('delete', $agreement) ) {
             $agreement->delete();
             $this->agreement_id = null;
             $this->emitUp('refresh');

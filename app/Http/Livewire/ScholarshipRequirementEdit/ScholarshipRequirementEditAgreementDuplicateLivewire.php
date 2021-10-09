@@ -18,7 +18,14 @@ class ScholarshipRequirementEditAgreementDuplicateLivewire extends Component
     protected $listeners = [
         'refresh' => '$refresh',
     ];
-    
+
+    public function hydrate()
+    {
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_agreement()) ) {
+            $this->emitUp('refresh');
+        }
+    }
+
     public function mount($agreement_id)
     {
         $this->agreement_id = $agreement_id;
@@ -62,7 +69,7 @@ class ScholarshipRequirementEditAgreementDuplicateLivewire extends Component
 
     public function view_requirement($requirement_id)
     {
-        if ( !ScholarshipRequirement::where('id', $requirement_id)->has('agreements')->exists() )
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_agreement()) || !ScholarshipRequirement::where('id', $requirement_id)->has('agreements')->exists() ) 
             return;
         
         $this->duplicate_agreement_requirement_id = $requirement_id;
@@ -71,22 +78,21 @@ class ScholarshipRequirementEditAgreementDuplicateLivewire extends Component
     
     public function duplication_confirm()
     {
-        if ( is_null($this->get_duplicate_agreement_requirement()) )
-            return;
-        
-        $this->dispatchBrowserEvent('swal:confirm:duplicate_agreement', [
-            'type' => 'warning',  
-            'message' => 'Are you sure?', 
-            'text' => 'Duplicating selected Agreement.',
-            'function' => "agreement_duplication"
-        ]);
+        if ( Auth::check() && Auth::user()->can('update', $this->get_duplicate_agreement_requirement()) ) {
+            $this->dispatchBrowserEvent('swal:confirm:duplicate_agreement', [
+                'type' => 'warning',  
+                'message' => 'Are you sure?', 
+                'text' => 'Duplicating selected Agreement.',
+                'function' => "agreement_duplication"
+            ]);
+        }
     }
 
     public function agreement_duplication()
     {
         $agreement = $this->get_agreement();
         $duplicate_agreement_requirement = $this->get_duplicate_agreement_requirement();
-        if ( is_null($agreement) || is_null($duplicate_agreement_requirement) )
+        if ( Auth::guest() || Auth::user()->cannot('update', $agreement) || Auth::user()->cannot('update', $duplicate_agreement_requirement) ) 
             return;
 
         $agreement->agreement = $duplicate_agreement_requirement->agreements->first()->agreement;

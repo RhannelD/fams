@@ -4,15 +4,18 @@ namespace App\Http\Livewire\ScholarshipRequirementEdit;
 
 use Livewire\Component;
 use App\Models\Scholarship;
+use App\Models\ScholarshipCategory;
+use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementItem;
 use App\Models\ScholarshipRequirementCategory;
 use App\Models\ScholarshipRequirementAgreement;
-use App\Models\ScholarshipCategory;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ScholarshipRequirementEditLivewire extends Component
 {
+    use AuthorizesRequests;
+    
     public $requirement_id;
     public $requirement;
 
@@ -25,34 +28,20 @@ class ScholarshipRequirementEditLivewire extends Component
     protected $listeners = [
         'refresh' => 'refreshing',
     ];
-    
-    protected function verifyUser()
-    {
-        if (!Auth::check()) {
-            redirect()->route('index');
-            return true;
-        }
-        return false;
-    }
 
-    protected function verifyScholarship()
+    public function hydrate()
     {
-        $scholarship_requirement = $this->get_scholarship_requirement();
-        if ( is_null($scholarship_requirement) ) {
-            redirect()->route('index');
-            return true;
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_scholarship_requirement()) ) {
+            return redirect()->route('requirement.edit', [$this->requirement_id]);
         }
-        return false;
     }
 
     public function mount($requirement_id)
     {
-        if ($this->verifyUser()) return;
-
         $this->requirement = new ScholarshipRequirement;
         $this->requirement_id = $requirement_id;
 
-        if ($this->verifyScholarship()) return;
+        $this->authorize('update', $this->get_scholarship_requirement());
     }
 
     public function render()
@@ -91,8 +80,9 @@ class ScholarshipRequirementEditLivewire extends Component
 
     public function updated($propertyName)
     {
-        if ($this->verifyUser()) return;
-        
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_scholarship_requirement()) )
+            return;
+
         $this->save();
 
         if ($propertyName == 'requirement.promote') {
@@ -107,7 +97,7 @@ class ScholarshipRequirementEditLivewire extends Component
     public function refreshing()
     {
         $scholarship_requirement = $this->get_scholarship_requirement();
-        if ( is_null($scholarship_requirement) )
+        if ( Auth::guest() || Auth::user()->cannot('update', $scholarship_requirement) )
             return;
         
         $this->dispatchBrowserEvent('refreshing', ['description' => $scholarship_requirement->description]);
@@ -115,11 +105,10 @@ class ScholarshipRequirementEditLivewire extends Component
 
     public function add_item()
     {
-        if ($this->verifyUser()) return;
-        if ($this->verifyScholarship()) return;
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_scholarship_requirement()) )
+            return;
 
-        $position = ScholarshipRequirementItem::where('requirement_id', $this->requirement_id)
-            ->max('position');
+        $position = ScholarshipRequirementItem::where('requirement_id', $this->requirement_id)->max('position');
 
         $item = new ScholarshipRequirementItem;
         $item->requirement_id = $this->requirement_id;
@@ -132,8 +121,8 @@ class ScholarshipRequirementEditLivewire extends Component
 
     public function update_requirement_order($list)
     {
-        if ($this->verifyUser()) return;
-        if ($this->verifyScholarship()) return;
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_scholarship_requirement()) )
+            return;
 
         foreach ($list as $item) {
             $requirement_item = ScholarshipRequirementItem::find($item['value']);
@@ -145,25 +134,23 @@ class ScholarshipRequirementEditLivewire extends Component
 
     public function save()
     {
-        if ($this->verifyUser()) return;
-
         $scholarship_requirement = $this->get_scholarship_requirement();
-        if ( is_null($scholarship_requirement) ) {
+        if ( Auth::guest() || Auth::user()->cannot('update', $scholarship_requirement) )
             return;
-        }
 
         $this->validate();
 
         $scholarship_requirement->requirement = $this->requirement->requirement;
         $scholarship_requirement->description = $this->requirement->description;
         if ( $scholarship_requirement->get_submitted_responses_count() == 0 ) 
-            $scholarship_requirement->promote     = $this->requirement->promote;
+            $scholarship_requirement->promote = $this->requirement->promote;
         $scholarship_requirement->save();
     }
 
     public function save_all()
     {
-        if ($this->verifyUser()) return;
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_scholarship_requirement()) )
+            return;
 
         $this->save();
         $this->emit('save_all');
@@ -171,34 +158,30 @@ class ScholarshipRequirementEditLivewire extends Component
 
     public function toggle_category($category_id)
     {
-        if ($this->verifyUser()) return;
         $scholarship_requirement = $this->get_scholarship_requirement();
-        if ( is_null($scholarship_requirement) || $scholarship_requirement->get_submitted_responses_count() )
+        if ( Auth::guest() || Auth::user()->cannot('update', $scholarship_requirement) || $scholarship_requirement->get_submitted_responses_count() < 1 ) 
             return;
-
+        
+        ScholarResponse::where('requirement_id', $this->requirement_id)->delete();
+        
         $requirement_category = ScholarshipRequirementCategory::updateOrCreate(
-            ['requirement_id' =>  $this->requirement_id],
-            ['category_id' => $category_id]
-        );
+                ['requirement_id' =>  $this->requirement_id],
+                ['category_id' => $category_id]
+            );
 
         if($requirement_category->wasRecentlyCreated){
             $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Category added successfully']);
             return;
         } elseif (!$requirement_category->wasRecentlyCreated && $requirement_category->wasChanged()){
-            $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Category change successfully']);
+            $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Category changed successfully']);
             return;
         }
     }
 
     public function add_agreement()
     {
-        if ($this->verifyUser()) return;
-
         $scholarship_requirement = $this->get_scholarship_requirement();
-        if ( is_null($scholarship_requirement) ) {
-            return;
-        }
-        if ( is_null($scholarship_requirement->agreements) )
+        if ( Auth::guest() || Auth::user()->cannot('update', $scholarship_requirement) || is_null($scholarship_requirement->agreements) )
             return;
         
         ScholarshipRequirementAgreement::firstOrCreate([

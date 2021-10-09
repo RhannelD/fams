@@ -12,7 +12,7 @@
             <div class="dropdown-menu">
                 <a class="dropdown-item"
                     type="button" data-toggle="modal" data-target="#agreementDuplicationModal">
-                    Duplicate
+                    Duplicate another
                 </a>
             </div>
         </div>
@@ -30,7 +30,7 @@
     <div class="card mb-5 shadow requirement-item-hover col-sm-12 offset-sm-0 col-md-10 offset-md-1 order-md-first">
         <div class="card-body mx-0 px-0">
             <div class="form-group mb-0">
-                <label for="agreement">Terms and Conditions</label>
+                <label for="agreement">Agreements</label>
                 <div wire:ignore>
                     <textarea wire:model.lazy="agreement" class="form-control" id="agreement" rows="3"></textarea>
                 </div>

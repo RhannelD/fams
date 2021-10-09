@@ -111,7 +111,7 @@
                     <div class="card shadow mb-2 requirement-item-hover">
                         <div class="card-body">
                             <button wire:click="add_agreement" class="btn btn-primary btn-block">
-                                Add Terms and Conditions
+                                Add Agreements
                             </button>
                         </div>
                     </div>
