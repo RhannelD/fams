@@ -12,13 +12,16 @@ class OfficerScholarshipLivewire extends Component
     public $user_id;
     public $delete_scholarship;
     
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check() || Auth::user()->usertype != 'admin') {
-            redirect()->route('index');
-            return true;
+        if ( $this->is_not_admin() ) {
+            $this->emitTo('officer.officer-livewire', 'refresh');
         }
-        return false;
+    }
+
+    protected function is_not_admin()
+    {
+        return Auth::guest() || Auth::user()->cannot('admin', [ScholarshipOfficer::class]);
     }
 
     public function mount($user_id)
@@ -35,7 +38,8 @@ class OfficerScholarshipLivewire extends Component
 
     public function confirm_delete($id)
     {
-        if ( $this->verifyUser() ) return;
+        if ( $this->is_not_admin() ) 
+            return;
 
         $this->delete_scholarship = $id;
 
@@ -49,7 +53,8 @@ class OfficerScholarshipLivewire extends Component
 
     public function delete()
     {
-        if ( $this->verifyUser() ) return;
+        if ( $this->is_not_admin() ) 
+            return;
 
         $scholarship = ScholarshipOfficer::where('user_id', $this->user_id)
             ->where('id', $this->delete_scholarship);

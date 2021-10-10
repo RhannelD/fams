@@ -21,36 +21,17 @@ class ScholarshipOfficerInviteLivewire extends Component
         'name_email' => 'required|email|unique:users,email',
     ];
     
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check()) {
-            redirect()->route('index');
-            return true;
+        if ( Auth::guest() || Auth::user()->cannot('viewAny', [ScholarshipOfficerInvite::class, $this->scholarship_id]) ) {
+            $this->dispatchBrowserEvent('remove:modal-backdrop');
+            $this->emitUp('refresh');
         }
-        return false;
     }
-    
-    protected function verifyUserIfOfficer()
-    {
-        if ( Auth::user()->is_admin() )
-            return false;
 
-        $if_officer = ScholarshipOfficer::where('user_id', Auth::id())
-            ->where('scholarship_id', $this->scholarship_id)
-            ->exists();
-
-        if (!$if_officer) 
-            redirect()->route('index');
-        
-        return !$if_officer;
-    }
-    
     public function mount($scholarship_id)
     {
-        if ($this->verifyUser()) return;
-        
         $this->scholarship_id = $scholarship_id;
-        if ( $this->verifyUserIfOfficer() ) return;
     }
 
     public function render()
@@ -109,8 +90,8 @@ class ScholarshipOfficerInviteLivewire extends Component
 
     public function invite_email($email)
     {
-        if ($this->verifyUser()) return;
-        if ( $this->verifyUserIfOfficer() ) return;
+        if ( Auth::guest() || Auth::user()->cannot('create', [ScholarshipOfficerInvite::class, $this->scholarship_id]) ) 
+            return;
 
         $token = null;
         do {
@@ -131,88 +112,91 @@ class ScholarshipOfficerInviteLivewire extends Component
         $this->if_invited();
     }
 
-    public function cancel_invite($invite_id)
+    public function cancel_invite(ScholarshipOfficerInvite $invite)
     {
-        if ($this->verifyUser()) return;
-        if ( $this->verifyUserIfOfficer() ) return;
-        
-        ScholarshipOfficerInvite::where('id', $invite_id)->delete();
+        if ( Auth::check() && Auth::user()->can('delete', $invite) ) 
+            $invite->delete();
     }
     
     public function cancel_all_invite_confirm()
     {
-        $this->dispatchBrowserEvent('swal:confirm:delete_something', [
-            'type' => 'warning',
-            'message' => 'Cancel all invites?', 
-            'text' => '',
-            'function' => 'cancel_all_invites'
-        ]);
+        if ( Auth::check() && Auth::user()->can('deleteMany', [ScholarshipOfficerInvite::class, $this->scholarship_id]) ) {
+            $this->dispatchBrowserEvent('swal:confirm:delete_something', [
+                'type' => 'warning',
+                'message' => 'Cancel all invites?', 
+                'text' => '',
+                'function' => 'cancel_all_invites'
+            ]);
+        }
     }
     
     public function cancel_all_invites()
     {
-        if ($this->verifyUser()) return;
-        if ( $this->verifyUserIfOfficer() ) return;
-        
-        ScholarshipOfficerInvite::where('scholarship_id', $this->scholarship_id)
-            ->whereNull('respond')
-            ->delete();
+        if ( Auth::check() && Auth::user()->can('deleteMany', [ScholarshipOfficerInvite::class, $this->scholarship_id]) ) {
+            ScholarshipOfficerInvite::where('scholarship_id', $this->scholarship_id)
+                ->whereNull('respond')
+                ->delete();
+        }
     }
     
     public function clear_all_accepted_invite_confirm()
     {
-        $this->dispatchBrowserEvent('swal:confirm:delete_something', [
-            'type' => 'info',
-            'message' => 'Clear accepted invites list?', 
-            'text' => 'This will only clear the list.',
-            'function' => 'clear_all_accepted_invite'
-        ]);
+        if ( Auth::check() && Auth::user()->can('deleteMany', [ScholarshipOfficerInvite::class, $this->scholarship_id]) ) {
+            $this->dispatchBrowserEvent('swal:confirm:delete_something', [
+                'type' => 'info',
+                'message' => 'Clear accepted invites list?', 
+                'text' => 'This will only clear the list.',
+                'function' => 'clear_all_accepted_invite'
+            ]);
+        }
     }
 
     public function clear_all_accepted_invite()
     {
-        if ($this->verifyUser()) return;
-        if ( $this->verifyUserIfOfficer() ) return;
-        
-        ScholarshipOfficerInvite::where('scholarship_id', $this->scholarship_id)
-            ->where('respond', true)
-            ->delete();
+        if ( Auth::check() && Auth::user()->can('deleteMany', [ScholarshipOfficerInvite::class, $this->scholarship_id]) ) {
+            ScholarshipOfficerInvite::where('scholarship_id', $this->scholarship_id)
+                ->where('respond', true)
+                ->delete();
+        }
     }
     
     public function clear_all_rejected_invite_confirm()
     {
-        $this->dispatchBrowserEvent('swal:confirm:delete_something', [
-            'type' => 'info',
-            'message' => 'Clear rejected invites list?', 
-            'text' => 'This will only clear the list.',
-            'function' => 'clear_all_rejected_invite'
-        ]);
+        if ( Auth::check() && Auth::user()->can('deleteMany', [ScholarshipOfficerInvite::class, $this->scholarship_id]) ) {
+            $this->dispatchBrowserEvent('swal:confirm:delete_something', [
+                'type' => 'info',
+                'message' => 'Clear rejected invites list?', 
+                'text' => 'This will only clear the list.',
+                'function' => 'clear_all_rejected_invite'
+            ]);
+        }
     }
 
     public function clear_all_rejected_invite()
     {
-        if ($this->verifyUser()) return;
-        if ( $this->verifyUserIfOfficer() ) return;
-        
-        ScholarshipOfficerInvite::where('scholarship_id', $this->scholarship_id)
-            ->where('respond', false)
-            ->delete();
+        if ( Auth::check() && Auth::user()->can('deleteMany', [ScholarshipOfficerInvite::class, $this->scholarship_id]) ) {
+            ScholarshipOfficerInvite::where('scholarship_id', $this->scholarship_id)
+                ->where('respond', false)
+                ->delete();
+        }
     }
     
     public function resend_all_rejected_invite_confirm()
     {
-        $this->dispatchBrowserEvent('swal:confirm:delete_something', [
-            'type' => 'info',
-            'message' => 'Resend all rejected invites?', 
-            'text' => 'This will appear at pending invites.',
-            'function' => 'resend_all_rejected_invite'
-        ]);
+        if ( Auth::check() && Auth::user()->can('updateMany', [ScholarshipOfficerInvite::class, $this->scholarship_id]) ) {
+            $this->dispatchBrowserEvent('swal:confirm:delete_something', [
+                'type' => 'info',
+                'message' => 'Resend all rejected invites?', 
+                'text' => 'This will appear at pending invites.',
+                'function' => 'resend_all_rejected_invite'
+            ]);
+        }
     }
 
     public function resend_all_rejected_invite()
     {
-        if ($this->verifyUser()) return;
-        if ( $this->verifyUserIfOfficer() ) return;
+        if ( Auth::guest() || Auth::user()->cannot('updateMany', [ScholarshipOfficerInvite::class, $this->scholarship_id]) ) 
+            return
         
         $invites = ScholarshipOfficerInvite::where('scholarship_id', $this->scholarship_id)
             ->where('respond', false)
@@ -226,12 +210,12 @@ class ScholarshipOfficerInviteLivewire extends Component
         }
     }
 
-    public function resend_rejected_invite($invite_id)
+    public function resend_rejected_invite(ScholarshipOfficerInvite $invite)
     {
-        if ($this->verifyUser()) return;
-        if ( $this->verifyUserIfOfficer() ) return;
+        if ( Auth::guest() || Auth::user()->cannot('resend', $invite) ) 
+            return
         
-        ScholarshipOfficerInvite::where('id', $invite_id)
+        ScholarshipOfficerInvite::where('id', $invite->id)
             ->where('respond', false)
             ->update(['respond' => null]);
         
@@ -250,7 +234,7 @@ class ScholarshipOfficerInviteLivewire extends Component
         ];
 
         try {
-            // Mail::to($invitation->email)->send(new OfficerInvitationMail($details));
+            Mail::to($invitation->email)->send(new OfficerInvitationMail($details));
         } catch (\Exception $e) {
             session()->flash('message-error', "Email has not been sent!");
         }

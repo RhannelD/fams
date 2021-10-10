@@ -2,14 +2,17 @@
 
 namespace App\Http\Livewire\Officer;
 
+use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\User;
+use App\Models\ScholarshipOfficer;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class OfficerLivewire extends Component
 {
+    use AuthorizesRequests;
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
@@ -17,36 +20,25 @@ class OfficerLivewire extends Component
     public $user;
 
     protected $listeners = [
-        'info' => 'info',
+        'info'    => 'info',
+        'refresh' => '$refresh',
     ];
 
-    protected function verifyUser()
-    {
-        if (!Auth::check() || Auth::user()->usertype != 'admin') {
-            redirect()->route('index');
-            return true;
-        }
-        return false;
-    }
-    
-    public function getQueryString()
-    {
-        return [
-            'search' => ['except' => ''],
-            'user' => ['except' => null]
-        ];
-    }
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'user'   => ['except' => null]
+    ];
 
-    public function updated($propertyName)
+    public function hydrate()
     {
-        if ( $propertyName == 'search' ) {
-            $this->page = 0;
+        if ( Auth::guest() || Auth::user()->cannot('admin', [ScholarshipOfficer::class]) ) {
+            return redirect()->route('officer', ['user' => $this->user]);
         }
     }
 
     public function mount()
     {
-        if ($this->verifyUser()) return;
+        $this->authorize('admin', [ScholarshipOfficer::class]);
     }
 
     public function render()
@@ -73,9 +65,17 @@ class OfficerLivewire extends Component
             ->extends('livewire.main.main-livewire');
     }
     
+    public function updated($propertyName)
+    {
+        if ( $propertyName == 'search' ) {
+            $this->page = 0;
+        }
+    }
+
     public function info($id)
     {
-        if ($this->verifyUser()) return;
+        if ( Auth::guest() || Auth::user()->cannot('admin', [ScholarshipOfficer::class]) )
+            return;
 
         if ( !isset($id) ) {
             $this->user = null;

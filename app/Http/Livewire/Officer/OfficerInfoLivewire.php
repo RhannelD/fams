@@ -23,13 +23,16 @@ class OfficerInfoLivewire extends Component
         'refresh' => '$refresh',
     ];
 
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check() || Auth::user()->usertype != 'admin') {
-            redirect()->route('index');
-            return true;
+        if ( $this->is_not_admin() ) {
+            $this->emitUp('refresh');
         }
-        return false;
+    }
+
+    protected function is_not_admin()
+    {
+        return Auth::guest() || Auth::user()->cannot('admin', [ScholarshipOfficer::class]);
     }
 
     public function mount($user_id)
@@ -39,17 +42,18 @@ class OfficerInfoLivewire extends Component
 
     public function render()
     {
-        $user = User::find($this->user_id);
+        return view('livewire.pages.officer.officer-info-livewire', ['user' => $this->get_user()]);
+    }
 
-        return view('livewire.pages.officer.officer-info-livewire', ['user' => $user]);
+    protected function get_user()
+    {
+        return User::find($this->user_id);
     }
     
     public function updated($propertyName)
     {
-        if ($this->verifyUser()) return;
-        
-        $user = User::find($this->user_id);
-        if ( is_null($user) ) {
+        $user = $this->get_user();
+        if ( is_null($user) || $this->is_not_admin() ) {
             $this->dispatchBrowserEvent('remove:modal-backdrop');
             return;
         }
@@ -59,13 +63,10 @@ class OfficerInfoLivewire extends Component
 
     public function confirm_delete()
     {
-        if ( $this->verifyUser() ) return;
-
-        if ( $this->cannotbedeleted() ) {
+        if ( $this->is_not_admin() || $this->cannotbedeleted() ) 
             return;
-        }
         
-        $user = User::find($this->user_id);
+        $user = $this->get_user();
         if ( is_null($user) ) {
             $this->dispatchBrowserEvent('swal:modal', [
                 'type' => 'info',  
@@ -87,13 +88,10 @@ class OfficerInfoLivewire extends Component
 
     public function delete()
     {
-        if ( $this->verifyUser() ) return;
-
-        if ( $this->cannotbedeleted() ) {
+        if ( $this->is_not_admin() || $this->cannotbedeleted() ) 
             return;
-        }
 
-        $user = User::find($this->user_id);
+        $user = $this->get_user();
         if ( is_null($user) ) {
             $this->emitUp('info', null);
             return;
@@ -133,10 +131,8 @@ class OfficerInfoLivewire extends Component
 
     public function change_pass()
     {
-        if ($this->verifyUser()) return;
-        
-        $user = User::find($this->user_id);
-        if ( is_null($user) ) {
+        $user = $this->get_user();
+        if ( is_null($user) || $this->is_not_admin() ) {
             $this->dispatchBrowserEvent('remove:modal-backdrop');
             return;
         }

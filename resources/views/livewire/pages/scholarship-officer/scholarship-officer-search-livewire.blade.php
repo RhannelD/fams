@@ -24,6 +24,7 @@
             <tbody>
                 @forelse ($officers as $officer)
                     <tr 
+                        wire:ignore.self
                         @if (Auth::user()->usertype != 'scholar')    
                             data-toggle="collapse" 
                             data-target="#collapse{{ $officer->id }}" 
@@ -40,7 +41,7 @@
                                 {{ $officer->fmlname() }}
                             </td>
                             <td>
-                                {{ $officer->scholarship_officers->where('scholarship_id', $scholarship_id)->first()->position->position }}
+                                {{ $officer->scholarship_officer->position->position }}
                             </td>
                             <td>
                                 {{ $officer->email }}
@@ -56,7 +57,7 @@
                                 {{ $officer->fmlname() }}
                             </td>
                             <td>
-                                {{ $officer->scholarship_officers->where('scholarship_id', $scholarship_id)->first()->position->position }}
+                                {{ $officer->scholarship_officer->position->position }}
                             </td>
                             <td>
                                 {{ $officer->email }}
@@ -65,7 +66,7 @@
                     </tr>
                     @if (Auth::user()->usertype != 'scholar')
                         <tr>
-                            <td colspan="6" id="collapse{{ $officer->id }}" data-parent="#accordions" class="collapse acc p-1" >
+                            <td wire:ignore.self colspan="6" id="collapse{{ $officer->id }}" data-parent="#accordions" class="collapse acc p-1" >
                                 <div class="card mb-3 shadow-sm">
                                     <div class="card-body p-2">
                                         <div class="row">
@@ -118,6 +119,15 @@
                                                 </table>
                                             </div>
                                         </div>
+
+                                        @can('delete', $officer->scholarship_officer)
+                                            <hr class="my-1">   
+                                            <div class="d-flex flex-row-reverse">
+                                                <button wire:click="remove_officer_confirmation({{ $officer->scholarship_officer->id }})" class="btn btn-danger">
+                                                    Remove
+                                                </button>
+                                            </div>
+                                        @endcan
                                     </div>
                                 </div>
                             </td>
@@ -131,4 +141,21 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        window.addEventListener('swal:confirm:remove_officer', event => { 
+            swal({
+              title: event.detail.message,
+              text: event.detail.text,
+              icon: event.detail.type,
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((willDelete) => {
+              if (willDelete) {
+                @this.call(event.detail.function)
+              }
+            });
+        });
+    </script>
 </div>

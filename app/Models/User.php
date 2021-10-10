@@ -62,6 +62,11 @@ class User extends Authenticatable
         return $this->hasMany(ScholarshipOfficer::class, 'user_id', 'id');
     }
 
+    public function scholarship_officer()
+    {
+        return $this->hasOne(ScholarshipOfficer::class, 'user_id', 'id');
+    }
+
     public function responses()
     {
         return $this->hasMany(ScholarResponse::class, 'user_id', 'id');

@@ -34,18 +34,16 @@ class OfficerEditLivewire extends Component
         ];
     }
 
-    public function updated($propertyName)
+    public function hydrate()
     {
-        $this->validateOnly($propertyName);
+        if ( $this->is_not_admin() ) {
+            $this->emitTo('officer.officer-livewire', 'refresh');
+        }
     }
 
-    protected function verifyUser()
+    protected function is_not_admin()
     {
-        if (!Auth::check() || Auth::user()->usertype != 'admin') {
-            redirect()->route('index');
-            return true;
-        }
-        return false;
+        return Auth::guest() || Auth::user()->cannot('admin', [ScholarshipOfficer::class]);
     }
 
     public function mount()
@@ -56,7 +54,7 @@ class OfficerEditLivewire extends Component
 
     public function set_user($user_id)
     {
-        if ($this->verifyUser()) return;
+        if ($this->is_not_admin()) return;
 
         $user = User::find($user_id);
         if ( is_null($user) ) {
@@ -82,7 +80,7 @@ class OfficerEditLivewire extends Component
 
     public function unset_user()
     {
-        if ($this->verifyUser()) return;
+        if ($this->is_not_admin()) return;
 
         $this->user_id = null;
         $this->user = new User;
@@ -97,9 +95,14 @@ class OfficerEditLivewire extends Component
         return view('livewire.pages.officer.officer-edit-livewire');
     }
 
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
     public function save()
     {
-        if ($this->verifyUser()) return;
+        if ($this->is_not_admin()) return;
 
         $this->validate();
 
