@@ -13,15 +13,19 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        Scholarship::class => ScholarshipPolicy::class,
         ScholarshipPost::class => ScholarshipPostPolicy::class,
         ScholarshipPostComment::class => ScholarshipPostCommentPolicy::class,
         ScholarshipCategory::class => ScholarshipCategoryPolicy::class,
         ScholarshipRequirement::class => ScholarshipRequirementPolicy::class,
         ScholarshipRequirementItem::class => ScholarshipRequirementItemPolicy::class,
         ScholarshipRequirementItemOption::class => ScholarshipRequirementItemOptionPolicy::class,
+        ScholarshipRequirementAgreement::class => ScholarshipRequirementAgreementPolicy::class,
+        ScholarshipOfficer::class => ScholarshipOfficerPolicy::class,
         ScholarshipOfficerInvite::class => ScholarshipOfficerInvitePolicy::class,
-        Scholarship::class => ScholarshipPolicy::class,
+        ScholarResponse::class => ScholarResponsePolicy::class,
+        ScholarshipScholar::class => ScholarshipScholarPolicy::class,
+        ScholarshipScholarInvite::class => ScholarshipScholarInvitePolicy::class,
     ];
 
     /**

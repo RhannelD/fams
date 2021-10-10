@@ -10,6 +10,7 @@ use Illuminate\Validation\Rule;
 use App\Mail\ScholarInvitationMail;
 use App\Models\ScholarshipCategory;
 use App\Imports\ScholarInviteImport;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\ScholarshipScholarInvite;
@@ -17,9 +18,11 @@ use Illuminate\Support\Facades\Validator;
 use App\Rules\NotScholarOfScholarshipRule;
 use Symfony\Component\Console\Input\Input;
 use App\Rules\EmailNotExistOrScholarEmailRule;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ScholarshipScholarInviteImportExcel extends Component
 {
+    use AuthorizesRequests;
     use WithFileUploads;
     
     public $scholarship_id;
@@ -32,9 +35,22 @@ class ScholarshipScholarInviteImportExcel extends Component
         'excel' => 'file|max:6000',
     ];
 
+    public function hydrate()
+    {
+        if ( $this->is_user_not_allow() ) {
+            return redirect()->route('scholarship.scholar.invite', [$this->scholarship_id]);
+        }
+    }
+
+    protected function is_user_not_allow()
+    {
+        return Auth::guest() || Auth::user()->cannot('viewAny', [ScholarshipScholarInvite::class, $this->scholarship_id]);
+    }    
+
     public function mount($scholarship_id)
     {
         $this->scholarship_id = $scholarship_id;
+        $this->authorize('viewAny',[ScholarshipScholarInvite::class, $scholarship_id]);
     }
 
     public function render()
@@ -71,6 +87,9 @@ class ScholarshipScholarInviteImportExcel extends Component
 
     protected function load_excel()
     {
+        if ( $this->is_user_not_allow() ) 
+            return;
+
         $import = new ScholarInviteImport;
         Excel::import($import, $this->excel);
         $modified_array = $import->getArray();
@@ -127,16 +146,21 @@ class ScholarshipScholarInviteImportExcel extends Component
 
     public function confirm_invite_all()
     {
-        $this->dispatchBrowserEvent('swal:confirm:invite_all', [
-            'type' => 'warning',  
-            'message' => 'Invite All?', 
-            'text' => 'Invite all email on the valid list!',
-            'function' => "invite_all"
-        ]);
+        if ( Auth::check() && Auth::user()->can('create', [ScholarshipScholarInvite::class, $this->scholarship_id]) ) {
+            $this->dispatchBrowserEvent('swal:confirm:invite_all', [
+                'type' => 'warning',  
+                'message' => 'Invite All?', 
+                'text' => 'Invite all email on the valid list!',
+                'function' => "invite_all"
+            ]);
+        }
     }
 
     public function invite_all()
     {
+        if ( Auth::guest() || Auth::user()->cannot('create', [ScholarshipScholarInvite::class, $this->scholarship_id]) ) 
+            return;
+
         $categories = $this->get_categories();
         foreach ($this->dataset as $key => $data) {
             if ( isset($data['invite']) && $data['invite'] ) 
@@ -184,7 +208,7 @@ class ScholarshipScholarInviteImportExcel extends Component
         ];
 
         try {
-            Mail::to($invitation->email)->send(new ScholarInvitationMail($details));
+            // Mail::to($invitation->email)->send(new ScholarInvitationMail($details));
         } catch (\Exception $e) {
             return false;
         }
@@ -193,16 +217,26 @@ class ScholarshipScholarInviteImportExcel extends Component
 
     public function confirm_cancel_all()
     {
-        $this->dispatchBrowserEvent('swal:confirm:cancel_all', [
-            'type' => 'warning',  
-            'message' => 'Are you sure?', 
-            'text' => 'Cancel all invited on the list!',
-            'function' => "cancel_all"
-        ]);
+        if ( $this->if_can_delete_many_invite() ) {
+            $this->dispatchBrowserEvent('swal:confirm:cancel_all', [
+                'type' => 'warning',  
+                'message' => 'Are you sure?', 
+                'text' => 'Cancel all invited on the list!',
+                'function' => "cancel_all"
+            ]);
+        }
+    }
+
+    protected function if_can_delete_many_invite()
+    {
+        return Auth::check() && Auth::user()->can('deleteMany', [ScholarshipScholarInvite::class, $this->scholarship_id]);
     }
 
     public function cancel_all()
     {
+        if ( !$this->if_can_delete_many_invite() ) 
+            return;
+
         $scholarship_id = $this->scholarship_id;
         foreach ($this->dataset as $key => $data) {
             if ( isset($data['invite']) && !$data['invite'] ) 

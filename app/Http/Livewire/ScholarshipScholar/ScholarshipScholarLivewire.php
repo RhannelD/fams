@@ -4,13 +4,15 @@ namespace App\Http\Livewire\ScholarshipScholar;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\ScholarshipCategory;
 use App\Models\ScholarshipScholar;
 use Illuminate\Support\Facades\DB;
+use App\Models\ScholarshipCategory;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ScholarshipScholarLivewire extends Component
 {
+    use AuthorizesRequests;
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
@@ -28,27 +30,24 @@ class ScholarshipScholarLivewire extends Component
         'refresh' => '$refresh',
     ];
     
-    protected function verifyUser()
+    protected $queryString = [
+        'search' => ['except' => ''],
+    ];
+
+    public function hydrate()
     {
-        if (!Auth::check()) {
-            redirect()->route('index');
-            return true;
+        if ( Auth::guest() || Auth::user()->is_scholar() ) {
+            $this->dispatchBrowserEvent('remove:modal-backdrop');
         }
-        return false;
+        if ( Auth::guest() || Auth::user()->cannot('viewAny', [ScholarshipScholar::class, $this->scholarship_id]) ) {
+            return redirect()->route('scholarship.scholar', [$this->scholarship_id]);
+        }
     }
-    
-    public function getQueryString()
-    {
-        return [
-            'search' => ['except' => ''],
-        ];
-    }
-    
+
     public function mount($scholarship_id)
     {
-        if ($this->verifyUser()) return;
-        
         $this->scholarship_id = $scholarship_id;
+        $this->authorize('viewAny', [ScholarshipScholar::class, $this->scholarship_id]);
     }
     
     public function updated($name)
