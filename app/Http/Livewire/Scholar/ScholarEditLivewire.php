@@ -18,7 +18,7 @@ class ScholarEditLivewire extends Component
     public $password;
 
     protected $listeners = [
-        'edit' => 'set_user',
+        'edit'   => 'set_user',
         'create' => 'unset_user'
     ];
 
@@ -53,18 +53,16 @@ class ScholarEditLivewire extends Component
         ];
     }
 
-    public function updated($propertyName)
+    public function hydrate()
     {
-        $this->validateOnly($propertyName);
+        if ( $this->is_not_admin() ) {
+            return redirect()->route('scholar', ['user' => $this->user_id]);
+        }
     }
 
-    protected function verifyUser()
+    protected function is_not_admin()
     {
-        if (!Auth::check() || Auth::user()->usertype != 'admin') {
-            redirect()->route('index');
-            return true;
-        }
-        return false;
+        return Auth::guest() || !Auth::user()->is_admin();
     }
 
     public function mount()
@@ -76,7 +74,7 @@ class ScholarEditLivewire extends Component
     
     public function set_user($user_id)
     {
-        if ($this->verifyUser()) return;
+        if ($this->is_not_admin()) return;
 
         $user = User::find($user_id);
         if ( is_null($user) ) {
@@ -120,7 +118,7 @@ class ScholarEditLivewire extends Component
 
     public function unset_user()
     {
-        if ($this->verifyUser()) return;
+        if ($this->is_not_admin()) return;
         
         $this->user_id = null;
         $this->user = new User;
@@ -149,9 +147,14 @@ class ScholarEditLivewire extends Component
         return ScholarCourse::orderBy('course')->get();
     }
     
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
     public function save()
     {
-        if ($this->verifyUser()) return;
+        if ($this->is_not_admin()) return;
 
         $this->validate();
 

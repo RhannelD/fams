@@ -26,7 +26,7 @@
                     class="btn btn-info text-white mb-1 mb-lg-0">
                     Open Scholarship
                 </a>
-                @if ( Auth::user()->usertype == 'admin' )
+                @can('delete', $scholarship_program)
                     <button type="button" class="btn btn-info mb-1 mb-lg-0 text-white" wire:click="edit()" data-toggle="modal" data-target="#scholarship_form">
                         <i class="fas fa-edit"></i>
                         Edit Info
@@ -35,7 +35,7 @@
                         <i class="fas fa-trash"></i>
                         Delete
                     </button>
-                @endif
+                @endcan
             </div>
         </div>
 

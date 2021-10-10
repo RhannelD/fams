@@ -21,28 +21,26 @@ class ScholarLivewire extends Component
         'info' => 'info',
     ];
 
-    protected function verifyUser()
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'user'   => ['except' => null]
+    ];
+
+    public function hydrate()
     {
-        if (!Auth::check() || Auth::user()->usertype != 'admin') {
-            redirect()->route('dashboard');
-            return true;
+        if ( $this->is_not_admin() ) {
+            return redirect()->route('scholar', ['user' => $this->user]);
         }
-        return false;
-    }
-    
-    public function getQueryString()
-    {
-        return [
-            'search' => ['except' => ''],
-            'user' => ['except' => null]
-        ];
     }
 
-    public function updated($propertyName)
+    protected function is_not_admin()
     {
-        if ( $propertyName == 'search' ) {
-            $this->page = 0;
-        }
+        return Auth::guest() || !Auth::user()->is_admin();
+    }
+
+    public function mount()
+    {
+        if ( $this->is_not_admin() ) abort('403', 'THIS ACTION IS UNAUTHORIZED.');
     }
 
     public function render()
@@ -69,9 +67,16 @@ class ScholarLivewire extends Component
             ->extends('livewire.main.main-livewire');
     }
 
+    public function updated($propertyName)
+    {
+        if ( $propertyName == 'search' ) {
+            $this->page = 0;
+        }
+    }
+
     public function info($id)
     {
-        if ($this->verifyUser()) return;
+        if ($this->is_not_admin()) return;
 
         if ( !isset($id) ) {
             $this->user = null;

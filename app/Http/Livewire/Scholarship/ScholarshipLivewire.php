@@ -3,14 +3,16 @@
 namespace App\Http\Livewire\Scholarship;
 
 use Livewire\Component;
-use Livewire\WithPagination;
 use App\Models\Scholarship;
+use Livewire\WithPagination;
 use App\Models\ScholarshipOfficer;
 use App\Models\ScholarshipCategory;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ScholarshipLivewire extends Component
 {
+    use AuthorizesRequests;
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
@@ -30,20 +32,25 @@ class ScholarshipLivewire extends Component
         ];
     }
 
-    public function updated($propertyName)
+    public function hydrate()
     {
-        $this->validateOnly($propertyName);
-    }
-
-    protected function verifyUser()
-    {
-        if (!Auth::check()) {
-            redirect()->route('dashboard');
-            return true;
+        if ( Auth::guest() || Auth::user()->is_officer() ) {
+            $this->dispatchBrowserEvent('remove:modal-backdrop');
         }
-        return false;
+        if ( $this->is_not_officer() ) {
+            return redirect()->route('scholarship');
+        }
     }
 
+    public function is_not_officer()
+    {
+        return Auth::guest() || Auth::user()->cannot('viewAny', [Scholarship::class]);
+    }
+
+    public function mount()
+    {
+        $this->authorize('viewAny', [Scholarship::class]);
+    }
 
     public function render()
     {
@@ -77,13 +84,15 @@ class ScholarshipLivewire extends Component
             ->extends('livewire.main.main-livewire');
     }
     
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
     public function info($id)
     {
-        if ($this->verifyUser()) return;
-
-        if ( is_null(Scholarship::find($id)) ) {
+        if ( Auth::guest() || Auth::user()->cannot('view', Scholarship::find($id)) ) 
             return;
-        }
 
         $this->scholarship_program_id = $id;
 
@@ -92,12 +101,9 @@ class ScholarshipLivewire extends Component
 
     public function confirm_delete()
     {
-        if ($this->verifyUser()) return;
-        
-        if ( is_null(Scholarship::find($this->scholarship_program_id)) ) {
+        if ( Auth::guest() || Auth::user()->cannot('delete', Scholarship::find($this->scholarship_program_id)) ) 
             return;
-        }
-
+        
         if ($this->cannotbedeleted()) {
             return;
         }
@@ -112,21 +118,16 @@ class ScholarshipLivewire extends Component
 
     public function delete()
     {
-        if ($this->verifyUser()) return;
+        if ( Auth::guest() || Auth::user()->cannot('delete', Scholarship::find($this->scholarship_program_id)) ) 
+            return;
         
-        if ( is_null(Scholarship::find($this->scholarship_program_id)) ) {
+        if ($this->cannotbedeleted()) 
             return;
-        }
-
-        if ($this->cannotbedeleted()) {
-            return;
-        }
         
         $user = Scholarship::findorfail($this->scholarship_program_id);
         
-        if (!$user->delete()) {
+        if (!$user->delete()) 
             return;
-        }
 
         $this->scholarship_program = null;
 
@@ -163,21 +164,24 @@ class ScholarshipLivewire extends Component
 
     public function edit()
     {
-        if ($this->verifyUser()) return;
-
-        $data = Scholarship::find($this->scholarship_program_id);
-        if ( is_null($data) ) {
+        $scholarship = Scholarship::find($this->scholarship_program_id);
+        if ( Auth::guest() || Auth::user()->cannot('update', $scholarship) ) {
             $this->nullinputs();
             return;
         }
 
-        $this->scholarship_id = $data->id;
-        $this->scholarship    = $data->scholarship;
+        $this->scholarship_id = $scholarship->id;
+        $this->scholarship    = $scholarship->scholarship;
     }
     
     public function save()
     {
-        if ($this->verifyUser()) return;
+        $scholarship = Scholarship::find($this->scholarship_id);
+        if ( isset($this->scholarship_id) && ( Auth::guest() || Auth::user()->cannot('update', $scholarship) ) ) 
+            return;
+
+        if ( is_null($this->scholarship_id) && ( Auth::guest() || Auth::user()->cannot('create', [Scholarship::class]) ) ) 
+            return;
         
         $data = $this->validate();
         

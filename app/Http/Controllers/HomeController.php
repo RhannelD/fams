@@ -63,10 +63,8 @@ class HomeController extends Controller
     public function index()
     {
         // return Auth::id();
-        return User::with('scholarship_officer')
-            ->where('id', 3)
-            ->first();
-        
+        return Auth::user();
+
 
         // $scholarshipPost = ScholarshipPost::find(34);
         // $user = Auth::user();

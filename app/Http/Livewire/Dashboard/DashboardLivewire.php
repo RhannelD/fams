@@ -25,7 +25,7 @@ class DashboardLivewire extends Component
             return true;
         }
         if (Auth::user()->usertype == 'scholar') {
-            redirect()->route('scholarship');
+            redirect()->route('scholar.scholarship');
             return true;
         }
         return false;

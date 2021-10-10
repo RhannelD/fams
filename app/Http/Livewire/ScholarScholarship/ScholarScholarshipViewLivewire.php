@@ -14,6 +14,23 @@ class ScholarScholarshipViewLivewire extends Component
         'tab' => ['except' => ''],
     ];
 
+    public function hydrate()
+    {
+        if ( $this->is_not_scholar() ) {
+            return redirect()->route('scholar.scholarship');
+        }
+    }
+
+    public function is_not_scholar()
+    {
+        return Auth::guest() || !Auth::user()->is_scholar();
+    }
+
+    public function mount()
+    {
+        if ( $this->is_not_scholar() ) abort('403', 'THIS ACTION IS UNAUTHORIZED.');
+    }
+
     public function render()
     {
         return view('livewire.pages.scholar-scholarship.scholar-scholarship-view-livewire', [

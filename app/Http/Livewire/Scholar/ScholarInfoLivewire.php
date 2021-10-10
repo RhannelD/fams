@@ -23,13 +23,16 @@ class ScholarInfoLivewire extends Component
         'refresh' => '$refresh',
     ];
 
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check() || Auth::user()->usertype != 'admin') {
-            redirect()->route('index');
-            return true;
+        if ( $this->is_not_admin() ) {
+            return redirect()->route('scholar', ['user' => $this->user_id]);
         }
-        return false;
+    }
+
+    protected function is_not_admin()
+    {
+        return Auth::guest() || !Auth::user()->is_admin();
     }
 
     public function mount($user_id)
@@ -46,7 +49,8 @@ class ScholarInfoLivewire extends Component
 
     public function updated($propertyName)
     {
-        if ($this->verifyUser()) return;
+        if ($this->is_not_admin()) 
+            return;
 
         $user = User::find($this->user_id);
         if ( is_null($user) ) {
@@ -59,9 +63,7 @@ class ScholarInfoLivewire extends Component
 
     public function confirm_delete()
     {
-        if ( $this->verifyUser() ) return;
-
-        if ( $this->cannotbedeleted() ) {
+        if ( $this->is_not_admin() || $this->cannotbedeleted() ) {
             return;
         }
 
@@ -87,9 +89,7 @@ class ScholarInfoLivewire extends Component
 
     public function delete()
     {
-        if ( $this->verifyUser() ) return;
-
-        if ( $this->cannotbedeleted() ) {
+        if ( $this->is_not_admin() || $this->cannotbedeleted() ) {
             return;
         }
 
@@ -132,7 +132,8 @@ class ScholarInfoLivewire extends Component
 
     public function change_pass()
     {
-        if ($this->verifyUser()) return;
+        if ($this->is_not_admin()) 
+            return;
 
         $user = User::find($this->user_id);
         if ( is_null($user) ) {

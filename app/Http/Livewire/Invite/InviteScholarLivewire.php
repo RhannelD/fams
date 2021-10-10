@@ -12,13 +12,16 @@ class InviteScholarLivewire extends Component
 {
     public $invite_id;
     
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check() || !Auth::user()->is_scholar() ) {
-            redirect()->route('index');
-            return true;
+        if ( $this->is_not_scholar() ) {
+            return redirect()->route('invite.scholar');
         }
-        return false;
+    }
+
+    public function is_not_scholar()
+    {
+        return Auth::guest() || !Auth::user()->is_scholar();
     }
 
     protected function verifyInvite($invite_id)
@@ -44,7 +47,8 @@ class InviteScholarLivewire extends Component
 
     public function approve($invite_id)
     {
-        if ( $this->verifyUser() ) return;
+        if ( $this->is_not_scholar() ) 
+            return;
         
         $invite = $this->verifyInvite($invite_id);
         if ( is_null($invite) ) 
@@ -62,7 +66,8 @@ class InviteScholarLivewire extends Component
 
     public function deny_confirm($invite_id)
     {
-        if ( $this->verifyUser() ) return;
+        if ( $this->is_not_scholar() ) 
+            return;
         
         $invite = $this->verifyInvite($invite_id);
         if ( is_null($invite) ) 
@@ -80,8 +85,8 @@ class InviteScholarLivewire extends Component
 
     public function deny()
     {
-        if ( $this->verifyUser() ) return;
-        if ( is_null($this->invite_id) ) return;
+        if ( $this->is_not_scholar() || is_null($this->invite_id) ) 
+            return;
 
         $invite = $this->verifyInvite($this->invite_id);
         if ( is_null($invite) ) 

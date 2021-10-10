@@ -13,19 +13,20 @@ class ScholarScholarshipLivewire extends Component
     public $user_id;
     public $delete_scholarship;
     
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check() || Auth::user()->usertype != 'admin') {
-            redirect()->route('index');
-            return true;
+        if ( $this->is_not_admin() ) {
+            return redirect()->route('scholar', ['user' => $this->user_id]);
         }
-        return false;
+    }
+
+    protected function is_not_admin()
+    {
+        return Auth::guest() || !Auth::user()->is_admin();
     }
 
     public function mount($user_id)
     {
-        if ($this->verifyUser()) return;
-
         $this->user_id = $user_id;
     }
     
@@ -39,7 +40,8 @@ class ScholarScholarshipLivewire extends Component
 
     public function confirm_delete($id)
     {
-        if ($this->verifyUser()) return;
+        if ($this->is_not_admin()) 
+            return;
 
         $scholarship = ScholarshipScholar::find($id);
         if ( is_null($scholarship) ) {
@@ -58,7 +60,8 @@ class ScholarScholarshipLivewire extends Component
 
     public function delete()
     {
-        if ($this->verifyUser()) return;
+        if ($this->is_not_admin()) 
+            return;
         
         $scholarship = ScholarshipScholar::find($this->delete_scholarship);
         if ( is_null($scholarship) ) {

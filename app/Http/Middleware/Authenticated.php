@@ -17,8 +17,14 @@ class Authenticated
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check()) {
-            return redirect()->route('dashboard');
+        if ( Auth::check() ) {
+            if ( Auth::user()->is_admin() ) {
+                return redirect()->route('dashboard');
+            } elseif ( Auth::user()->is_officer() ) {
+                return redirect()->route('scholarship');
+            } elseif ( Auth::user()->is_scholar() ) {
+                return redirect()->route('scholar.scholarship');
+            }
         }
 
         return $next($request);

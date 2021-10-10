@@ -26,7 +26,7 @@ class OfficerInfoLivewire extends Component
     public function hydrate()
     {
         if ( $this->is_not_admin() ) {
-            $this->emitUp('refresh');
+            return redirect()->route('officer', ['user' => $this->user_id]);
         }
     }
 

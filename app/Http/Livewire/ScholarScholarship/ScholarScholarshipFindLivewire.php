@@ -15,9 +15,19 @@ class ScholarScholarshipFindLivewire extends Component
 
     public function hydrate()
     {
-        if ( Auth::guest() ) {
-            return redirect()->route('index');
+        if ( $this->is_not_scholar() ) {
+            return redirect()->route('scholar.scholarship');
         }
+    }
+
+    public function is_not_scholar()
+    {
+        return Auth::guest() || !Auth::user()->is_scholar();
+    }
+
+    public function mount()
+    {
+        if ( $this->is_not_scholar() ) abort('403', 'THIS ACTION IS UNAUTHORIZED.');
     }
 
     public function render()
@@ -65,16 +75,5 @@ class ScholarScholarshipFindLivewire extends Component
     public function load_more()
     {
         $this->post_count += 10;
-    }
-    
-    public function try()
-    {
-        ScholarshipPost::create([
-            'user_id' => 1,
-            'scholarship_id' => 1,
-            'title' => 'asdasd',
-            'post' => 'asdasd',
-            'promote' => true,
-        ]);
     }
 }

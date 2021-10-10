@@ -13,14 +13,14 @@
 
 		<div class="col-md-6 mt-2">
 
-			@if (Auth::user()->usertype == 'admin')
+			@can('create', [\App\Models\Scholarship::class])
 				<div class="input-group rounded">
 					<button class="btn btn-info ml-auto mr-0 text-white" type="button" wire:click="nullinputs" data-toggle="modal" data-target="#scholarship_form">
 						<i class="fas fa-plus"></i>
 						Create Scholarship
 					</button>
 				</div>
-			@endif
+			@endcan
 
 		</div>
 	</div>
@@ -35,34 +35,36 @@
 			@include('livewire.pages.scholarship.scholarship-info-livewire')
 		</div>
 
-		<div>
-			<div wire:ignore.self class="modal fade scholarship_form" id="scholarship_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered" role="document">
-					<form class="modal-content" wire:submit.prevent="save()">
-						<div class="modal-header bg-dark text-white">
-						<h5 class="modal-title" id="exampleModalCenterTitle">Scholarship {{ ((isset($scholarship_id))? 'Editing': 'Creating') }}</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true"><i class="fas fa-times-circle text-white"></i></span>
-							</button>
-						</div>
-						<div class="modal-body student_creating">
-							@include('livewire.form.scholarship-form-livewire')
-						</div>
-						<div class="modal-footer">
-							<button type="submit" class="btn btn-success">
-								<i class="fas fa-save" wire:loading.remove wire:target="save"></i>
-								<i class="fas fa-spinner fa-spin" wire:loading wire:target="save"></i>
-								Save
-							</button>
-							<button type="button" data-dismiss="modal" class="btn btn-secondary" id="cancel_edit">
-								<i class="fas fa-times"></i>
-								Cancel
-							</button>
-						</div>
-					</form>
+		@can('create', [\App\Models\Scholarship::class])
+			<div>
+				<div wire:ignore.self class="modal fade scholarship_form" id="scholarship_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<form class="modal-content" wire:submit.prevent="save()">
+							<div class="modal-header bg-dark text-white">
+							<h5 class="modal-title" id="exampleModalCenterTitle">Scholarship {{ ((isset($scholarship_id))? 'Editing': 'Creating') }}</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true"><i class="fas fa-times-circle text-white"></i></span>
+								</button>
+							</div>
+							<div class="modal-body student_creating">
+								@include('livewire.form.scholarship-form-livewire')
+							</div>
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-success">
+									<i class="fas fa-save" wire:loading.remove wire:target="save"></i>
+									<i class="fas fa-spinner fa-spin" wire:loading wire:target="save"></i>
+									Save
+								</button>
+								<button type="button" data-dismiss="modal" class="btn btn-secondary" id="cancel_edit">
+									<i class="fas fa-times"></i>
+									Cancel
+								</button>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
-		</div>
+		@endcan
 
 	</div>
 
