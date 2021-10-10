@@ -21,6 +21,13 @@ class ScholarshipRequirementResponseViewLivewire extends Component
         $this->response_id = $response_id;
     }
 
+    public function hydrate()
+    {
+        if ( Auth::guest() || Auth::user()->cannot('assess', $this->get_scholar_response()) ) {
+            $this->emitUp('refresh');
+        }
+    }
+
     public function render()
     {
         return view('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-view-livewire', [
@@ -41,7 +48,7 @@ class ScholarshipRequirementResponseViewLivewire extends Component
     public function response_approve()
     {
         $scholar_response = $this->get_scholar_response();
-        if ( is_null($scholar_response) ) 
+        if ( Auth::guest() || Auth::user()->cannot('assess', $scholar_response) ) 
             return;
 
         if ( $this->is_scholar($scholar_response) ) {
@@ -49,7 +56,7 @@ class ScholarshipRequirementResponseViewLivewire extends Component
             return;
         }
 
-        $confirm = $this->dispatchBrowserEvent('swal:confirm:approve', [
+        $this->dispatchBrowserEvent('swal:confirm:approve', [
             'type' => 'info',  
             'message' => 'Add to scholars?', 
             'text' => 'Sender is not yet a scholar here.',
@@ -60,7 +67,7 @@ class ScholarshipRequirementResponseViewLivewire extends Component
     public function response_approval()
     {
         $scholar_response = $this->get_scholar_response();
-        if ( is_null($scholar_response) ) 
+        if ( Auth::guest() || Auth::user()->cannot('assess', $scholar_response) ) 
             return;
 
         if ( is_null($scholar_response->approval) ) {
@@ -95,7 +102,7 @@ class ScholarshipRequirementResponseViewLivewire extends Component
     public function response_deny()
     {
         $scholar_response = $this->get_scholar_response();
-        if ( is_null($scholar_response) ) 
+        if ( Auth::guest() || Auth::user()->cannot('assess', $scholar_response) ) 
             return;
 
         if ( !$this->is_scholar($scholar_response) ) {
@@ -114,7 +121,7 @@ class ScholarshipRequirementResponseViewLivewire extends Component
     public function response_denial()
     {
         $scholar_response = $this->get_scholar_response();
-        if ( is_null($scholar_response) ) 
+        if ( Auth::guest() || Auth::user()->cannot('assess', $scholar_response) ) 
             return;
 
         if ( is_null($scholar_response->approval) ) {
@@ -141,7 +148,7 @@ class ScholarshipRequirementResponseViewLivewire extends Component
     public function response_delete_confirm()
     {
         $scholar_response = $this->get_scholar_response();
-        if ( is_null($scholar_response) ) 
+        if ( Auth::guest() || Auth::user()->cannot('assess', $scholar_response) ) 
             return;
 
         $confirm = $this->dispatchBrowserEvent('swal:confirm:response_delete', [
@@ -155,7 +162,7 @@ class ScholarshipRequirementResponseViewLivewire extends Component
     public function response_delete()
     {
         $scholar_response = $this->get_scholar_response();
-        if ( is_null($scholar_response) ) 
+        if ( Auth::guest() || Auth::user()->cannot('assess', $scholar_response) ) 
             return;
 
         if ( isset($scholar_response->approval) ) {

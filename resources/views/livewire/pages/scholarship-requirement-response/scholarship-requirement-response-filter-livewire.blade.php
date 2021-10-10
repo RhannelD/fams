@@ -1,7 +1,7 @@
 <div>
     <button class="form-control btn btn-primary btn-block d-flex" type="button" data-toggle="modal" data-target="#filter-modal">
-        <i class="fas fa-filter my-auto ml-auto mr-auto mr-md-1"></i>
-        <span class="d-none d-sm-block ml-1 mr-auto">
+        <i class="fas fa-filter my-auto"></i>
+        <span class="ml-1 mr-auto">
             Filter
         </span>
     </button>

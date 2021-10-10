@@ -7,9 +7,11 @@
         <div class="col-12">
             <div class="card bg-primary border-primary shadow">
                 <div class="card-body text-white border-primary py-1">
-                    <h2 class="my-1">
+                    <h2 class="my-1 row">
                         @isset( $requirement->requirement )
-                            <strong>{{ $requirement->requirement }}</strong>
+                            <a href="{{ route('scholarship.requirement.open', [$requirement_id]) }}" class="text-white col-auto">
+                                <strong>{{ $requirement->requirement }}</strong>
+                            </a>
                         @endisset
                     </h2>
                 </div>
@@ -29,7 +31,7 @@
 
         <div class="col-md-8 mt-2">
             <div class="form-row">
-                <div class="col-9 col-md-9 col-xl-10 d-flex">
+                <div class="col-12 d-flex flex-wrap">
                     <div class="mt-1 mr-1">
                         @include('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-filter-livewire')
                     </div>
@@ -38,36 +40,37 @@
                             More
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <button class="dropdown-item" type="button" data-toggle="modal" data-target="#unsubmitted-response">
-                                Unsubmitted
-                            </button>
+                            @if ( !$requirement->promote )
+                                <button class="dropdown-item" type="button" data-toggle="modal" data-target="#unsubmitted-response">
+                                    Not Yet Responding
+                                </button>
+                            @endif
                             <button class="dropdown-item" type="button">
                                 Something else here
                             </button>
                         </div>
                     </div>
-                    @if ( is_null($index) )    
-                        <div class="input-group mt-1">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text rounded-left d-none d-lg-block" for="rows">Rows</label>
-                                <label class="input-group-text rounded-left d-block d-lg-none" for="rows">#</label>
+                    @if ( is_null($index) )   
+                        <div class="mt-1 d-flex">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text rounded-left" for="rows">Rows</label>
+                                </div>
+                                <select wire:model="show_row" class="form-control" id="rows" style="max-width: 100px;">
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="150">150</option>
+                                    <option value="200">200</option>
+                                </select>
                             </div>
-                            <select wire:model="show_row" class="form-control" id="rows" style="max-width: 100px;">
-                                <option value="10">10</option>
-                                <option value="15">15</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="150">150</option>
-                                <option value="200">200</option>
-                            </select>
                         </div>
                     @endif
-                </div>
-                <div class="col-3 col-md-3 col-xl-2 d-flex">
-                    <a href="{{ route('scholarship.requirement.open', [$requirement_id]) }}" class="btn btn-dark mt-1 mr-1 ml-auto">
-                        Preview
-                    </a>
+                    <button class="btn btn-info mx-1 text-white mr-0 ml-sm-auto mt-1" wire:click="unview_response">
+                        View Table
+                    </button>
                 </div>
             </div>
         </div>
@@ -85,37 +88,33 @@
         @else
             @isset( $responses )
             <div class="contents-container col-12 mb-2 table_responses px-0">
-                <div class="d-flex my-1 mx-3">
-                    <div class="ml-0 mr-auto">
-                        <button class="btn btn-info mx-1 text-white" wire:click="unview_response">
-                            View Table
-                        </button>
-                    </div>
-                    <div class="my-auto" wire:loading wire:target="change_index">
-                        <i class="fas fa-spinner fa-spin"></i>
-                    </div>
-                    <div class="card mx-1">
+                <hr class="my-1 d-md-none d-sm-block">
+                <div class="d-flex flex-wrap my-1 mx-3">
+                    <div class="card ml-sm-auto mx-1 mt-1">
                         <div class="card-body pb-1 pt-2 px-2">
-                            {{ $index+1 }} /{{ $responses->count() }}
+                            <i class="fas fa-spinner fa-spin" wire:loading wire:target="change_index"></i>
+                            <span wire:loading.remove wire:target="change_index">
+                                {{ $index+1 }} /{{ $responses->count() }}
+                            </span>
                         </div>
                     </div>
                     <div class="mr-0">
                         @if ( $index > 0 )
-                            <button class="btn btn-info mx-1 text-white" wire:click="change_index(-1)" wire:loading.attr="disabled">
+                            <button class="btn btn-info mx-1 text-white mt-1" wire:click="change_index(-1)" wire:loading.attr="disabled">
                                 <i class="fas fa-chevron-circle-left"></i> Previous
                             </button>
                         @else
-                            <button class="btn btn-dark mx-1" disabled wire:click="change_index(0)">
+                            <button class="btn btn-dark mx-1 mt-1" disabled wire:click="change_index(0)">
                                 <i class="fas fa-chevron-circle-left"></i> Previous
                             </button>
                         @endif
 
                         @if ( $index < $responses->count()-1 )
-                            <button class="btn btn-info mx-1 text-white" wire:click="change_index(1)" wire:loading.attr="disabled">
+                            <button class="btn btn-info mx-1 text-white mt-1" wire:click="change_index(1)" wire:loading.attr="disabled">
                                 Next <i class="fas fa-chevron-circle-right"></i>
                             </button>
                         @else
-                            <button class="btn btn-dark mx-1" disabled wire:click="change_index(0)">
+                            <button class="btn btn-dark mx-1 mt-1" disabled wire:click="change_index(0)">
                                 Next <i class="fas fa-chevron-circle-right"></i>
                             </button>
                         @endif

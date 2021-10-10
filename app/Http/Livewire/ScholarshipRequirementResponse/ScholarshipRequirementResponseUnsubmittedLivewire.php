@@ -2,9 +2,10 @@
 
 namespace App\Http\Livewire\ScholarshipRequirementResponse;
 
+use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirement;
 
 class ScholarshipRequirementResponseUnsubmittedLivewire extends Component
@@ -23,11 +24,15 @@ class ScholarshipRequirementResponseUnsubmittedLivewire extends Component
         'refresh' => '$refresh',
     ];
 
-    public function getQueryString()
+    protected $queryString = [];
+
+    public function hydrate()
     {
-        return [];
+        if ( Auth::guest() || Auth::user()->cannot('viewAny', [ScholarResponse::class, $this->requirement_id]) ) {
+            $this->emitUp('refresh');
+        }
     }
-    
+
     public function mount($requirement_id)
     {
         $this->requirement_id = $requirement_id;

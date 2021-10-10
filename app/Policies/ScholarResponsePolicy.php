@@ -2,11 +2,12 @@
 
 namespace App\Policies;
 
-use App\Models\ScholarshipRequirementItemOption;
 use App\Models\User;
+use App\Models\ScholarResponse;
+use App\Models\ScholarshipRequirement;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ScholarshipRequirementItemOptionPolicy
+class ScholarResponsePolicy
 {
     use HandlesAuthorization;
 
@@ -30,19 +31,20 @@ class ScholarshipRequirementItemOptionPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user, $requirement_id)
     {
-        //
+        $requirement = ScholarshipRequirement::find($requirement_id);
+        return (isset($requirement)? User::where('id', $user->id)->whereOfficerOf($requirement->scholarship_id)->exists(): false);
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ScholarshipRequirementItemOption  $scholarshipRequirementItemOption
+     * @param  \App\Models\ScholarResponse  $scholarResponse
      * @return mixed
      */
-    public function view(User $user, ScholarshipRequirementItemOption $scholarshipRequirementItemOption)
+    public function view(User $user, ScholarResponse $scholarResponse)
     {
         //
     }
@@ -59,37 +61,48 @@ class ScholarshipRequirementItemOptionPolicy
     }
 
     /**
+     * Determine whether the user can assess models.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function assess(User $user, ScholarResponse $scholarResponse)
+    {
+        return User::where('id', $user->id)->whereOfficerOf($scholarResponse->requirement->scholarship_id)->exists();
+    }
+
+    /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ScholarshipRequirementItemOption  $scholarshipRequirementItemOption
+     * @param  \App\Models\ScholarResponse  $scholarResponse
      * @return mixed
      */
-    public function update(User $user, ScholarshipRequirementItemOption $scholarshipRequirementItemOption)
+    public function update(User $user, ScholarResponse $scholarResponse)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarshipRequirementItemOption->item->requirement->scholarship_id)->exists();
+        // 
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ScholarshipRequirementItemOption  $scholarshipRequirementItemOption
+     * @param  \App\Models\ScholarResponse  $scholarResponse
      * @return mixed
      */
-    public function delete(User $user, ScholarshipRequirementItemOption $scholarshipRequirementItemOption)
+    public function delete(User $user, ScholarResponse $scholarResponse)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarshipRequirementItemOption->item->requirement->scholarship_id)->exists();
+        //
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ScholarshipRequirementItemOption  $scholarshipRequirementItemOption
+     * @param  \App\Models\ScholarResponse  $scholarResponse
      * @return mixed
      */
-    public function restore(User $user, ScholarshipRequirementItemOption $scholarshipRequirementItemOption)
+    public function restore(User $user, ScholarResponse $scholarResponse)
     {
         //
     }
@@ -98,10 +111,10 @@ class ScholarshipRequirementItemOptionPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ScholarshipRequirementItemOption  $scholarshipRequirementItemOption
+     * @param  \App\Models\ScholarResponse  $scholarResponse
      * @return mixed
      */
-    public function forceDelete(User $user, ScholarshipRequirementItemOption $scholarshipRequirementItemOption)
+    public function forceDelete(User $user, ScholarResponse $scholarResponse)
     {
         //
     }

@@ -4,13 +4,15 @@ namespace App\Http\Livewire\ScholarshipRequirementResponse;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\ScholarshipRequirement;
 use App\Models\ScholarResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ScholarshipRequirement;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ScholarshipRequirementResponseLivewire extends Component
 {
+    use AuthorizesRequests;
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
@@ -27,16 +29,29 @@ class ScholarshipRequirementResponseLivewire extends Component
         'refresh' => '$refresh',
     ];
 
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'index'  => ['except' => null],
+    ];
+
+    public function hydrate()
+    {
+        if ( Auth::guest() || Auth::user()->cannot('viewAny', [ScholarResponse::class, $this->requirement_id]) ) {
+            return redirect()->route('requirement.response', [$this->requirement_id]);
+        }
+    }
+
     public function mount($requirement_id)
     {
         $this->requirement_id = $requirement_id;
+        $this->authorize('viewAny', [ScholarResponse::class, $requirement_id]);
     }
 
     public function render()
     {
         return view('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-livewire', [
                 'requirement' => $this->get_requirement(),
-                'responses' => $this->get_responses()
+                'responses'   => $this->get_responses(),
             ])
             ->extends('livewire.main.main-livewire');
     }
@@ -91,14 +106,6 @@ class ScholarshipRequirementResponseLivewire extends Component
         return $responses;
     }
 
-    public function getQueryString()
-    {
-        return [
-            'search' => ['except' => ''],
-            'index' => ['except' => null]
-        ];
-    }
-    
     public function updated($name)
     {
         $this->page = 1;
@@ -135,7 +142,7 @@ class ScholarshipRequirementResponseLivewire extends Component
     {
         $this->index = null;
     }
-    
+
     public function change_index($num)
     {
         if ( isset($this->index) ) {

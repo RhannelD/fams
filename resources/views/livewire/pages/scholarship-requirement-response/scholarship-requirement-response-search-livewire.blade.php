@@ -86,7 +86,7 @@
                     </tr>
                 @empty
                     <tr class="rows">
-                        <td class="text-nowrap" colspan="4">
+                        <td class="text-nowrap" colspan="9">
                             No Results
                         </td>
                     </tr>
