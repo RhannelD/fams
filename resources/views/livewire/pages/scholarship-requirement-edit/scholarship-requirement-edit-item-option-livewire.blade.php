@@ -4,14 +4,14 @@
         @if ($type == 'radio')
             <div class="input-group-prepend">
                 <div class="input-group-text">
-                    <input type="radio">
+                    <i class="far fa-circle"></i>
                 </div>
             </div>
             <input wire:model.lazy='option.option' type="text" class="form-control bg-white rounded-right">
         @elseif ($type == 'check')
             <div class="input-group-prepend">
                 <div class="input-group-text">
-                    <input type="checkbox" name="">
+                    <i class="far fa-square"></i>
                 </div>
             </div>
             <input wire:model.lazy='option.option' type="text" class="form-control bg-white rounded-right">

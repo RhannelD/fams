@@ -27,38 +27,45 @@ class ScholarshipRequirementEditItemOptionLivewire extends Component
         return false;
     }
 
+    public function hydrate()
+    {
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_item_option()) ) {
+            $this->emitUp('refresh');
+        }
+    }
+
     public function mount($option_id, $type)
     {
-        if ($this->verifyUser()) return;
-
         $this->option_id = $option_id;
         $this->option = new ScholarshipRequirementItemOption;
         $this->type = $type;
     }
     
-    public function updated($propertyName)
-    {
-        if ($this->verifyUser()) return;
-
-        $this->validate();
-        $this->save();
-    }
-
     public function render()
     {
-        $item_option = ScholarshipRequirementItemOption::find($this->option_id);
-
-        if ( isset($item_option) ) {
-            $this->option->option = $item_option->option;
-        }
+        $item_option = $this->get_item_option();
+        $this->option->option = isset($item_option)? $item_option->option: null;
 
         return view('livewire.pages.scholarship-requirement-edit.scholarship-requirement-edit-item-option-livewire', ['item_option' => $item_option]);
     }
 
+    protected function get_item_option()
+    {
+        return ScholarshipRequirementItemOption::find($this->option_id);
+    }
+
+    public function updated($propertyName)
+    {
+        if ( Auth::check() && Auth::user()->can('update', $this->get_item_option()) ) {
+            $this->validate();
+            $this->save();
+        }
+    }
+
     protected function save()
     {
-        $item_option = ScholarshipRequirementItemOption::find($this->option_id);
-        if ( is_null($item_option) )
+        $item_option = $this->get_item_option();
+        if ( Auth::guest() || Auth::user()->cannot('update', $item_option) )
             return;
 
         $item_option->option = $this->option->option;
@@ -67,10 +74,8 @@ class ScholarshipRequirementEditItemOptionLivewire extends Component
 
     public function delete_option()
     {
-        if ($this->verifyUser()) return;
-
-        $item_option = ScholarshipRequirementItemOption::find($this->option_id);
-        if ( is_null($item_option) )
+        $item_option = $this->get_item_option();
+        if ( Auth::guest() || Auth::user()->cannot('delete', $item_option) )
             return;
 
         if ( ScholarshipRequirementItemOption::where('item_id', $item_option->item_id)->count() <= 1 ) {
@@ -87,8 +92,6 @@ class ScholarshipRequirementEditItemOptionLivewire extends Component
 
     public function save_all()
     {
-        if ($this->verifyUser()) return;
-        
         $this->validate();
         $this->save();
     }

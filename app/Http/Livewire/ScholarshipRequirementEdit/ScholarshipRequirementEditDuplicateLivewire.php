@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\ScholarshipRequirementEdit;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementItem;
 use App\Models\ScholarshipRequirementItemOption;
@@ -20,6 +21,13 @@ class ScholarshipRequirementEditDuplicateLivewire extends Component
         'refresh' => '$refresh',
     ];
     
+    public function hydrate()
+    {
+        if ( Auth::guest() || Auth::user()->cannot('viewAny', [ScholarshipRequirement::class, $this->scholarship_id]) ) {
+            $this->emitUp('refresh');
+        }
+    }
+
     public function mount($requirement_id, $scholarship_id)
     {
         $this->requirement_id = $requirement_id;
@@ -51,7 +59,7 @@ class ScholarshipRequirementEditDuplicateLivewire extends Component
 
     public function view_requirement($requirement_id)
     {
-        if ( !ScholarshipRequirement::where('id', $requirement_id)->exists() )
+        if ( Auth::guest() || Auth::user()->cannot('update', ScholarshipRequirement::find($requirement_id)) )
             return;
         
         $this->duplicate_requirement_id = $requirement_id;
@@ -60,22 +68,21 @@ class ScholarshipRequirementEditDuplicateLivewire extends Component
 
     public function duplication_confirm()
     {
-        if ( is_null($this->get_duplicate_requirement()) )
-            return;
-        
-        $this->dispatchBrowserEvent('swal:confirm:duplicate_requirement', [
-            'type' => 'warning',  
-            'message' => 'Are you sure?', 
-            'text' => 'All progress will be deleted before duplication.',
-            'function' => "requirement_duplication"
-        ]);
+        if ( Auth::check() && Auth::user()->can('update', $this->get_duplicate_requirement()) ) {
+            $this->dispatchBrowserEvent('swal:confirm:duplicate_requirement', [
+                'type' => 'warning',  
+                'message' => 'Are you sure?', 
+                'text' => 'All progress will be deleted before duplication.',
+                'function' => "requirement_duplication"
+            ]);
+        }
     }
 
     public function requirement_duplication()
     {
         $duplicate_requirement = $this->get_duplicate_requirement();
         $requirement = ScholarshipRequirement::find($this->requirement_id);
-        if ( is_null($duplicate_requirement) || is_null($requirement) )
+        if ( Auth::guest() || Auth::user()->cannot('update', $duplicate_requirement) || Auth::user()->cannot('update', $requirement) )
             return;
 
         ScholarshipRequirementItem::where('requirement_id', $this->requirement_id)->delete();

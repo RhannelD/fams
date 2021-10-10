@@ -20,15 +20,6 @@ class ScholarshipRequirementEditAgreementLivewire extends Component
         'agreement' => 'required|string|min:10|max:15000000',
     ];
 
-    protected function verifyUser()
-    {
-        if (!Auth::check()) {
-            redirect()->route('index');
-            return true;
-        }
-        return false;
-    }
-
     public function hydrate()
     {
         if ( Auth::guest() || Auth::user()->cannot('update', $this->get_agreement()) ) {

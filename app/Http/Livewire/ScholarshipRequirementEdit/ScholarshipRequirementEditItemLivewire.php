@@ -23,24 +23,9 @@ class ScholarshipRequirementEditItemLivewire extends Component
         'item.type' => 'required',
     ];
 
-    protected function verifyUser()
-    {
-        if (!Auth::check()) {
-            redirect()->route('index');
-            return true;
-        }
-        return false;
-    }
-
-    protected function verifyItem()
-    {
-        $requirement_item = ScholarshipRequirementItem::find($this->item_id);
-        return is_null($requirement_item);
-    }
-
     public function hydrate()
     {
-        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_scholarship_requirement()) ) {
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_requirement_item()) ) {
             $this->emitUp('refresh');
         }
     }
@@ -71,7 +56,7 @@ class ScholarshipRequirementEditItemLivewire extends Component
     
     public function updated($propertyName)
     {
-        if ( Auth::guest() || Auth::user()->cannot('update', $requirement) )
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_requirement_item()) )
             return;
 
         $this->validate();
@@ -84,10 +69,8 @@ class ScholarshipRequirementEditItemLivewire extends Component
 
     public function save()
     {
-        if ($this->verifyUser()) return;
-
         $requirement_item = $this->get_requirement_item();
-        if ( is_null($requirement_item) ) 
+        if ( Auth::guest() || Auth::user()->cannot('update', $requirement_item) )
             return;
         
         $requirement_item->item = $this->item->item;
@@ -99,28 +82,26 @@ class ScholarshipRequirementEditItemLivewire extends Component
     
     public function save_all()
     {
-        if ($this->verifyUser()) return;
-
         $this->validate();
         $this->save();
     }
 
     public function delete_confirmation()
     {
-        if ($this->verifyUser()) return;
-        if ($this->verifyItem()) return;
-
-        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_confirmation_'.$this->item_id, [
-            'type' => 'warning',  
-            'message' => 'Are you sure?', 
-            'text' => 'If deleted, you will not be able to recover this Item!',
-            'function' => "delete_item"
-        ]);
+        if ( Auth::check() && Auth::user()->can('update', $this->get_requirement_item()) ) {
+            $this->dispatchBrowserEvent('swal:confirm:delete_confirmation_'.$this->item_id, [
+                'type' => 'warning',  
+                'message' => 'Are you sure?', 
+                'text' => 'If deleted, you will not be able to recover this Item!',
+                'function' => "delete_item"
+            ]);
+        }
     }
 
     public function delete_item()
     {
-        if ($this->verifyUser()) return;
+        if ( Auth::guest() || Auth::user()->cannot('delete', $this->get_requirement_item()) )
+            return;
 
         if ( !ScholarshipRequirementItem::where('id', $this->item_id)->delete() ) 
             return;
@@ -132,8 +113,8 @@ class ScholarshipRequirementEditItemLivewire extends Component
 
     public function change_item_type()
     {
-        if ($this->verifyUser()) return;
-        if ($this->verifyItem()) return;
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_requirement_item()) )
+            return;
 
         if(!in_array($this->item->type, array('radio', 'check'))) {
             $options = ScholarshipRequirementItemOption::where('item_id', $this->item_id)->delete();
@@ -149,8 +130,8 @@ class ScholarshipRequirementEditItemLivewire extends Component
 
     public function add_item_option()
     {
-        if ($this->verifyUser()) return;
-        if ($this->verifyItem()) return;
+        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_requirement_item()) )
+            return;
         
         $option = new ScholarshipRequirementItemOption;
         $option->item_id = $this->item_id;
