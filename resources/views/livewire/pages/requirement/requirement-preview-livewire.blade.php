@@ -77,7 +77,7 @@
                         @switch( $requirement->can_be_accessed() )
                             @case('disabled')
                                 <div class="alert alert-info mb-2">
-                                    Due date is finished. You cant edit your response. 
+                                    Due date is finished. You cant edit or submit your response. 
                                 </div>
                                 @break
 

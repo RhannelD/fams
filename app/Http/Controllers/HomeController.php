@@ -62,8 +62,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $req = ScholarshipRequirement::find(62);
-        return Auth::user()->can('access_on_category', $req);
+        return Carbon::parse(ScholarshipRequirement::first()->end_at)->format('Y-m-d h:i:s') < Carbon::now()->format('Y-m-d h:i:s');
+
+        // $req = ScholarshipRequirement::find(62);
+        // return Auth::user()->can('access_on_category', $req);
 
 
         // $scholarshipPost = ScholarshipPost::find(34);

@@ -46,7 +46,7 @@ class ScholarResponsePolicy
      */
     public function view(User $user, ScholarResponse $scholarResponse)
     {
-        //
+        return $user->id = $scholarResponse->user_id;
     }
 
     /**
@@ -55,9 +55,27 @@ class ScholarResponsePolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create(User $user, $requirement_id)
     {
-        //
+        $scholarshipRequirement = ScholarshipRequirement::find('requirement_id', $requirement_id);
+
+        return isset($scholarshipRequirement) && (
+            (
+                // returns true if scholar didn't have scholarship under this program and requirement are for applicants
+                $scholarshipRequirement->promote 
+                && $user->is_scholar()
+                && !$user->is_scholar_of($scholarshipRequirement->scholarship_id)
+            ) || (
+                // returns true if scholar has the same category with requirement and requirement are for existing scholar's
+                !$scholarshipRequirement->promote 
+                && ScholarshipRequirementCategory::where('requirement_id', $scholarshipRequirement->id)
+                    ->whereHas('category', function ($query) use ($user) {
+                        $query->whereHas('scholars', function ($query) use ($user){
+                            $query->where('user_id', $user->id);
+                        });
+                    })->exists()
+            )
+        );
     }
 
     /**
@@ -81,6 +99,42 @@ class ScholarResponsePolicy
     public function update(User $user, ScholarResponse $scholarResponse)
     {
         // 
+    }
+
+    /**
+     * Determine whether the user can submit the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ScholarResponse  $scholarResponse
+     * @return mixed
+     */
+    public function submit(User $user, ScholarResponse $scholarResponse)
+    {
+        return !$scholarResponse->is_submitted() 
+            && $user->id = $scholarResponse->user_id
+            && $scholarResponse->requirement->enable !== false
+            && (
+                !$scholarResponse->is_late_to_submit()
+                || $scholarResponse->requirement->enable === true
+            );
+    }
+
+    /**
+     * Determine whether the user can unsubmit the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ScholarResponse  $scholarResponse
+     * @return mixed
+     */
+    public function unsubmit(User $user, ScholarResponse $scholarResponse)
+    {
+        return $scholarResponse->is_submitted() 
+            && $user->id = $scholarResponse->user_id
+            && $scholarResponse->requirement->enable !== false
+            && (
+                !$scholarResponse->is_late_to_submit()
+                || $scholarResponse->requirement->enable === true
+            );
     }
 
     /**

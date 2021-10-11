@@ -56,17 +56,27 @@ class ResponseRadioLivewire extends Component
         return false;
     }
 
+    public function hydrate()
+    {
+        $response = $this->get_user_response();
+        if ( Auth::guest() || $this->is_admin() || Auth::user()->cannot('view', $response) || Auth::user()->cannot('respond', $response->requirement) )
+            return $this->emitUp('refresh');
+    }
+
+    protected function is_admin()
+    {
+        return Auth::check() && Auth::user()->is_admin();
+    }
+
     public function mount($requirement_item_id, $response_id)
     {
-        if ($this->verifyUser()) return;
-        
         $this->requirement_item_id = $requirement_item_id;
         $this->response_id = $response_id;
     }
 
     public function render()
     {
-        $response = ScholarResponse::find($this->response_id);
+        $response = $this->get_user_response();
 
         $response_id = $this->response_id;
         $options = ScholarshipRequirementItemOption::select('id', 'option')
@@ -87,12 +97,13 @@ class ResponseRadioLivewire extends Component
             ]);
     }
 
+    protected function get_user_response()
+    {
+        return ScholarResponse::find($this->response_id);
+    }
+
     public function updated($propertyName)
     {
-        if ($this->verifyUser()) return;
-        if ($this->verifyUserResponse()) return;
-        if ($this->verifyItemAndResponse()) return;
-
         $this->validateOnly($propertyName);
 
         $this->save();

@@ -7,8 +7,8 @@
 
             <div class="card shadow mb-2 requirement-item-hover">
                 <div class="card-body">
-                    <a href="{{ route('requirement.view', [$requirement->id]) }}" class="btn btn-dark btn-block">
-                        Back
+                    <a href="{{ route('requirement.view', [$requirement->id]) }}" class="btn btn-secondary btn-block text-white">
+                        Requirement Preview
                     </a>
                 </div>
             </div> 
@@ -17,53 +17,47 @@
                 <div class="card-body">
 
                     @if ( $user_response->cant_be_edit() )
-                        <div class="alert alert-info mb-2">
-                            You can't edit your response anymore.
-                            <br>
-                            @if ( $user_response->approval )
-                                This has already been approved.
-                            @else
-                                This has already been denied.
-                            @endif
-                        </div>
-                        <a href="{{ route('requirement.view', [$requirement->id]) }}" class="btn btn-info btn-block pr-md-4 text-white">
-                            View requirement info
-                        </a>
+                        @if ($user_response->approval)
+                            <div class="alert alert-success my-auto">
+                                Your response had been approved.
+                            </div>
+                        @else
+                            <div class="alert alert-danger my-auto">
+                                Your response had been denied.
+                            </div>
+                        @endif
                             
                     @elseif ( !isset( $user_response->submit_at ) )
-                        <button wire:click="submit_response" class="btn btn-success btn-block">
-                            <i class="fas fa-paper-plane mr-1" wire:loading.remove wire:target="submit_response"></i>
-                            <i class="fas fa-spinner fa-spin" wire:loading wire:target="submit_response"></i>
-                            Submit Response
-                        </button>
+                        @if ( Auth::user()->can('submit', $user_response) )
+                            <button wire:click="submit_response" class="btn btn-success btn-block">
+                                <i class="fas fa-paper-plane mr-1" wire:loading.remove wire:target="submit_response"></i>
+                                <i class="fas fa-spinner fa-spin" wire:loading wire:target="submit_response"></i>
+                                Submit Response
+                            </button>
+                        @else
+                            <div class="alert alert-danger my-auto">
+                                The form is disabled.<br>
+                                You cant submit this anymore.
+                            </div>
+                        @endif
 
                     @else
-                        <button wire:click="unsubmit_response" class="btn btn-danger btn-block">
-                            <i class="fas fa-trash mr-1" wire:loading.remove wire:target="unsubmit_response"></i>
-                            <i class="fas fa-spinner fa-spin" wire:loading wire:target="unsubmit_response"></i>
-                            Unsubmit Response
-                        </button>
-                        
+                        @if ( Auth::user()->can('unsubmit', $user_response) )
+                            <button wire:click="unsubmit_response" class="btn btn-danger btn-block">
+                                <i class="fas fa-trash mr-1" wire:loading.remove wire:target="unsubmit_response"></i>
+                                <i class="fas fa-spinner fa-spin" wire:loading wire:target="unsubmit_response"></i>
+                                Unsubmit Response
+                            </button>
+                        @else
+                            <div class="alert alert-info my-auto">
+                                The form is disabled.<br>
+                                You cant unsubmit this anymore.
+                            </div>
+                        @endif
                     @endif
 
                 </div>
             </div>
-
-            @isset( $user_response->approval )     
-                <div class="card shadow mb-2 requirement-item-hover">
-                    <div class="card-body pb-1">
-                        @if ($user_response->approval)
-                            <div class="alert alert-success">
-                                Approved
-                            </div>
-                        @else
-                            <div class="alert alert-danger">
-                                Denied
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            @endisset
 
             <hr>
         </div>

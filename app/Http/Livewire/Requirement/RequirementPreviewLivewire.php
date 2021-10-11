@@ -25,7 +25,7 @@ class RequirementPreviewLivewire extends Component
     public function hydrate()
     {
         if ( Auth::guest() || Auth::user()->cannot('preview', $this->get_requirement()) ) {
-            return redirect()->route('requirement.response', [$this->requirement_id]);
+            return redirect()->route('requirement.view', [$this->requirement_id]);
         }
     }
 

@@ -2,112 +2,87 @@
 
 namespace App\Http\Livewire\Response;
 
+use Carbon\Carbon;
 use Livewire\Component;
-use App\Models\ScholarshipScholar;
-use App\Models\ScholarshipRequirement;
-use App\Models\ScholarshipRequirementItem;
-use App\Models\ScholarshipRequirementItemOption;
-use App\Models\ScholarshipRequirementCategory;
 use App\Models\ScholarResponse;
+use App\Models\ScholarshipScholar;
+use Illuminate\Support\Facades\DB;
 use App\Models\ScholarResponseFile;
+use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarResponseAnswer;
 use App\Models\ScholarResponseOption;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
+use App\Models\ScholarshipRequirement;
+use App\Models\ScholarshipRequirementItem;
+use App\Models\ScholarshipRequirementCategory;
+use App\Models\ScholarshipRequirementItemOption;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ResponseLivewire extends Component
 {
+    use AuthorizesRequests;
+    
     public $requirement_id;
-    public $user_response_id = 0;
+    public $response_id;
    
     protected $listeners = [
         'refresh' => '$refresh'
     ];
 
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check() || Auth::user()->usertype != 'scholar') {
-            redirect()->route('index');
-            return true;
-        }
-        return false;
+        if ( $this->is_admin() ) 
+            return redirect()->route('scholarship.requirement.open', [$this->requirement_id]);
+
+        if ( Auth::guest() || Auth::user()->cannot('respond', $this->get_requirement()) || Auth::user()->cannot('view', $this->get_user_response()) )
+            return redirect()->route('requirement.response', [$this->requirement_id]);
     }
 
-    protected function verifyUserRequirementAccess()
+    protected function is_admin()
     {
-        $requirement = ScholarshipRequirement::find($this->requirement_id);
-        if ( is_null($requirement) )
-            return false;
-
-        if ( $requirement->promote )
-            return true;
-
-        $access = ScholarshipRequirementCategory::where('requirement_id', $this->requirement_id)
-            ->whereIn('scholarship_requirement_categories.category_id', function($query){
-                $query->select('scholarship_scholars.category_id')
-                    ->from(with(new ScholarshipScholar)->getTable())
-                    ->where('scholarship_scholars.user_id', Auth::id());
-            })
-            ->exists();
-
-        if (!$access) {
-            redirect()->route('index');
-        }
-        return $access;
-    }
-
-    protected function verifyUserResponse()
-    {
-        $user_response = ScholarResponse::find($this->user_response_id);
-        if ( is_null($user_response) || $user_response->user_id != Auth::id()) {
-            redirect()->route('index');
-            return;
-        }
-        return false;
+        return Auth::check() && Auth::user()->is_admin();
     }
 
     public function mount($requirement_id)
     {
-        if ($this->verifyUser()) return;
-        
         $this->requirement_id = $requirement_id;
+        $this->authorize('respond', $this->get_requirement());
 
-        if (!$this->verifyUserRequirementAccess()) return;
+        if ( $this->is_admin() ) 
+            return redirect()->route('scholarship.requirement.open', [$this->requirement_id]);
+        
+        $response = ScholarResponse::firstOrCreate([
+                'user_id' => Auth::id(),
+                'requirement_id' => $this->requirement_id,
+            ]);
+        $this->response_id = $response->id;
     }
 
     public function render()
     {
-        $requirement = ScholarshipRequirement::find($this->requirement_id);
-
-        $user_response = null;
-        if ( isset($requirement) ) {
-            $user_response = ScholarResponse::firstOrCreate([
-                    'user_id' => Auth::id(),
-                    'requirement_id' => $this->requirement_id,
-                ]);
-
-            $this->user_response_id = $user_response->id;
-        }
-
         return view('livewire.pages.response.response-livewire', [
-                'requirement' => $requirement,
-                'user_response' => $user_response
+                'requirement' => $this->get_requirement(),
+                'user_response' => $this->get_user_response(),
             ])
             ->extends('livewire.main.main-livewire');
     }
 
+    protected function get_requirement()
+    {
+        return ScholarshipRequirement::find($this->requirement_id);
+    }
+
+    protected function get_user_response()
+    {
+        return ScholarResponse::find($this->response_id);
+    }
+
     public function submit_response()
     {
-        if ($this->verifyUser()) return;
-        if (!$this->verifyUserRequirementAccess()) return;
-        if ($this->verifyUserResponse()) return;
-
-        $user_response = ScholarResponse::find($this->user_response_id);
-        if ( is_null($user_response) )
+        $user_response = $this->get_user_response();
+        if ( Auth::guest() || $this->is_admin() || Auth::user()->cannot('respond', $this->get_requirement()) || Auth::user()->cannot('submit', $user_response) )
             return;
 
-        $response_id = $this->user_response_id;
+        $response_id = $this->response_id;
 
         $missing = ScholarshipRequirement::where('id', $this->requirement_id)
             ->where(function ($query) use ($response_id) {
@@ -161,12 +136,8 @@ class ResponseLivewire extends Component
 
     public function unsubmit_response()
     {
-        if ($this->verifyUser()) return;
-        if (!$this->verifyUserRequirementAccess()) return;
-        if ($this->verifyUserResponse()) return;
-
-        $user_response = ScholarResponse::find($this->user_response_id);
-        if ( is_null($user_response) )
+        $user_response = $this->get_user_response();
+        if ( Auth::guest() || $this->is_admin() || Auth::user()->cannot('respond', $this->get_requirement()) || Auth::user()->cannot('unsubmit', $user_response) )
             return;
 
         $user_response->submit_at = null;

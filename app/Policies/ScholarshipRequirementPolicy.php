@@ -96,6 +96,37 @@ class ScholarshipRequirementPolicy
     }
 
     /**
+     * Determine whether the user can respond to models.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ScholarshipRequirement  $scholarshipRequirement
+     * @return mixed
+     */
+    public function respond(User $user, ScholarshipRequirement $scholarshipRequirement)
+    {
+        return (
+            // returns true if scholar didn't have scholarship under this program and requirement are for applicants
+            $scholarshipRequirement->promote 
+            && $user->is_scholar()
+            && !$user->is_scholar_of($scholarshipRequirement->scholarship_id)
+        ) || (
+            // returns true if scholar has the same category with requirement and requirement are for existing scholar's
+            !$scholarshipRequirement->promote 
+            && ScholarshipRequirementCategory::where('requirement_id', $scholarshipRequirement->id)
+                ->whereHas('category', function ($query) use ($user) {
+                    $query->whereHas('scholars', function ($query) use ($user){
+                        $query->where('user_id', $user->id);
+                    });
+                })->exists()
+        ) || (
+            // returns true if scholar has existing response
+            ScholarResponse::where('user_id', $user->id)
+                ->where('requirement_id', $scholarshipRequirement->id)
+                ->exists()
+        );
+    }
+
+    /**
      * Determine whether the user can create models.
      *
      * @param  \App\Models\User  $user

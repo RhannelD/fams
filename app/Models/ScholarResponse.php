@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScholarResponse extends Model
 {
@@ -47,5 +48,16 @@ class ScholarResponse extends Model
     {
         $requirement = ScholarshipRequirement::find($this->requirement_id);
         return $requirement->end_at > $this->submit_at;
+    }
+
+    public function is_submitted()
+    {
+        return isset($this->submit_at);
+    }
+
+    public function is_late_to_submit()
+    {
+        $requirement = ScholarshipRequirement::find($this->requirement_id);
+        return Carbon::parse($requirement->end_at)->format('Y-m-d h:i:s') < Carbon::now()->format('Y-m-d h:i:s');
     }
 }
