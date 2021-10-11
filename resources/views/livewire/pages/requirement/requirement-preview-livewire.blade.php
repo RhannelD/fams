@@ -51,7 +51,7 @@
                                         Due date is finished but you can still send a response.
                                     </div>
                                 @case('ongoing')
-                                    <a href="{{ route('reponse', [$requirement->id]) }}" class="btn btn-success btn-block pr-md-4">
+                                    <a href="{{ route('requirement.response', [$requirement->id]) }}" class="btn btn-success btn-block pr-md-4">
                                         <i class="fas fa-paper-plane mr-1"></i>
                                         Respond
                                     </a>
@@ -70,12 +70,12 @@
                         <div class="alert alert-info mb-2">
                             You can't edit your response anymore.
                         </div>
-                        <a href="{{ route('reponse', [$requirement->id]) }}" class="btn btn-info btn-block text-white">
+                        <a href="{{ route('requirement.response', [$requirement->id]) }}" class="btn btn-info btn-block text-white">
                             View your response
                         </a>
 
                     @elseif ( !$scholar_response->cant_be_edit() )
-                        <a href="{{ route('reponse', [$requirement->id]) }}" class="btn btn-info btn-block text-white">
+                        <a href="{{ route('requirement.response', [$requirement->id]) }}" class="btn btn-info btn-block text-white">
                             Edit your response
                         </a>
                         

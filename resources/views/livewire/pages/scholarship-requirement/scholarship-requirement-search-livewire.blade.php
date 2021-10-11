@@ -62,8 +62,8 @@
                             <a href="{{ route('scholarship.requirement.open', [$requirement->id]) }}" class="btn btn-sm btn-success ml-auto">
                                 Preview
                             </a>
-                            <a href="{{ route('requirement.response', [$requirement->id]) }}" class="btn btn-sm btn-primary ml-1 mr-auto">
-                                Responds
+                            <a href="{{ route('scholarship.requirement.responses', [$requirement->id]) }}" class="btn btn-sm btn-primary ml-1 mr-auto">
+                                Responses
                             </a>
                         </td>
                     </tr>

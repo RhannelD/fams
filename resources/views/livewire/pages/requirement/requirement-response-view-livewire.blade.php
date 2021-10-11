@@ -2,7 +2,7 @@
     <div class="card-header bg-white pb-2 border-bottom-0">
         <div class="d-flex">
             <h5 class="ml-0 mr-auto mb-1 mt-2 btn-block">
-                <a href="{{ route('reponse', [$scholar_response->requirement_id]) }}">   
+                <a href="{{ route('requirement.response', [$scholar_response->requirement_id]) }}">   
                     <div class="input-group mb-1 item-hover">
                         <div class="input-group-prepend">
                             <span class="input-group-text bg-primary text-white border-primary">

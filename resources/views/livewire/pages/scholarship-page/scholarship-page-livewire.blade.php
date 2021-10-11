@@ -24,7 +24,7 @@
 
             @foreach ($posts as $post)
                 <div class="card mb-3 shadow requirement-item-hover mx-auto" style="max-width: 800px">
-                    <a href="{{ route('post.show', [$post->id]) }}" class="nounderline text-dark">
+                    <a href="{{ route('scholarship.post.show', [$post->id]) }}" class="nounderline text-dark">
                         <div class="card-header"> 
                             <h5>
                                 {{ $post->title }} 
@@ -58,7 +58,7 @@
                         </div>
 
                         <div class="card-footer d-flex justify-content-end">
-                            <a href="{{ route('post.show', [$post->id]) }}" class=" text-dark">
+                            <a href="{{ route('scholarship.post.show', [$post->id]) }}" class=" text-dark">
                                 Comment
                                 <span class="badge badge-primary pt-1">{{ $post->comments->count() }}</span>
                             </a>

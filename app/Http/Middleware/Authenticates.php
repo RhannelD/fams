@@ -21,6 +21,6 @@ class Authenticates
             return $next($request);
         }
 
-        return redirect()->route('login.index');
+        return redirect()->route('index');
     }
 }

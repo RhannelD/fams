@@ -21,7 +21,7 @@ class ScholarshipPostObserver
 
         $details = [
             'scholarship' => $scholarshipPost->scholarship->scholarship,
-            'url' => route('post.show', [$scholarshipPost->id]),
+            'url' => route('scholarship.post.show', [$scholarshipPost->id]),
             'poster' => $scholarshipPost->user->flname(),
         ];
 

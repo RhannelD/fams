@@ -5,7 +5,7 @@
                 <div class="card mb-3 shadow requirement-item-hover mx-auto" style="max-width: 800px">
                     <div class="card-header"> 
                         <h5>
-                            <a href="{{ route('post.show', [$post->id]) }}" class="text-dark">
+                            <a href="{{ route('scholarship.post.show', [$post->id]) }}" class="text-dark">
                                 {{ $post->title }} {{ $post->id }}
                             </a>
                         </h5>
@@ -22,7 +22,7 @@
                             </h6>
                         </div>
                     </div>
-                    <a href="{{ route('post.show', [$post->id]) }}" class="nounderline text-dark">
+                    <a href="{{ route('scholarship.post.show', [$post->id]) }}" class="nounderline text-dark">
                         <div class="card-body bg-light">
                             <p class="mb-0">
                                 {!! Purify::clean($post->post) !!}
@@ -38,7 +38,7 @@
                         </div>
                     </a>
                     <div class="card-footer d-flex justify-content-end">
-                        <a href="{{ route('post.show', [$post->id]) }}" class=" text-dark">
+                        <a href="{{ route('scholarship.post.show', [$post->id]) }}" class=" text-dark">
                             Comment
                             <span class="badge badge-primary pt-1">{{ $post->comments->count() }}</span>
                         </a>

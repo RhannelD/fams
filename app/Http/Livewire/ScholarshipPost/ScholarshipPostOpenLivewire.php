@@ -32,7 +32,7 @@ class ScholarshipPostOpenLivewire extends Component
     public function hydrate()
     {
         if ( Auth::guest() || Auth::user()->cannot('view', $this->get_post()) ) {
-            return redirect()->route('post.show', [$this->post_id]);
+            return redirect()->route('scholarship.post.show', [$this->post_id]);
         }
     }
 

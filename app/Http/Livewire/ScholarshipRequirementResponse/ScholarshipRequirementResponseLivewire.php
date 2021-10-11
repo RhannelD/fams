@@ -37,7 +37,7 @@ class ScholarshipRequirementResponseLivewire extends Component
     public function hydrate()
     {
         if ( Auth::guest() || Auth::user()->cannot('viewAny', [ScholarResponse::class, $this->requirement_id]) ) {
-            return redirect()->route('requirement.response', [$this->requirement_id]);
+            return redirect()->route('scholarship.requirement.responses', [$this->requirement_id]);
         }
     }
 

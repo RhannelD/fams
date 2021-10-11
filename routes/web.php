@@ -39,40 +39,69 @@ use App\Http\Livewire\ScholarshipRequirementResponse\ScholarshipRequirementRespo
 |
 */
 
-Route::get('/', function () {
-    return redirect()->route('login.index');
-})->name('index');
+Route::get('/', function () { return redirect()->route('login.index'); })->name('index');
 
-Route::get('/login', LoginLivewire::class)->name('login.index')->middleware('auth.login');
-Route::get('/sign-up', SignUpLivewire::class)->name('sign-up.index')->middleware('auth.login');
-Route::get('/password-reset/{token}/{email}', PasswordResetLivewire::class)->name('password.reset')->middleware('auth.login');
-Route::get('/invite/officer/{invite_token}', ScholarshipOfficerInviteLinkLivewire::class)->name('invite');
+// Needs to be signed out to access
+Route::group(['middleware' => ['user.login']], function(){
+    Route::get('/login', LoginLivewire::class)->name('login.index');
 
-Route::get('/dashboard', DashboardLivewire::class)->name('dashboard')->middleware('auth.main');
-Route::get('/officer', OfficerLivewire::class)->name('officer')->middleware('auth.main');
-Route::get('/scholar', ScholarLivewire::class)->name('scholar')->middleware('auth.main');
-Route::get('/scholarship', ScholarshipLivewire::class)->name('scholarship')->middleware('auth.main');
-Route::get('/scholarship/scholar', ScholarScholarshipViewLivewire::class)->name('scholar.scholarship')->middleware('auth.main');
+    Route::get('/sign-up', SignUpLivewire::class)->name('sign-up.index');
 
-Route::get('/scholarship/{scholarship_id}/home', ScholarshipPageLivewire::class)->name('scholarship.home')->middleware('auth.main');
-Route::get('/scholarship/{scholarship_id}/officer', ScholarshipOfficerLivewire::class)->name('scholarship.officer')->middleware('auth.main');
-Route::get('/scholarship/{scholarship_id}/scholar', ScholarshipScholarLivewire::class)->name('scholarship.scholar')->middleware('auth.main');
-Route::get('/scholarship/{scholarship_id}/scholar/invite', ScholarshipScholarInviteImportExcel::class)->name('scholarship.scholar.invite')->middleware('auth.main');
-Route::get('/scholarship/{scholarship_id}/requirement', ScholarshipRequirementLivewire::class)->name('scholarship.requirement')->middleware('auth.main');
-Route::get('/scholarship/{scholarship_id}/category', ScholarshipCategoryLivewire::class)->name('scholarship.category')->middleware('auth.main');
-Route::get('/scholarship/requirement/{requirement_id}', ScholarshipRequirementOpenLivewire::class)->name('scholarship.requirement.open')->middleware('auth.main');
-Route::get('/scholarship/requirement/{requirement_id}/edit', ScholarshipRequirementEditLivewire::class)->name('requirement.edit')->middleware('auth.main');
-Route::get('/scholarship/requirement/{requirement_id}/response', ScholarshipRequirementResponseLivewire::class)->name('requirement.response')->middleware('auth.main');
-Route::get('/scholarship/post/{post_id}', ScholarshipPostOpenLivewire::class)->name('post.show')->middleware('auth.main');
+    Route::get('/sign-up/officer/{invite_token}', ScholarshipOfficerInviteLinkLivewire::class)->name('invite');
 
-Route::get('/invite/scholar', InviteScholarLivewire::class)->name('invite.scholar')->middleware('auth.main');
-Route::get('/invite/officer', InviteOfficerLivewire::class)->name('invite.officer')->middleware('auth.main');
+    Route::get('/password-reset/{token}/{email}', PasswordResetLivewire::class)->name('password.reset');
+});
 
-Route::get('/requirement/{requirement_id}', RequirementPreviewLivewire::class)->name('requirement.view')->middleware('auth.main');
-Route::get('/requirement/{requirement_id}/response', ResponseLivewire::class)->name('reponse')->middleware('auth.main');
+// Needs to be signed in to access
+Route::group(['middleware' => ['user.auth']], function(){
+    Route::get('/dashboard', DashboardLivewire::class)->name('dashboard');
 
-Route::get('/my-account', MyAccountLivewire::class)->name('my.account')->middleware('auth.main');
+    Route::get('/officer', OfficerLivewire::class)->name('officer');
 
-Route::get('/file/preview/{id}', [FilePreviewController::class, 'show'])->name('file.preview')->middleware('auth.main');
+    Route::get('/scholar', ScholarLivewire::class)->name('scholar');
 
-Route::get('/try', [HomeController::class, 'index'])->name('try');
+    Route::get('/scholarship', ScholarshipLivewire::class)->name('scholarship');
+
+    Route::get('/scholarship/scholar', ScholarScholarshipViewLivewire::class)->name('scholar.scholarship');
+
+    Route::get('/file/preview/{id}', [FilePreviewController::class, 'show'])->name('file.preview');
+
+    Route::prefix('/scholarship')->group(function () {
+        Route::get('/{scholarship_id}/home', ScholarshipPageLivewire::class)->name('scholarship.home');
+
+        Route::get('/post/{post_id}', ScholarshipPostOpenLivewire::class)->name('scholarship.post.show');
+
+        Route::get('/{scholarship_id}/officer', ScholarshipOfficerLivewire::class)->name('scholarship.officer');
+
+        Route::get('/{scholarship_id}/scholar', ScholarshipScholarLivewire::class)->name('scholarship.scholar');
+
+        Route::get('/{scholarship_id}/scholar/invite', ScholarshipScholarInviteImportExcel::class)->name('scholarship.scholar.invite');
+
+        Route::get('/{scholarship_id}/category', ScholarshipCategoryLivewire::class)->name('scholarship.category');
+
+        Route::get('/{scholarship_id}/requirement', ScholarshipRequirementLivewire::class)->name('scholarship.requirement');
+
+        Route::get('/requirement/{requirement_id}', ScholarshipRequirementOpenLivewire::class)->name('scholarship.requirement.open');
+
+        Route::get('/requirement/{requirement_id}/edit', ScholarshipRequirementEditLivewire::class)->name('scholarship.requirement.edit');
+
+        Route::get('/requirement/{requirement_id}/responses', ScholarshipRequirementResponseLivewire::class)->name('scholarship.requirement.responses');
+    });
+
+    Route::prefix('/my-account')->group(function () {
+        Route::get('/invite/scholar', InviteScholarLivewire::class)->name('invite.scholar');
+
+        Route::get('/invite/officer', InviteOfficerLivewire::class)->name('invite.officer');
+
+        Route::get('/info', MyAccountLivewire::class)->name('my.account');
+    });
+
+    Route::prefix('/requirement')->group(function () {
+        Route::get('/{requirement_id}', RequirementPreviewLivewire::class)->name('requirement.view');
+
+        Route::get('/{requirement_id}/response', ResponseLivewire::class)->name('requirement.response');
+    });
+});
+
+//----------------------- To be Deleted --------------------------
+Route::get('/try', [HomeController::class, 'index'])->name('try');  

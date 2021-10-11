@@ -37,8 +37,8 @@
 
                 <div class="card shadow mb-2 requirement-item-hover">
                     <div class="card-body">
-                        <a href="{{ route('requirement.response', [$requirement->id]) }}" class="btn btn-success btn-block">
-                            View Responds
+                        <a href="{{ route('scholarship.requirement.responses', [$requirement->id]) }}" class="btn btn-success btn-block">
+                            View Responses
                             <span class="badge badge-dark">
                                 <strong>
                                     {{ $requirement->responses->whereNotNull('submit_at')->count() }}
@@ -61,7 +61,7 @@
                                 Edit
                             </button>
                         @else
-                            <a href="{{ route('requirement.edit', [$requirement->id]) }}" class="btn btn-info btn-block text-white">Edit</a>
+                            <a href="{{ route('scholarship.requirement.edit', [$requirement->id]) }}" class="btn btn-info btn-block text-white">Edit</a>
                         @endif
                         <button wire:click="delete_confirmation"  class="btn btn-danger btn-block">Delete</button>
                     </div>

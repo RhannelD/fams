@@ -103,6 +103,6 @@ class ScholarshipRequirementLivewire extends Component
         $item_Grade->position = $position++;
         $item_Grade->save();
 
-        redirect()->route('requirement.edit', [$new_requirement->id]);
+        redirect()->route('scholarship.requirement.edit', [$new_requirement->id]);
     }
 }

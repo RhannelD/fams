@@ -118,6 +118,6 @@ class ScholarshipRequirementOpenLivewire extends Component
         if ( Auth::guest() || Auth::user()->cannot('update', $this->get_scholarship_requirement()) )
             return;
 
-        return redirect()->route('requirement.edit', [$this->requirement_id]);
+        return redirect()->route('scholarship.requirement.edit', [$this->requirement_id]);
     }
 }

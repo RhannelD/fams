@@ -36,7 +36,7 @@ class ScholarResponseCommentObserver
                 $details['url'] = route('requirement.view', [$scholarResponseComment->response->requirement_id]);
             } else {
                 $details['body_message'] = "{$scholarResponseComment->user->flname()} commented on a requirement response of {$scholarResponseComment->response->user->flname()}.";
-                $details['url'] = route('requirement.response', [
+                $details['url'] = route('scholarship.requirement.responses', [
                         'requirement_id' => $scholarResponseComment->response->requirement_id,
                         'search' => $scholarResponseComment->response->user->email,
                         'index' => 0,

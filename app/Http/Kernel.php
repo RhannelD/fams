@@ -39,6 +39,14 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
+        'user.auth' => [
+            \App\Http\Middleware\Authenticates::class,
+        ],
+
+        'user.login' => [
+            \App\Http\Middleware\Authenticated::class,
+        ],
+
         'api' => [
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
