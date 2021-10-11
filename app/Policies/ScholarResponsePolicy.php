@@ -92,7 +92,7 @@ class ScholarResponsePolicy
      */
     public function delete(User $user, ScholarResponse $scholarResponse)
     {
-        //
+        return $user->id == $scholarResponse->user_id && !$scholarResponse->cant_be_edit();
     }
 
     /**

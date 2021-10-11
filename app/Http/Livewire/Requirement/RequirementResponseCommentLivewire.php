@@ -12,28 +12,22 @@ class RequirementResponseCommentLivewire extends Component
     public $response_id;
     public $comment;
 
-
     protected $rules = [
         'comment.comment' => 'required|string|min:1|max:60000',
     ];
 
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check()) {
-            redirect()->route('index');
-            return true;
+        if ( Auth::guest() || Auth::user()->cannot('create', [ScholarResponseComment::class, $this->response_id]) ) {
+            $this->emitUp('comment_updated');
         }
-        return false;
     }
 
     public function mount($response_id)
     {
-        if ($this->verifyUser()) return;
-
         $this->response_id = $response_id;
         $this->comment = new ScholarResponseComment;
     }
-
 
     public function render()
     {
@@ -47,21 +41,17 @@ class RequirementResponseCommentLivewire extends Component
 
     public function comment()
     {
-        if ($this->verifyUser()) return;
-
         $this->validate();
 
-        if ( !ScholarResponse::find($this->response_id) ) {
-            return redirect()->route('index');
+        if ( Auth::check() && Auth::user()->can('create', [ScholarResponseComment::class, $this->response_id]) ) {
+            $this->comment->user_id = Auth::id();
+            $this->comment->response_id = $this->response_id;
+    
+            if ($this->comment->save()) {
+                $this->comment = new ScholarResponseComment;
+            }
         }
-   
-        $this->comment->user_id = Auth::id();
-        $this->comment->response_id = $this->response_id;
 
-        if ($this->comment->save()) {
-            $this->comment = new ScholarResponseComment;
-
-            $this->emitUp('comment_updated');
-        }
+        $this->emitUp('comment_updated');
     }
 }

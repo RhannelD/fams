@@ -62,8 +62,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // return Auth::id();
-        return Auth::user();
+        $req = ScholarshipRequirement::find(62);
+        return Auth::user()->can('access_on_category', $req);
 
 
         // $scholarshipPost = ScholarshipPost::find(34);

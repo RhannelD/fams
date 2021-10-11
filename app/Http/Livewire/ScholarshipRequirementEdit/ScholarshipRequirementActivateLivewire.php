@@ -16,7 +16,7 @@ class ScholarshipRequirementActivateLivewire extends Component
 
     protected $rules = [
         'start_at' => 'required|date_format:Y-m-d\TH:i',
-        'end_at' => 'required|date_format:Y-m-d\TH:i|after:requirement.start_at',
+        'end_at' => 'required|date_format:Y-m-d\TH:i|after:start_at',
     ];
 
     public function hydrate()

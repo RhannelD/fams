@@ -3,114 +3,96 @@
 namespace App\Http\Livewire\Requirement;
 
 use Livewire\Component;
-use App\Models\ScholarshipRequirement;
-use App\Models\ScholarshipRequirementCategory;
-use App\Models\ScholarshipScholar;
 use App\Models\ScholarResponse;
-use App\Models\ScholarResponseComment;
+use App\Models\ScholarshipScholar;
 use App\Models\ScholarshipCategory;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ScholarResponseComment;
+use App\Models\ScholarshipRequirement;
+use App\Models\ScholarshipRequirementCategory;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class RequirementPreviewLivewire extends Component
 {
+    use AuthorizesRequests;
+    
     public $requirement_id;
-    public $response_id;
 
     protected $listeners = [
         'comment_updated' => '$refresh'
     ];
 
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check()) {
-            redirect()->route('index');
-            return true;
+        if ( Auth::guest() || Auth::user()->cannot('preview', $this->get_requirement()) ) {
+            return redirect()->route('requirement.response', [$this->requirement_id]);
         }
-        return false;
     }
 
     public function mount($requirement_id)
     {
-        if ($this->verifyUser()) return;
-
         $this->requirement_id = $requirement_id;
+        $this->authorize('preview', $this->get_requirement());
     }
 
     public function render()
     {
-        $requirement = ScholarshipRequirement::find($this->requirement_id);
+        $requirement = $this->get_requirement();
 
-        $scholar_response = ScholarResponse::where('requirement_id', $this->requirement_id)
-            ->where('user_id', Auth::id())
-            ->first();
-
-        $this->response_id = (isset($scholar_response->id))? $scholar_response->id: null;
+        $scholar_response = $this->get_scholar_response();
 
         // access is true if user is under the requirements categories
-        $access = ScholarshipRequirementCategory::where('requirement_id', $this->requirement_id)
-            ->whereIn('scholarship_requirement_categories.category_id', function($query){
-                $query->select('scholarship_scholars.category_id')
-                    ->from(with(new ScholarshipScholar)->getTable())
-                    ->where('scholarship_scholars.user_id', Auth::id());
-            })
-            ->exists();
+        $access = $this->get_access_under_category($requirement);
 
         // is_scholar is true if your under this scholarship program
-        $is_scholar = false;
-        if ( isset($requirement) ) {
-            $is_scholar = ScholarshipScholar::whereHas('category', function ($query) use ($requirement) {
-                    $query->where('scholarship_id', $requirement->scholarship_id);
-                })
-                ->where('user_id', Auth::id())
-                ->exists();
-        }
-
-        $can_respond = ScholarshipScholar::where('user_id', Auth::id())
-            ->whereIn('category_id', function($query){
-                $query->select('category_id')
-                ->from(with(new ScholarshipRequirementCategory)->getTable())
-                ->where('requirement_id', $this->requirement_id);
-            })->exists();
+        $is_scholar = $this->get_access_as_scholar($requirement);
 
         return view('livewire.pages.requirement.requirement-preview-livewire', [
             'requirement' => $requirement,
             'scholar_response' => $scholar_response,
             'access' => $access,
             'is_scholar' => $is_scholar,
-            'can_respond' => $can_respond,
         ])->extends('livewire.main.main-livewire');
+    }
+
+    protected function get_requirement()
+    {
+        return ScholarshipRequirement::find($this->requirement_id);
+    }
+
+    protected function get_scholar_response()
+    {
+        return ScholarResponse::where('requirement_id', $this->requirement_id)->where('user_id', Auth::id())->first();
+    }
+
+    protected function get_access_under_category($requirement)
+    {
+        return Auth::check() && Auth::user()->can('access_under_category', $requirement);
+    }
+
+    protected function get_access_as_scholar($requirement)
+    {
+        return Auth::check() && Auth::user()->can('access_as_scholar', $requirement);
     }
 
     public function delete_response_confirmation()
     {
-        if ($this->verifyUser()) return;
-
-        $response = ScholarResponse::find($this->response_id);
-        if ( is_null($response) ) {
-            $this->response_id = null;
-            return;
-        } elseif ( isset($response->approval) ) {
-            return;
+        $response = $this->get_scholar_response();
+        if ( Auth::check() && Auth::user()->can('delete', $response) ) {
+            $this->dispatchBrowserEvent('swal:confirm:delete_response_'.$response->id, [
+                'type' => 'warning',  
+                'message' => 'Are you sure?', 
+                'text' => 'If deleted, you will not be able to recover this response!',
+                'function' => "delete_response"
+            ]);
         }
-
-        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_response_'.$this->response_id, [
-            'type' => 'warning',  
-            'message' => 'Are you sure?', 
-            'text' => 'If deleted, you will not be able to recover this response!',
-            'function' => "delete_response"
-        ]);
     }
 
     public function delete_response()
     {
-        if ($this->verifyUser()) return;
-
-        $response = ScholarResponse::find($this->response_id);
-        if ( is_null($response) ) {
+        $response = $this->get_scholar_response();
+        if ( Auth::guest() || Auth::user()->cannot('delete', $response) ) 
             return;
-        } elseif ( isset($response->approval) ) {
-            return;
-        }
 
         if ( $response->delete() ) {
             $this->dispatchBrowserEvent('swal:modal', [
@@ -118,8 +100,6 @@ class RequirementPreviewLivewire extends Component
                 'message' => 'Response Deleted Successfully', 
                 'text' => ''
             ]);
-
-            $this->response_id = null;
         }
     }
 }

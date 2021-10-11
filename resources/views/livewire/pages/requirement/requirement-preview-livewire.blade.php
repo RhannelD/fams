@@ -18,7 +18,6 @@
     <hr>
     <div class="row">
         <div class="col-12 col-md-3 mb-2">
-
             <div class="card shadow mb-2 requirement-item-hover ">
                 <div class="card-body">
 
@@ -75,9 +74,19 @@
                         </a>
 
                     @elseif ( !$scholar_response->cant_be_edit() )
-                        <a href="{{ route('requirement.response', [$requirement->id]) }}" class="btn btn-info btn-block text-white">
-                            Edit your response
-                        </a>
+                        @switch( $requirement->can_be_accessed() )
+                            @case('disabled')
+                                <div class="alert alert-info mb-2">
+                                    Due date is finished. You cant edit your response. 
+                                </div>
+                                @break
+
+                            @default
+                                <a href="{{ route('requirement.response', [$requirement->id]) }}" class="btn btn-info btn-block text-white">
+                                    Edit your response
+                                </a>
+                                @break
+                        @endswitch
                         
                     @endif
 
@@ -181,22 +190,23 @@
         </div>
     </div>
 
-    
-    <script>
-        window.addEventListener('swal:confirm:delete_response_{{ $response_id }}', event => { 
-            swal({
-                title: event.detail.message,
-                text: event.detail.text,
-                icon: event.detail.type,
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                @this.call(event.detail.function)
-                }
+    @isset( $scholar_response )
+        <script>
+            window.addEventListener('swal:confirm:delete_response_{{ $scholar_response->id }}', event => { 
+                swal({
+                    title: event.detail.message,
+                    text: event.detail.text,
+                    icon: event.detail.type,
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                    @this.call(event.detail.function)
+                    }
+                });
             });
-        });
-    </script>
+        </script>
+    @endisset
 @endif
 </div>

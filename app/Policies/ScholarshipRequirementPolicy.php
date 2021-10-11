@@ -2,8 +2,9 @@
 
 namespace App\Policies;
 
-use App\Models\ScholarshipRequirement;
 use App\Models\User;
+use App\Models\ScholarshipRequirement;
+use App\Models\ScholarshipRequirementCategory;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ScholarshipRequirementPolicy
@@ -45,6 +46,53 @@ class ScholarshipRequirementPolicy
     public function view(User $user, ScholarshipRequirement $scholarshipRequirement)
     {
         return User::where('id', $user->id)->whereOfficerOf($scholarshipRequirement->scholarship_id)->exists();
+    }
+
+    /**
+     * Determine whether the user can preview the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ScholarshipRequirement  $scholarshipRequirement
+     * @return mixed
+     */
+    public function preview(User $user, ScholarshipRequirement $scholarshipRequirement)
+    {
+        return (
+                $scholarshipRequirement->promote 
+                && $user->is_scholar()
+            ) || (
+                User::where('id', $user->id)->whereScholarOf($scholarshipRequirement->scholarship_id)->exists()
+            );
+    }
+
+    /**
+     * Determine whether the user can access the model if under the same category
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ScholarshipRequirement  $scholarshipRequirement
+     * @return mixed
+     */
+    public function access_under_category(User $user, ScholarshipRequirement $scholarshipRequirement)
+    {
+        return ScholarshipRequirementCategory::where('requirement_id', $scholarshipRequirement->id)
+            ->whereHas('category', function ($query) use ($user) {
+                $query->whereHas('scholars', function ($query) use ($user){
+                    $query->where('user_id', $user->id);
+                });
+            })
+            ->exists();
+    }
+
+    /**
+     * Determine whether the user can access the model if scholar on this scholarship
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ScholarshipRequirement  $scholarshipRequirement
+     * @return mixed
+     */
+    public function access_as_scholar(User $user, ScholarshipRequirement $scholarshipRequirement)
+    {
+        return $user->is_scholar_of($scholarshipRequirement->scholarship_id);
     }
 
     /**

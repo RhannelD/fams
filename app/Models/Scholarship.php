@@ -34,4 +34,21 @@ class Scholarship extends Model
     {
         return $this->hasMany(ScholarshipCategory::class, 'scholarship_id', 'id');
     } 
+
+    
+    public function scopeWhereHasScholar($query, $user_id)
+    {
+        return $query->whereHas('categories', function ($query) use ($user_id) {
+                $query->whereHas('scholars', function ($query) use ($user_id) {
+                    $query->where('user_id', $user_id);
+                });
+            });
+    }
+    
+    public function scopeWhereHasOfficer($query, $user_id)
+    {
+        return $query->whereHas('officers', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            });
+    }
 }

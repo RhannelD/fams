@@ -14,19 +14,19 @@
                 </a>
             </h5>
             
-            @if ( !$scholar_response->cant_be_edit() )    
+            @can('delete', $scholar_response)
                 <div class="mr-0 ml-2 mt-2">
                     <button wire:click="delete_response_confirmation" class="btn btn-danger">
                         <i class="fas fa-minus-circle"></i>
                     </button>
                 </div>
-            @endif
+            @endcan
         </div>
     </div>
     <div class="card-body pt-0">
         <table>
             <tr>
-                <td>Submitted at:</td>
+                <td>Date Submitted:</td>
                 <td class="pl-2">
                     @if ( is_null($scholar_response->submit_at) )
                         Not Yet Submitted
@@ -36,9 +36,11 @@
                 </td>
             </tr>
             <tr>
-                <td>Approval:</td>
+                <td>Status:</td>
                 <td class="pl-2">
-                    @if ( is_null($scholar_response->approval) )
+                    @if ( is_null($scholar_response->submit_at) )
+                        <span class="badge badge-pill badge-secondary">Waiting...</span>
+                    @elseif ( is_null($scholar_response->approval) )
                         <span class="badge badge-pill badge-info text-white">Pending</span>
                     @elseif ($scholar_response->approval)
                         <span class="badge badge-pill badge-success">Approved</span>
@@ -87,7 +89,7 @@
         </div>
     @endif
 
-    <div class="card-footer bg-white">
-        @livewire('requirement.requirement-response-comment-livewire', [$response_id], key('response-comment-'.time().$response_id))
+    <div class="card-footer bg-white" id="requirement-response-comment">
+        @livewire('requirement.requirement-response-comment-livewire', [$scholar_response->id], key('response-comment-'.time().$scholar_response->id))
     </div>
 </div>

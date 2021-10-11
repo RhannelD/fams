@@ -10,39 +10,36 @@ class RequirementResponseOpenCommentLivewire extends Component
 {
     public $comment_id;
     
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check()) {
-            redirect()->route('index');
-            return true;
+        if ( Auth::guest() || Auth::user()->cannot('view', $this->get_comment()) ) {
+            $this->emitUp('comment_updated');
         }
-        return false;
     }
 
     public function mount($comment_id)
     {
-        if ($this->verifyUser()) return;
-
         $this->comment_id = $comment_id;
     }
 
     public function render()
     {
-        $comment = ScholarResponseComment::find($this->comment_id);
+        return view('livewire.pages.requirement.requirement-response-open-comment-livewire', ['comment' => $this->get_comment()]);
+    }
 
-        return view('livewire.pages.requirement.requirement-response-open-comment-livewire', ['comment' => $comment]);
+    protected function get_comment()
+    {
+        return ScholarResponseComment::find($this->comment_id);
     }
 
     public function delete_comment_confirmation()
     {
-        if ($this->verifyUser()) return;
-
-        if ( !ScholarResponseComment::find($this->comment_id) ) {
+        if ( Auth::guest() || Auth::user()->cannot('delete', $this->get_comment()) ) {
             $this->emitUp('comment_updated');
             return;
         }
 
-        $confirm = $this->dispatchBrowserEvent('swal:confirm:delete_comment_'.$this->comment_id, [
+        $this->dispatchBrowserEvent('swal:confirm:delete_comment_'.$this->comment_id, [
             'type' => 'warning',  
             'message' => 'Are you sure?', 
             'text' => 'If deleted, you will not be able to recover this comment!',
@@ -52,10 +49,8 @@ class RequirementResponseOpenCommentLivewire extends Component
 
     public function delete_comment()
     {
-        if ($this->verifyUser()) return;
-
-        $comment = ScholarResponseComment::find($this->comment_id);
-        if ( !$comment ) {
+        $comment = $this->get_comment();
+        if ( Auth::guest() || Auth::user()->cannot('delete', $comment) ) {
             $this->emitUp('comment_updated');
             return;
         }
