@@ -136,7 +136,7 @@
                                                 <div class="input-group mb-1">
                                                     <div class="input-group-prepend">
                                                         <div class="input-group-text">
-                                                            <input type="radio" name="radio_{{ $requirement_item->id }}">
+                                                            <i class="far fa-circle"></i>
                                                         </div>
                                                     </div>
                                                     <input type="text" class="form-control bg-white" value="{{ $option->option }}" readonly>
@@ -148,7 +148,7 @@
                                                 <div class="input-group mb-1">
                                                     <div class="input-group-prepend">
                                                         <div class="input-group-text">
-                                                            <input type="checkbox">
+                                                            <i class="far fa-square"></i>
                                                         </div>
                                                     </div>
                                                     <input type="text" class="form-control bg-white" value="{{ $option->option }}" readonly>

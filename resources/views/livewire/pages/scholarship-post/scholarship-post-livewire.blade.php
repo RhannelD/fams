@@ -31,12 +31,12 @@
                         <div class="form-group form-check">
                             <input wire:model.lazy="post.promote" type="checkbox" class="form-check-input" id="exampleCheck1">
                             <label class="form-check-label" for="exampleCheck1">
-                                Promote
+                                Global
                                 (
                                     @if ($post->promote)
-                                        This will be visible to other scholar's
+                                        This will be visible to new applicants
                                     @else
-                                        This not visible to other scholar's
+                                        This not visible to new applicants
                                     @endif
                                 )
                             </label>
@@ -51,27 +51,45 @@
                             </div>
                         @endif
                             
-                        @php  $displayed = 0;  @endphp
-                        @foreach ($requirements as $requirement)  
-                            @if ( in_array($requirement->id, $added_requirements)  )    
-                                @php  $displayed++;  @endphp  
-                                <div class="input-group mb-1">
-                                    <input type="text" class="form-control bg-white" value="{{ $requirement->requirement }}" readonly>
-                                    <div class="input-group-append">
-                                        <button wire:click="remove_requirement({{ $requirement->id }})" class="btn btn-danger" type="button">
-                                            <i class="fas fa-minus-circle"></i>
-                                        </button>
+                        @forelse ($display_requirements as $requirement)  
+                            <div class="input-group mb-1">
+                                <input type="text" class="form-control bg-white" value="{{ $requirement->requirement }}" readonly>
+                                <div class="input-group-append">
+                                    @if ( !$requirement->promote && $post->promote )
+                                        @php
+                                            $match = true;
+                                        @endphp
+                                        <a class="btn btn-outline-danger" data-toggle="collapse" href="#collapse_{{ $requirement->id }}" role="button" 
+                                            aria-expanded="false" aria-controls="collapse_{{ $requirement->id }}">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                        </a>
+                                    @endif
+                                    <button wire:click="remove_requirement({{ $requirement->id }})" class="btn btn-danger" type="button">
+                                        <i class="fas fa-minus-circle"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            @if ( isset($match) && $match )
+                                <div class="collapse" id="collapse_{{ $requirement->id }}">
+                                    <div class="mx-1 mb-2">
+                                        <span class="text-danger">
+                                            This requirement is for old scholars.
+                                        </span>
                                     </div>
                                 </div>
                             @endif
-                        @endforeach
-
-                        @if ( $displayed == 0 )
+                        @empty
                             <div class="input-group mb-1">
                                 <input type="text" class="form-control bg-white" value="None" readonly>
                             </div>
+                        @endforelse
+                        @if ( isset($match) && $match )
+                            <hr class="my-2">
+                            <div class="alert alert-warning mt-2">
+                                The post has been set as global.<br>
+                                Requirements for old scholars are not accessible to new applicants.
+                            </div>
                         @endif
-                        
                     </div>
 
                     <div role="tabpanel"
@@ -82,26 +100,31 @@
                         @endif
                         >
 
-                        @php  $displayed = 0;  @endphp
-                        @foreach ($requirements as $requirement)  
-                            @if ( !in_array($requirement->id, $added_requirements)  )    
-                                @php  $displayed++;  @endphp  
-                                <div class="input-group mb-1">
-                                    <input type="text" class="form-control bg-white" value="{{ $requirement->requirement }}" readonly>
-                                    <div class="input-group-append">
-                                        <button wire:click="add_requirement({{ $requirement->id }})" class="btn btn-success" type="button">
-                                            <i class="fas fa-plus-circle"></i>
-                                        </button>
-                                    </div>
+                        <div class="d-flex align-content-start flex-wrap my-1">
+                            <div class="d-flex mr-0 mr-sm-auto">
+                                <div class="input-group rounded">
+                                    <input type="search" class="form-control rounded" placeholder="Search Requirements" wire:model.debounce.1000ms='search'/>
+                                    <span wire:click="$refresh" class="input-group-text border-0 mx-1">
+                                        <i class="fas fa-search"></i>
+                                    </span>
                                 </div>
-                            @endif
-                        @endforeach
-
-                        @if ( $displayed == 0 )
+                            </div>
+                            {{ $requirements->links() }}
+                        </div> 
+                        @forelse ($requirements as $requirement)
+                            <div class="input-group mb-1">
+                                <input type="text" class="form-control bg-white" value="{{ $requirement->requirement }}" readonly>
+                                <div class="input-group-append">
+                                    <button wire:click="add_requirement({{ $requirement->id }})" class="btn btn-success" type="button">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        @empty
                             <div class="input-group mb-1">
                                 <input type="text" class="form-control bg-white" value="None" readonly>
                             </div>
-                        @endif
+                        @endforelse
 
                         <div class="form-group d-flex">
                             <button wire:click="show_requirements" type="button" class="btn btn-info mr-0 ml-auto text-white">
@@ -125,6 +148,11 @@
         });
 
         $( document ).ready(function() {
+            $('[data-toggle="popover"]').popover()
+            $('.popover-dismiss').popover({
+                trigger: 'focus'
+            });
+
             ClassicEditor.create( document.querySelector( '#post_post' ), {
                 toolbar: {
                     items: [

@@ -17,26 +17,28 @@
                                     <i class="fas fa-ellipsis-h"></i>
                                 </span>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    {{-- @can('delete', $post) --}}
+                                    @can('delete', $post)
                                         <a wire:click="delete_post_confirmation" class="dropdown-item">
                                             <i class="fas fa-trash mr-1"></i>
                                             Delete Post
                                         </a>
-                                    {{-- @endcan --}}
-                                    <a class="dropdown-item" data-toggle="modal" data-target="#post_something">
-                                        <i class="fas fa-pen-square mr-1"></i>
-                                        Edit Post
-                                    </a>
+                                    @endcan
+                                    @can('update', $post)
+                                        <a class="dropdown-item" data-toggle="modal" data-target="#post_something">
+                                            <i class="fas fa-pen-square mr-1"></i>
+                                            Edit Post
+                                        </a>
+                                    @endcan
                                 </div>
                             </div>
                         @endcanany
                     </h5>
-
-                    @if ( $post->user_id == Auth::id() || Auth::user()->is_admin() )
-                        <div wire:ignore>
+                    
+                    @can('update', $post)
+                        <div wire:ignore id="scholarship-post-livewire">
                             @livewire('scholarship-post.scholarship-post-livewire', [$post->scholarship_id, $post->id], key('scholarship-page-post-'.time().$post->scholarship_id))
                         </div>
-                    @endif
+                    @endcan
 
                     <div class="d-flex">
                         <div class="mr-auto bd-highlight my-0">
@@ -81,6 +83,11 @@
 
                 </div>
                 <div class="card-footer d-flex justify-content-end">
+                    <div>
+                        @if ($post->promote)
+                            Global
+                        @endif
+                    </div>
                     <div class="dropdown mr-0 ml-auto">
                         <span id="dropdown_comments" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="badge badge-primary pt-1">{{ $comment_count }}</span>

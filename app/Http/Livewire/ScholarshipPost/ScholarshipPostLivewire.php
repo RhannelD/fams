@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\ScholarshipPost;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\ScholarshipPost;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirement;
@@ -12,14 +13,16 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class ScholarshipPostLivewire extends Component
 {
     use AuthorizesRequests;
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $invalid_session = false;
+    public $search;
     
     public $scholarship_id;
     public $post_id;
     public $post;
 
     public $show_requirement = false;
-    public $requirements;
     public $added_requirements = [];
 
 
@@ -28,6 +31,11 @@ class ScholarshipPostLivewire extends Component
         'post.post' => 'required|string|min:1|max:16000000',
         'post.promote' => 'boolean',
     ];
+    
+    public function getQueryString()
+    {
+        return [];
+    }
 
     public function hydrate()
     {
@@ -45,12 +53,6 @@ class ScholarshipPostLivewire extends Component
     public function mount($scholarship_id, $post_id = null)
     {
         $this->scholarship_id = $scholarship_id;
-
-        $this->requirements = ScholarshipRequirement::where('scholarship_requirements.scholarship_id', $this->scholarship_id)
-            ->whereNotIn('scholarship_requirements.id', $this->added_requirements)
-            ->orderBy('scholarship_requirements.id', 'desc')
-            ->get();
-
         $this->post_id = $post_id;
         $this->set_post();
     }
@@ -66,8 +68,9 @@ class ScholarshipPostLivewire extends Component
                 return;
             }
 
-            $this->post->title = $post->title;
-            $this->post->post  = $post->post;
+            $this->post->title   = $post->title;
+            $this->post->post    = $post->post;
+            $this->post->promote = $post->promote;
             
             foreach ($post->requirement_links as $link) {
                 array_push($this->added_requirements, $link->requirement_id);
@@ -77,12 +80,35 @@ class ScholarshipPostLivewire extends Component
 
     public function render()
     {
-        return view('livewire.pages.scholarship-post.scholarship-post-livewire');
+        return view('livewire.pages.scholarship-post.scholarship-post-livewire', [
+            'requirements' => $this->get_requirements(),
+            'display_requirements' => $this->get_requirements_added(),
+        ]);
     }
     
     protected function get_post()
     {
         return ScholarshipPost::find($this->post_id);
+    }
+
+    protected function get_requirements()
+    {
+        $search = $this->search;
+        return ScholarshipRequirement::where('scholarship_id', $this->scholarship_id)
+            ->whereNotIn('id', $this->added_requirements)
+            ->when(isset($search), function ($query) use ($search) {
+                $query->where('requirement', 'like', "%$search%");
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+    }
+
+    protected function get_requirements_added()
+    {
+        return ScholarshipRequirement::where('scholarship_id', $this->scholarship_id)
+            ->whereIn('id', $this->added_requirements)
+            ->orderBy('id', 'desc')
+            ->get();
     }
 
     public function updated($propertyName)
@@ -106,9 +132,10 @@ class ScholarshipPostLivewire extends Component
                 $this->emitUp('post_updated');
                 return;
             }
-            $post->title = $this->post->title;
-            $post->post  = $this->post->post;
-            $this->post  = $post;
+            $post->title   = $this->post->title;
+            $post->post    = $this->post->post;
+            $post->promote = $this->post->promote;
+            $this->post    = $post;
         }
 
         if ($this->post->save()) {
@@ -146,7 +173,7 @@ class ScholarshipPostLivewire extends Component
 
     public function add_requirement($requirement_id)
     {
-        array_push($this->added_requirements, $requirement_id);
+        $this->added_requirements[] = $requirement_id;
 
         $this->show_requirement = false;
     }

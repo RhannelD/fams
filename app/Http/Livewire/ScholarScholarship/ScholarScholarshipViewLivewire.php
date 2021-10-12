@@ -29,6 +29,8 @@ class ScholarScholarshipViewLivewire extends Component
     public function mount()
     {
         if ( $this->is_not_scholar() ) abort('403', 'THIS ACTION IS UNAUTHORIZED.');
+        if ( count($this->get_scholarships()) == 0 ) 
+            $this->tab = 'find';
     }
 
     public function render()
