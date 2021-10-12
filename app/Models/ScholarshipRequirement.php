@@ -62,6 +62,11 @@ class ScholarshipRequirement extends Model
         return $this->responses->whereNotNull('submit_at')->count();
     }
 
+    public function has_categories()
+    {
+        return ScholarshipRequirementCategory::where('requirement_id', $this->id)->exists();
+    }
+
     public function categories()
     {
         return $this->hasMany(ScholarshipRequirementCategory::class, 'requirement_id', 'id');

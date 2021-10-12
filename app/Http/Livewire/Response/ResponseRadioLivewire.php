@@ -24,38 +24,6 @@ class ResponseRadioLivewire extends Component
         'option.exists' => 'The option you selected is not existing.',
     ];
 
-    protected function verifyUser()
-    {
-        if (!Auth::check() || Auth::user()->usertype != 'scholar') {
-            redirect()->route('index');
-            return true;
-        }
-        return false;
-    }
-
-    protected function verifyUserResponse()
-    {
-        $access = ScholarResponse::where('id', $this->response_id)
-            ->where('user_id', Auth::id())
-            ->exists();
-
-        if (!$access)
-            redirect()->route('index');
-        
-        return !$access;
-    }
-
-    protected function verifyItemAndResponse()
-    {
-        $requirement_item = ScholarshipRequirementItem::find($this->requirement_item_id);
-        $response = ScholarResponse::find($this->response_id);
-        if ( is_null($requirement_item) || is_null($response) ){
-            $this->emitUp('refresh');
-            return true;
-        }
-        return false;
-    }
-
     public function hydrate()
     {
         $response = $this->get_user_response();
@@ -72,29 +40,41 @@ class ResponseRadioLivewire extends Component
     {
         $this->requirement_item_id = $requirement_item_id;
         $this->response_id = $response_id;
+        $this->set_option_id();
     }
 
     public function render()
     {
-        $response = $this->get_user_response();
+        $this->set_option_id();
+        
+        return view('livewire.pages.response.response-radio-livewire', [
+                'response' => $this->get_user_response(),
+                'options' => $this->get_requirement_item_options(),
+            ]);
+    }
 
+    protected function get_requirement()
+    {
+        $item = ScholarshipRequirementItem::find($this->requirement_item_id);
+        return $item? $item->requirement: null;
+    }
+
+    protected function get_requirement_item_options()
+    {
         $response_id = $this->response_id;
-        $options = ScholarshipRequirementItemOption::select('id', 'option')
-            ->where('item_id', $this->requirement_item_id)
+        return ScholarshipRequirementItemOption::where('item_id', $this->requirement_item_id)
             ->with(['responses' => function ($query) use ($response_id) {
                 $query->where('response_id', $response_id);
             }])
             ->get();
+    }
 
+    protected function set_option_id()
+    {
         $response_option = ScholarResponseOption::where('response_id', $this->response_id)
             ->where('item_id', $this->requirement_item_id)
             ->first();
         $this->option_id = (isset($response_option))? $response_option->option_id: null;
-
-        return view('livewire.pages.response.response-radio-livewire', [
-                'response' => $response,
-                'options' => $options,
-            ]);
     }
 
     protected function get_user_response()
@@ -109,8 +89,16 @@ class ResponseRadioLivewire extends Component
         $this->save();
     }
 
+    protected function cant_update()
+    {
+        return Auth::guest() || $this->is_admin() || Auth::user()->cannot('respond', $this->get_requirement()) || Auth::user()->cannot('submit', $this->get_user_response());
+    }
+
     protected function save()
     {
+        if ( $this->cant_update() )
+            return;
+
         ScholarResponseOption::updateOrCreate([
                 'response_id' => $this->response_id,
                 'item_id' => $this->requirement_item_id
@@ -121,10 +109,9 @@ class ResponseRadioLivewire extends Component
 
     public function clear_selection()
     {
-        if ($this->verifyUser()) return;
-        if ($this->verifyUserResponse()) return;
-        if ($this->verifyItemAndResponse()) return;
-        
+        if ( $this->cant_update() )
+            return;
+
         ScholarResponseOption::where('response_id', $this->response_id)
             ->where('item_id', $this->requirement_item_id)
             ->delete();

@@ -24,69 +24,56 @@ class ResponseFileUploadLivewire extends Component
         'file' => 'file|max:6000',
     ];
 
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check() || Auth::user()->usertype != 'scholar') {
-            redirect()->route('index');
-            return true;
-        }
-        return false;
+        $response = $this->get_user_response();
+        if ( Auth::guest() || $this->is_admin() || Auth::user()->cannot('view', $response) || Auth::user()->cannot('respond', $response->requirement) || is_null($this->get_requirement_item()) )
+            return $this->emitUp('refresh');
     }
 
-    protected function verifyItemAndResponse()
+    protected function is_admin()
     {
-        $requirement_item = ScholarshipRequirementItem::find($this->requirement_item_id);
-        $response = ScholarResponse::find($this->response_id);
-        if ( is_null($requirement_item) || is_null($response) ){
-            $this->emitUp('refresh');
-            return true;
-        }
-        return false;
-    }
- 
-    protected function verifyUserResponse()
-    {
-        $response = ScholarResponse::find($this->response_id);
-        if ( is_null($response) ) 
-            return true;
-
-        $access = $response->user_id != Auth::id();
-
-        if ($access) {
-            redirect()->route('index');
-        }
-        return $access;
+        return Auth::check() && Auth::user()->is_admin();
     }
 
     public function mount($requirement_item_id, $response_id)
     {
-        if ($this->verifyUser()) return;
-        
         $this->requirement_item_id = $requirement_item_id;
         $this->response_id = $response_id;
     }
 
     public function render()
     {
-        $requirement_item = ScholarshipRequirementItem::find($this->requirement_item_id);
-        $response = ScholarResponse::find($this->response_id);
-
-        $response_file = ScholarResponseFile::where('response_id', $this->response_id)
-            ->where('item_id', $this->requirement_item_id)
-            ->first();
-
         return view('livewire.pages.response.response-file-upload-livewire', [
-                'requirement_item' => $requirement_item,
-                'response' => $response,
-                'response_file' => $response_file
+                'requirement_item' => $this->get_requirement_item(),
+                'response' => $this->get_user_response(),
+                'response_file' => $this->get_response_file(),
             ]);
+    }
+
+    protected function get_requirement()
+    {
+        $item = $this->get_requirement_item();
+        return $item? $item->requirement: null;
+    }
+
+    protected function get_requirement_item()
+    {
+        return ScholarshipRequirementItem::find($this->requirement_item_id);
+    }
+
+    protected function get_user_response()
+    {
+        return ScholarResponse::find($this->response_id);
+    }
+
+    protected function get_response_file()
+    {
+        return ScholarResponseFile::where('response_id', $this->response_id)->where('item_id', $this->requirement_item_id)->first();
     }
 
     public function updated($propertyName)
     {
-        if ($this->verifyUser()) return;
-        if ($this->verifyUserResponse()) return;
-
         if ( empty($this->get_file_extension()) ) {
             return $this->addError('file', 'Invalid file type!');
         }
@@ -101,9 +88,15 @@ class ResponseFileUploadLivewire extends Component
         return pathinfo($this->file->getClientOriginalName(), PATHINFO_EXTENSION);
     }
 
+    protected function cant_update()
+    {
+        return Auth::guest() || $this->is_admin() || Auth::user()->cannot('respond', $this->get_requirement()) || Auth::user()->cannot('submit', $this->get_user_response());
+    }
+
     public function save()
     {
-        if ($this->verifyItemAndResponse()) return;
+        if ( $this->cant_update() ) 
+            return;
 
         $orig_name  = $this->file->getClientOriginalName();
 
@@ -138,9 +131,8 @@ class ResponseFileUploadLivewire extends Component
 
     public function delete($id)
     {
-        if ($this->verifyUser()) return;
-        if ($this->verifyUserResponse()) return;
-        if ($this->verifyItemAndResponse()) return;
+        if ( $this->cant_update() ) 
+            return;
         
         if ( ScholarResponseFile::where('id', $id)->exists() ) {
             ScholarResponseFile::find($id)->delete();

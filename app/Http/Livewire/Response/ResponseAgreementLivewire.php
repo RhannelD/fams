@@ -3,14 +3,27 @@
 namespace App\Http\Livewire\Response;
 
 use Livewire\Component;
-use App\Models\ScholarshipRequirementAgreement;
 use App\Models\ScholarResponse;
+use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarResponseAgreement;
+use App\Models\ScholarshipRequirementAgreement;
 
 class ResponseAgreementLivewire extends Component
 {
     public $agreement_id;
     public $response_id;
+
+    public function hydrate()
+    {
+        $response = $this->get_user_response();
+        if ( Auth::guest() || $this->is_admin() || Auth::user()->cannot('view', $response) || Auth::user()->cannot('respond', $response->requirement) )
+            return $this->emitUp('refresh');
+    }
+
+    protected function is_admin()
+    {
+        return Auth::check() && Auth::user()->is_admin();
+    }
 
     public function mount($agreement_id, $response_id)
     {
@@ -25,6 +38,17 @@ class ResponseAgreementLivewire extends Component
             ]);
     }
 
+    protected function get_requirement()
+    {
+        $agreement = $this->get_agreement();
+        return $agreement? $agreement->requirement: null;
+    }
+
+    protected function get_user_response()
+    {
+        return ScholarResponse::find($this->response_id);
+    }
+
     protected function get_agreement()
     {
         return ScholarshipRequirementAgreement::with(['response_agreements' => function ($query) {
@@ -34,10 +58,14 @@ class ResponseAgreementLivewire extends Component
             ->first();
     }
 
+    protected function cant_update()
+    {
+        return Auth::guest() || $this->is_admin() || Auth::user()->cannot('respond', $this->get_requirement()) || Auth::user()->cannot('submit', $this->get_user_response());
+    }
+
     public function toggle_check()
     {
-        $response = ScholarResponse::find($this->response_id);
-        if ( is_null($response) || isset($response->submit_at) ) 
+        if ( $this->cant_update() || is_null(get_agreement()) )
             return;
 
         $agreement = ScholarResponseAgreement::where('response_id', $this->response_id)

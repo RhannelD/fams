@@ -44,25 +44,31 @@
                             </div>
 
                         @else
-                            @switch( $requirement->can_be_accessed() )
-                                @case('finished')
-                                    <div class="alert alert-info mb-2">
-                                        Due date is finished but you can still send a response.
-                                    </div>
-                                @case('ongoing')
-                                    <a href="{{ route('requirement.response', [$requirement->id]) }}" class="btn btn-success btn-block pr-md-4">
-                                        <i class="fas fa-paper-plane mr-1"></i>
-                                        Respond
-                                    </a>
-                                    @break
+                            @if ( $requirement->has_categories() )
+                                @switch( $requirement->can_be_accessed() )
+                                    @case('finished')
+                                        <div class="alert alert-info mb-2">
+                                            Due date is finished but you can still send a response.
+                                        </div>
+                                    @case('ongoing')
+                                        <a href="{{ route('requirement.response', [$requirement->id]) }}" class="btn btn-success btn-block pr-md-4">
+                                            <i class="fas fa-paper-plane mr-1"></i>
+                                            Respond
+                                        </a>
+                                        @break
 
-                                @default
-                                    <div class="alert alert-danger my-auto">
-                                        You can't respond to this requirement.
-                                    </div>
-                                    @break
-                            @endswitch
-                            
+                                    @default
+                                        <div class="alert alert-danger my-auto">
+                                            You can't respond to this requirement.
+                                        </div>
+                                        @break
+                                @endswitch
+                            @else
+                                <div class="alert alert-danger my-auto">
+                                    You can't respond to this requirement.<br>
+                                    Category has not been set.
+                                </div>
+                            @endif
                         @endif
 
                     @elseif ( $scholar_response->cant_be_edit() )
@@ -118,7 +124,7 @@
                 <div class="col-md-6 px-4 mb-2">
 
                     <h5><strong>Scholar Category</strong></h5>
-                    @foreach ($requirement->categories as $category)
+                    @forelse ($requirement->categories as $category)
                         <hr class="my-1">
                         <table>
                             <tr>
@@ -130,7 +136,12 @@
                                 <td class="pl-2">{{ $category->category->amount }}</td>
                             </tr>
                         </table>
-                    @endforeach
+                    @empty
+                        <hr class="my-1">
+                        <div class="alert alert-info my-auto">
+                            Category has not been set.
+                        </div>
+                    @endforelse
 
                 </div>
                 <div class="col-md-6 px-4 mb-2">

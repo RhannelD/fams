@@ -4,6 +4,7 @@ namespace App\Http\Livewire\ScholarshipRequirementEdit;
 
 use Livewire\Component;
 use App\Models\Scholarship;
+use App\Models\ScholarResponse;
 use App\Models\ScholarshipCategory;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirement;
@@ -159,7 +160,7 @@ class ScholarshipRequirementEditLivewire extends Component
     public function toggle_category($category_id)
     {
         $scholarship_requirement = $this->get_scholarship_requirement();
-        if ( Auth::guest() || Auth::user()->cannot('update', $scholarship_requirement) || $scholarship_requirement->get_submitted_responses_count() < 1 ) 
+        if ( Auth::guest() || Auth::user()->cannot('update', $scholarship_requirement) || $scholarship_requirement->get_submitted_responses_count() > 0 ) 
             return;
         
         ScholarResponse::where('requirement_id', $this->requirement_id)->delete();

@@ -25,75 +25,69 @@ class ResponseAnswerLivewire extends Component
         'answer.answer.string' => 'The answer must be a string.',
     ];
 
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check() || Auth::user()->usertype != 'scholar') {
-            redirect()->route('index');
-            return true;
-        }
-        return false;
+        $response = $this->get_user_response();
+        if ( Auth::guest() || $this->is_admin() || Auth::user()->cannot('view', $response) || Auth::user()->cannot('respond', $response->requirement) )
+            return $this->emitUp('refresh');
     }
 
-    protected function verifyUserResponse()
+    protected function is_admin()
     {
-        $access = ScholarResponse::where('id', $this->response_id)
-            ->where('user_id', Auth::id())
-            ->exists();
-
-        if (!$access) {
-            redirect()->route('index');
-        }
-        return !$access;
-    }
-
-    protected function verifyItemAndResponse()
-    {
-        $requirement_item = ScholarshipRequirementItem::find($this->requirement_item_id);
-        $response = ScholarResponse::find($this->response_id);
-        if ( is_null($requirement_item) || is_null($response) ){
-            $this->emitUp('refresh');
-            return true;
-        }
-        return false;
+        return Auth::check() && Auth::user()->is_admin();
     }
 
     public function mount($requirement_item_id, $response_id)
     {
-        if ($this->verifyUser()) return;
-        
         $this->requirement_item_id = $requirement_item_id;
         $this->response_id = $response_id;
-
         $this->answer = new ScholarResponseAnswer;
     }
 
     public function render()
     {
-        $response = ScholarResponse::find($this->response_id);
+        $this->set_answer();
 
+        return view('livewire.pages.response.response-answer-livewire', ['response' => $this->get_user_response()]);
+    }
+
+    protected function get_requirement()
+    {
+        $item = ScholarshipRequirementItem::find($this->requirement_item_id);
+        return $item? $item->requirement: null;
+    }
+
+    protected function get_user_response()
+    {
+        return ScholarResponse::find($this->response_id);
+    }
+
+    protected function set_answer()
+    {
         $answer = ScholarResponseAnswer::firstOrNew([
             'response_id' => $this->response_id, 
             'item_id' => $this->requirement_item_id
         ]);
 
         $this->answer->answer = $answer->answer;
-
-        return view('livewire.pages.response.response-answer-livewire', ['response' => $response]);
     }
 
     public function updated($propertyName)
     {
-        if ($this->verifyUser()) return;
-        if ($this->verifyUserResponse()) return;
-
         $this->validateOnly($propertyName);
 
         $this->save();
     }
 
+    protected function cant_update()
+    {
+        return Auth::guest() || $this->is_admin() || Auth::user()->cannot('respond', $this->get_requirement()) || Auth::user()->cannot('submit', $this->get_user_response());
+    }
+
     protected function save()
     {
-        if ($this->verifyItemAndResponse()) return;
+        if ( $this->cant_update() ) 
+            return;
 
         $answer = ScholarResponseAnswer::firstOrNew([
             'response_id' => $this->response_id, 

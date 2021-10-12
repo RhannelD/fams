@@ -46,7 +46,7 @@ class ScholarResponsePolicy
      */
     public function view(User $user, ScholarResponse $scholarResponse)
     {
-        return $user->id = $scholarResponse->user_id;
+        return $user->id == $scholarResponse->user_id;
     }
 
     /**
@@ -115,7 +115,7 @@ class ScholarResponsePolicy
             && $scholarResponse->requirement->enable !== false
             && (
                 !$scholarResponse->is_late_to_submit()
-                || $scholarResponse->requirement->enable === true
+                || $scholarResponse->requirement->enable == true
             );
     }
 
@@ -133,7 +133,7 @@ class ScholarResponsePolicy
             && $scholarResponse->requirement->enable !== false
             && (
                 !$scholarResponse->is_late_to_submit()
-                || $scholarResponse->requirement->enable === true
+                || $scholarResponse->requirement->enable == true
             );
     }
 

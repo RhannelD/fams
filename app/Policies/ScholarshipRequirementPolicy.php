@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Models\ScholarResponse;
 use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementCategory;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -109,6 +110,7 @@ class ScholarshipRequirementPolicy
             $scholarshipRequirement->promote 
             && $user->is_scholar()
             && !$user->is_scholar_of($scholarshipRequirement->scholarship_id)
+            && $scholarshipRequirement->has_categories()
         ) || (
             // returns true if scholar has the same category with requirement and requirement are for existing scholar's
             !$scholarshipRequirement->promote 

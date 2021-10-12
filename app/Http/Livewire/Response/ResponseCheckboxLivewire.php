@@ -15,42 +15,20 @@ class ResponseCheckboxLivewire extends Component
     public $response_id;
     public $option_id;
 
-    protected function verifyUser()
+    public function hydrate()
     {
-        if (!Auth::check() || Auth::user()->usertype != 'scholar') {
-            redirect()->route('index');
-            return true;
-        }
-        return false;
+        $response = $this->get_user_response();
+        if ( Auth::guest() || $this->is_admin() || Auth::user()->cannot('view', $response) || Auth::user()->cannot('respond', $response->requirement) )
+            return $this->emitUp('refresh');
     }
 
-    protected function verifyUserResponse()
+    protected function is_admin()
     {
-        $access = ScholarResponse::where('id', $this->response_id)
-            ->where('user_id', Auth::id())
-            ->exists();
-
-        if (!$access) {
-            redirect()->route('index');
-        }
-        return !$access;
-    }
-
-    protected function verifyItemAndResponse()
-    {
-        $requirement_item = ScholarshipRequirementItem::find($this->requirement_item_id);
-        $option = ScholarshipRequirementItemOption::find($this->option_id);
-        if ( is_null($requirement_item) || is_null($option) ){
-            $this->emitUp('refresh');
-            return true;
-        }
-        return false;
+        return Auth::check() && Auth::user()->is_admin();
     }
 
     public function mount($requirement_item_id, $response_id, $option_id)
     {
-        if ($this->verifyUser()) return;
-        
         $this->requirement_item_id = $requirement_item_id;
         $this->response_id = $response_id;
         $this->option_id = $option_id;
@@ -58,17 +36,27 @@ class ResponseCheckboxLivewire extends Component
 
     public function render()
     {
-        $option = ScholarshipRequirementItemOption::find($this->option_id);
-
-        $option_checked = $this->if_option_checked();
-
-        $is_submitted = ScholarResponse::find($this->response_id)->submit_at;
-
         return view('livewire.pages.response.response-checkbox-livewire', [
-                'option' => $option,
-                'option_checked' => $option_checked, 
-                'is_submitted' => $is_submitted
+                'option' => $this->get_option(),
+                'option_checked' => $this->if_option_checked(), 
+                'is_submitted' => $this->get_user_response()->submit_at,
             ]);
+    }
+
+    protected function get_requirement()
+    {
+        $item = ScholarshipRequirementItem::find($this->requirement_item_id);
+        return $item? $item->requirement: null;
+    }
+
+    protected function get_user_response()
+    {
+        return ScholarResponse::find($this->response_id);
+    }
+
+    protected function get_option()
+    {
+        return ScholarshipRequirementItemOption::find($this->option_id);
     }
 
     public function if_option_checked()
@@ -78,11 +66,15 @@ class ResponseCheckboxLivewire extends Component
             ->exists();
     }
 
+    protected function cant_update()
+    {
+        return Auth::guest() || $this->is_admin() || Auth::user()->cannot('respond', $this->get_requirement()) || Auth::user()->cannot('submit', $this->get_user_response());
+    }
+
     public function save()
     {
-        if ($this->verifyUser()) return;
-        if ($this->verifyUserResponse()) return;
-        if ($this->verifyItemAndResponse()) return;
+        if ( $this->cant_update() || is_null($this->get_option()) )
+            return;
 
         if ( $this->if_option_checked() ) {
             return ScholarResponseOption::where('response_id', $this->response_id)

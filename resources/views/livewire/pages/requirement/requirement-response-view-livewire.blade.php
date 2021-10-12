@@ -31,7 +31,12 @@
                     @if ( is_null($scholar_response->submit_at) )
                         Not Yet Submitted
                     @else
-                        {{ date_format(new DateTime($scholar_response->submit_at),"M d,  Y h:i A") }}
+                        {{ \Carbon\Carbon::parse($scholar_response->end_at)->format("M d,  Y h:i A") }}
+                        @if ( $scholar_response->submmited_on_time() )
+                            <span class="badge badge-pill badge-success">On time</span>
+                        @else
+                            <span class="badge badge-pill badge-danger">Late</span>
+                        @endif
                     @endif
                 </td>
             </tr>
