@@ -37,7 +37,6 @@ class UserSeeder extends Seeder
 
         User::factory()->count(15)->create(['usertype' => 'officer']);
 
-        User::factory()->count(85)->create();
-
+        User::factory()->count(100)->create();
     }
 }

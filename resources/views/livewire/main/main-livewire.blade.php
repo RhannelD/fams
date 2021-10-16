@@ -16,7 +16,7 @@
         </div>
 
         <div class="list-group list-group-flush">  
-            @if (in_array(Auth::user()->usertype, array('officer', 'admin')))
+            @if (Auth::user()->is_admin())
                 <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('dashboard') }}">
                     <i class="fas fa-chart-line"></i>
                     Dashboard
@@ -36,7 +36,7 @@
 
             @if (!Auth::check())
                 <hr>
-            @elseif (Auth::user()->usertype == 'admin')
+            @elseif (Auth::user()->is_admin())
                 <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('officer') }}">
                     <i class="fas fa-address-card"></i>
                     Officers
@@ -48,7 +48,7 @@
             @elseif (in_array(Auth::user()->usertype, array('officer', 'scholar')))
                 <hr class="my-2">
                 <strong class="ml-3">
-                    @if (Auth::user()->usertype == 'officer')
+                    @if (Auth::user()->is_officer())
                         Managing
                     @else
                         Scholarship

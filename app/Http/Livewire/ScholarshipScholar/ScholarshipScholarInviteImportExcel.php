@@ -208,7 +208,7 @@ class ScholarshipScholarInviteImportExcel extends Component
         ];
 
         try {
-            // Mail::to($invitation->email)->send(new ScholarInvitationMail($details));
+            Mail::to($invitation->email)->send(new ScholarInvitationMail($details));
         } catch (\Exception $e) {
             return false;
         }

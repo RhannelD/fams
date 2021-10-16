@@ -21,6 +21,7 @@ use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerLivewire;
 use App\Http\Livewire\ScholarshipScholar\ScholarshipScholarLivewire;
 use App\Http\Livewire\ScholarshipCategory\ScholarshipCategoryLivewire;
 use App\Http\Livewire\ScholarScholarship\ScholarScholarshipViewLivewire;
+use App\Http\Livewire\ScholarshipDashboard\ScholarshipDashboardLivewire;
 use App\Http\Livewire\ScholarshipRequirement\ScholarshipRequirementLivewire;
 use App\Http\Livewire\ScholarshipScholar\ScholarshipScholarInviteImportExcel;
 use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerInviteLinkLivewire;
@@ -67,6 +68,8 @@ Route::group(['middleware' => ['user.auth']], function(){
     Route::get('/file/preview/{id}', [FilePreviewController::class, 'show'])->name('file.preview');
 
     Route::prefix('/scholarship')->group(function () {
+        Route::get('/{scholarship_id}/dashboard', ScholarshipDashboardLivewire::class)->name('scholarship.dashboard');
+
         Route::get('/{scholarship_id}/home', ScholarshipPageLivewire::class)->name('scholarship.home');
 
         Route::get('/post/{post_id}', ScholarshipPostOpenLivewire::class)->name('scholarship.post.show');

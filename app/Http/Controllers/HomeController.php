@@ -62,7 +62,30 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return Carbon::parse(ScholarshipRequirement::first()->end_at)->format('Y-m-d h:i:s') < Carbon::now()->format('Y-m-d h:i:s');
+        //selectRaw('YEAR(submit_at)')->
+        return ScholarResponse::whereNotNull('submit_at')
+            ->whereYear('submit_at', Carbon::now()->format('Y'))
+            ->whereMonth('submit_at', Carbon::now()->subMonths(1)->format('m'))
+            ->first();
+
+        // $date = Carbon::now();
+        // for ($i=0; $i < 10; $i++) { 
+        //     echo  $date->format('F Y').'<br>';
+        //     $date->subMonth();
+        // }
+
+        // $data1 = collect([
+        //     '1',
+        //     '2',
+        //     '3',
+        //     '4',
+        // ]);
+
+        // return [
+        //     $data1->toJson()
+        // ];
+
+        // return Carbon::parse(ScholarshipRequirement::first()->end_at)->format('Y-m-d h:i:s') < Carbon::now()->format('Y-m-d h:i:s');
 
         // $req = ScholarshipRequirement::find(62);
         // return Auth::user()->can('access_on_category', $req);

@@ -24,13 +24,13 @@ class DashboardLivewire extends Component
             redirect()->route('dashboard');
             return true;
         }
-        if (Auth::user()->usertype == 'scholar') {
-            redirect()->route('scholar.scholarship');
+        if (!Auth::user()->is_admin()) {
+            redirect()->route('index');
             return true;
         }
         return false;
     }
-    
+
     public function mount()
     {
         if ($this->verifyUser()) return;
