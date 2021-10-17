@@ -205,4 +205,13 @@ class User extends Authenticatable
             })
             ->first();
     }
+
+    public function get_invite_count()
+    {
+        if ( $this->is_scholar() ) {
+            return ScholarshipScholarInvite::where('email', $this->email)->whereNull('respond')->count();
+        } elseif ( $this->is_officer() ) {
+            return ScholarshipOfficerInvite::where('email', $this->email)->whereNull('respond')->count();
+        }
+    }
 }

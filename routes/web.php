@@ -16,6 +16,7 @@ use App\Http\Livewire\Invite\InviteScholarLivewire;
 use App\Http\Livewire\Scholarship\ScholarshipLivewire;
 use App\Http\Livewire\Requirement\RequirementPreviewLivewire;
 use App\Http\Livewire\ScholarshipPage\ScholarshipPageLivewire;
+use App\Http\Livewire\Requirement\RequirementResponsesLivewire;
 use App\Http\Livewire\ScholarshipPost\ScholarshipPostOpenLivewire;
 use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerLivewire;
 use App\Http\Livewire\ScholarshipScholar\ScholarshipScholarLivewire;
@@ -100,6 +101,8 @@ Route::group(['middleware' => ['user.auth']], function(){
     });
 
     Route::prefix('/requirement')->group(function () {
+        Route::get('/reponses', RequirementResponsesLivewire::class)->name('requirement.reponses.list');
+
         Route::get('/{requirement_id}', RequirementPreviewLivewire::class)->name('requirement.view');
 
         Route::get('/{requirement_id}/response', ResponseLivewire::class)->name('requirement.response');

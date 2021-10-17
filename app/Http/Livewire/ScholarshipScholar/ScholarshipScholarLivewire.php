@@ -17,6 +17,7 @@ class ScholarshipScholarLivewire extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $scholarship_id;
+    public $remove_scholar_id;
     public $search;
     public $show_row = 10;
 
@@ -144,5 +145,43 @@ class ScholarshipScholarLivewire extends Component
         $this->num_scholarship = 1;
         $this->order_by = 'firstname';
         $this->order = 'asc';
+    }
+
+    protected function get_remove_scholar()
+    {
+        return ScholarshipScholar::find($this->remove_scholar_id);
+    }
+
+    public function remove_scholar_confirm($scholar_id)
+    {
+        $this->remove_scholar_id = $scholar_id;
+        $scholar = $this->get_remove_scholar();
+
+        if ( Auth::check() && Auth::user()->can('delete', $scholar) ) {
+            $this->dispatchBrowserEvent('swal:confirm:remove_scholar', [
+                'type' => 'warning',
+                'message' => 'Are you sure?', 
+                'text' => "Removing {$scholar->user->flname()} on the scholarship program.",
+                'function' => 'remove_scholar'
+            ]);
+        }
+    }
+
+    public function remove_scholar()
+    {
+        $scholar = $this->get_remove_scholar();
+
+        if ( Auth::guest() || Auth::user()->cannot('delete', $scholar) ) 
+            return;
+
+        $name = $scholar->user->flname();
+        if ( $scholar->delete() ) {
+            $this->remove_scholar_id = null;
+            $this->dispatchBrowserEvent('swal:modal', [
+                'type' => 'success',  
+                'message' => 'Scholar Successfully Removed', 
+                'text' => "{$name} has been successfully removed as a scholar."
+            ]);
+        }
     }
 }

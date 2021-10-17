@@ -53,10 +53,25 @@
 	</div>
 
 	<div class="row">
-
 		<div class="contents-container col-12 mb-2">
 			@include('livewire.pages.scholarship-scholar.scholarship-scholar-search-livewire')
 		</div>
-
 	</div>
+
+    <script>
+        window.addEventListener('swal:confirm:remove_scholar', event => { 
+            swal({
+                title: event.detail.message,
+                text: event.detail.text,
+                icon: event.detail.type,
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    @this.call(event.detail.function)
+                }
+            });
+        });
+    </script>
 </div>

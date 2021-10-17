@@ -34,6 +34,13 @@
                 Scholarships
             </a>
 
+            @if ( Auth::check() && Auth::user()->is_scholar() )
+                <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('requirement.reponses.list') }}">
+                    <i class="fas fa-file-upload"></i>
+                    Responses
+                </a> 
+            @endif
+
             @if (!Auth::check())
                 <hr>
             @elseif (Auth::user()->is_admin())
@@ -79,6 +86,11 @@
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <strong>{{ Auth::user()->firstname . ' ' . Auth::user()->lastname }} </strong>
+                            @if ( Auth::user()->get_invite_count() )
+                                <span class="badge badge-danger">
+                                    {{ Auth::user()->get_invite_count() }}
+                                </span>
+                            @endif
                         </a>
 						<div class="dropdown-menu dropdown-menu-right dropdown-cyan" aria-labelledby="navbarDropdownMenuLink-4">
 							<a class="dropdown-item" href="{{ route('my.account') }}">
@@ -94,7 +106,12 @@
                                     @endif
                                     >
                                     <i class="fas fa-envelope"></i>
-                                    Invites
+                                    Invites 
+                                    @if ( Auth::user()->get_invite_count() )
+                                        <span class="badge badge-danger">
+                                            {{ Auth::user()->get_invite_count() }}
+                                        </span>
+                                    @endif
                                 </a>
                             @endif
                             @livewire('add-ins.logout-livewire')

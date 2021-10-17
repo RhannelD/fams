@@ -86,7 +86,7 @@ class ScholarshipScholarPolicy
      */
     public function delete(User $user, ScholarshipScholar $scholarshipScholar)
     {
-        //
+        return User::where('id', $user->id)->whereOfficerOf($scholarshipScholar->category->scholarship_id)->exists();
     }
 
     /**

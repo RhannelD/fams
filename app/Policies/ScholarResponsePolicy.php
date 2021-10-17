@@ -20,7 +20,7 @@ class ScholarResponsePolicy
      */
     public function before(User $user, $ability)
     {
-        if ($user->is_admin()) {
+        if ($user->is_admin() && $ability != 'viewUserResponse' ) {
             return true;
         }
     }
@@ -35,6 +35,17 @@ class ScholarResponsePolicy
     {
         $requirement = ScholarshipRequirement::find($requirement_id);
         return (isset($requirement)? User::where('id', $user->id)->whereOfficerOf($requirement->scholarship_id)->exists(): false);
+    }
+
+    /**
+     * Determine whether the user can view any models.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function viewUserResponse(User $user)
+    {
+        return $user->is_scholar();
     }
 
     /**
