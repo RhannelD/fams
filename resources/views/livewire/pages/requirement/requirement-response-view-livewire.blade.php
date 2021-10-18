@@ -32,9 +32,7 @@
                         Not Yet Submitted
                     @else
                         {{ \Carbon\Carbon::parse($scholar_response->end_at)->format("M d,  Y h:i A") }}
-                        @if ( $scholar_response->submmited_on_time() )
-                            <span class="badge badge-pill badge-success">On time</span>
-                        @else
+                        @if ( is_null($scholar_response->requirement->enable) && !$scholar_response->submmited_on_time() )
                             <span class="badge badge-pill badge-danger">Late</span>
                         @endif
                     @endif

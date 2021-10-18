@@ -65,7 +65,7 @@ class ResponseAgreementLivewire extends Component
 
     public function toggle_check()
     {
-        if ( $this->cant_update() || is_null(get_agreement()) )
+        if ( $this->cant_update() || is_null($this->get_agreement()) )
             return;
 
         $agreement = ScholarResponseAgreement::where('response_id', $this->response_id)

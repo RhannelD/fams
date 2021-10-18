@@ -27,34 +27,26 @@ class ScholarshipRequirement extends Model
 
     public function can_be_accessed()
     {
-        $date_end = Carbon::parse($this->end_at);
+        if ( isset($this->enable) )
+            return $this->enable? 'ongoing': 'disabled';
+
+        $date_start = Carbon::parse($this->start_at)->toDateTimeString();
+        $date_end = Carbon::parse($this->end_at)->toDateTimeString();
         $date_now = Carbon::now()->toDateTimeString();
 
-        if ( !isset($this->enable) ) {
-            if ($date_end > $date_now) {
-                return 'ongoing';
-            }
-            return 'disabled';
-        }
-        if ( !$this->enable ) {
-            return 'disabled';
-        }
-        if ( $date_end > $date_now ) {
-            return 'ongoing';
-        }
-        return 'finished';
+        return ($date_start<=$date_now && $date_now<=$date_end)?  'ongoing': 'disabled';
     }
 
     public function has_started()
     {
-        $date_start = Carbon::parse($this->start_at);
-        $date_end = Carbon::parse($this->end_at);
+        if ( isset($this->enable) )
+            return $this->enable;
+        
+        $date_start = Carbon::parse($this->start_at)->toDateTimeString();
+        $date_end = Carbon::parse($this->end_at)->toDateTimeString();
         $date_now = Carbon::now()->toDateTimeString();
         
-        if ( isset($this->enable) ) {
-            return $this->enable;
-        }
-        return ( $date_now>$date_start && $date_now<$date_end );
+        return ( $date_now>=$date_start && $date_now<=$date_end );
     }
 
     public function get_submitted_responses_count()

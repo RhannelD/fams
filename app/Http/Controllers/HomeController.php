@@ -62,11 +62,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+        return User::all();
         //selectRaw('YEAR(submit_at)')->
-        return ScholarResponse::whereNotNull('submit_at')
-            ->whereYear('submit_at', Carbon::now()->format('Y'))
-            ->whereMonth('submit_at', Carbon::now()->subMonths(1)->format('m'))
-            ->first();
+        // return Carbon::parse('2021-12-31 12:00:00');
 
         // $date = Carbon::now();
         // for ($i=0; $i < 10; $i++) { 

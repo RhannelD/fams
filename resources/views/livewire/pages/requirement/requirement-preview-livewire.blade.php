@@ -46,10 +46,6 @@
                         @else
                             @if ( $requirement->has_categories() )
                                 @switch( $requirement->can_be_accessed() )
-                                    @case('finished')
-                                        <div class="alert alert-info mb-2">
-                                            Due date is finished but you can still send a response.
-                                        </div>
                                     @case('ongoing')
                                         <a href="{{ route('requirement.response', [$requirement->id]) }}" class="btn btn-success btn-block pr-md-4">
                                             <i class="fas fa-paper-plane mr-1"></i>
@@ -150,14 +146,6 @@
                     <hr class="my-1">
                     <table>
                         <tr>
-                            <td>Start Date:</td>
-                            <td class="pl-2">{{ date_format(new DateTime($requirement->start_at),"M d,  Y h:i A") }}</td>
-                        </tr>
-                        <tr>
-                            <td>End Date:</td>
-                            <td class="pl-2">{{ date_format(new DateTime($requirement->end_at),"M d, Y  h:i A") }}</td>
-                        </tr>
-                        <tr>
                             <td>For:</td>
                             <td class="pl-2">
                                 @if ( $requirement->promote )
@@ -172,10 +160,6 @@
                             <td class="pl-2">
 
                                 @switch( $requirement->can_be_accessed() )
-                                    @case('finished')
-                                        <span class="badge badge-pill badge-danger">Finished</span>
-                                        @break
-
                                     @case('ongoing')
                                         <span class="badge badge-pill badge-success">Ongoing</span>
                                         @break
@@ -187,6 +171,16 @@
 
                             </td>
                         </tr>
+                        @if ( is_null($requirement->enable) )
+                            <tr>
+                                <td>Start Date:</td>
+                                <td class="pl-2">{{ date_format(new DateTime($requirement->start_at),"M d,  Y h:i A") }}</td>
+                            </tr>
+                            <tr>
+                                <td>End Date:</td>
+                                <td class="pl-2">{{ date_format(new DateTime($requirement->end_at),"M d, Y  h:i A") }}</td>
+                            </tr>
+                        @endif
                     </table>
 
                 </div>

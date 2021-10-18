@@ -43,10 +43,6 @@
                         </td>
                         <td class="text-center px-1">
                             @switch( $response->requirement->can_be_accessed() )
-                                @case('finished')
-                                    <span class="badge badge-pill badge-danger">Finished</span>
-                                    @break
-
                                 @case('ongoing')
                                     <span class="badge badge-pill badge-success">Ongoing</span>
                                     @break

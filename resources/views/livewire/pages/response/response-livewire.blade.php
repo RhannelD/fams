@@ -29,12 +29,6 @@
                             
                     @elseif ( !isset( $user_response->submit_at ) )
                         @if ( Auth::user()->can('submit', $user_response) )
-                            @if (  $user_response->is_late_to_submit() )
-                                <div class="alert alert-danger">
-                                    This will be marked as late. <br>
-                                    Due: {{ \Carbon\Carbon::parse($requirement->end_at)->format("M d,  Y h:i A") }}
-                                </div>
-                            @endif
                             <button wire:click="submit_response" class="btn btn-success btn-block">
                                 <i class="fas fa-paper-plane mr-1" wire:loading.remove wire:target="submit_response"></i>
                                 <i class="fas fa-spinner fa-spin" wire:loading wire:target="submit_response"></i>

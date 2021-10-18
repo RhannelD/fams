@@ -77,9 +77,7 @@
                                 <td>Submitted at:</td>
                                 <td>
                                     {{ $scholar_response->submit_at }}         
-                                    @if ( $scholar_response->submmited_on_time() )
-                                        <span class="badge badge-pill badge-success">On Time</span>
-                                    @else
+                                    @if ( is_null($scholar_response->requirement->enable) && !$scholar_response->submmited_on_time() )
                                         <span class="badge badge-pill badge-danger">Late</span>
                                     @endif
                                 </td>

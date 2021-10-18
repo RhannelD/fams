@@ -123,11 +123,7 @@ class ScholarResponsePolicy
     {
         return !$scholarResponse->is_submitted() 
             && $user->id = $scholarResponse->user_id
-            && $scholarResponse->requirement->enable !== false
-            && (
-                !$scholarResponse->is_late_to_submit()
-                || $scholarResponse->requirement->enable == true
-            );
+            && !$scholarResponse->is_late_to_submit();
     }
 
     /**
@@ -141,11 +137,7 @@ class ScholarResponsePolicy
     {
         return $scholarResponse->is_submitted() 
             && $user->id = $scholarResponse->user_id
-            && $scholarResponse->requirement->enable !== false
-            && (
-                !$scholarResponse->is_late_to_submit()
-                || $scholarResponse->requirement->enable == true
-            );
+            && !$scholarResponse->is_late_to_submit();
     }
 
     /**

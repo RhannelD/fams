@@ -58,6 +58,9 @@ class ScholarResponse extends Model
     public function is_late_to_submit()
     {
         $requirement = ScholarshipRequirement::find($this->requirement_id);
+        if ( isset($requirement->enable) ) 
+            return !$requirement->enable;
+
         return Carbon::parse($requirement->end_at)->format('Y-m-d h:i:s') < Carbon::now()->format('Y-m-d h:i:s');
     }
 }
