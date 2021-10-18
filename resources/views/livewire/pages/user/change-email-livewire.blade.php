@@ -15,8 +15,8 @@
                         <h4>Verify Password</h4>
                         <div>
                             <div class="form-group">
-                                <label for="password">Enter Password</label>
-                                <input wire:model.lazy='password' type="password" class="form-control" id="password">
+                                <label for="verify_password">Enter Password</label>
+                                <input wire:model.lazy='password' type="password" class="form-control" id="verify_password">
                                 @error('password') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>

@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             ScholarCourseSeeder::class,
             ScholarSchoolSeeder::class,
             ScholarInfoSeeder::class,
+            ScholarFacebookSeeder::class,
         ]);
     }
 }

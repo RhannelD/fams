@@ -11,6 +11,13 @@ class MyAccountLivewire extends Component
         'refresh' => '$refresh',
     ];
 
+    public function hydrate()
+    {
+        if ( Auth::guest() ) {
+            return redirect()->route('my.account'); 
+        }
+    }
+
     public function render()
     {
         return view('livewire.pages.user.my-account-livewire', [

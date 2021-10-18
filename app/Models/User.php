@@ -97,6 +97,11 @@ class User extends Authenticatable
         return $this->hasOne(ScholarInfo::class, 'user_id', 'id');
     }
     
+    public function facebook()
+    {
+        return $this->hasOne(ScholarFacebook::class, 'user_id', 'id');
+    }
+    
 
     public function scopeWhereAdmin($query)
     {

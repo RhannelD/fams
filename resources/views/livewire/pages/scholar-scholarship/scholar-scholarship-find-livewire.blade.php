@@ -6,7 +6,7 @@
                     <div class="card-header"> 
                         <h5>
                             <a href="{{ route('scholarship.post.show', [$post->id]) }}" class="text-dark">
-                                {{ $post->title }} {{ $post->id }}
+                                {{ $post->title }}
                             </a>
                         </h5>
                         <div class="d-flex">

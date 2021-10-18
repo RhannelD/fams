@@ -55,6 +55,9 @@
                                     >
                                     <i class="fas fa-info-circle"></i>
                                 </button>
+                                <a href="{{ $scholar->user->facebook->facebook_link }}" class="btn btn-sm btn-primary">
+                                    <i class="fab fa-facebook m-0"></i>
+                                </a>
                                 <button wire:click="remove_scholar_confirm({{ $scholar->id }})" class="btn btn-danger btn-sm">
                                     <i class="fas fa-user-times"></i>
                                 </button>
