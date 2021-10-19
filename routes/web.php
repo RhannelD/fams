@@ -9,6 +9,7 @@ use App\Http\Livewire\Officer\OfficerLivewire;
 use App\Http\Livewire\Scholar\ScholarLivewire;
 use App\Http\Controllers\FilePreviewController;
 use App\Http\Livewire\Response\ResponseLivewire;
+use App\Http\Livewire\UserChat\UserChatLivewire;
 use App\Http\Livewire\Auth\PasswordResetLivewire;
 use App\Http\Livewire\Dashboard\DashboardLivewire;
 use App\Http\Livewire\Invite\InviteOfficerLivewire;
@@ -56,6 +57,8 @@ Route::group(['middleware' => ['user.login']], function(){
 
 // Needs to be signed in to access
 Route::group(['middleware' => ['user.auth']], function(){
+    Route::get('/message', UserChatLivewire::class)->name('user.chat');
+
     Route::get('/dashboard', DashboardLivewire::class)->name('dashboard');
 
     Route::get('/officer', OfficerLivewire::class)->name('officer');

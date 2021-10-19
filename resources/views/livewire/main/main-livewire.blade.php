@@ -97,6 +97,10 @@
                                 <i class="fas fa-user-circle"></i>
                                 My account
                             </a>
+							<a class="dropdown-item" href="{{ route('user.chat') }}">
+                                <i class="fas fa-comments"></i>
+                                Messages
+                            </a>
                             @if ( !Auth::user()->is_admin() )
                                 <a class="dropdown-item" 
                                     @if ( Auth::user()->is_officer() )

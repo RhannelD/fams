@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
             ScholarSchoolSeeder::class,
             ScholarInfoSeeder::class,
             ScholarFacebookSeeder::class,
+            UserChatSeeder::class,
         ]);
     }
 }

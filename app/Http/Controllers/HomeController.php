@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\UserChat;
 use App\Models\Scholarship;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -62,7 +63,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return User::all();
+        return UserChat::all();
         //selectRaw('YEAR(submit_at)')->
         // return Carbon::parse('2021-12-31 12:00:00');
 
