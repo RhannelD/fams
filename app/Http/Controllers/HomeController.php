@@ -63,7 +63,42 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return UserChat::all();
+        $chat = UserChat::orderBy('id', 'desc')->first();
+
+        return Carbon::parse($chat->created_at);
+
+        // DB::enableQueryLog();
+        // $user_id = Auth::id();
+        // $users = User::where('id', '!=', Auth::id())
+        //     ->where(function ($query){
+        //         $query->whereHas('chat_send', function ($query) {
+        //             $query->where('receiver_id', Auth::id());
+        //         })
+        //         ->orWhereHas('chat_receive', function ($query) {
+        //             $query->where('sender_id', Auth::id());
+        //         });
+        //     })
+        //     ->select('users.*')
+        //     ->addSelect(
+        //         DB::raw("(
+        //             select user_chats.id 
+        //             from user_chats
+        //             where (
+        //                 sender_id = {$user_id} 
+        //                 and receiver_id = users.id
+        //             ) or (
+        //                 receiver_id = {$user_id} 
+        //                 and sender_id = users.id
+        //             )
+        //             ORDER BY id DESC LIMIT 1
+        //         ) as last_chat_id")
+        //     )
+        //     ->orderBy('last_chat_id', 'desc')
+        //     ->get();
+
+        // // dd(DB::getQueryLog());
+        // return $users;
+
         //selectRaw('YEAR(submit_at)')->
         // return Carbon::parse('2021-12-31 12:00:00');
 

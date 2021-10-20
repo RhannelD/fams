@@ -102,6 +102,16 @@ class User extends Authenticatable
         return $this->hasOne(ScholarFacebook::class, 'user_id', 'id');
     }
     
+    public function chat_send()
+    {
+        return $this->hasMany(UserChat::class, 'sender_id', 'id');
+    }
+    
+    public function chat_receive()
+    {
+        return $this->hasMany(UserChat::class, 'receiver_id', 'id');
+    }
+    
 
     public function scopeWhereAdmin($query)
     {

@@ -21,14 +21,8 @@
                 Home
             </a>
         </div>
-        <div class="list-group list-group-flush">  
-            <strong class="ml-3">
-                Messages
-            </strong>
-            <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('index') }}">
-                <i class="fas fa-home"></i>
-                Home
-            </a>
+        <div>
+            @livewire('user-chat.user-chat-list-livewire')
         </div>
     </div>
     <!-- /#sidebar-wrapper -->
