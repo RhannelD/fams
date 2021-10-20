@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="offset-md-6 col-md-6">
+        <div class="col-12">
             @if ( count($search_users) )
                 <div class="d-flex justify-content-end my-1">
                     {{ $search_users->links() }}

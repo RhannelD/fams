@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Livewire\Auth\LoginLivewire;
 use App\Http\Livewire\Auth\SignUpLivewire;
+use App\Http\Livewire\Send\SendEmailLivewire;
 use App\Http\Livewire\User\MyAccountLivewire;
 use App\Http\Livewire\Officer\OfficerLivewire;
 use App\Http\Livewire\Scholar\ScholarLivewire;
@@ -85,14 +86,16 @@ Route::group(['middleware' => ['user.auth']], function(){
         Route::get('/{scholarship_id}/scholar/invite', ScholarshipScholarInviteImportExcel::class)->name('scholarship.scholar.invite');
 
         Route::get('/{scholarship_id}/category', ScholarshipCategoryLivewire::class)->name('scholarship.category');
-
+        
         Route::get('/{scholarship_id}/requirement', ScholarshipRequirementLivewire::class)->name('scholarship.requirement');
-
+        
         Route::get('/requirement/{requirement_id}', ScholarshipRequirementOpenLivewire::class)->name('scholarship.requirement.open');
-
+        
         Route::get('/requirement/{requirement_id}/edit', ScholarshipRequirementEditLivewire::class)->name('scholarship.requirement.edit');
-
+        
         Route::get('/requirement/{requirement_id}/responses', ScholarshipRequirementResponseLivewire::class)->name('scholarship.requirement.responses');
+
+        Route::get('/{scholarship_id}/send/email', SendEmailLivewire::class)->name('scholarship.send.email');
     });
 
     Route::prefix('/my-account')->group(function () {

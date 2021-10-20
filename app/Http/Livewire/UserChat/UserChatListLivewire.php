@@ -26,9 +26,18 @@ class UserChatListLivewire extends Component
         ]);
     }
 
+    public function hydrate()
+    {
+        if ( Auth::guest() ) 
+            return redirect()->route('user.chat', ['rid' => $this->rid]);
+    }
+
     protected function get_convos()
     {
         $user_id = Auth::id();
+        if ( is_null($user_id) ) {
+            return [];
+        }
         return User::where('id', '!=', Auth::id())
             ->where(function ($query){
                 $query->whereHas('chat_send', function ($query) {

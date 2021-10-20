@@ -21,6 +21,7 @@ class UserChatLivewire extends Component
     public $chat_count = 8;
 
     protected $listeners = [
+        'refresh' => '$refresh',
         'set_receiver' => 'set_receiver'
     ];
 
@@ -38,6 +39,17 @@ class UserChatLivewire extends Component
         'rid' => ['except' => ''],
         'page' => ['except' => 1],
     ];
+
+    public function mount()
+    {
+        if ( Auth::guest() ) abort(403);
+    }
+
+    public function hydrate()
+    {
+        if ( Auth::guest() ) 
+            return redirect()->route('user.chat', ['rid' => $this->rid]);
+    }
 
     public function dehydrate()
     {
