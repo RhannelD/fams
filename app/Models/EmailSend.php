@@ -29,4 +29,9 @@ class EmailSend extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+    
+    public function sent_to()
+    {
+        return $this->hasMany(EmailSendTo::class, 'email_send_id', 'id');
+    }
 }

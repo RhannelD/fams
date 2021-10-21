@@ -14,8 +14,8 @@
         <li class="nav-item" role="presentation">
             <a id="emails-tab" data-toggle="tab" href="#emails" role="tab" aria-controls="emails"
                 wire:click="$set('tab', 'emails')"
-                class="nav-link {{ $tab=='find'?'active':'' }}"
-                aria-selected="{{ $tab=='find'?'false':'' }}"
+                class="nav-link {{ $tab=='emails'?'active':'' }}"
+                aria-selected="{{ $tab=='emails'?'false':'' }}"
                 >
                 Emails
             </a>
@@ -26,6 +26,15 @@
             @include('livewire.pages.send.send-email-sending-livewire')
         </div>
         <div wire:ignore class="tab-pane fade {{ $tab=='emails'?'show active':'' }}" id="emails" role="tabpanel" aria-labelledby="emails-tab">
+            @livewire('send.send-email-list-livewire', [$scholarship_id])
+
+            @livewire('send.send-email-view-livewire')
         </div>
     </div>
+
+    <script>
+        window.addEventListener('emails-tab', event => {
+            $('#emails-tab').tab('show');
+        });
+    </script>
 </div>

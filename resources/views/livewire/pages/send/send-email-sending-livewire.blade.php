@@ -89,13 +89,19 @@
             @error('message') <span class="text-danger">{{ $message }}</span> @enderror
         </div>
         <div class="d-flex justify-content-end">
-            <button wire:click='send' class="btn btn-success"
+            <button wire:click='send' wire:loading.attr='disabled' class="btn btn-success"
                 @if ( !count($added_recipients) )
                     disabled
                 @endif
                 >
-                <i class="fas fa-envelope"></i>
-                Send
+                <span wire:loading.remove wire:target='send'>
+                    <i class="fas fa-envelope"></i>
+                    Send
+                </span>
+                <span wire:loading wire:target='send'>
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                    Sending...
+                </span>
             </button>
         </div>
     </div>

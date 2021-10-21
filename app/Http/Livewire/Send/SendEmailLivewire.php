@@ -26,13 +26,20 @@ class SendEmailLivewire extends Component
     public $message;
     public $recipient = [];
 
+    protected $listeners = [
+        'refresh' => '$refresh'
+    ];
+
     protected $rules = [
         'message' => 'required|min:5|max:999',
     ];
 
-    protected $queryString = [
-        'tab' => ['except' => ''],
-    ];
+    public function getQueryString()
+    {
+        return [
+            'tab' => ['except' => ''],
+        ];
+    }
 
     public function mount($scholarship_id)
     {
@@ -86,6 +93,8 @@ class SendEmailLivewire extends Component
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
+        if ( $propertyName == 'search' ) 
+            $this->page = 1;
     }
 
     public function add_recipient($user_id)
@@ -101,6 +110,11 @@ class SendEmailLivewire extends Component
     public function remove_recipient($user_id)
     {
         $this->recipient = array_diff($this->recipient, [$user_id]);
+    }
+
+    public function view_emails()
+    {
+        $this->tab = 'emails';
     }
 
     public function send()
@@ -125,6 +139,9 @@ class SendEmailLivewire extends Component
                 'message' => $this->message,
             ]);
 
+        if ( !$email_send )
+            return;
+
         foreach ($user_recipients as $user_recipient) {
             $sent = false;
             try {
@@ -139,9 +156,16 @@ class SendEmailLivewire extends Component
                 'email' => $user_recipient->email,
                 'sent' => $sent,
             ]);
-            if ( $sent ) {
-                $this->remove_recipient($user_recipient->id);
-            }
         }
+
+        $this->reset('message');
+        $this->reset('recipient');
+
+        $this->view_emails();
+        $this->emitTo('send.send-email-list-livewire', 'refresh');
+        $this->dispatchBrowserEvent('emails-tab');
+        $this->dispatchBrowserEvent('view_set_email_send', [
+            'email_send_id' => $email_send->id,
+        ]);
     }
 }

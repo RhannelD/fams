@@ -117,6 +117,11 @@ class User extends Authenticatable
         return $this->hasMany(UserChat::class, 'receiver_id', 'id');
     }
     
+    public function email_sent_to()
+    {
+        return $this->hasMany(EmailSendTo::class, 'email', 'email');
+    }
+    
 
     public function scopeWhereAdmin($query)
     {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\UserChat;
+use App\Models\EmailSend;
 use App\Models\Scholarship;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -63,9 +64,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $chat = UserChat::orderBy('id', 'desc')->first();
-
-        return Carbon::parse($chat->created_at);
 
         // DB::enableQueryLog();
         // $user_id = Auth::id();
