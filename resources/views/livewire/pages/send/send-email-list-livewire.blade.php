@@ -45,29 +45,34 @@
                         <tbody>
                             @forelse ($send_email_list as $send_email)
                                 <tr class="border-bottom">
-                                    <th>
+                                    <th class="align-middle">
                                         {{ ( ($loop->index + 1) + ( ($show_row * $page ) - $show_row) ) }}
                                     </th>
-                                    <td>
+                                    <td class="align-middle text-nowrap">
                                         {{ $send_email->user->flname() }}
                                     </td>
-                                    <td class="overflow-hidden text-nowrap" style="max-width: 200px;">
+                                    <td class="overflow-hidden align-middle text-nowrap" style="max-width: 200px;">
                                         {{ $send_email->message }}
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-center align-middle">
                                         {{ $send_email->sent_to->where('sent', true)->count() }}
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-center align-middle">
                                         {{ $send_email->sent_to->where('sent', false)->count() }}
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-center align-middle text-nowrap">
                                         {{ \Carbon\Carbon::parse($send_email->created_at)->format('M d, Y  h:i A') }}
                                     </td>
-                                    <td>
+                                    <td class="text-center text-nowrap">
                                         <button class="btn btn-sm btn-info text-white" type="button" data-toggle="modal" data-target="#email_sent_modal"
                                             onclick="set_email_send({{ $send_email->id }})"
                                             >
                                             <i class="fas fa-info-circle"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger"
+                                            
+                                            >
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>

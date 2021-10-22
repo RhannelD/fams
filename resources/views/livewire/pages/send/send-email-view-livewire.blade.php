@@ -40,7 +40,7 @@
                                     <tbody>
                                         @foreach ($email_send->sent_to as $sent_to)
                                             <tr>
-                                                <td class="align-middle">
+                                                <td class="align-middle text-nowrap">
                                                     {{ isset($sent_to->user)? $sent_to->user->flname(): '' }}
                                                 </td>
                                                 <td class="align-middle">
@@ -59,7 +59,7 @@
                                                 </td>
                                                 <td class="text-center align-middle">
                                                     @if ( !$sent_to->sent && $sent_to->user )
-                                                        <button class="btn btn-success btn-sm" id="resend-email-to-{{ $sent_to->user->id }}"
+                                                        <button class="btn btn-success btn-sm text-nowrap" id="resend-email-to-{{ $sent_to->user->id }}"
                                                             wire:click='send({{ $sent_to->user->id }})' 
                                                             wire:loading.attr='disabled'
                                                             >
@@ -115,14 +115,14 @@
                                     <tbody>
                                         @forelse ($search_users as $search_user)
                                             <tr>
-                                                <td class="align-middle">
+                                                <td class="align-middle text-nowrap">
                                                     {{ $search_user->flname() }}
                                                 </td>
-                                                <td class="align-middle">
+                                                <td class="align-middle text-nowrap">
                                                     {{ $search_user->email }}
                                                 </td>
                                                 <td class="text-center align-middle">
-                                                    <button class="btn btn-success btn-sm" id="send-email-to-{{ $search_user->id }}"
+                                                    <button class="btn btn-success btn-sm text-nowrap" id="send-email-to-{{ $search_user->id }}"
                                                         wire:click='send({{ $search_user->id }})' 
                                                         wire:loading.attr='disabled'
                                                         >

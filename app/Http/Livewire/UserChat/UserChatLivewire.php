@@ -128,7 +128,7 @@ class UserChatLivewire extends Component
 
     protected function get_search()
     {
-        if ( isset($this->rid) ) 
+        if ( isset($this->rid) || empty($this->search) ) 
             return [];
 
         return User::where('id', '!=', Auth::id())

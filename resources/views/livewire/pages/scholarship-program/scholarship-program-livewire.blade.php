@@ -50,9 +50,9 @@
                             <strong>Category</strong>
                         </a>
                     @endcan
-
-                        <div class="dropdown">
-                            <button class="btn btn-light ml-1 dropdown-toggle" type="button" 
+                    @can('sendEmails', $scholarship)
+                        <div class="dropdown ml-1">
+                            <button class="btn btn-light dropdown-toggle" type="button" 
                                 id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <strong>More</strong>
                             </button>
@@ -62,7 +62,7 @@
                                 </a>
                             </div>
                         </div>
-
+                    @endcan
                 </div>
             </h2>
         </div>

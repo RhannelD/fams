@@ -34,16 +34,16 @@
                     <tbody>
                         @forelse ($search_users as $search_user)
                             <tr wire:click='add_recipient({{ $search_user->id }})'>
-                                <th>
+                                <th class='align-middle text-nowrap'>
                                     {{ ( ($loop->index + 1) + ( ($show_row * $page ) - $show_row) ) }}
                                 </th>
-                                <td>
+                                <td class='align-middle text-nowrap'>
                                     {{ $search_user->flname() }}
                                 </td>
-                                <td>
+                                <td class='align-middle text-nowrap'>
                                     {{ $search_user->email }}
                                 </td>
-                                <td>
+                                <td class='align-middle text-nowrap'>
                                     {{ $search_user->scholarship_scholar->category->category }}
                                 </td>
                             </tr>

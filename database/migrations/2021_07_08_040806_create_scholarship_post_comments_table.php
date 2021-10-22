@@ -15,8 +15,8 @@ class CreateScholarshipPostCommentsTable extends Migration
     {
         Schema::create('scholarship_post_comments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('post_id');
             $table->foreignId('user_id');
+            $table->foreignId('post_id');
             $table->text('comment');
             $table->timestamps();
             

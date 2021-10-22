@@ -29,10 +29,4 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-    
-    'messagebird' => [
-        'access_key' => env('MESSAGEBIRD_ACCESS_KEY'),
-        'originator' => env('MESSAGEBIRD_ORIGINATOR'),
-        'recipients' => env('MESSAGEBIRD_RECIPIENTS'),
-    ],
 ];

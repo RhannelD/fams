@@ -177,7 +177,6 @@ return [
 
         UxWeb\SweetAlert\SweetAlertServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
-        NotificationChannels\Messagebird\MessagebirdServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         
     ],
