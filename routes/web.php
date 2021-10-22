@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Livewire\Auth\LoginLivewire;
 use App\Http\Livewire\Auth\SignUpLivewire;
+use App\Http\Livewire\Send\SendSmsLivewire;
 use App\Http\Livewire\Send\SendEmailLivewire;
 use App\Http\Livewire\User\MyAccountLivewire;
 use App\Http\Livewire\Officer\OfficerLivewire;
@@ -96,6 +97,8 @@ Route::group(['middleware' => ['user.auth']], function(){
         Route::get('/requirement/{requirement_id}/responses', ScholarshipRequirementResponseLivewire::class)->name('scholarship.requirement.responses');
 
         Route::get('/{scholarship_id}/send/email', SendEmailLivewire::class)->name('scholarship.send.email');
+
+        Route::get('/{scholarship_id}/send/sms', SendSmsLivewire::class)->name('scholarship.send.sms');
     });
 
     Route::prefix('/my-account')->group(function () {

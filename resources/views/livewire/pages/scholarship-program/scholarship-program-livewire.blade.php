@@ -50,19 +50,26 @@
                             <strong>Category</strong>
                         </a>
                     @endcan
-                    @can('sendEmails', $scholarship)
+                    @canany(['sendEmails', 'sendSMSes'], $scholarship)
                         <div class="dropdown ml-1">
                             <button class="btn btn-light dropdown-toggle" type="button" 
                                 id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <strong>More</strong>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="{{ route('scholarship.send.email', [$scholarship->id]) }}">
-                                    Send Email
-                                </a>
+                                @can('sendEmails', $scholarship)
+                                    <a class="dropdown-item" href="{{ route('scholarship.send.email', [$scholarship->id]) }}">
+                                        Send Email
+                                    </a>
+                                @endcan
+                                @can('sendSMSes', $scholarship)
+                                    <a class="dropdown-item" href="{{ route('scholarship.send.sms', [$scholarship->id]) }}">
+                                        Send SMS
+                                    </a>
+                                @endcan
                             </div>
                         </div>
-                    @endcan
+                    @endcanany
                 </div>
             </h2>
         </div>

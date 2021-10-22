@@ -122,6 +122,11 @@ class User extends Authenticatable
         return $this->hasMany(EmailSendTo::class, 'email', 'email');
     }
     
+    public function sms_sent_to()
+    {
+        return $this->hasMany(SmsSendTo::class, 'user_id', 'id');
+    }
+    
 
     public function scopeWhereAdmin($query)
     {

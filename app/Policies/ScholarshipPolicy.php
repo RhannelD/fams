@@ -73,6 +73,42 @@ class ScholarshipPolicy
     }
 
     /**
+     * Determine whether the user can send emails from the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Scholarship  $scholarship
+     * @return mixed
+     */
+    public function deleteSendEmails(User $user, Scholarship $scholarship)
+    {
+        return ScholarshipOfficer::where('user_id', $user->id)->where('scholarship_id', $scholarship->id)->whereAdmin()->exists();
+    }
+
+    /**
+     * Determine whether the user can send sms from the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Scholarship  $scholarship
+     * @return mixed
+     */
+    public function sendSMSes(User $user, Scholarship $scholarship)
+    {
+        return User::where('id', $user->id)->whereOfficerOf($scholarship->id)->exists();
+    }
+
+    /**
+     * Determine whether the user can send sms from the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Scholarship  $scholarship
+     * @return mixed
+     */
+    public function deleteSendSMSes(User $user, Scholarship $scholarship)
+    {
+        return ScholarshipOfficer::where('user_id', $user->id)->where('scholarship_id', $scholarship->id)->whereAdmin()->exists();
+    }
+
+    /**
      * Determine whether the user can create models.
      *
      * @param  \App\Models\User  $user

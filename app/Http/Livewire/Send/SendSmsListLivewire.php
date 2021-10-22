@@ -2,13 +2,13 @@
 
 namespace App\Http\Livewire\Send;
 
+use App\Models\SmsSend;
 use Livewire\Component;
-use App\Models\EmailSend;
 use App\Models\Scholarship;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 
-class SendEmailListLivewire extends Component
+class SendSmsListLivewire extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
@@ -33,15 +33,15 @@ class SendEmailListLivewire extends Component
 
     public function hydrate()
     {
-        if ( Auth::guest() || Auth::user()->cannot('sendEmails', $this->get_scholarship()) ) 
+        if ( Auth::guest() || Auth::user()->cannot('sendSMSes', $this->get_scholarship()) ) 
             $this->emitUp('refresh');
     }
 
     public function render()
     {
-        return view('livewire.pages.send.send-email-list-livewire', [
+        return view('livewire.pages.send.send-sms-list-livewire', [
             'scholarship' => $this->get_scholarship(),
-            'send_email_list' => $this->get_send_email_list(),
+            'send_sms_list' => $this->get_send_sms_list(),
             'has_more' => $this->get_has_more(),
         ]);
     }
@@ -51,22 +51,22 @@ class SendEmailListLivewire extends Component
         return Scholarship::find($this->scholarship_id);
     }
 
-    protected function get_send_email_list()
+    protected function get_send_sms_list()
     {
-        return $this->set_send_email_list()
+        return $this->set_sms_email_list()
             ->orderBy('id', 'desc')
             ->paginate($this->show_row);
     }
 
     protected function get_has_more()
     {
-        return $this->show_row < $this->set_send_email_list()->count();
+        return $this->show_row < $this->set_sms_email_list()->count();
     }
 
-    protected function set_send_email_list()
+    protected function set_sms_email_list()
     {
         $search = $this->search;
-        return EmailSend::where('scholarship_id', $this->scholarship_id)
+        return SmsSend::where('scholarship_id', $this->scholarship_id)
             ->when(!empty($search), function ($query) use ($search) {
                 $query->where('message', 'like', "%{$search}%")
                 ->orWhereHas('user', function ($query) use ($search) {
@@ -81,36 +81,36 @@ class SendEmailListLivewire extends Component
             $this->page = 1;
     }
 
-    protected function get_send_email($send_email_id)
+    protected function get_send_sms($send_sms_id)
     {
-        return EmailSend::find($send_email_id);
+        return SmsSend::find($send_sms_id);
     }
 
-    protected function cant_delete_sent_email()
+    protected function cant_delete_sent_sms()
     {
-        return Auth::guest() || Auth::user()->cannot('deleteSendEmails', $this->get_scholarship());
+        return Auth::guest() || Auth::user()->cannot('deleteSendSMSes', $this->get_scholarship());
     }
 
-    public function delete_send_email_confirm($send_email_id)
+    public function delete_send_sms_confirm($send_sms_id)
     {
-        if ( $this->cant_delete_sent_email() || empty($this->get_send_email($send_email_id)) ) 
+        if ( $this->cant_delete_sent_sms() || empty($this->get_send_sms($send_sms_id)) ) 
             return;
         
-        $this->dispatchBrowserEvent('swal:confirm:delete_send_email', [
+        $this->dispatchBrowserEvent('swal:confirm:delete_send_sms', [
             'type' => 'warning',  
             'message' => 'Are you sure?', 
-            'text' => 'If deleted, you will not be able to recover this sent Email!',
-            'send_email_id' => $send_email_id
+            'text' => 'If deleted, you will not be able to recover this sent SMS!',
+            'send_sms_id' => $send_sms_id
         ]);
     }
 
-    public function delete_send_email($send_email_id)
+    public function delete_send_sms($send_sms_id)
     {
-        $send_email = $this->get_send_email($send_email_id);
-        if ( $this->cant_delete_sent_email() || empty($send_email) ) 
+        $send_sms = $this->get_send_sms($send_sms_id);
+        if ( $this->cant_delete_sent_sms() || empty($send_sms) ) 
             return;
-    
-        if ( $send_email->delete() ) 
-            session()->flash('message-success', 'Sent Email successfully deleted.');
+        
+        if ( $send_sms->delete() ) 
+            session()->flash('message-success', 'Sent SMS successfully deleted.');
     }
 }

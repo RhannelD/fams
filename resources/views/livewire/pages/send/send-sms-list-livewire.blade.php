@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <div class="mr-0 ml-auto">
-                    {{ $send_email_list->links() }}
+                    {{ $send_sms_list->links() }}
                 </div>
             </div> 
         </div>
@@ -48,42 +48,42 @@
                             <th></th>
                         </thead>
                         <tbody>
-                            @forelse ($send_email_list as $send_email)
+                            @forelse ($send_sms_list as $send_sms)
                                 <tr class="border-bottom">
                                     <th class="align-middle">
                                         {{ ( ($loop->index + 1) + ( ($show_row * $page ) - $show_row) ) }}
                                     </th>
                                     <td class="align-middle text-nowrap">
-                                        {{ $send_email->user->flname() }}
+                                        {{ $send_sms->user->flname() }}
                                     </td>
                                     <td class="overflow-hidden align-middle text-nowrap" style="max-width: 200px;">
-                                        {{ $send_email->message }}
+                                        {{ $send_sms->message }}
                                     </td>
                                     <td class="text-center align-middle">
-                                        {{ $send_email->sent_to->where('sent', true)->count() }}
+                                        {{ $send_sms->sent_to->where('sent', true)->count() }}
                                     </td>
                                     <td class="text-center align-middle">
-                                        {{ $send_email->sent_to->where('sent', false)->count() }}
+                                        {{ $send_sms->sent_to->where('sent', false)->count() }}
                                     </td>
                                     <td class="text-center align-middle text-nowrap">
-                                        {{ \Carbon\Carbon::parse($send_email->created_at)->format('M d, Y  h:i A') }}
+                                        {{ \Carbon\Carbon::parse($send_sms->created_at)->format('M d, Y  h:i A') }}
                                     </td>
                                     <td class="text-center text-nowrap">
-                                        <button class="btn btn-sm btn-info text-white" type="button" data-toggle="modal" data-target="#email_sent_modal"
-                                            onclick="set_email_send({{ $send_email->id }})"
+                                        <button class="btn btn-sm btn-info text-white" type="button" data-toggle="modal" data-target="#sms_sent_modal"
+                                            onclick="set_sms_send({{ $send_sms->id }})"
                                             >
                                             <i class="fas fa-info-circle"></i>
                                         </button>
-                                        @can('deleteSendEmails', $scholarship)
-                                            <button class="btn btn-sm btn-danger"
-                                                wire:click='delete_send_email_confirm({{ $send_email->id }})'
-                                                wire:target='delete_send_email_confirm, delete_send_email'
+                                        @can('deleteSendSMSes', $scholarship)
+                                            <button class="btn btn-sm btn-danger" id="delete-send-sms-{{ $send_sms->id }}"
+                                                wire:click='delete_send_sms_confirm({{ $send_sms->id }})'
+                                                wire:target='delete_send_sms_confirm, delete_send_sms'
                                                 wire:loading.attr='disabled'
                                                 >
-                                                <span wire:loading.remove wire:target="delete_send_email({{ $send_email->id }})">
+                                                <span wire:loading.remove wire:target="delete_send_sms({{ $send_sms->id }})" id="delete-send-sms-trash-{{ $send_sms->id }}">
                                                     <i class="fas fa-trash"></i>
                                                 </span>
-                                                <span wire:loading wire:target="delete_send_email({{ $send_email->id }})">
+                                                <span wire:loading wire:target="delete_send_sms({{ $send_sms->id }})" id="delete-send-sms-loading-{{ $send_sms->id }}">
                                                     <i class="fas fa-circle-notch fa-spin"></i>
                                                 </span>
                                             </button>
@@ -120,10 +120,10 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         
-        window.addEventListener('swal:confirm:delete_send_email', event => { 
+        window.addEventListener('swal:confirm:delete_send_sms', event => { 
             swal({
               title: event.detail.message,
               text: event.detail.text,
@@ -133,7 +133,7 @@
             })
             .then((willDelete) => {
               if (willDelete) {
-                @this.delete_send_email(event.detail.send_email_id)
+                @this.delete_send_sms(event.detail.send_sms_id)
               }
             });
         });
