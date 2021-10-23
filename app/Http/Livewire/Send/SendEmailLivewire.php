@@ -45,6 +45,8 @@ class SendEmailLivewire extends Component
     {
         $this->scholarship_id = $scholarship_id;
         $this->authorize('sendEmails', $this->get_scholarship());
+        if ( !empty(request()->query('rid')) ) 
+            $this->add_recipient(request()->query('rid'));
     }
 
     public function hydrate()

@@ -19,6 +19,11 @@
             @else
                 {{ $user->flname() }}  
             @endif
+            @if ( $user->unseen_chats )
+                <span class="badge badge-danger">
+                    {{ $user->unseen_chats }}
+                </span>
+            @endif
         </button>
     @empty
         None

@@ -243,5 +243,16 @@ class User extends Authenticatable
         } elseif ( $this->is_officer() ) {
             return ScholarshipOfficerInvite::where('email', $this->email)->whereNull('respond')->count();
         }
+        return 0;
+    }
+
+    public function get_unseen_chat_count()
+    {
+        return UserChat::where('receiver_id', $this->id)->whereNull('seen')->groupBy('receiver_id')->count();
+    }
+
+    public function get_invite_and_unseen_chat_count()
+    {
+        return $this->get_invite_count() + $this->get_unseen_chat_count();
     }
 }

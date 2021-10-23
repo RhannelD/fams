@@ -44,6 +44,8 @@ class SendSmsLivewire extends Component
     {
         $this->scholarship_id = $scholarship_id;
         $this->authorize('sendSMSes', $this->get_scholarship());
+        if ( !empty(request()->query('rid')) ) 
+            $this->add_recipient(request()->query('rid'));
     }
 
     public function hydrate()

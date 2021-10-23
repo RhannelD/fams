@@ -23,7 +23,7 @@
             </thead>
             <tbody>
                 @forelse ($officers as $officer)
-                    <tr>
+                    <tr class="align-middle text-nowrap">
                         @if (Auth::user()->usertype != 'scholar')    
                             <th>
                                 {{ ( ($loop->index + 1) + ( ($show_row * $page ) - $show_row) ) }}
@@ -49,6 +49,9 @@
                                     >
                                     <i class="fas fa-info-circle"></i>
                                 </button>
+                                <a href="{{ route('user.chat', ['rid'=>$officer->id]) }}" class="btn btn-info btn-sm text-white">
+                                    <i class="fas fa-comments"></i>
+                                </a>
                             </td>
                         @else
                             <td>

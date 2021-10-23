@@ -18,6 +18,12 @@ class UserChatListLivewire extends Component
         'set_receiver' => 'set_receiver',
     ];
 
+    public function mount()
+    {
+        if ( !empty(request()->query('rid')) ) 
+            $this->set_receiver(request()->query('rid'));
+    }
+
     public function render()
     {
         return view('livewire.pages.user-chat.user-chat-list-livewire', [
@@ -61,6 +67,15 @@ class UserChatListLivewire extends Component
                     )
                     ORDER BY id DESC LIMIT 1
                 ) as last_chat_id")
+            )
+            ->addSelect(
+                DB::raw("(
+                    select count(user_chats.id) 
+                    from user_chats
+                    where receiver_id = {$user_id} 
+                        and sender_id = users.id
+                        and seen is null
+                ) as unseen_chats")
             )
             ->orderBy('last_chat_id', 'desc')
             ->take($this->convo_count)

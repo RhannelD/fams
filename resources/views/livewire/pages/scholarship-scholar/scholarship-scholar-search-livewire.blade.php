@@ -27,7 +27,7 @@
             </thead>
             <tbody class="accordion">
                 @forelse ($scholars as $scholar)
-                    <tr>
+                    <tr class="align-middle text-nowrap">
                         @if (Auth::user()->usertype != 'scholar')
                             <th scope="row">
                                 {{ ( ($loop->index + 1) + ( ($show_row * $page ) - $show_row) ) }}
@@ -46,7 +46,7 @@
                             <td>
                                 {{ $scholar->user->phone }}
                             </td>
-                            <td class="py-2">
+                            <td class="py-2 text-center">
                                 <button class="btn btn-info btn-sm text-white" type="button" 
                                     data-toggle="collapse" 
                                     data-target="#collapse{{ $scholar->user_id }}" 
@@ -55,7 +55,18 @@
                                     >
                                     <i class="fas fa-info-circle"></i>
                                 </button>
-                                <a href="{{ $scholar->user->facebook->facebook_link }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('user.chat', ['rid'=>$scholar->user_id]) }}" class="btn btn-info btn-sm text-white">
+                                    <i class="fas fa-comments"></i>
+                                </a>
+                                <a href="{{ route('scholarship.send.sms', ['scholarship_id' => $scholarship_id, 'rid'=>$scholar->user_id]) }}" 
+                                    class="btn btn-info btn-sm text-white">
+                                    <i class="fas fa-sms"></i>
+                                </a>
+                                <a href="{{ route('scholarship.send.email', ['scholarship_id' => $scholarship_id, 'rid'=>$scholar->user_id]) }}" 
+                                    class="btn btn-info btn-sm text-white">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                                <a href="{{ $scholar->user->facebook->facebook_link }}" target="blank" class="btn btn-sm btn-primary">
                                     <i class="fab fa-facebook m-0"></i>
                                 </a>
                                 <button wire:click="remove_scholar_confirm({{ $scholar->id }})" class="btn btn-danger btn-sm">

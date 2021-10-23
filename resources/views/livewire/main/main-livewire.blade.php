@@ -86,9 +86,9 @@
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <strong>{{ Auth::user()->firstname . ' ' . Auth::user()->lastname }} </strong>
-                            @if ( Auth::user()->get_invite_count() )
+                            @if ( Auth::user()->get_invite_and_unseen_chat_count() )
                                 <span class="badge badge-danger">
-                                    {{ Auth::user()->get_invite_count() }}
+                                    {{ Auth::user()->get_invite_and_unseen_chat_count() }}
                                 </span>
                             @endif
                         </a>
@@ -100,6 +100,11 @@
 							<a class="dropdown-item" href="{{ route('user.chat') }}">
                                 <i class="fas fa-comments"></i>
                                 Messages
+                                @if ( Auth::user()->get_unseen_chat_count() )
+                                    <span class="badge badge-danger">
+                                        {{ Auth::user()->get_unseen_chat_count() }}
+                                    </span>
+                                @endif
                             </a>
                             @if ( !Auth::user()->is_admin() )
                                 <a class="dropdown-item" 
