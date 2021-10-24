@@ -28,7 +28,7 @@ class SignUpLivewire extends Component
         'user.middlename' => 'required|regex:/^[a-z ,.\'-]+$/i',
         'user.lastname' => 'required|regex:/^[a-z ,.\'-]+$/i',
         'user.gender' => 'required|in:male,female',
-        'user.phone' => "required|unique:users,phone|regex:/(09)[0-9]{9}/",
+        'user.phone' => "required|unique:users,phone|regex:/(09)[0-9]\d{8}$/",
         'user.birthday' => 'required|before:10 years ago|after:100 years ago',
         'user.birthplace' => 'required|max:200',
         'user.religion' => 'max:200',

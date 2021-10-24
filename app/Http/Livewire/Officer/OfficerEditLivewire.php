@@ -24,7 +24,7 @@ class OfficerEditLivewire extends Component
             'user.middlename' => 'required|regex:/^[a-z ,.\'-]+$/i',
             'user.lastname' => 'required|regex:/^[a-z ,.\'-]+$/i',
             'user.gender' => 'required|in:male,female',
-            'user.phone' => "required|unique:users,phone".((isset($this->user_id))?",".$this->user_id:'')."|regex:/(09)[0-9]{9}/",
+            'user.phone' => "required|unique:users,phone".((isset($this->user_id))?",".$this->user_id:'')."|regex:/(09)[0-9]\d{8}$/",
             'user.birthday' => 'required|before:10 years ago|after:100 years ago',
             'user.birthplace' => 'max:200',
             'user.address' => 'max:200',

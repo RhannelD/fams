@@ -134,7 +134,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="c_mother_educational_attainment">Mother's Educational Attainment</label>
-                                    <input wire:model.lazy="user_info.mother_educational_attainment" type="text" class="form-control" id="c_mother_occupation" placeholder="Mother's Educational Attainment">
+                                    <input wire:model.lazy="user_info.mother_educational_attainment" type="text" class="form-control" id="c_mother_educational_attainment" placeholder="Mother's Educational Attainment">
                                     @error('user_info.mother_educational_attainment') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group">
@@ -168,7 +168,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="c_father_educational_attainment">Father's Educational Attainment</label>
-                                    <input wire:model.lazy="user_info.father_educational_attainment" type="text" class="form-control" id="c_father_occupation" placeholder="Father's Educational Attainment">
+                                    <input wire:model.lazy="user_info.father_educational_attainment" type="text" class="form-control" id="c_father_educational_attainment" placeholder="Father's Educational Attainment">
                                     @error('user_info.father_educational_attainment') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group">

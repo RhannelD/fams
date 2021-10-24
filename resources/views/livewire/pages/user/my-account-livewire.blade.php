@@ -4,12 +4,21 @@
         <strong>Your Account</strong>
     </h2>
     <hr>
-    <div class="container-fluid">
-        <h5>
-            <strong>
-                Personal Information
-            </strong>
-        </h5>
+    <div class="container-fluid px-md-3 px-0">
+        <div class="d-flex">
+            <h4 class="my-auto ml-0 mr-auto">
+                <strong>
+                    Personal Information
+                </strong>
+            </h4>
+            <div class="mr-0">
+                <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#update-personal-info"
+                    wire:click="$emitTo('user.update-personal-information', 'reset_values')"
+                    >
+                    <i class="fas fa-user-edit"></i>
+                </button>
+            </div>
+        </div>
         <div class="row">
             <div class="col-auto">
                 <table>
@@ -19,6 +28,14 @@
                         </td>
                         <td>
                             {{ $user->fmlname() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Email: 
+                        </td>
+                        <td>
+                            {{ $user->email }}
                         </td>
                     </tr>
                     <tr>
@@ -59,14 +76,6 @@
                     </tr>
                     <tr>
                         <td>
-                            Email: 
-                        </td>
-                        <td>
-                            {{ $user->email }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
                             Birth Date: 
                         </td>
                         <td>
@@ -81,12 +90,20 @@
                             {{ $user->birthplace }}
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            Address: 
+                        </td>
+                        <td>
+                            {{ $user->address }}
+                        </td>
+                    </tr>
                 </table>
             </div>
         </div>
+        <hr class="my-2">
     </div>
-    <hr>
-    @if ( $user->is_scholar() && $user->scholarship_scholars->count()>0 )
+    @if ( $user->is_scholar() || $user->scholarship_scholars->count()>0 )
         @include('livewire.pages.user.my-account-scholarship-scholar-livewire')
         <hr>
     @endif
@@ -95,11 +112,6 @@
         <hr>
     @endif
     <div class="d-flex justify-content-end">
-        <button class="btn btn-primary mx-1" data-toggle="modal" data-target="#update-facebook-modal"
-            wire:click="$emitTo('user.change-facebook-livewire', 'reset_values')"
-            >
-            Update Facebook
-        </button>
         <button class="btn btn-primary mx-1" data-toggle="modal" data-target="#update-email-modal"
             wire:click="$emitTo('user.change-email-livewire', 'reset_values')"
             >
@@ -117,11 +129,15 @@
 
     @livewire('user.change-password-livewire')
     @livewire('user.change-email-livewire')
+    @livewire('user.update-personal-information')
     @if ( Auth::user()->is_scholar() )
         @livewire('user.change-facebook-livewire')
     @endif
 
     <script>
+		window.addEventListener('change-personal-info-form', event => {
+			$("#update-personal-info").modal(event.detail.action);
+		});
 		window.addEventListener('change-password-form', event => {
 			$("#change-password-modal").modal(event.detail.action);
 		});
