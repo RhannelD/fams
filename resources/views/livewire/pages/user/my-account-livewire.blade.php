@@ -132,6 +132,8 @@
     @livewire('user.update-personal-information')
     @if ( Auth::user()->is_scholar() )
         @livewire('user.change-facebook-livewire')
+        @livewire('user.update-education-information-livewire')
+        @livewire('user.update-family-information-livewire')
     @endif
 
     <script>
@@ -146,6 +148,12 @@
 		});
 		window.addEventListener('change-facebook-form', event => {
 			$("#update-facebook-modal").modal(event.detail.action);
+		});
+		window.addEventListener('update-family-info-form', event => {
+			$("#update-family-info-modal").modal(event.detail.action);
+		});
+		window.addEventListener('update-education-info-form', event => {
+			$("#update-education-info-modal").modal(event.detail.action);
 		});
     </script>
 @endisset

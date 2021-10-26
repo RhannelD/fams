@@ -71,7 +71,11 @@
                 
                 <div class="card mb-3 mt-2 shadow requirement-item-hover">
                     <div class="card-body">
-                        <h4>{{ $scholar_response->user->flname() }}</h4>
+                        <h4 class="ml-0">
+                            <a data-toggle="collapse" href="#collapse-scholar-info" role="button" aria-expanded="false" aria-controls="collapse-scholar-info">
+                                {{ $scholar_response->user->flname() }}
+                            </a>
+                        </h4>
                         <table>
                             <tr>
                                 <td>Submitted at:</td>
@@ -99,6 +103,11 @@
                                 <td></td>
                             </tr>
                         </table>
+                        <div class="collapse" id="collapse-scholar-info">
+                            <div class="card card-body py-2">
+                                @include('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-view-scholar-livewire')
+                            </div>
+                        </div>
                     </div>
                 </div>
 

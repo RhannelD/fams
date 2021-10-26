@@ -25,11 +25,49 @@
     <div class="d-flex">
         <h4 class="my-auto ml-0 mr-auto">
             <strong>
+                Education Information
+            </strong>
+        </h4>
+        <div class="mr-0">
+            <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#update-education-info-modal"
+                wire:click="$emitTo('user.update-education-information-livewire', 'reset_values')"
+                >
+                <i class="fas fa-edit"></i>
+            </button>
+        </div>
+    </div>
+    <table>
+        <tbody>
+            <tr>
+                <td>School:</td>
+                <td>{{ $user->scholar_info->school->school }}</td>
+            </tr>
+            <tr>
+                <td>Course:</td>
+                <td>{{ $user->scholar_info->course->course }}</td>
+            </tr>
+            <tr>
+                <td>Year:</td>
+                <td>{{ $user->scholar_info->year }}</td>
+            </tr>
+            <tr>
+                <td>Semester:</td>
+                <td>{{ $user->scholar_info->semester }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr class="my-2">
+
+    <div class="d-flex">
+        <h4 class="my-auto ml-0 mr-auto">
+            <strong>
                 Family Information
             </strong>
         </h4>
         <div class="mr-0">
-            <button class="btn btn-sm btn-primary">
+            <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#update-family-info-modal"
+                wire:click="$emitTo('user.update-family-information-livewire', 'reset_values')"
+                >
                 <i class="fas fa-edit"></i>
             </button>
         </div>

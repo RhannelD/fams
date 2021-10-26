@@ -97,7 +97,11 @@ class ScholarshipOfficerPolicy
      */
     public function delete(User $user, ScholarshipOfficer $scholarshipOfficer)
     {
-        return $user->id != $scholarshipOfficer->user_id && ScholarshipOfficer::where('user_id', $user->id)->whereAdmin()->exists();
+        return $user->id != $scholarshipOfficer->user_id 
+            && ScholarshipOfficer::where('user_id', $user->id)
+                ->whereAdmin()
+                ->where('scholarship_id', $scholarshipOfficer->scholarship_id)
+                ->exists();
     }
 
     /**

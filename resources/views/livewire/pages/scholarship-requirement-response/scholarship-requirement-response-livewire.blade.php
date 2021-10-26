@@ -68,9 +68,11 @@
                             </div>
                         </div>
                     @endif
-                    <button class="btn btn-info mx-1 text-white mr-0 ml-sm-auto mt-1" wire:click="unview_response">
-                        View Table
-                    </button>
+                    @isset($index)
+                        <button class="btn btn-info mx-1 text-white mr-0 ml-sm-auto mt-1" wire:click="unview_response">
+                            View Table
+                        </button>
+                    @endisset
                 </div>
             </div>
         </div>

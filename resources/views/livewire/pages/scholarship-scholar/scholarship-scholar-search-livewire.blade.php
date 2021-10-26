@@ -66,9 +66,11 @@
                                     class="btn btn-info btn-sm text-white">
                                     <i class="fas fa-envelope"></i>
                                 </a>
-                                <a href="{{ $scholar->user->facebook->facebook_link }}" target="blank" class="btn btn-sm btn-primary">
-                                    <i class="fab fa-facebook m-0"></i>
-                                </a>
+                                @isset($scholar->user->facebook)
+                                    <a href="{{ $scholar->user->facebook->facebook_link }}" target="blank" class="btn btn-sm btn-primary">
+                                        <i class="fab fa-facebook m-0"></i>
+                                    </a>
+                                @endisset
                                 <button wire:click="remove_scholar_confirm({{ $scholar->id }})" class="btn btn-danger btn-sm">
                                     <i class="fas fa-user-times"></i>
                                 </button>

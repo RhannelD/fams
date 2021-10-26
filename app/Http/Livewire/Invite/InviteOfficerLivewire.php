@@ -59,7 +59,7 @@ class InviteOfficerLivewire extends Component
             ScholarshipOfficer::firstOrCreate([
                 'user_id' => Auth::id(),
                 'scholarship_id' => $invite->scholarship_id,
-                'position_id' => 2,
+                'position_id' => $invite->scholarship->officers->count()? 2: 1,
             ]);
             $this->emitTo('add-ins.navbar-scholarship-livewire', 'refresh');
         }
