@@ -173,9 +173,9 @@ class SignUpLivewire extends Component
 
         if (Auth::attempt(['email' => $email, 'password' => $this->password])) {
             if (Auth::user()->usertype == 'scholar') {
-                redirect()->route('scholarship');
+                redirect()->route('scholar.scholarship');
             } else {
-                redirect()->route('dashboard');
+                redirect()->route('scholarship');
             }
             return;
         }

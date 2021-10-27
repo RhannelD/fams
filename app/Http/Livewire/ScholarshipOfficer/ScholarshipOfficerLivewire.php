@@ -4,6 +4,7 @@ namespace App\Http\Livewire\ScholarshipOfficer;
 
 use App\Models\User;
 use Livewire\Component;
+use App\Models\Scholarship;
 use Livewire\WithPagination;
 use App\Models\ScholarshipOfficer;
 use Illuminate\Support\Facades\DB;
@@ -42,6 +43,7 @@ class ScholarshipOfficerLivewire extends Component
     public function mount($scholarship_id)
     {
         $this->scholarship_id = $scholarship_id;
+        abort_if(!Scholarship::find($scholarship_id), '404');
         $this->authorize('viewAny', [ScholarshipOfficer::class, $scholarship_id]);
     }
     

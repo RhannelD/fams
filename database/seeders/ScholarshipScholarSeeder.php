@@ -17,26 +17,31 @@ class ScholarshipScholarSeeder extends Seeder
      */
     public function run()
     {
-        $scholars = User::where('usertype', 'scholar')->get();
+        $scholarships = Scholarship::with('categories')->get();
 
-        $scholarships = Scholarship::all();
+        $test_scholar = User::whereScholar()->where('email', 'rendalida@gmail.com')->first();
+        if ( isset($test_scholar) ) {
+            for ($index=0; $index < 2; $index++) { 
+                ScholarshipScholar::factory()->create([   
+                    'user_id'       => $test_scholar->id,
+                    'category_id'   => $scholarships[$index]->categories[0]->id,
+                ]);
+            }
+        }
+
+        $scholars = User::whereScholar()->where('email', '!=', 'rendalida@gmail.com')->get();
 
         foreach ($scholars as $scholar) {
-            if (rand(1, 10) == 1) {
+            if (rand(1, 12) == 1) {
                 continue;
             }
 
             foreach ($scholarships as $scholarship) {
-                if (rand(1, 4) == 1) {
-                    $categories = ScholarshipCategory::where('scholarship_id', $scholarship->id)->get();
-
-                    $random_id = rand(0, 2);
-                    if (isset($categories[$random_id])) {
-                        ScholarshipScholar::factory()->create([   
-                            'user_id'       => $scholar->id,
-                            'category_id'   => $categories[$random_id]->id,
-                        ]);
-                    }                    
+                if (rand(1, 6) == 1) {    
+                    ScholarshipScholar::factory()->create([
+                        'user_id'       => $scholar->id,
+                        'category_id'   => $scholarship->categories[rand(0, count($scholarship->categories)-1)]->id,
+                    ]);
                 }
             }
         }

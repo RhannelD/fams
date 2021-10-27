@@ -4,6 +4,7 @@ namespace App\Http\Livewire\ScholarshipRequirement;
 
 use Carbon\Carbon;
 use Livewire\Component;
+use App\Models\Scholarship;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,7 @@ class ScholarshipRequirementLivewire extends Component
     public function mount($scholarship_id)
     {
         $this->scholarship_id = $scholarship_id;
+        abort_if(!Scholarship::find($scholarship_id), '404');
         $this->authorize('viewAny', [ScholarshipRequirement::class, $scholarship_id]);
     }
 

@@ -56,7 +56,7 @@
     </div>
 
     @if( $scholar_response->comments->count() != 0 )    
-        <div class="card-footer bg-white">
+        <div class="card-footer bg-white" wire:poll.8000ms>
 
             @if( is_null($scholar_response->submit_at) )  
                 <div class="alert alert-info">
@@ -92,7 +92,7 @@
         </div>
     @endif
 
-    <div class="card-footer bg-white" id="requirement-response-comment">
+    <div wire:ignore class="card-footer bg-white" id="requirement-response-comment">
         @livewire('requirement.requirement-response-comment-livewire', [$scholar_response->id], key('response-comment-'.time().$scholar_response->id))
     </div>
 </div>

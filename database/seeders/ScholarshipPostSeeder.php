@@ -40,9 +40,7 @@ class ScholarshipPostSeeder extends Seeder
         // For new Scholars fake applications of firsy scholar
         foreach ($scholarships as $scholarship) {
             $scholarship_id =  $scholarship->id;
-            $officer = User::whereHas('scholarship_officers', function ($query) use ($scholarship_id) {
-                    $query->where('scholarship_id', $scholarship_id);
-                })->get();
+            $officers = User::whereOfficerOf($scholarship_id)->get();
 
             $date = Carbon::parse('2018-01-01 00:00:00')
                 ->subMonths(rand(0, 2))
@@ -52,10 +50,14 @@ class ScholarshipPostSeeder extends Seeder
                 ->format('Y-m-d h:i:s');
 
             ScholarshipPost::factory()->create([   
-                'user_id' => $officer[(rand(0, (count($officer)-1)))],
+                'user_id' => $officers[(rand(0, (count($officers)-1)))],
                 'scholarship_id' => $scholarship_id,
                 'title' => "We are looking for new scholars!",
-                'post' => '<h4><strong>We have available slots</strong></h4><p>To those who are looking for scholarship, we have available slots for you. Just accomplish the forms linked down below to submit your requirements.&nbsp;</p><p>Thank you.</p>',
+                'post' => '
+                    <h4><strong>We have available slots</strong></h4>
+                    <p>To those who are looking for scholarship, we have available slots for you. Just accomplish the forms linked down below to submit your requirements.&nbsp;</p>
+                    <p>Thank you.</p>
+                    ',
                 'promote' => true,
                 'created_at' => $date,
                 'updated_at' => $date,
@@ -65,9 +67,7 @@ class ScholarshipPostSeeder extends Seeder
         // For the Renewal Scholars
         foreach ($scholarships as $scholarship) {
             $scholarship_id =  $scholarship->id;
-            $officer = User::whereHas('scholarship_officers', function ($query) use ($scholarship_id) {
-                    $query->where('scholarship_id', $scholarship_id);
-                })->get();
+            $officers = User::whereOfficerOf($scholarship_id)->get();
 
             $year_now = Carbon::today()->format('Y');
             $date_now = Carbon::today()->format('Y-m-d h:i:s');
@@ -80,27 +80,30 @@ class ScholarshipPostSeeder extends Seeder
                     $date_after  = $year.$mdt['after'];
                     $date_before = $year.$mdt['before'];
 
+                    $date_before_changed = $date_now < $date_before;
                     if ( $date_now < $date_after ) {
                         break;
-                    } elseif ( $date_now < $date_before ) {
+                    } elseif ( $date_before_changed ) {
                         $date_before = $date_now;
                     }
                     
                     $after  = Carbon::parse($date_after);
                     $before = Carbon::parse($date_before);
                     $random_days = rand(0, $before->diffInDays($after));
-                    $random_date = $after->addDays($random_days)
-                        ->addHours(rand(0, 10))
-                        ->subHour(rand(0, 10))
-                        ->addMinutes(rand(0, 59))
-                        ->subMinute(rand(0, 59))
-                        ->format('Y-m-d h:i:s');
+
+                    $temp_random_date = $after->subHour(rand(0, 10))->subMinute(rand(0, 59));
+                    if ( !$date_before_changed ) {
+                        $temp_random_date = $temp_random_date->addDays($random_days)
+                            ->addHours(rand(0, 10))
+                            ->addMinutes(rand(0, 59));
+                    }
+                    $random_date = $temp_random_date->format('Y-m-d h:i:s');
                     
                     $school_year = $semester=='1st'? (int)$year: ((int)$year)-1;
                     $academic_year = $school_year.'-'.($school_year+1);
 
                     ScholarshipPost::factory()->create([   
-                        'user_id' => $officer[(rand(0, (count($officer)-1)))],
+                        'user_id' => $officers[(rand(0, (count($officers)-1)))],
                         'scholarship_id' => $scholarship_id,
                         'title' => "Scholarship Renewal for $academic_year $semester semester",
                         'post' => 'To all of our beloved scholars, you may now submit all of your requirements to your respective links.',
@@ -111,15 +114,13 @@ class ScholarshipPostSeeder extends Seeder
 
                     // Just a random post
                     if (rand(0,2) != 1) {
-                        $random_date = $after->addDays($random_days+rand(2,7))
-                            ->addHours(rand(0, 10))
-                            ->subHour(rand(0, 10))
-                            ->addMinutes(rand(0, 59))
+                        $random_date = $temp_random_date
+                            ->subHour(rand(0, 13))
                             ->subMinute(rand(0, 59))
                             ->format('Y-m-d h:i:s');
                             
                         ScholarshipPost::factory()->create([   
-                            'user_id' => $officer[(rand(0, (count($officer)-1)))],
+                            'user_id' => $officers[(rand(0, (count($officers)-1)))],
                             'scholarship_id' => $scholarship_id,
                             'title' => "Just a simple announcement!",
                             'created_at' => $random_date,
@@ -134,14 +135,12 @@ class ScholarshipPostSeeder extends Seeder
         // For new applicants
         foreach ($scholarships as $scholarship) {
             $scholarship_id =  $scholarship->id;
-            $officer = User::whereHas('scholarship_officers', function ($query) use ($scholarship_id) {
-                    $query->where('scholarship_id', $scholarship_id);
-                })->get();
+            $officers = User::whereOfficerOf($scholarship_id)->get();
 
             $date = Carbon::today()->subDays(rand(3, 30))->format('Y-m-d h:i:s');
 
             ScholarshipPost::factory()->create([   
-                'user_id' => $officer[(rand(0, (count($officer)-1)))],
+                'user_id' => $officers[(rand(0, (count($officers)-1)))],
                 'scholarship_id' => $scholarship_id,
                 'title' => "We are looking for new scholars!",
                 'post' => '<h4><strong>We have available slots</strong></h4><p>To those who are looking for scholarship, we have available slots for you. Just accomplish the forms linked down below to submit your requirements.&nbsp;</p><p>Thank you.</p>',

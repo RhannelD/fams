@@ -30,6 +30,7 @@ class ScholarshipCategoryLivewire extends Component
     public function mount($scholarship_id)
     {
         $this->scholarship_id = $scholarship_id;
+        abort_if(!Scholarship::find($scholarship_id), '404');
         $this->authorize('viewAny', [ScholarshipCategory::class, $scholarship_id]);
     }
     

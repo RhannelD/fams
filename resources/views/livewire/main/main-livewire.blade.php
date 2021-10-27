@@ -75,7 +75,7 @@
             <button class="btn btn-outline-secondary disabled" id="menu-toggle">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-brand ml-2 font-weight-bold">FAMS</div>
+            <div class="navbar-brand ml-2 font-weight-bold">{{ config('app.name') }}</div>
 
             <button type="" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse1">
                 <i class="fas fa-ellipsis-v"></i>

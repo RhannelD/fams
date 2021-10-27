@@ -34,7 +34,7 @@
                 </div>
                 
                 <div class="card mt-2 shadow">
-                    <div class="card-body">
+                    <div class="card-body" wire:poll.8000ms>
                         @isset($scholar_response->comments)
                         <h5 class="mx-2">Comments</h5>
                         <hr class="my-2">
@@ -61,7 +61,7 @@
                         @endforeach
                         @endisset
                     </div>
-                    <div class="card-footer bg-white">
+                    <div wire:ignore class="card-footer bg-white" id="requirement-response-comment">
                         @livewire('requirement.requirement-response-comment-livewire', [$response_id], key('response-comment-'.time().$response_id))
                     </div>
                 </div>
@@ -166,7 +166,7 @@
                                         </div>
                                         
                                         @if (isset($file_extension) && $is_desktop && $file_extension == 'pdf')
-                                            <div class="collapse"  id="collapsefile_{{ $response_file->id }}">
+                                            <div wire:ignore.self class="collapse"  id="collapsefile_{{ $response_file->id }}">
                                                 <hr class="mb-1 mt-2">
                                                 <iframe src="{{ Storage::disk('files')->url($response_file->file_url) }}" frameborder="0"
                                                     class="btn-block" style="height: 800px;">

@@ -16,35 +16,45 @@ class ScholarshipOfficerSeeder extends Seeder
      */
     public function run()
     {
-        $officers = User::where('usertype', 'officer')->get();
+        $officers = User::whereOfficer()->get();
 
         $scholarships = Scholarship::all();
+        $scholarships_count = count($scholarships);
 
-        $fill_admins = true;
+        $index = 0;
+        foreach ($officers as $key => $officer) {
+            if ( $index >= $scholarships_count ) 
+                break;
+            
+            $user_id = $officer->id;
+            ScholarshipOfficer::factory()->create([   
+                'user_id'       => $user_id,
+                'scholarship_id'=> $scholarships[$index]->id,
+                'position_id'   => 1,
+            ]);
+            
+            if ( in_array($user_id, [2, 3]) ) {
+                ScholarshipOfficer::factory()->create([   
+                    'user_id'       => $user_id,
+                    'scholarship_id'=> $scholarships[$index+1]->id,
+                ]);
+            }
+            $index++;
+        }
+
+        $officers = User::whereOfficer()->doesntHave('scholarship_officers')->get();
         $officers_count = count($officers);
-        $officers_index = 0;
-
-        while ($officers_index < $officers_count) { 
+        for ($index=0; $index < $officers_count; $index++) { 
             foreach ($scholarships as $scholarship) {
-                if ($fill_admins) {
-                    ScholarshipOfficer::factory()->create([   
-                        'user_id'       => $officers[$officers_index]->id,
-                        'scholarship_id'=> $scholarship->id,
-                        'position_id'   => 1,
-                    ]);
-
-                    $officers_index++;
-                    continue;
-                }
+                if ( !($index < $officers_count) ) 
+                    break;
 
                 ScholarshipOfficer::factory()->create([   
-                    'user_id'       => $officers[$officers_index]->id,
+                    'user_id'       => $officers[$index]->id,
                     'scholarship_id'=> $scholarship->id,
                 ]);
-                $officers_index++;
+                $index++;
             }
-
-            $fill_admins = false;
         }
     }
 }

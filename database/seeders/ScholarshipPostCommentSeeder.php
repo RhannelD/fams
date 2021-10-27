@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\ScholarshipPost;
+use Illuminate\Database\Seeder;
 use App\Models\ScholarshipPostComment;
 
 class ScholarshipPostCommentSeeder extends Seeder
@@ -19,21 +20,26 @@ class ScholarshipPostCommentSeeder extends Seeder
         $posts = ScholarshipPost::all();
 
         foreach ($posts as $post) {
-            $officers = User::select('users.*')
-                ->join('scholarship_officers', 'users.id', '=', 'scholarship_officers.user_id')
-                ->where('scholarship_officers.scholarship_id', $post->scholarship_id);
-
-            $users = User::select('users.*')
-                ->join('scholarship_scholars', 'users.id', '=', 'scholarship_scholars.user_id')
-                ->join('scholarship_categories', 'scholarship_scholars.category_id', '=', 'scholarship_categories.id')
-                ->where('scholarship_categories.scholarship_id', $post->scholarship_id)
-                ->union($officers)
+            $scholarship_id = $post->scholarship_id;
+            $users = User::whereOfficerOf($scholarship_id)
+                ->orWhere(function ($query) use ($scholarship_id) {
+                    $query->whereScholarOf($scholarship_id);
+                })
                 ->get();
 
+            $post_created_at = Carbon::parse($post->created_at);
+
             for ($comment_count=0; $comment_count < rand(0, 30); $comment_count++) { 
+                $post_created_at = $post_created_at
+                    ->addHours(rand(0, 10))
+                    ->addMinutes(rand(0, 59));
+
+                $date = $post_created_at->format('Y-m-d h:i:s');
                 ScholarshipPostComment::factory()->create([   
                     'user_id' => $users[rand(0, (count($users)-1))]->id,
                     'post_id' => $post->id,
+                    'created_at' => $date,
+                    'updated_at' => $date,
                 ]);
             }
         }

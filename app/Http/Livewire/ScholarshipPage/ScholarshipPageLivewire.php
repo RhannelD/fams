@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\ScholarshipPage;
 
 use Livewire\Component;
+use App\Models\Scholarship;
 use App\Models\ScholarshipPost;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,7 @@ class ScholarshipPageLivewire extends Component
     public function mount($scholarship_id)
     {
         $this->scholarship_id = $scholarship_id;
-
+        abort_if(!Scholarship::find($scholarship_id), '404');
         $this->authorize('viewAny', [ScholarshipPost::class, $scholarship_id]);
     }
 

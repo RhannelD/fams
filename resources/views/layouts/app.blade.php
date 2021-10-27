@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>FAMS</title>
+    <title>{{ config('app.name') }}</title>
     <link rel="icon" href="{{ asset('img/scholarship-icon.png') }}">
 
     <!-- Scripts -->

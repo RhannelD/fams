@@ -64,6 +64,80 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $users = array(
+            array('Firstname' => 'Alzeo','Lastname' => 'Landicho','Gender' => 'male','Email' => 'alzeo.landicho@example.com'),
+            array('Firstname' => 'Alvin','Lastname' => 'Dalida','Gender' => 'male','Email' => 'alvin.dalida@example.com'),
+            array('Firstname' => 'Analy','Lastname' => 'Dalida','Gender' => 'female','Email' => 'analy.dalida@example.com'),
+            array('Firstname' => 'Jaypee','Lastname' => 'Venzon','Gender' => 'male','Email' => 'jaypee.venzon@example.com'),
+            array('Firstname' => 'Daisy','Lastname' => 'Elposar','Gender' => 'male','Email' => 'daisy.elposar@example.com'),
+            array('Firstname' => 'Nikki Sofia','Lastname' => 'Mailig','Gender' => 'female','Email' => 'nikkisofia.mailig@example.com'),
+            array('Firstname' => 'Ryan','Lastname' => 'De Luna','Gender' => 'male','Email' => 'ryan.deluna@example.com'),
+            array('Firstname' => 'Jayrald','Lastname' => 'Holgado','Gender' => 'male','Email' => 'jayrald.holgado@example.com'),
+            array('Firstname' => 'Donnalyn','Lastname' => 'Cirilo','Gender' => 'female','Email' => 'donnalyn.cirilo@example.com'),
+            array('Firstname' => 'Michael','Lastname' => 'Dimaala','Gender' => 'male','Email' => 'michael.dimaala@example.com'),
+            array('Firstname' => 'Ian Glenn','Lastname' => 'Mercado','Gender' => 'male','Email' => 'ianglenn.mercado@example.com'),
+            array('Firstname' => 'Judith','Lastname' => 'Manalo','Gender' => 'female','Email' => 'judith.manalo@example.com'),
+            array('Firstname' => 'John Paul','Lastname' => 'Macalindong','Gender' => 'male','Email' => 'johnpaul.macalindong@example.com'),
+            array('Firstname' => 'Ronniel','Lastname' => 'Buhay','Gender' => 'male','Email' => 'ronniel.buhay@example.com'),
+            array('Firstname' => 'Jhanzen','Lastname' => 'Lopez','Gender' => 'male','Email' => 'jhanzen.lopez@example.com'),
+            array('Firstname' => 'John Alex','Lastname' => 'Binuya','Gender' => 'male','Email' => 'johnalex.binuya@example.com'),
+            array('Firstname' => 'Ma. Vanessa','Lastname' => 'Bengcang','Gender' => 'female','Email' => 'mavanessa.bengcang@example.com'),
+            array('Firstname' => 'Angelo Kim','Lastname' => 'Espina','Gender' => 'male','Email' => 'angelokim.espina@example.com'),
+            array('Firstname' => 'Aila Mei','Lastname' => 'Atienza','Gender' => 'female','Email' => 'ailamei.atienza@example.com'),
+            array('Firstname' => 'Lemuel','Lastname' => 'Capacia','Gender' => 'male','Email' => 'lemuel.capacia@example.com'),
+            array('Firstname' => 'April Rose','Lastname' => 'Catena','Gender' => 'female','Email' => 'aprilrose.catena@example.com'),
+            array('Firstname' => 'Jean Dale','Lastname' => 'Malabanan','Gender' => 'female','Email' => 'jeandale.malabanan@example.com'),
+            array('Firstname' => 'Nel','Lastname' => 'Tolentino','Gender' => 'male','Email' => 'nel.tolentino@example.com'),
+            array('Firstname' => 'Brandon','Lastname' => 'Cabatian','Gender' => 'male','Email' => 'brandon.cabatin@example.com'),
+            array('Firstname' => 'Ailyn','Lastname' => 'Data','Gender' => 'female','Email' => 'ailyn.data@example.com'),
+            array('Firstname' => 'Dhenmark','Lastname' => 'Ignaco','Gender' => 'male','Email' => 'dhenmark.ignaco@example.com'),
+            array('Firstname' => 'Aldwin','Lastname' => 'Zafra','Gender' => 'male','Email' => 'aldwin.zafra@example.com'),
+            array('Firstname' => 'Weljun','Lastname' => 'De Liola','Gender' => 'male','Email' => 'weljun.deliola@example.com'),
+            array('Firstname' => 'Noel','Lastname' => 'Carandang','Gender' => 'male','Email' => 'noel.carandang@example.com'),
+            array('Firstname' => 'Dharwyn','Lastname' => 'Buhay','Gender' => 'male','Email' => 'dharwyn.buhay@example.com'),
+            array('Firstname' => 'Edward','Lastname' => 'Erna','Gender' => 'male','Email' => 'edward.erna@example.com'),
+            array('Firstname' => 'Alexandra Gheil','Lastname' => 'Emaas','Gender' => 'female','Email' => 'alexandragheil.emaas@example.com'),
+            array('Firstname' => 'Rizzalyn','Lastname' => 'Ramirez','Gender' => 'female','Email' => 'rizzalyn.ramirez@example.com'),
+            array('Firstname' => 'Nicole','Lastname' => 'Bascon','Gender' => 'female','Email' => 'nicole.bascon@example.com'),
+            array('Firstname' => 'Iver','Lastname' => 'Mulingbayan','Gender' => 'female','Email' => 'iver.mulingbayan@example.com'),
+            array('Firstname' => 'Karen','Lastname' => 'Bayaborda','Gender' => 'female','Email' => 'karen.bayaborda@example.com'),
+            array('Firstname' => 'Aljhon','Lastname' => 'Mulingbayan','Gender' => 'male','Email' => 'aljhon.mulingbayan@example.com'),
+            array('Firstname' => 'Francis','Lastname' => 'Andino','Gender' => 'male','Email' => 'francis.andino@example.com'),
+            array('Firstname' => 'Jalem','Lastname' => 'Manalastas','Gender' => 'male','Email' => 'jalem.manalastas@example.com'),
+            array('Firstname' => 'Salvador','Lastname' => 'Todoc','Gender' => 'male','Email' => 'salvador.todoc@example.com'),
+            array('Firstname' => 'Janine','Lastname' => 'Cornejo','Gender' => 'female','Email' => 'janine.cornejo@example.com'),
+            array('Firstname' => 'Menalyn','Lastname' => 'Mendoza','Gender' => 'female','Email' => 'menalyn.mendoza@example.com'),
+            array('Firstname' => 'Alfred','Lastname' => 'Mendoza','Gender' => 'male','Email' => 'alfred.mendoza@example.com'),
+            array('Firstname' => 'Kent Arvin','Lastname' => 'Berbie','Gender' => 'male','Email' => 'kentarvin.berbie@example.com'),
+            array('Firstname' => 'John Neri','Lastname' => 'Comeso','Gender' => 'male','Email' => 'johnneri.comeso@example.com'),
+            array('Firstname' => 'Neil','Lastname' => 'Daria','Gender' => 'male','Email' => 'neil.daria@example.com'),
+            array('Firstname' => 'Marcel','Lastname' => 'Argente','Gender' => 'female','Email' => 'marcel.argente@example.com'),
+            array('Firstname' => 'Alyssa','Lastname' => 'Rada','Gender' => 'female','Email' => 'alyssa.rada@example.com'),
+            array('Firstname' => 'Orlando','Lastname' => 'Dilag','Gender' => 'male','Email' => 'orlando.dilag@example.com'),
+            array('Firstname' => 'Melissa','Lastname' => 'Erna','Gender' => 'female','Email' => 'melissa.erna@example.com'),
+            array('Firstname' => 'Keyzy Rose','Lastname' => 'Dime','Gender' => 'female','Email' => 'keyzyrose.dime@example.com'),
+            array('Firstname' => 'Jessa ','Lastname' => 'Mendoza','Gender' => 'female','Email' => 'jessa.mendoza@example.com'),
+            array('Firstname' => 'Kimberly','Lastname' => 'Oronico','Gender' => 'female','Email' => 'kimberly.oronico@example.com'),
+            array('Firstname' => 'John Kevin','Lastname' => 'Canha','Gender' => 'male','Email' => 'johnkevin.canha@example.com'),
+            array('Firstname' => 'Kenneth','Lastname' => 'Varias','Gender' => 'male','Email' => 'kenneth.varias@example.com'),
+            array('Firstname' => 'Rizza','Lastname' => 'Frane','Gender' => 'female','Email' => 'rizza.frane@example.com'),
+            array('Firstname' => 'Jessie','Lastname' => 'Andino','Gender' => 'female','Email' => 'jessie.andino@example.com'),
+            array('Firstname' => 'Clarissa','Lastname' => 'Santos','Gender' => 'female','Email' => 'clarissa.santos@example.com'),
+            array('Firstname' => 'Ryan','Lastname' => 'De Guzman','Gender' => 'male','Email' => 'ryan.deguzman@example.com'),
+            array('Firstname' => 'Realyn','Lastname' => 'Mercado','Gender' => 'female','Email' => 'realyn.mercado@example.com')
+        );
+
+
+        foreach ($users as $key => $user) {
+            echo '['.'<br>';
+
+            echo "'firstname'     => '{$user['Firstname']}',".'<br>';
+            echo "'lastname'      => '{$user['Lastname']}',".'<br>';
+            echo "'gender'        => '{$user['Gender']}',".'<br>';
+            echo "'email'         => '{$user['Email']}',".'<br>';
+
+            echo '],'.'<br>';
+        }
 
         // DB::enableQueryLog();
         // $user_id = Auth::id();

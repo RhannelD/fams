@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\ScholarshipScholar;
 
 use Livewire\Component;
+use App\Models\Scholarship;
 use Livewire\WithPagination;
 use App\Models\ScholarshipScholar;
 use Illuminate\Support\Facades\DB;
@@ -48,6 +49,7 @@ class ScholarshipScholarLivewire extends Component
     public function mount($scholarship_id)
     {
         $this->scholarship_id = $scholarship_id;
+        abort_if(!Scholarship::find($scholarship_id), '404');
         $this->authorize('viewAny', [ScholarshipScholar::class, $this->scholarship_id]);
     }
     

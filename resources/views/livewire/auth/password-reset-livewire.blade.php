@@ -3,7 +3,7 @@
         <a class="navbar-brand text-light" href="{{ route('index') }}">
             <img src="{{ asset('img/scholarship-icon.png') }}" width="30" height="30" alt="" style="margin-top: -5px;">
             <Strong>
-                FAMS
+                {{ config('app.name') }}
             </Strong>
         </a>
     </nav>

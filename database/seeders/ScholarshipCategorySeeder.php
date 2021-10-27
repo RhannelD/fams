@@ -15,18 +15,6 @@ class ScholarshipCategorySeeder extends Seeder
      */
     public function run()
     {
-        $scholarships = Scholarship::all();
-
-        for ($num=0; $num < 3; $num++) { 
-            foreach ($scholarships as $scholarship) {
-                if ($num != 0 && rand(1,3) == 1) {
-                    continue;
-                }
-
-                ScholarshipCategory::factory()->create([   
-                    'scholarship_id'=> $scholarship->id,
-                ]);
-            }
-        }
+        //
     }
 }
