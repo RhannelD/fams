@@ -103,7 +103,7 @@
                                 <td></td>
                             </tr>
                         </table>
-                        <div class="collapse" id="collapse-scholar-info">
+                        <div class="collapse" id="collapse-scholar-info" wire:ignore.self>
                             <div class="card card-body py-2">
                                 @include('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-view-scholar-livewire')
                             </div>

@@ -41,11 +41,15 @@
         window.addEventListener('responses_chart', event => { 
             var datasets = [];
             var color_index = 0;
+            var max_value = 5;
 
             $.each(event.detail.data, function( key, value ) {
+                $.each(value, function( key, value ) {
+                    max_value = (max_value < value)? value: max_value;
+                });
                 datasets.push({
                     label: key,
-                    data: event.detail.data[key],
+                    data: value,
                     borderColor: barColors[color_index],
                     fill: false,
                 });
@@ -70,6 +74,17 @@
                         intersect: false,
                     },
                     stacked: false,
+                    scales: {
+                        yAxes: [{
+                            display: true,
+                            ticks: {
+                                beginAtZero: true,
+                                steps: 1,
+                                stepValue: 1,
+                                max: max_value+2
+                            }
+                        }]
+                    },
                 },
             });
         });
@@ -106,7 +121,7 @@
                 options: {
                     title: {
                         display: true,
-                        text: "Scholars by Gender"
+                        text: "Scholars by Sex"
                     }
                 }
             });

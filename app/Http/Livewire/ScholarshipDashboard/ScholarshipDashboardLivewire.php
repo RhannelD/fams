@@ -60,32 +60,61 @@ class ScholarshipDashboardLivewire extends Component
 
     public function responses_chart()
     {
+        $quarters = [
+            1 => 'Jan-Mar',
+            2 => 'Apr-Jun',
+            3 => 'Jul-Sep',
+            4 => 'Oct-Dec',
+        ];
+
         $label = [];
         $data = [];
 
         $date = Carbon::now();
         $categories = $this->get_scholarship()->categories;
 
-        for ($i=0; $i < 12; $i++) { 
-            $label[] = $date->format('F Y');
+        $iterate = 6;
+        $quarter_now = $date->isoFormat('Q');
+        while ( true ) {
+            if ( !($iterate > 0) ) 
+                break;
 
             $year  = $date->format('Y');
-            $month = $date->format('m');
-            foreach ($categories as $category) {
-                $category_id = $category->id;
-                $data[$category->category][] = ScholarResponse::whereNotNull('submit_at')
-                    ->whereYear('submit_at', $year)
-                    ->whereMonth('submit_at', $month)
-                    ->whereHas('requirement', function ($query) use ($category_id) {
-                        $query->where('promote', 0)
-                        ->whereHas('categories', function ($query) use ($category_id) {
-                            $query->where('category_id', $category_id);
-                        });
-                    })
-                    ->count();
+
+            for ($quarter=$quarter_now; $quarter > 0; $quarter--) { 
+                if ( !$iterate ) 
+                    break;
+
+                $label[$iterate] = $year.' '.$quarters[$quarter];
+
+                foreach ($categories as $key => $category) {
+                    $category_id = $category->id;
+                    $responses = ScholarResponse::selectRaw('
+                            count(scholar_responses.id) as response_count, 
+                            YEAR(submit_at) AS year, 
+                            QUARTER(submit_at) AS quarter
+                        ')
+                        ->whereNotNull('submit_at')
+                        ->whereHas('requirement', function ($query) use ($category_id) {
+                            $query->where('promote', 0)
+                            ->whereHas('categories', function ($query) use ($category_id) {
+                                $query->where('category_id', $category_id);
+                            });
+                        })
+                        ->whereRaw('YEAR(submit_at) = ?', [$year])
+                        ->whereRaw('QUARTER(submit_at) = ?', [$quarter])
+                        ->groupByRaw('year, quarter')
+                        ->orderByRaw('year DESC, quarter DESC')
+                        ->first();
+
+                    $data[$category->category][$iterate] = isset($responses)? $responses->response_count: 0;
+                }
+                
+                $iterate--;
             }
 
-            $date->subMonth();
+            $quarter_now = 4;
+            $date->subYear();
         }
 
         $label = array_reverse($label);
@@ -144,28 +173,11 @@ class ScholarshipDashboardLivewire extends Component
     
     public function scholars_scholarship_count()
     {
-        $scholarship_id = $this->scholarship_id;
-        $scholars =  DB::select(
-            "SELECT DISTINCT(COUNT(u.id)) as label, (
-                SELECT COUNT(u2.id)
-                FROM users u2
-                WHERE (COUNT(u.id)) = (
-                    SELECT COUNT(u2.id)
-                    FROM scholarship_scholars ss2
-                    WHERE ss2.user_id = u2.id
-                    )
-            ) AS data
-            FROM users u
-                INNER JOIN scholarship_scholars ss ON u.id = ss.user_id 
-            WHERE u.id IN (
-                SELECT ss3.user_id
-                FROM scholarship_scholars ss3
-                	INNER JOIN scholarship_categories sc3 ON ss3.category_id = sc3.id
-                WHERE sc3.scholarship_id = {$scholarship_id}
-            )
-            GROUP BY u.id
-            ORDER BY label"
-        );
+        $scholars = User::selectRaw('count(id) as data')
+            ->withCount('scholarship_scholars as label')
+            ->whereScholarOf($this->scholarship_id)
+            ->groupBy('label')
+            ->get();
 
         $label = [];
         $data = [];

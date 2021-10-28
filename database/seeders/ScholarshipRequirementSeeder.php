@@ -20,11 +20,10 @@ class ScholarshipRequirementSeeder extends Seeder
      */
     public function run()
     {
-        $scholarships = Scholarship::all();
+        $scholarships = Scholarship::with('categories')->get();
 
         // Requirements for Scholars fake applications of first scholar
         foreach ($scholarships as $scholarship) {
-            $categories = ScholarshipCategory::where('scholarship_id', $scholarship->id)->get();
             $posts = ScholarshipPost::where('scholarship_id', $scholarship->id)
                 ->where('title', 'We are looking for new scholars!')
                 ->orderBy('id')
@@ -35,12 +34,13 @@ class ScholarshipRequirementSeeder extends Seeder
                 $post_created_at = Carbon::parse($post->created_at);
                 $date = $post_created_at->format('Y-m-d h:i:s');
 
-                foreach ($categories as $category) {
+                foreach ($scholarship->categories as $category) {
                     $requirement = ScholarshipRequirement::factory()->create([   
                         'scholarship_id' => $scholarship->id,
                         'requirement' => "Scholarship Application Form for $category->category",
                         'description' => "<h3>$category->category Applicants</h3> You submit your requirements here.",
                         'promote' => true,
+                        'enable' => null,
                         'start_at' => $date,
                         'end_at' => Carbon::parse($post->created_at)->addWeek(2)->format('Y-m-d h:i:s'),
                     ]);
@@ -75,6 +75,7 @@ class ScholarshipRequirementSeeder extends Seeder
                         'requirement' => "$category->category - {$post->title}",
                         'description' => "<h1>$category->category Scholars</h1> You submit your requirements here.",
                         'start_at' => $date,
+                        'enable' => null,
                         'end_at' => Carbon::parse($post->created_at)->addWeek(2)->format('Y-m-d h:i:s'),
                     ]);
 
@@ -102,7 +103,6 @@ class ScholarshipRequirementSeeder extends Seeder
 
             foreach ($posts as $post) {
                 $post_created_at = Carbon::parse($post->created_at);
-                $date = $post_created_at->format('Y-m-d h:i:s');
 
                 foreach ($categories as $category) {
                     $requirement = ScholarshipRequirement::factory()->create([   
@@ -110,8 +110,9 @@ class ScholarshipRequirementSeeder extends Seeder
                         'requirement' => "Application Form for $category->category",
                         'description' => "<h3>$category->category Applicants</h3> You submit your requirements here.",
                         'promote' => true,
-                        'start_at' => $date,
-                        'end_at' => Carbon::parse($post->created_at)->addMonth(rand(1,4))->addWeek(rand(2,4))->format('Y-m-d h:i:s'),
+                        'enable' => null,
+                        'start_at' => $post_created_at->format('Y-m-d h:i:s'),
+                        'end_at'   => $post_created_at->addMonth(rand(1,4))->addWeek(rand(2,4))->format('Y-m-d h:i:s'),
                     ]);
 
                     ScholarshipPostLinkRequirement::factory()->create([   

@@ -33,7 +33,6 @@ class ScholarResponseSeeder extends Seeder
 
                 $min = strtotime($requirement->start_at);
                 $max = strtotime($requirement->end_at);
-                $ran = rand($min, $max);
                 
                 foreach ($students as $student) {
                     // Inserts all of the approved scholars
@@ -80,7 +79,6 @@ class ScholarResponseSeeder extends Seeder
 
                 $min = strtotime($requirement->start_at);
                 $max = strtotime($requirement->end_at);
-                $ran = rand($min, $max);
 
                 foreach ($students as $student) {
                     // Inserts all of the approved scholar renewal
@@ -104,6 +102,9 @@ class ScholarResponseSeeder extends Seeder
         foreach ($requirements as $requirement) {
             $req_categories = ScholarshipRequirementCategory::where('requirement_id', $requirement->id)->get();
             
+            $min = strtotime($requirement->start_at);
+            $max = strtotime($requirement->end_at);
+
             foreach ($req_categories as $req_category) {
                 $students = User::whereScholar()
                     ->whereNotScholarOf($requirement->scholarship_id)
@@ -111,7 +112,7 @@ class ScholarResponseSeeder extends Seeder
 
                 foreach ($students as $student) {
                     // Inserts random pending response of other scholars
-                    if ( rand(0, 5) != 1 ) 
+                    if ( rand(0, 7) != 6 ) 
                         continue;
                     
                     $ran = rand($min, $max);
@@ -124,6 +125,5 @@ class ScholarResponseSeeder extends Seeder
                 }
             }
         }
-        // -------------------------------------------------------------
     }
 }

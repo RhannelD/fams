@@ -95,7 +95,7 @@
                 options: {
                     title: {
                         display: true,
-                        text: "Scholars by Gender"
+                        text: "Scholars by Sex"
                     }
                 }
             });

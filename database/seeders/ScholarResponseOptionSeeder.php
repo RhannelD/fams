@@ -61,7 +61,7 @@ class ScholarResponseOptionSeeder extends Seeder
                 foreach ($requirement->items as $item) {
                     $options = ScholarshipRequirementItemOption::select('id')
                         ->where('item_id', $item->id)
-                        ->limit(rand(1, 4))
+                        ->limit(rand(1, 3))
                         ->get();
 
                     foreach ($options as $option ) {

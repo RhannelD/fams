@@ -23,6 +23,18 @@ class ScholarshipRequirementAgreementSeeder extends Seeder
 
             ScholarshipRequirementAgreement::factory()->create([   
                 'requirement_id' => $requirement->id,
+                'agreement' => "
+                    <h3>This is an angreeement</h3>
+                    Upon submitting this requirement you are agreeing with the terms.
+                    <ul>
+                        <li>
+                            If we verified that you are lying about your documents, this will potentially lose your scholarship here.
+                        </li>
+                        <li>
+                            You will lose your scholarship when you are using multiple accounts to acquire multiple scholarships.
+                        </li>
+                    </ul>
+                ",
             ]);
         }
     }

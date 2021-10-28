@@ -85,7 +85,16 @@
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <strong>{{ Auth::user()->firstname . ' ' . Auth::user()->lastname }} </strong>
+                            <strong>
+                                @if ( Auth::user()->is_admin() )
+                                    <i class="fas fa-user-cog"></i>
+                                @elseif ( Auth::user()->is_officer() )
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                @else
+                                    <i class="fas fa-user-graduate"></i>
+                                @endif
+                                {{ Auth::user()->firstname . ' ' . Auth::user()->lastname }} 
+                            </strong>
                             @if ( Auth::user()->get_invite_and_unseen_chat_count() )
                                 <span class="badge badge-danger">
                                     {{ Auth::user()->get_invite_and_unseen_chat_count() }}

@@ -72,18 +72,6 @@ class ScholarSchoolSeeder extends Seeder
                 'location'  => 'Batangas City, Batangas', 
             ],
             [ 
-                'school'    => 'De La Salle Lipa', 
-                'location'  => 'Lipa City, Batangas', 
-            ],
-            [ 
-                'school'    => 'Kolehiyo ng Lungsod ng Lipa', 
-                'location'  => 'Lipa City, Batangas', 
-            ],
-            [ 
-                'school'    => 'Lipa City Colleges', 
-                'location'  => 'Lipa City, Batangas', 
-            ],
-            [ 
                 'school'    => 'STI College - Lipa', 
                 'location'  => 'Lipa City, Batangas', 
             ],
@@ -93,14 +81,6 @@ class ScholarSchoolSeeder extends Seeder
             ],
             [ 
                 'school'    => 'Saint Bridget College', 
-                'location'  => 'Batangas City, Batangas', 
-            ],
-            [ 
-                'school'    => 'Sta. Teresa College', 
-                'location'  => 'Bauan, Batangas', 
-            ],
-            [ 
-                'school'    => 'STI College - Batangas', 
                 'location'  => 'Batangas City, Batangas', 
             ],
         ];

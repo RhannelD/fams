@@ -25,8 +25,6 @@ class DatabaseSeeder extends Seeder
             ScholarshipRequirementSeeder::class,
             ScholarshipRequirementAgreementSeeder::class,
             ScholarshipRequirementItemSeeder::class,
-            ScholarshipRequirementItemOptionSeeder::class,
-            ScholarshipRequirementCategorySeeder::class,
             ScholarResponseSeeder::class,
             ScholarResponseAgreementSeeder::class,
             ScholarResponseAnswerSeeder::class,
