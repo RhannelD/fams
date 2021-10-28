@@ -64,11 +64,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return User::selectRaw('count(id) as count')
-            ->withCount('scholarship_scholars as label')
-            ->whereScholarOf(1)
-            ->groupBy('label')
-            ->get();
+        return '+63'.substr("09123456789", 1);
 
         // $category_id = 1;
         // return ScholarResponse::selectRaw('

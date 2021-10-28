@@ -34,8 +34,8 @@
             <div class="row justify-content-center h-100">
                 <div class="col-12">
                     <div class="h-100 d-flex flex-column">
-                        <div class="row justify-content-center bg-primary">
-                            <nav class=" col-12 navbar navbar-expand-lg navbar-light bg-light border-bottom  justify-content-center">
+                        <div class="row {{-- justify-content-center --}} bg-primary">
+                            <nav class="col-12 navbar navbar-expand-lg navbar-light bg-light border-bottom  {{-- justify-content-center --}}">
                                 <button class="btn btn-outline-secondary disabled" id="menu-toggle">
                                     <span class="navbar-toggler-icon"></span>
                                 </button>

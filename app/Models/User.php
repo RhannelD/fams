@@ -51,6 +51,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * Route notifications for the Nexmo channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return string
+     */
+    public function routeNotificationForNexmo($notification)
+    {
+        return '63'.substr($this->phone, 1); 
+    }
 
     public function scholarship_scholars()
     {

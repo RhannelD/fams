@@ -78,11 +78,11 @@
                                     <div class="input-group-append">
                                         @if ( $requirement_link->requirement->can_be_accessed() == 'ongoing' )
                                             <span class="input-group-text bg-success text-white" id="basic-addon2">
-                                                <i class="fas fa-toggle-on"></i>
+                                                <i class="far fa-calendar-check"></i>
                                             </span>
                                         @else
                                             <span class="input-group-text bg-danger text-white" id="basic-addon2">
-                                                <i class="fas fa-toggle-off"></i>
+                                                <i class="far fa-calendar-times"></i>
                                             </span>
                                         @endif
                                     </div>

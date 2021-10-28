@@ -88,7 +88,7 @@
                             <td>
                                 {{ $scholar->user->email }}
                             </td>
-                            <td>
+                            <td class="py-2 text-center">
                                 <a href="{{ route('user.chat', ['rid'=>$scholar->user_id]) }}" class="btn btn-info btn-sm text-white">
                                     <i class="fas fa-comments"></i>
                                 </a>

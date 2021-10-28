@@ -9,6 +9,7 @@ use App\Models\SmsSendTo;
 use App\Models\Scholarship;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\SmsSendNotification;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class SendSmsLivewire extends Component
@@ -164,7 +165,7 @@ class SendSmsLivewire extends Component
     protected function send_sms($user_recipient)
     {
         try {
-            // $user_recipient->notify(new ScholarshipSendMailNotification($details));
+            $user_recipient->notify(new SmsSendNotification(['message' => $this->message]));
             return true;
         } catch (\Exception $e) {
             return false;

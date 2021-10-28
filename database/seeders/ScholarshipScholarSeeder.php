@@ -19,7 +19,7 @@ class ScholarshipScholarSeeder extends Seeder
     {
         $scholarships = Scholarship::with('categories')->get();
 
-        $test_scholar = User::whereScholar()->where('email', 'rendalida@gmail.com')->first();
+        $test_scholar = User::whereScholar()->where('email', 'johnravenbalbar@gmail.com')->first();
         if ( isset($test_scholar) ) {
             for ($index=0; $index < 2; $index++) { 
                 ScholarshipScholar::factory()->create([   
@@ -29,7 +29,7 @@ class ScholarshipScholarSeeder extends Seeder
             }
         }
 
-        $scholars = User::whereScholar()->where('email', '!=', 'rendalida@gmail.com')->get();
+        $scholars = User::whereScholar()->where('email', '!=', 'johnravenbalbar@gmail.com')->get();
 
         foreach ($scholars as $scholar) {
             if (rand(1, 12) == 1) {

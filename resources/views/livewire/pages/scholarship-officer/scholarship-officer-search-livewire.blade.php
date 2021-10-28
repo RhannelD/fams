@@ -41,7 +41,7 @@
                             <td>
                                 {{ $officer->phone }}
                             </td>
-                            <td class="py-2">
+                            <td class="py-2 text-center">
                                 <button class="btn btn-info btn-sm text-white" type="button" 
                                     data-toggle="collapse" 
                                     data-target="#collapse{{ $officer->id }}" 
@@ -50,9 +50,11 @@
                                     >
                                     <i class="fas fa-info-circle"></i>
                                 </button>
-                                <a href="{{ route('user.chat', ['rid'=>$officer->id]) }}" class="btn btn-info btn-sm text-white">
-                                    <i class="fas fa-comments"></i>
-                                </a>
+                                @if ( $officer->id == Auth::id() )
+                                    <a href="{{ route('user.chat', ['rid'=>$officer->id]) }}" class="btn btn-info btn-sm text-white">
+                                        <i class="fas fa-comments"></i>
+                                    </a>
+                                @endif
                             </td>
                         @else
                             <td>
@@ -64,11 +66,11 @@
                             <td>
                                 {{ $officer->email }}
                             </td>
-                            <th>
+                            <td class="py-2 text-center">
                                 <a href="{{ route('user.chat', ['rid'=>$officer->id]) }}" class="btn btn-info btn-sm text-white">
                                     <i class="fas fa-comments"></i>
                                 </a>
-                            </th>
+                            </td>
                         @endif
                     </tr>
                     @if (Auth::user()->usertype != 'scholar')

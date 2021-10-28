@@ -24,7 +24,7 @@
             <div class="card-header bg-primary border-primary text-white">
                 <h4 class="my-0">
                     <strong>
-                        Student Sign-up
+                        Scholar Sign-up
                     </strong>
                 </h4>
             </div>

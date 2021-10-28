@@ -140,7 +140,7 @@ class ResponseLivewire extends Component
         if ( Auth::guest() || $this->is_admin() || Auth::user()->cannot('respond', $this->get_requirement()) || Auth::user()->cannot('unsubmit', $user_response) )
             return;
 
-        if ( $user_response->requirement->enable == true || !$user_response->submmited_on_time() ) 
+        if ( $user_response->requirement->enable == true || !$user_response->submmited_on_time() || $user_response->requirement->promote ) 
             return $this->dispatchBrowserEvent('swal:confirm:unsubmit_response', [
                 'type' => 'warning',  
                 'message' => 'Are you sure?', 
