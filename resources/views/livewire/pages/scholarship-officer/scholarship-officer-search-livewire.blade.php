@@ -18,6 +18,7 @@
                         <th>Name</th>
                         <th>Position</th>
                         <th>Email</th>
+                        <th></th>
                     @endif
                 </tr>
             </thead>
@@ -63,6 +64,11 @@
                             <td>
                                 {{ $officer->email }}
                             </td>
+                            <th>
+                                <a href="{{ route('user.chat', ['rid'=>$officer->id]) }}" class="btn btn-info btn-sm text-white">
+                                    <i class="fas fa-comments"></i>
+                                </a>
+                            </th>
                         @endif
                     </tr>
                     @if (Auth::user()->usertype != 'scholar')

@@ -8,7 +8,7 @@
             </h6>
     
             <h6 class="ml-auto mr-1 bd-highlight my-0">
-                {{ date('d-m-Y h:i A', strtotime($comment->created_at)) }}
+                {{ \Carbon\Carbon::parse($comment->created_at)->format("M d, Y h:i A") }}
             </h6>
             
             @can('delete', $comment)

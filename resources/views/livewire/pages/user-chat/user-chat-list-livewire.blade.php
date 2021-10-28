@@ -26,7 +26,9 @@
             @endif
         </button>
     @empty
-        None
+        <button class="list-group-item list-group-item-action bg-light tabs border-right-0">
+            None
+        </button>
     @endforelse
     @if ( $convo_number>$convo_count )
         <button wire:click='load_more' class="btn btn-primary rounded-0">

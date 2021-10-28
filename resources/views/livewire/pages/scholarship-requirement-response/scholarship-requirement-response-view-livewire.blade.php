@@ -50,7 +50,7 @@
                                         </h6>
                         
                                         <h6 class="ml-auto mr-1 bd-highlight my-0">
-                                            {{ date('d-m-Y h:i A', strtotime($comment->created_at)) }}
+                                            {{ \Carbon\Carbon::parse($comment->created_at)->format("M d, Y h:i A") }}
                                         </h6>
                                     </div>
                                     <p class="mb-0 mx-2">{!! nl2br(e($comment->comment)) !!}</p>
@@ -80,7 +80,7 @@
                             <tr>
                                 <td>Submitted at:</td>
                                 <td>
-                                    {{ $scholar_response->submit_at }}         
+                                    {{ \Carbon\Carbon::parse($scholar_response->submit_at)->format("M d,  Y h:i A") }}     
                                     @if ( is_null($scholar_response->requirement->enable) && !$scholar_response->submmited_on_time() )
                                         <span class="badge badge-pill badge-danger">Late</span>
                                     @endif

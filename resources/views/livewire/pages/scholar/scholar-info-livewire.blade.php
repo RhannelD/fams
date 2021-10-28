@@ -36,7 +36,7 @@
                         </tr>
                         <tr>
                             <td>Birth Date:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $user->birthday }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ \Carbon\Carbon::parse($user->birthday)->format("M d,  Y h:i A") }}</td>
                         </tr>
                         <tr>
                             <td>Birth Place:</td>
@@ -78,7 +78,7 @@
                         </tr>
                         <tr>
                             <td>Mother's Birth Date:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->mother_birthday }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ \Carbon\Carbon::parse($user->scholar_info->mother_birthday)->format("M d,  Y h:i A") }}</td>
                         </tr>
                         <tr>
                             <td>Mother's Educational Attainment:</td>
@@ -98,7 +98,7 @@
                         </tr>
                         <tr>
                             <td>Father's Birth Date:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->father_birthday }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ \Carbon\Carbon::parse($user->scholar_info->father_birthday)->format("M d, Y h:i A") }}</td>
                         </tr>
                         <tr>
                             <td>Father's Educational Attainment:</td>

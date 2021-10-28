@@ -49,7 +49,7 @@
                             </h6>
                         </div>
                         <h6 class="ml-auto mr-1 bd-highlight my-0">
-                            {{ date('d-m-Y h:i A', strtotime($post->created_at)) }}
+                            {{ \Carbon\Carbon::parse($post->created_at)->format("M d,  Y h:i A") }}
                         </h6>
                     </div>
                 </div>
@@ -75,6 +75,17 @@
                                         </span>
                                     </div>
                                     <input type="text" class="form-control bg-white" value="{{ $requirement_link->requirement->requirement }}" readonly>
+                                    <div class="input-group-append">
+                                        @if ( $requirement_link->requirement->can_be_accessed() == 'ongoing' )
+                                            <span class="input-group-text bg-success text-white" id="basic-addon2">
+                                                <i class="fas fa-toggle-on"></i>
+                                            </span>
+                                        @else
+                                            <span class="input-group-text bg-danger text-white" id="basic-addon2">
+                                                <i class="fas fa-toggle-off"></i>
+                                            </span>
+                                        @endif
+                                    </div>
                                 </div>
                             </a>
                         @endforeach

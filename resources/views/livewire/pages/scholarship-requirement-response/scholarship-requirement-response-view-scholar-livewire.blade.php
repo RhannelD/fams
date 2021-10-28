@@ -46,7 +46,7 @@
                 <tr>
                     <td>Birth Date:</td>
                     <td>
-                        {{ date_format(new DateTime($scholar_response->user->birthday),"M d, Y") }}
+                        {{ \Carbon\Carbon::parse($scholar_response->user->birthday)->format("M d, Y") }}
                     </td>
                 </tr>
                 <tr>
@@ -109,7 +109,7 @@
                 </tr>
                 <tr>
                     <td>Mother's Birth Date:</td>
-                    <td>{{ $scholar_response->user->scholar_info->mother_birthday }}</td>
+                    <td>{{ \Carbon\Carbon::parse($scholar_response->user->scholar_info->mother_birthday)->format("M d, Y") }}</td>
                 </tr>
                 <tr>
                     <td>Mother's Educational Attainment:</td>
@@ -129,7 +129,7 @@
                 </tr>
                 <tr>
                     <td>Father's Birth Date:</td>
-                    <td>{{ $scholar_response->user->scholar_info->father_birthday }}</td>
+                    <td>{{ \Carbon\Carbon::parse($scholar_response->user->scholar_info->father_birthday)->format("M d, Y") }}</td>
                 </tr>
                 <tr>
                     <td>Father's Educational Attainment:</td>

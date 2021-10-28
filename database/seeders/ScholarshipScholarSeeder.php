@@ -37,7 +37,7 @@ class ScholarshipScholarSeeder extends Seeder
             }
 
             foreach ($scholarships as $scholarship) {
-                if (rand(1, 6) == 1) {    
+                if (rand(1, 4) == 1) {    
                     ScholarshipScholar::factory()->create([
                         'user_id'       => $scholar->id,
                         'category_id'   => $scholarship->categories[rand(0, count($scholarship->categories)-1)]->id,

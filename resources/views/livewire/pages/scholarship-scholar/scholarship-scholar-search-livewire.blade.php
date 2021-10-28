@@ -22,6 +22,7 @@
                             <th>Category</th>
                         @endempty
                         <th>Email</th>
+                        <th></th>
                     @endif
                 </tr>
             </thead>
@@ -86,6 +87,11 @@
                             @endempty
                             <td>
                                 {{ $scholar->user->email }}
+                            </td>
+                            <td>
+                                <a href="{{ route('user.chat', ['rid'=>$scholar->user_id]) }}" class="btn btn-info btn-sm text-white">
+                                    <i class="fas fa-comments"></i>
+                                </a>
                             </td>
                         @endif
                     </tr>

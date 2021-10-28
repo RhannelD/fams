@@ -38,7 +38,7 @@
                                     @endisset
                                 </div>
                                 <h6 class="ml-auto mr-1 bd-highlight my-0">
-                                    {{ date('d-m-Y h:i A', strtotime($post->created_at)) }}
+                                    {{ \Carbon\Carbon::parse($post->created_at)->format("M d,  Y h:i A") }}
                                 </h6>
                             </div>
                         </div>

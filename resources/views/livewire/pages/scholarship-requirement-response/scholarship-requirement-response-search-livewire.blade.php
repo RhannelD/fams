@@ -57,7 +57,7 @@
                             {{ $response->user->email }}
                         </td>
                         <td class="text-nowrap">
-                            {{ date('d-m-Y h:i A', strtotime($response->submit_at)) }}
+                            {{ \Carbon\Carbon::parse($response->submit_at)->format("M d,  Y h:i A") }}
                             @if ( is_null($response->requirement->enable) && !$response->submmited_on_time() )
                                 <span class="badge badge-pill badge-danger">Late</span>
                             @endif

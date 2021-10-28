@@ -22,7 +22,7 @@
                         </tr>
                         <tr>
                             <td>Accepted at:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ date('d-m-Y h:i A', strtotime($scholarship->created_at)) }}</td>
+                            <td class="pl-sm-1 pl-md-2">{{ \Carbon\Carbon::parse($scholarship->created_at)->format("M d, Y h:i A") }}</td>
                         </tr>
                         <tr>
                             <td colspan="2">
