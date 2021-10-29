@@ -50,7 +50,7 @@
                                     >
                                     <i class="fas fa-info-circle"></i>
                                 </button>
-                                @if ( $officer->id == Auth::id() )
+                                @if ( $officer->id != Auth::id() )
                                     <a href="{{ route('user.chat', ['rid'=>$officer->id]) }}" class="btn btn-info btn-sm text-white">
                                         <i class="fas fa-comments"></i>
                                     </a>

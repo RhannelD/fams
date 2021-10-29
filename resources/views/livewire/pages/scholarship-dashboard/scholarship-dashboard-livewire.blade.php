@@ -67,7 +67,7 @@
                     responsive: true,
                     title: {
                         display: true,
-                        text: "Scholar responses every month for renewal."
+                        text: "Scholar responses every quarter for renewal."
                     },
                     interaction: {
                         mode: 'index',

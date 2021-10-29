@@ -8,6 +8,7 @@ use Livewire\Component;
 use App\Models\SmsSendTo;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\SmsSendNotification;
 
 class SendSmsViewLivewire extends Component
 {
@@ -78,7 +79,7 @@ class SendSmsViewLivewire extends Component
         if ( Auth::guest() || is_null($user_recipient) || Auth::user()->cannot('sendSMSes', ($sms_send? $sms_send->scholarship: null)) ) 
             return;
 
-        $sent = $this->sending_sms($user_recipient);
+        $sent = $this->sending_sms($user_recipient, $sms_send);
 
         SmsSendTo::updateOrCreate(
             [
@@ -92,10 +93,10 @@ class SendSmsViewLivewire extends Component
         $this->emitTo('send.send-sms-list-livewire', 'refresh');
     }
 
-    protected function sending_sms($user_recipient)
+    protected function sending_sms($user_recipient, $sms_send)
     {
         try {
-            // $user_recipient->notify(new ScholarshipSendMailNotification($details));
+            $user_recipient->notify(new SmsSendNotification(['message' => $sms_send->message]));
             return true;
         } catch (\Exception $e) {
             return false;

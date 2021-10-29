@@ -24,7 +24,7 @@ class ScholarshipScholarSeeder extends Seeder
             for ($index=0; $index < 2; $index++) { 
                 ScholarshipScholar::factory()->create([   
                     'user_id'       => $test_scholar->id,
-                    'category_id'   => $scholarships[$index]->categories[0]->id,
+                    'category_id'   => $scholarships[($index==0? $index: $index+1)]->categories[0]->id,
                 ]);
             }
         }
