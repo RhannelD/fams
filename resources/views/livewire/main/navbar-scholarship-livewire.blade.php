@@ -1,16 +1,12 @@
 <div>
     @forelse ($scholarships as $scholarship)
-        <a class="list-group-item list-group-item-action bg-light tabs border-top-0 border-right-0 
-            @if ($loop->last)
-                border-bottom-0 
-            @endif 
-            "
+        <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs border-0"
             href="{{ route('scholarship.home', [$scholarship->id]) }}">
             <i class="fas fa-money-check"></i>
             {{ $scholarship->scholarship }}
         </a>
     @empty
-        <a class="list-group-item list-group-item-action bg-light tabs border-top-0 border-right-0 border-bottom-0">
+        <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white tabs border-0">
             None
         </a>
     @endforelse

@@ -10,20 +10,20 @@
 <div class="d-flex" id="wrapper">
 
     <!-- Sidebar -->
-    <div class="bg-light border-right" id="sidebar-wrapper">
+    <div class="bg-dark-grey-2" id="sidebar-wrapper">
         <div class="sidebar-heading" style="font-size: 26px;">
             <img src="{{ asset('img/scholarship-icon.png') }}" alt="" height="80px" class="mx-auto d-block mb-2">
         </div>
 
         <div class="list-group list-group-flush">  
             @if (Auth::user()->is_admin())
-                <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('dashboard') }}">
+                <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('dashboard') }}">
                     <i class="fas fa-chart-line"></i>
                     Dashboard
                 </a> 
             @endif
 
-            <a class="list-group-item list-group-item-action bg-light tabs" 
+            <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" 
                 @if (Auth::user()->is_scholar())
                     href="{{ route('scholar.scholarship') }}"
                 @else
@@ -35,7 +35,7 @@
             </a>
 
             @if ( Auth::check() && Auth::user()->is_scholar() )
-                <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('requirement.reponses.list') }}">
+                <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('requirement.reponses.list') }}">
                     <i class="fas fa-file-upload"></i>
                     Responses
                 </a> 
@@ -44,17 +44,17 @@
             @if (!Auth::check())
                 <hr>
             @elseif (Auth::user()->is_admin())
-                <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('officer') }}">
+                <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('officer') }}">
                     <i class="fas fa-address-card"></i>
                     Officers
                 </a>
-                <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('scholar') }}">
+                <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('scholar') }}">
                     <i class="fas fa-user-graduate"></i>
                     Scholars
                 </a>
             @elseif (in_array(Auth::user()->usertype, array('officer', 'scholar')))
                 <hr class="my-2">
-                <strong class="ml-3">
+                <strong class="ml-3 text-white">
                     @if (Auth::user()->is_officer())
                         Managing
                     @else
@@ -71,11 +71,10 @@
     <!-- Page Content -->
     <div id="page-content-wrapper">
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-            <button class="btn btn-outline-secondary disabled" id="menu-toggle">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark-grey border-bottom-0">
+            <button onclick="menu_toggle()" class="btn btn-outline-secondary disabled" id="menu-toggle">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-brand ml-2 font-weight-bold">{{ config('app.name') }}</div>
 
             <button type="" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse1">
                 <i class="fas fa-ellipsis-v"></i>
@@ -139,7 +138,7 @@
             </div>
         </nav>
 
-        <div class="container-fluid" id="mainpanel">
+        <div class="container-fluid px-0" id="mainpanel">
             
             @yield('content')
             

@@ -52,7 +52,7 @@ class ScholarshipOfficerLivewire extends Component
         return view('livewire.pages.scholarship-officer.scholarship-officer-livewire', [
                 'officers' => $this->get_officers()
             ])
-            ->extends('livewire.main.main-livewire');
+            ->extends('livewire.main.scholarship');
     }
 
     protected function get_officers()

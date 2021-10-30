@@ -47,7 +47,7 @@ class ScholarshipPostOpenLivewire extends Component
                 'comments' => $comments,
                 'comment_count' => $comment_count,
                 'show_more' => $show_more,
-            ])->extends('livewire.main.main-livewire');
+            ])->extends('livewire.main.scholarship');
     }
 
     protected function get_post()

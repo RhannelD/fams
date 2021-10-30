@@ -56,7 +56,7 @@ class ScholarshipScholarInviteImportExcel extends Component
     public function render()
     {
         return view('livewire.pages.scholarship-scholar.scholarship-scholar-invite-import-excel')
-            ->extends('livewire.main.main-livewire');
+            ->extends('livewire.main.scholarship');
     }
 
     public function updated($propertyName)

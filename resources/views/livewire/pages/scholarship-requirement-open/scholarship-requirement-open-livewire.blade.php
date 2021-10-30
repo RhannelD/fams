@@ -1,10 +1,9 @@
 <div>
 @isset($requirement)
-    @livewire('add-ins.scholarship-program-livewire', [$requirement->scholarship_id], key('page-tabs-'.time().$requirement->scholarship_id))
+    @livewire('add-ins.scholarship-program-livewire', [$requirement->scholarship_id, 'requirements'], key('page-tabs-'.time().$requirement->scholarship_id))
 
-    <hr>
-    <div class="mx-auto mxw-1300px">
-        <div class="row">
+    <div class="mx-auto mt-2 mxw-1300px">
+        <div class="row mx-2">
             <div class="col-12 col-md-3 mb-2">
 
                 <div class="card shadow mb-2 requirement-item-hover">

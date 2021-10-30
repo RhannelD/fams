@@ -1,8 +1,7 @@
 <div>
-    @livewire('add-ins.scholarship-program-livewire', [$scholarship_id], key('page-tabs-'.time().$scholarship_id))
+    @livewire('add-ins.scholarship-program-livewire', [$scholarship_id, 'officers'], key('page-tabs-'.time().$scholarship_id))
 
-    <hr class="mb-2">
-	<div class="row mb-1">
+	<div class="row mb-1 mx-1">
 		<div class="input-group col-md-5 mt-2">
 			<div class="input-group rounded mb-auto mt-1">
 				<input type="search" class="form-control rounded" placeholder="Search Officer" wire:model.debounce.1000ms='search'/>
@@ -66,7 +65,7 @@
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="row mx-1">
         @if (session()->has('message-success'))
             <div class="col-12 my-2">
                 <div class="alert alert-success my-0">

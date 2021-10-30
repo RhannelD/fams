@@ -14,23 +14,25 @@ class NavbarScholarshipLivewire extends Component
 
     public function render()
     {
-        $scholarships = [];
-
-        if (Auth::user()->usertype == 'officer') {
-            $scholarships = Scholarship::select('scholarships.id', 'scholarship')
-                ->join('scholarship_officers', 'scholarships.id', '=', 'scholarship_officers.scholarship_id')
-                ->join('users', 'scholarship_officers.user_id', '=', 'users.id')
-                ->where('users.id',  Auth::id())
-                ->get();
-        } else {
-            $scholarships = Scholarship::select('scholarships.id', 'scholarship')
-                ->join('scholarship_categories', 'scholarships.id', '=', 'scholarship_categories.scholarship_id')
-                ->join('scholarship_scholars', 'scholarship_categories.id', '=', 'scholarship_scholars.category_id')
-                ->join('users', 'scholarship_scholars.user_id', '=', 'users.id')
-                ->where('users.id',  Auth::id())
-                ->get();
-        }
-        
-        return view('livewire.main.navbar-scholarship-livewire', ['scholarships' => $scholarships]);
+        return view('livewire.main.navbar-scholarship-livewire', ['scholarships' => $this->get_scholarships()]);
     }
+
+    protected function get_scholarships()
+    {
+        return Scholarship::when( Auth::user()->is_officer(), function ($query) {
+                $query->whereHas('officers', function ($query) {
+                    $query->where('user_id', Auth::id());
+                });
+            })
+            ->when( Auth::user()->is_scholar(), function ($query) {
+                $query->whereHas('categories', function ($query) {
+                    $query->whereHas('scholars', function ($query) {
+                        $query->where('user_id', Auth::id());
+                    });
+                });
+            })
+            ->orderBy('scholarship')
+            ->get();
+    }
+    
 }

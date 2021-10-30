@@ -1,9 +1,8 @@
 <div>
-    @livewire('add-ins.scholarship-program-livewire', [$scholarship_id], key('page-tabs-'.time().$scholarship_id))
+    @livewire('add-ins.scholarship-program-livewire', [$scholarship_id, 'scholars'], key('page-tabs-'.time().$scholarship_id))
     
-    <hr class="mb-2">
-	<div class="mx-auto mxw-1300px">
-        <div class="row">
+	<div class="mx-auto mxw-1300px mt-2">
+        <div class="row mx-1">
             <div class="col-12">
                 <div class="alert alert-info">
                     Import excel file to invite scholars.

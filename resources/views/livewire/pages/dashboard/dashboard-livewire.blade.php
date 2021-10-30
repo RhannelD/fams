@@ -1,22 +1,17 @@
 <div>
     <script src="{{ asset('js/Chart.min.js') }}"></script>
-    <div class="row mt-1 mx-2">
-        <div class="card col-12 bg-secondary text-white border-secondary">
-            <h2 class="m-2 row">
-                <strong class="my-auto">
-                    Dashboard
-                </strong>
-                
-                <div class="mr-1 ml-auto">
-                    <button wire:click='refresh_all' class="btn btn-success float-right text-white">
-                        <i class="fas fa-sync-alt" wire:target="refresh_all" wire:loading.class.add='fa-spin'></i>
-                        Refresh
-                    </button>
-                </div>
-            </h2>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary border-bottom-0">
+        <div class="navbar-brand ml-2 font-weight-bold">
+            Dashboard
         </div>
-    </div>
-    <div class="row mb-3">
+        <button class="btn btn-outline-light ml-auto" wire:click='refresh_all'>
+            <i class="fas fa-sync-alt" wire:target="refresh_all" wire:loading.class.add='fa-spin'></i>
+            Refresh
+        </button>
+    </nav>
+
+    <div class="row mb-3 mx-1">
         <div class="col-10 offset-1 offset-md-0 col-md-8 col-lg-6 col-xl-4">
             <canvas id="scholars_by_scholarship" width="100" height="100"></canvas>
         </div>

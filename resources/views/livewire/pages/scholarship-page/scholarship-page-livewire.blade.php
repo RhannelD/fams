@@ -1,7 +1,6 @@
-<div>
-    @livewire('add-ins.scholarship-program-livewire', [$scholarship_id], key('page-tabs-'.time().$scholarship_id))
+<div class="w-100">
+    @livewire('add-ins.scholarship-program-livewire', [$scholarship_id, 'home'], key('page-tabs-'.time().$scholarship_id))
 
-    <hr>
     <div class="row mt-3">
         <div class="col-12">
             @can('create', [\App\Models\ScholarshipPost::class, $scholarship_id])

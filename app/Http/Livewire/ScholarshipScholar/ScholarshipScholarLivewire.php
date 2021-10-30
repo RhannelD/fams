@@ -105,7 +105,7 @@ class ScholarshipScholarLivewire extends Component
                 'scholars' => $this->get_scholars(),
                 'categories' => $this->get_categories(),
             ])
-            ->extends('livewire.main.main-livewire');
+            ->extends('livewire.main.scholarship');
     }
 
     protected function get_categories()

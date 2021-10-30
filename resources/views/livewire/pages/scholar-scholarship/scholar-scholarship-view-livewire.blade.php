@@ -1,4 +1,4 @@
-<div>
+<div class="mx-2">
     <ul wire:ignore class="nav nav-tabs d-flex justify-content-end my-2" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <a id="scholarship-tab" data-toggle="tab" href="#scholarship" role="tab" aria-controls="scholarship"

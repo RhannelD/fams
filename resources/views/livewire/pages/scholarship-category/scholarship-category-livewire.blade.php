@@ -1,8 +1,7 @@
 <div>
-    @livewire('add-ins.scholarship-program-livewire', [$scholarship_id], key('page-tabs-'.time().$scholarship_id))
+    @livewire('add-ins.scholarship-program-livewire', [$scholarship_id, 'category'], key('page-tabs-'.time().$scholarship_id))
     
-    <hr class="mb-2">
-	<div class="mb-1">
+	<div class="mb-1 mx-3">
 		<div class="d-flex mt-2">
             <h3 class="ml-3 my-auto py-1">
                 <strong>Categories</strong>
@@ -15,7 +14,7 @@
         </div>
 	</div>
 
-    <div class="mx-md-3 row mt-3">
+    <div class="mx-md-3 mx-1 row mt-3">
         @forelse ($categories as $category)
             <div class="col-xl-3 col-lg-3 col-sm-6 my-2">
                 <div class="card shadow-sm">

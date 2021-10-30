@@ -53,7 +53,7 @@ class ScholarshipRequirementResponseLivewire extends Component
                 'requirement' => $this->get_requirement(),
                 'responses'   => $this->get_responses(),
             ])
-            ->extends('livewire.main.main-livewire');
+            ->extends('livewire.main.scholarship');
     }
 
     protected function get_requirement()

@@ -1,9 +1,8 @@
 <div>
 @isset($requirement)
-    @livewire('add-ins.scholarship-program-livewire', [$requirement->scholarship_id], key('page-tabs-'.time().$requirement->scholarship_id))
+    @livewire('add-ins.scholarship-program-livewire', [$requirement->scholarship_id, 'requirements'], key('page-tabs-'.time().$requirement->scholarship_id))
 
-    <hr class="mb-1">
-    <div class="row">  
+    <div class="row mx-1 mt-1">  
         <div class="col-12">
             <div class="card bg-primary border-primary shadow">
                 <div class="card-body text-white border-primary py-1">
@@ -19,7 +18,7 @@
         </div>
     </div>
 
-	<div class="row mb-1">
+	<div class="row mb-1 mx-1">
 		<div class="input-group col-md-4 mt-2">
 			<div class="input-group rounded mt-1">
 				<input type="search" class="form-control rounded" placeholder="Search Scholar Response" wire:model.debounce.1000ms='search'/>
@@ -82,7 +81,7 @@
         @livewire('scholarship-requirement-response.scholarship-requirement-response-unsubmitted-livewire', [$requirement_id], key('unsubmitted-response-'.time()))
     </div>
 
-	<div class="row">
+	<div class="row mx-1">
         @if ( is_null($index))
             <div class="contents-container col-12 mb-2 table_responses">
                 @include('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-search-livewire')

@@ -1,11 +1,10 @@
 <div>
 @if ( isset($post) )
     <div wire:ignore>
-        @livewire('add-ins.scholarship-program-livewire', [$post->scholarship_id], key('page-tabs-'.time().$post->scholarship_id))
+        @livewire('add-ins.scholarship-program-livewire', [$post->scholarship_id, 'home'], key('page-tabs-'.time().$post->scholarship_id))
     </div>
 
-    <hr>
-    <div class="row">
+    <div class="row mt-2">
         <div class="col-12 mb-2">
             <div class="card mb-3 shadow item-hover mx-auto" style="max-width: 800px">
                 <div class="card-header"> 

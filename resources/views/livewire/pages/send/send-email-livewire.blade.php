@@ -1,7 +1,7 @@
 <div>
-    @livewire('add-ins.scholarship-program-livewire', [$scholarship_id], key('page-tabs-'.time().$scholarship_id))
+    @livewire('add-ins.scholarship-program-livewire', [$scholarship_id, 'send-email'], key('page-tabs-'.time().$scholarship_id))
     
-    <ul wire:ignore class="nav nav-tabs d-flex justify-content-end my-2" id="myTab" role="tablist">
+    <ul wire:ignore class="nav nav-tabs d-flex justify-content-end my-2 mx-1" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <a id="send-email-tab" data-toggle="tab" href="#send-email" role="tab" aria-controls="send-email"
                 wire:click="$set('tab', '')"
@@ -21,7 +21,7 @@
             </a>
         </li>
     </ul>
-    <div class="tab-content mt-3" id="pills-tabContent">
+    <div class="tab-content mt-3 mx-3" id="pills-tabContent">
         <div wire:ignore.self class="tab-pane fade {{ $tab==''?'show active':'' }}" id="send-email" role="tabpanel" aria-labelledby="send-email-tab">
             @include('livewire.pages.send.send-email-sending-livewire')
         </div>

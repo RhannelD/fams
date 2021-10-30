@@ -62,7 +62,7 @@ class SendEmailLivewire extends Component
                 'search_users' => $this->get_search_users(),
                 'added_recipients' => $this->get_added_recipients(),
             ])
-            ->extends('livewire.main.main-livewire');
+            ->extends('livewire.main.scholarship');
     }
 
     protected function get_scholarship()

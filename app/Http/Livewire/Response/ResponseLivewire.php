@@ -63,7 +63,7 @@ class ResponseLivewire extends Component
                 'requirement' => $this->get_requirement(),
                 'user_response' => $this->get_user_response(),
             ])
-            ->extends('livewire.main.main-livewire');
+            ->extends('livewire.main.scholarship');
     }
 
     protected function get_requirement()

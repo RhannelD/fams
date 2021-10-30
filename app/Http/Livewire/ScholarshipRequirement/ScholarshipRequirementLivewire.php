@@ -56,7 +56,7 @@ class ScholarshipRequirementLivewire extends Component
         return view('livewire.pages.scholarship-requirement.scholarship-requirement-livewire', [
                 'requirements' => $this->get_requirements()
             ])
-            ->extends('livewire.main.main-livewire');
+            ->extends('livewire.main.scholarship');
     }
 
     protected function get_requirements()

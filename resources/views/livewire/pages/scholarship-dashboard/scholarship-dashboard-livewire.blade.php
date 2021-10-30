@@ -1,9 +1,8 @@
 <div>
     <script src="{{ asset('js/Chart.min.js') }}"></script>
     <script src="https://www.chartjs.org/samples/2.9.4/utils.js"></script>
-    @livewire('add-ins.scholarship-program-livewire', [$scholarship_id], key('page-tabs-'.time().$scholarship_id))
+    @livewire('add-ins.scholarship-program-livewire', [$scholarship_id, 'dashboard'], key('page-tabs-'.time().$scholarship_id))
 
-    <hr class="mb-2">
     <div class="row mt-1 mx-2">
         <div class="col-12 d-flex flex-row-reverse">
             <button wire:click='refresh_all' class="btn btn-success float-right text-white">
@@ -12,7 +11,7 @@
             </button>
         </div>
     </div>
-    <div class="row mb-3">
+    <div class="row mb-3 mx-1">
         <div class="col-12">
             <canvas id="responses_chart" width="100" height="300"></canvas>
         </div>

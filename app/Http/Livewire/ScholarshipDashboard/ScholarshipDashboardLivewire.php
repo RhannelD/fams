@@ -42,7 +42,7 @@ class ScholarshipDashboardLivewire extends Component
     public function render()
     {
         return view('livewire.pages.scholarship-dashboard.scholarship-dashboard-livewire')
-            ->extends('livewire.main.main-livewire');
+            ->extends('livewire.main.scholarship');
     }
 
     protected function get_scholarship()

@@ -1,6 +1,6 @@
 <div>
 @if( isset($scholarship_requirement) )
-    @livewire('add-ins.scholarship-program-livewire', [$scholarship_requirement->scholarship_id], key('page-tabs-'.time().$scholarship_requirement->scholarship_id))
+    @livewire('add-ins.scholarship-program-livewire', [$scholarship_requirement->scholarship_id, 'requirements'], key('page-tabs-'.time().$scholarship_requirement->scholarship_id))
 
     <hr>
     <div class="mx-auto mxw-1300px">

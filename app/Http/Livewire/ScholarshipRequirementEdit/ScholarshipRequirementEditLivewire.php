@@ -59,7 +59,7 @@ class ScholarshipRequirementEditLivewire extends Component
                 'scholarship_requirement' => $scholarship_requirement,
                 'categories' => $this->get_categories()
             ])
-            ->extends('livewire.main.main-livewire');
+            ->extends('livewire.main.scholarship');
     }
 
     protected function get_scholarship_requirement()

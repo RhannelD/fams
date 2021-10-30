@@ -42,10 +42,9 @@
     
     <script src="{{ asset('js/livewire-sortable.js') }}"></script>
     <script>
-        $("#menu-toggle").click(function(e) {
-            e.preventDefault();
+        function menu_toggle() {
             $("#wrapper").toggleClass("toggled");
-        });
+        }
   
         window.addEventListener('swal:modal', event => { 
             swal({

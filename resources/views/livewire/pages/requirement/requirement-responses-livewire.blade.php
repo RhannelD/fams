@@ -1,4 +1,4 @@
-<div>
+<div class="mt-3 mx-2">
     <div class="d-flex align-content-start flex-wrap my-1">
         <div class="d-flex mr-0 mr-sm-auto">
             <div class="input-group rounded">

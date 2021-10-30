@@ -1,8 +1,7 @@
 <div>
-    @livewire('add-ins.scholarship-program-livewire', [$scholarship_id], key('page-tabs-'.time().$scholarship_id))
+    @livewire('add-ins.scholarship-program-livewire', [$scholarship_id, 'requirements'], key('page-tabs-'.time().$scholarship_id))
 
-    <hr class="mb-2">
-	<div class="row mb-1">
+	<div class="row mb-1 mx-1">
 		<div class="input-group col-md-5 mt-2">
 			<div class="input-group rounded">
 				<input type="search" class="form-control rounded" placeholder="Search Requirement" wire:model.debounce.1000ms='search'/>
@@ -50,7 +49,7 @@
             </div>
         @endif
     </div>
-	<div class="row">
+	<div class="row mx-1">
 
 		<div class="contents-container col-12 mb-2">
 			@include('livewire.pages.scholarship-requirement.scholarship-requirement-search-livewire')

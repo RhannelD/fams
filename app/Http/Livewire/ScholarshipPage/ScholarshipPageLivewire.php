@@ -46,7 +46,7 @@ class ScholarshipPageLivewire extends Component
                 'show_more' => $show_more,
                 'url' => url()->current(),
             ])
-            ->extends('livewire.main.main-livewire');
+            ->extends('livewire.main.scholarship');
     }
 
     protected function get_posts()

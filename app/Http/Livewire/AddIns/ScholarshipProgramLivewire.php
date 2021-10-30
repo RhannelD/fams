@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\Auth;
 class ScholarshipProgramLivewire extends Component
 {
     public $scholarship_id;
+    public $active;
 
-    public function mount($scholarship_id)
+    public function mount($scholarship_id, $active = null)
     {
         $this->scholarship_id = $scholarship_id;
+        $this->active = $active;
     }
 
     public function render()

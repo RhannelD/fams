@@ -1,5 +1,5 @@
 <div>
-	<div class="row mb-1">
+	<div class="row mb-1 mx-1">
 		<div class="input-group col-md-6 mt-2">
 
 			<div class="input-group rounded">
@@ -23,7 +23,7 @@
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="row mx-1">
 
 		<div class="contents-container col-md-6 mb-2 table_student">
 			@include('livewire.pages.officer.officer-search-livewire')

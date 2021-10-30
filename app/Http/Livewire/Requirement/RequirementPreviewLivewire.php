@@ -52,7 +52,7 @@ class RequirementPreviewLivewire extends Component
             'scholar_response' => $scholar_response,
             'access' => $access,
             'is_scholar' => $is_scholar,
-        ])->extends('livewire.main.main-livewire');
+        ])->extends('livewire.main.scholarship');
     }
 
     protected function get_requirement()

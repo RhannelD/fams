@@ -79,3 +79,19 @@ body {
     max-width: 35px;
     max-height: 35px;
 }
+
+.bg-dark-grey{
+    background-color: #3d4750;
+}
+
+.bg-dark-grey-2{
+    background-color: #343D46;
+}
+
+.hover-bg-white:hover{
+    background-color: #65737E;
+}
+
+.bg-light-grey{
+    background-color: #576470;
+}

@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Scholarship;
 
 use Livewire\Component;
 use App\Models\Scholarship;
-use Livewire\WithPagination;
 use App\Models\ScholarshipOfficer;
 use App\Models\ScholarshipCategory;
 use Illuminate\Support\Facades\Auth;
@@ -13,8 +12,6 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class ScholarshipLivewire extends Component
 {
     use AuthorizesRequests;
-    use WithPagination;
-    protected $paginationTheme = 'bootstrap';
 
     public $search = '';
     public $scholarship_program_id;
@@ -54,34 +51,22 @@ class ScholarshipLivewire extends Component
 
     public function render()
     {
-        $search = $this->search;
-
-        $scholarships = Scholarship::select('scholarships.*')
-            ->where('scholarship', 'like', "%$search%");
-
-        if (Auth::user()->usertype != 'admin') {
-            if (Auth::user()->usertype == 'officer') {
-                $scholarships = $scholarships
-                    ->join('scholarship_officers', 'scholarships.id', '=', 'scholarship_officers.scholarship_id')
-                    ->where('scholarship_officers.user_id', Auth::id());
-            }
-            if (Auth::user()->usertype == 'scholar') {
-                $scholarships = $scholarships
-                    ->join('scholarship_categories', 'scholarships.id', '=', 'scholarship_categories.scholarship_id')
-                    ->join('scholarship_scholars', 'scholarship_categories.id', '=', 'scholarship_scholars.category_id')
-                    ->where('scholarship_scholars.user_id', Auth::id());
-            }
-        }   
-        
-        $scholarships = $scholarships->paginate(15);
-
-        $scholarship_program = Scholarship::find($this->scholarship_program_id);
-
         return view('livewire.pages.scholarship.scholarship-livewire', [
-                'scholarships' => $scholarships,
-                'scholarship_program' =>$scholarship_program,
+                'scholarships' => $this-> get_scholarships(),
             ])
             ->extends('livewire.main.main-livewire');
+    }
+
+    protected function get_scholarships()
+    {
+        return Scholarship::where('scholarship', 'like', "%{$this->search}%")
+            ->when( Auth::user()->is_officer(), function ($query) {
+                $query->whereHas('officers', function ($query) {
+                    $query->where('user_id', Auth::id());
+                });
+            })
+            ->orderBy('scholarship')
+            ->get();
     }
     
     public function updated($propertyName)
@@ -162,9 +147,10 @@ class ScholarshipLivewire extends Component
         $this->scholarship    = null;
     }
 
-    public function edit()
+    public function edit($scholarship_program_id)
     {
-        $scholarship = Scholarship::find($this->scholarship_program_id);
+        $this->scholarship_program_id = $scholarship_program_id;
+        $scholarship = Scholarship::find($scholarship_program_id);
         if ( Auth::guest() || Auth::user()->cannot('update', $scholarship) ) {
             $this->nullinputs();
             return;
