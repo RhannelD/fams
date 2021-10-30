@@ -110,12 +110,23 @@
             @endcan
             @can('viewAny', [\App\Models\ScholarshipRequirement::class, $scholarship_id])
                 <li class="nav-item">
-                    <a class="nav-link text-white{{ $active == 'requirements'? '': '-50' }} text-nowrap" href="{{ route('scholarship.requirement', [$scholarship->id]) }}">
+                    <a class="nav-link text-white{{ $active == 'applications'? '': '-50' }} text-nowrap" href="{{ route('scholarship.application', [$scholarship->id]) }}">
                         <i class="fas fa-file-alt"></i>
-                        Requirements
-                        @if ( $scholarship->get_num_of_pending_responses() )
+                        Applications
+                        @if ( $scholarship->get_num_of_pending_application_responses() )
                             <span class="badge badge-primary">
-                                {{ $scholarship->get_num_of_pending_responses() }}
+                                {{ $scholarship->get_num_of_pending_application_responses() }}
+                            </span>
+                        @endif
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white{{ $active == 'renewals'? '': '-50' }} text-nowrap" href="{{ route('scholarship.requirement', [$scholarship->id]) }}">
+                        <i class="fas fa-file-alt"></i>
+                        Renewals
+                        @if ( $scholarship->get_num_of_pending_renewal_responses() )
+                            <span class="badge badge-primary">
+                                {{ $scholarship->get_num_of_pending_renewal_responses() }}
                             </span>
                         @endif
                     </a>

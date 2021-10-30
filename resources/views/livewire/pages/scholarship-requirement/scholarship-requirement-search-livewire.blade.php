@@ -11,7 +11,6 @@
                     <th>Requirement</th>
                     <th class="text-right px-1">Responds</th>
                     <th class="px-1">Category</th>
-                    <th class="text-center px-1">Target</th>
                     <th class="text-center px-1">State</th>
                     <th class="text-center px-1">Actions</th>
                 </tr>
@@ -34,13 +33,6 @@
                         <td class="px-1">
                             @if ( $requirement->categories->count() > 0 )
                                 {{ $requirement->categories->first()->category->category }}
-                            @endif
-                        </td>
-                        <td class="text-center px-1">
-                            @if ($requirement->promote)
-                                <span class="badge badge-pill badge-secondary">Application</span>
-                            @else
-                                <span class="badge badge-pill badge-primary">Renewal</span>
                             @endif
                         </td>
                         <td class="text-center px-1">

@@ -59,7 +59,7 @@
 								<i class="fas fa-edit"></i>
 								Edit Info
 							</button>
-							<button class="btn btn-danger text-white mb-1 mb-lg-0" wire:click="confirm_delete()">
+							<button class="btn btn-danger text-white mb-1 mb-lg-0" wire:click="confirm_delete({{ $scholarship->id }})">
 								<i class="fas fa-trash"></i>
 								Delete
 							</button>

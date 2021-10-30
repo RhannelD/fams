@@ -84,8 +84,9 @@ class ScholarshipLivewire extends Component
         $this->dispatchBrowserEvent('scholarship-info', ['action' => 'show']);
     }
 
-    public function confirm_delete()
+    public function confirm_delete($scholarship_program_id)
     {
+        $this->scholarship_program_id = $scholarship_program_id;
         if ( Auth::guest() || Auth::user()->cannot('delete', Scholarship::find($this->scholarship_program_id)) ) 
             return;
         

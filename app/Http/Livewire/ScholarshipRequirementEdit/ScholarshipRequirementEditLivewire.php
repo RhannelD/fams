@@ -23,7 +23,6 @@ class ScholarshipRequirementEditLivewire extends Component
     protected $rules = [
         'requirement.requirement' => 'required|string|min:6',
         'requirement.description' => 'required|string|max:500',
-        'requirement.promote' => 'required',
     ];
 
     protected $listeners = [
@@ -52,7 +51,6 @@ class ScholarshipRequirementEditLivewire extends Component
         if ( isset($scholarship_requirement) ) {
             $this->requirement->requirement = $scholarship_requirement->requirement;
             $this->requirement->description = $scholarship_requirement->description;
-            $this->requirement->promote     = $scholarship_requirement->promote;
         }
 
         return view('livewire.pages.scholarship-requirement-edit.scholarship-requirement-edit-livewire', [
@@ -85,14 +83,6 @@ class ScholarshipRequirementEditLivewire extends Component
             return;
 
         $this->save();
-
-        if ($propertyName == 'requirement.promote') {
-            if ($this->requirement->promote) {
-                $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Requirement type changed for New Applicants']);
-            } else {
-                $this->dispatchBrowserEvent('toggle_enable_form', ['message' => 'Requirement type changed for Old Scholars']);
-            }
-        }
     }
 
     public function refreshing()
@@ -143,8 +133,6 @@ class ScholarshipRequirementEditLivewire extends Component
 
         $scholarship_requirement->requirement = $this->requirement->requirement;
         $scholarship_requirement->description = $this->requirement->description;
-        if ( $scholarship_requirement->get_submitted_responses_count() == 0 ) 
-            $scholarship_requirement->promote = $this->requirement->promote;
         $scholarship_requirement->save();
     }
 

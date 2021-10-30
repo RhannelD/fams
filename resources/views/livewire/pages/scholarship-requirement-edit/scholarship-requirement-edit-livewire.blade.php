@@ -1,10 +1,9 @@
 <div>
 @if( isset($scholarship_requirement) )
-    @livewire('add-ins.scholarship-program-livewire', [$scholarship_requirement->scholarship_id, 'requirements'], key('page-tabs-'.time().$scholarship_requirement->scholarship_id))
+    @livewire('add-ins.scholarship-program-livewire', [$scholarship_requirement->scholarship_id, ($scholarship_requirement->promote? 'applications': 'renewals')], key('page-tabs-'.time().$scholarship_requirement->scholarship_id))
 
-    <hr>
-    <div class="mx-auto mxw-1300px">
-        <div class="row">
+    <div class="mx-auto mxw-1300px mt-2">
+        <div class="row mx-1">
             <div class="col-12 col-md-3 mb-2">
                 
                 <div class="card shadow mb-2 requirement-item-hover">
@@ -33,7 +32,7 @@
                 <div class="card shadow mb-2 requirement-item-hover">
                     <div class="card-body">
                         <a href="{{ route('scholarship.requirement.open', [$scholarship_requirement->id]) }}" class="btn btn-block btn-info text-white">
-                            Requirement View
+                            {{ $scholarship_requirement->promote? 'Application': 'Renewal' }} Form View
                         </a>
                     </div>
                 </div>
@@ -57,17 +56,8 @@
                                 <input type="text" class="form-control bg-white border-info" readonly value="{{ $scholarship_requirement->categories->first()->category->category }}">
                             </div>
                         @else
-                            <div class="form-group">
-                                <label for="promote_{{ $scholarship_requirement->id }}">Requirement for</label>
-                                <select wire:model.lazy="requirement.promote" class="form-control" id="promote_{{ $scholarship_requirement->id }}">
-                                    <option value="1">Applicatants</option>
-                                    <option value="0">Old Scholars</option>
-                                </select>
-                                @error('requirement.promote') <span class="text-danger">{{ $message }}</span> @enderror
-                            </div>
-                            
                             <div class="form-group mb-0">
-                                <label for="">Requirement for category</label>
+                                <label for="">{{ $scholarship_requirement->promote? 'Application': 'Renewal' }} for category</label>
                                 @foreach ($categories as $category)
                                     <div class="input-group mb-1">
                                         <div class="input-group-prepend">
@@ -123,7 +113,13 @@
                 <div class="card bg-white border-dark mb-4 shadow requirement-item-hover">
                     <div class="card-body border-primary">
                         <div class="form-group">
-                            <label for="requirement"><h5><strong>Requirement Title</strong></h5></label>
+                            <label for="requirement">
+                                <h5>
+                                    <strong>
+                                        {{ $scholarship_requirement->promote? 'Application': 'Renewal' }} Form Title
+                                    </strong>
+                                </h5>
+                            </label>
                             <input wire:model.lazy="requirement.requirement" class="form-control form-control-lg" type="text" 
                                 placeholder="Requirement Title" id='requirement'>
                             @error('requirement.requirement') <span class="text-danger">{{ $message }}</span> @enderror

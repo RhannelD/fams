@@ -6,27 +6,22 @@ use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\Scholarship;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementItem;
 use App\Models\ScholarshipRequirementCategory;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class ScholarshipRequirementLivewire extends Component
+class ScholarshipApplicationLivewire extends Component
 {
     use AuthorizesRequests;
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-
+    
     public $scholarship_id;
     public $search;
     public $show_row = 10;
 
-    protected $listeners = [
-        'refresh' => '$refresh',
-    ];
-    
     public function getQueryString()
     {
         return [];
@@ -35,7 +30,7 @@ class ScholarshipRequirementLivewire extends Component
     public function mount($scholarship_id)
     {
         $this->scholarship_id = $scholarship_id;
-        abort_if(!$this-> get_scholarship(), '404');
+        abort_if(!$this->get_scholarship(), '404');
         $this->authorize('viewAny', [ScholarshipRequirement::class, $scholarship_id]);
     }
 
@@ -46,17 +41,17 @@ class ScholarshipRequirementLivewire extends Component
         }
     }
 
-    public function updated($name)
-    {
-        $this->page = 1;
-    }
-
     public function render()
     {
-        return view('livewire.pages.scholarship-requirement.scholarship-requirement-livewire', [
+        return view('livewire.pages.scholarship-requirement.scholarship-application-livewire', [
                 'requirements' => $this->get_requirements()
             ])
             ->extends('livewire.main.scholarship');
+    }
+    
+    public function updated($name)
+    {
+        $this->page = 1;
     }
 
     protected function get_scholarship()
@@ -68,7 +63,7 @@ class ScholarshipRequirementLivewire extends Component
     {
         return ScholarshipRequirement::where('requirement', 'like', "%{$this->search}%")
             ->where('scholarship_id', $this->scholarship_id)
-            ->where('promote', false)
+            ->where('promote', true)
             ->orderBy('id', 'desc')
             ->paginate($this->show_row);
     }
@@ -87,12 +82,12 @@ class ScholarshipRequirementLivewire extends Component
             ]);
             return;
         }
-    
+
         $new_requirement = new ScholarshipRequirement;
         $new_requirement->scholarship_id = $this->scholarship_id;
-        $new_requirement->requirement = 'Renewal Form Title';
-        $new_requirement->description = 'Renewal Description';
-        $new_requirement->promote = false;
+        $new_requirement->requirement = 'Application Form Title';
+        $new_requirement->description = 'Application Description';
+        $new_requirement->promote = true;
         $new_requirement->enable = null;
         $new_requirement->start_at = Carbon::now()->format('Y-m-d H:i:s');
         $new_requirement->end_at = Carbon::now()->addDay()->format('Y-m-d H:i:s');

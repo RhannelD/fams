@@ -91,9 +91,13 @@ class ScholarshipRequirementOpenLivewire extends Component
             return;
 
         $scholarship_id = $requirement->scholarship_id;
+        $promote = $requirement->promote;
         if ($requirement->delete()) {
-            session()->flash('deleted', 'Requirement successfully deleted.');
-            redirect()->route('scholarship.requirement', [$scholarship_id]);
+            session()->flash('deleted', 'Application form successfully deleted.');
+
+            if ( $promote )
+                return redirect()->route('scholarship.application', [$scholarship_id]);
+            return redirect()->route('scholarship.requirement', [$scholarship_id]);
         }
     }
 

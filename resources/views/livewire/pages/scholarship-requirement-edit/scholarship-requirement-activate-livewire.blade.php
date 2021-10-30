@@ -2,7 +2,7 @@
 @isset($requirement)
     <div class="card-body">
         <h6 class="my-1 text-center">
-            Requirement Form Access
+            {{ $requirement->promote? 'Application': 'Renewal' }} Form Access
         </h6>
         <hr class="my-2">
         <div class="custom-control custom-switch">
