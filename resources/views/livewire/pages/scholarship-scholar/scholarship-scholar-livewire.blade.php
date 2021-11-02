@@ -14,30 +14,37 @@
 		</div>
 
         <div class="col-md-7 mt-2">
-            <div class="form-row">
-                <div class="input-group col-6 col-md-4 my-0">
-                    <div class="input-group-prepend">
-                        <label class="input-group-text d-none d-sm-block" for="rows">Rows</label>
-                        <label class="input-group-text d-block d-sm-none" for="rows">#</label>
+            <div class="d-flex flex-wrap">
+                <div class="d-flex">
+                    <div class="input-group my-0">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text d-none d-sm-block" for="rows">Rows</label>
+                            <label class="input-group-text d-block d-sm-none" for="rows">#</label>
+                        </div>
+                        <select wire:model="show_row" class="form-control" id="rows">
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="150">150</option>
+                            <option value="200">200</option>
+                        </select>
                     </div>
-                    <select wire:model="show_row" class="form-control" id="rows">
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="150">150</option>
-                        <option value="200">200</option>
-                    </select>
                 </div>
                 @if (Auth::user()->is_admin() || Auth::user()->is_officer())    
-                    <div class="form-group col-3 my-0">
+                    <div class="form-group my-0 ml-1 mr-auto">
                         @include('livewire.pages.scholarship-scholar.scholarship-scholar-filter-livewire')
                     </div>
-                    <div class="form-group col-3 col-md-2 offset-md-3 my-0">
+                    <div class="form-group my-0 ml-1">
                         <button class="form-control btn btn-success" type="button" data-toggle="modal" data-target="#officer_invite">
                             Invite
                         </button>
+                    </div>
+                    <div class="form-group my-0 ml-1">
+                        <a href="{{ route('scholar.list.pdf', [$scholarship_id]) }}" target="blank" class="form-control btn btn-primary">
+                            Print
+                        </a>
                     </div>
                     <div>
                         <div wire:ignore.self class="modal fade officer_invite" id="officer_invite" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

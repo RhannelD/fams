@@ -5,7 +5,6 @@ namespace App\Http\Livewire\User;
 use Livewire\Component;
 use App\Models\ScholarInfo;
 use App\Models\ScholarCourse;
-use App\Models\ScholarSchool;
 use Illuminate\Support\Facades\Auth;
 
 class UpdateEducationInformationLivewire extends Component
@@ -17,7 +16,6 @@ class UpdateEducationInformationLivewire extends Component
     ];
 
     protected $rules = [
-        'user_info.school_id' => 'exists:scholar_schools,id',
         'user_info.course_id' => 'exists:scholar_courses,id',
         'user_info.year' => 'required|max:10|min:1',
         'user_info.semester' => 'required|max:3|min:1',
@@ -40,16 +38,10 @@ class UpdateEducationInformationLivewire extends Component
     public function render()
     {
         return view('livewire.pages.user.update-education-information-livewire', [
-            'schools' => $this->get_schools(),
             'courses' => $this->get_courses(),
         ]);
     }
     
-    protected function get_schools()
-    {
-        return ScholarSchool::orderBy('school')->get();
-    }
-
     protected function get_courses()
     {
         return ScholarCourse::orderBy('course')->get();
@@ -65,7 +57,6 @@ class UpdateEducationInformationLivewire extends Component
         if ( Auth::check() ) {
             $user_info = ScholarInfo::where('user_id', Auth::id())->first();
             $this->user_info =  new ScholarInfo;
-            $this->user_info->school_id = $user_info->school_id;
             $this->user_info->course_id = $user_info->course_id;
             $this->user_info->year      = $user_info->year;
             $this->user_info->semester  = $user_info->semester;
@@ -80,7 +71,6 @@ class UpdateEducationInformationLivewire extends Component
         $this->validate();
 
         $user_info = ScholarInfo::where('user_id', Auth::id())->first();
-        $user_info->school_id = $this->user_info->school_id;
         $user_info->course_id = $this->user_info->course_id;
         $user_info->year      = $this->user_info->year;
         $user_info->semester  = $this->user_info->semester;

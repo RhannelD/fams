@@ -6,7 +6,6 @@ use App\Models\User;
 use Livewire\Component;
 use App\Models\ScholarInfo;
 use App\Models\ScholarCourse;
-use App\Models\ScholarSchool;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -36,7 +35,6 @@ class ScholarEditLivewire extends Component
             'user.email' => "required|unique:users,email".((isset($this->user_id))?",".$this->user_id:''),
             'password' => 'required|min:9',
 
-            'user_info.school_id' => 'exists:scholar_schools,id',
             'user_info.course_id' => 'exists:scholar_courses,id',
             'user_info.year' => 'required|max:10|min:1',
             'user_info.semester' => 'required|max:3|min:1',
@@ -96,7 +94,6 @@ class ScholarEditLivewire extends Component
 
         $user_info = ScholarInfo::where('user_id', $user_id)->first();
         if ( isset($user_info) ) {
-            $this->user_info->school_id                     = $user_info->school_id;
             $this->user_info->course_id                     = $user_info->course_id;
             $this->user_info->year                          = $user_info->year;
             $this->user_info->semester                      = $user_info->semester;
@@ -132,14 +129,8 @@ class ScholarEditLivewire extends Component
     public function render()
     {
         return view('livewire.pages.scholar.scholar-edit-livewire', [
-            'schools' => $this->get_schools(),
             'courses' => $this->get_courses(),
         ]);
-    }
-
-    protected function get_schools()
-    {
-        return ScholarSchool::orderBy('school')->get();
     }
 
     protected function get_courses()
@@ -196,7 +187,6 @@ class ScholarEditLivewire extends Component
                     'user_id' => $this->user_id
                 ],
                 [
-                    'school_id'                     => $user_info->school_id,
                     'course_id'                     => $user_info->course_id,
                     'year'                          => $user_info->year,
                     'semester'                      => $user_info->semester,

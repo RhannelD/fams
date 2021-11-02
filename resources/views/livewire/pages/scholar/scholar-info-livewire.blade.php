@@ -48,10 +48,6 @@
                 <table>
                     <tbody>
                         <tr>
-                            <td>School:</td>
-                            <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->school->school }}</td>
-                        </tr>
-                        <tr>
                             <td>Course:</td>
                             <td class="pl-sm-1 pl-md-2">{{ $user->scholar_info->course->course }}</td>
                         </tr>

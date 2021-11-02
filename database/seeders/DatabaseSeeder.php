@@ -32,7 +32,6 @@ class DatabaseSeeder extends Seeder
             ScholarResponseFileSeeder::class,
             ScholarResponseCommentSeeder::class,
             ScholarCourseSeeder::class,
-            ScholarSchoolSeeder::class,
             ScholarInfoSeeder::class,
             ScholarFacebookSeeder::class,
             UserChatSeeder::class,

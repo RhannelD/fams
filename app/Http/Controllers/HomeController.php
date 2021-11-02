@@ -10,7 +10,6 @@ use App\Models\Scholarship;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ScholarCourse;
-use App\Models\ScholarSchool;
 use App\Mail\PasswordResetMail;
 use App\Models\ScholarResponse;
 use App\Models\ScholarshipPost;

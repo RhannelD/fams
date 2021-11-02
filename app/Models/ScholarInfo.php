@@ -16,7 +16,6 @@ class ScholarInfo extends Model
      */
     protected $fillable = [
         'user_id',
-        'school_id',
         'course_id',
         'year',
         'semester',
@@ -33,11 +32,6 @@ class ScholarInfo extends Model
     ];
 
     
-    public function school()
-    {
-        return $this->belongsTo(ScholarSchool::class, 'school_id', 'id');
-    }
-
     public function course()
     {
         return $this->belongsTo(ScholarCourse::class, 'course_id', 'id');

@@ -16,37 +16,117 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="c_email">Email Address</label>
-                        <input type="email" wire:model.lazy="email" class="form-control" id="c_email" placeholder="juan.delacruz.@g.batstate-u-edu.ph">
-                        @error('email') <span class="text-danger">{{ $message }}</span> @enderror
+                @if ( !$sent )
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="c_email">Email Address</label>
+                            <input type="email" wire:model.lazy="email" class="form-control" id="c_email" placeholder="juan.delacruz.@g.batstate-u-edu.ph">
+                            @error('email') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                        @if (session()->has('message-success'))
+                            <div class="alert alert-success mb-0">
+                                <i class="fas fa-check-circle"></i>
+                                {{ session('message-success') }}
+                            </div>
+                        @elseif (session()->has('message-error'))
+                            <div class="alert alert-danger mb-0">
+                                <i class="fas fa-times-circle"></i>
+                                {{ session('message-error') }}
+                            </div>
+                        @endif
                     </div>
-                    @if (session()->has('message-success'))
-                        <div class="alert alert-success mb-0">
-                            <i class="fas fa-check-circle"></i>
-                            {{ session('message-success') }}
-                        </div>
-                    @elseif (session()->has('message-error'))
-                        <div class="alert alert-danger mb-0">
-                            <i class="fas fa-times-circle"></i>
-                            {{ session('message-error') }}
-                        </div>
-                    @endif
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary"
-                        wire:click='search'
-                        >
-                        <i class="fas fa-spinner fa-spin"
-                            wire:loading
-                            wire:target='search'
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary"
+                            wire:click='search'
                             >
-                        </i>
-                        Search
-                    </button>
-                </div>
+                            <i class="fas fa-spinner fa-spin" id="search_load"
+                                wire:loading
+                                wire:target='search'
+                                >
+                            </i>
+                            Search
+                        </button>
+                    </div>
+                @elseif ( $sent && !$verify_code )
+                    <div class="modal-body">
+                        <label for="c_email">Email Address</label>
+                        <div class="input-group mb-3">
+                            <input type="text" wire:model.lazy="email" class="form-control bg-white border-success" aria-describedby="email-resend" disabled>
+                            <div class="input-group-append">
+                                <button wire:click='search' class="btn btn-success" type="button" id="email-resend">
+                                    <i class="fas fa-spinner fa-spin" id="search_load"
+                                        wire:loading
+                                        wire:target='search'
+                                        >
+                                    </i>
+                                    Resend
+                                </button>
+                            </div>
+                        </div>
+                        @if (session()->has('message-success'))
+                            <div class="alert alert-success mb-0">
+                                <i class="fas fa-check-circle"></i>
+                                {{ session('message-success') }}
+                            </div>
+                        @elseif (session()->has('message-error'))
+                            <div class="alert alert-danger mb-0">
+                                <i class="fas fa-times-circle"></i>
+                                {{ session('message-error') }}
+                            </div>
+                        @endif
+                        <hr class="my-2">
+                        <div class="form-group">
+                            <label for="verify_code">Enter Verification Code</label>
+                            <input wire:model.lazy='code' type="text" class="form-control" id="verify_code" placeholder="Code">
+                            @error('code') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success"
+                            wire:click='verify_code'
+                            >
+                            <i class="fas fa-spinner fa-spin" id="verify_code_load"
+                                wire:loading
+                                wire:target='verify_code'
+                                >
+                            </i>
+                            Submit
+                        </button>
+                    </div>
+                @else
+                    <div class="modal-body">
+                        <label for="c_email">Email Address</label>
+                        <div class="input-group mb-3">
+                            <input type="text" wire:model.lazy="email" class="form-control bg-white border-success" aria-describedby="email-resend" disabled>
+                        </div>
+                        <hr class="my-2">
+                        <div class="form-group">
+                            <label for="password-new">New Password</label>
+                            <input wire:model.lazy='new_password' type="password" class="form-control" id="password-new">
+                            @error('new_password') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="password-confirm">Confirm Password</label>
+                            <input wire:model.lazy='confirm_password' type="password" class="form-control" id="password-confirm">
+                            @error('confirm_password') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success"
+                            wire:click='save'
+                            >
+                            <i class="fas fa-spinner fa-spin" id="save_load"
+                                wire:loading
+                                wire:target='save'
+                                >
+                            </i>
+                            Save
+                        </button>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

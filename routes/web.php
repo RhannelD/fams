@@ -10,9 +10,9 @@ use App\Http\Livewire\User\MyAccountLivewire;
 use App\Http\Livewire\Officer\OfficerLivewire;
 use App\Http\Livewire\Scholar\ScholarLivewire;
 use App\Http\Controllers\FilePreviewController;
+use App\Http\Controllers\ScholarListController;
 use App\Http\Livewire\Response\ResponseLivewire;
 use App\Http\Livewire\UserChat\UserChatLivewire;
-use App\Http\Livewire\Auth\PasswordResetLivewire;
 use App\Http\Livewire\Dashboard\DashboardLivewire;
 use App\Http\Livewire\Invite\InviteOfficerLivewire;
 use App\Http\Livewire\Invite\InviteScholarLivewire;
@@ -54,8 +54,6 @@ Route::group(['middleware' => ['user.login']], function(){
     Route::get('/sign-up', SignUpLivewire::class)->name('sign-up.index');
 
     Route::get('/sign-up/officer/{invite_token}', ScholarshipOfficerInviteLinkLivewire::class)->name('invite');
-
-    Route::get('/password-reset/{token}/{email}', PasswordResetLivewire::class)->name('password.reset');
 });
 
 // Needs to be signed in to access
@@ -73,6 +71,8 @@ Route::group(['middleware' => ['user.auth']], function(){
     Route::get('/scholarship/scholar', ScholarScholarshipViewLivewire::class)->name('scholar.scholarship');
 
     Route::get('/file/preview/{id}', [FilePreviewController::class, 'show'])->name('file.preview');
+    
+    Route::get('/scholar/{scholarship}/list/pdf', [ScholarListController::class, 'scholar_list'])->name('scholar.list.pdf');
 
     Route::prefix('/scholarship')->group(function () {
         Route::get('/{scholarship_id}/dashboard', ScholarshipDashboardLivewire::class)->name('scholarship.dashboard');

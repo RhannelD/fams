@@ -28,7 +28,7 @@
 	<hr class="my-2 mx-2">
 	<div class="row mx-1">
 		@forelse ($scholarships as $scholarship)
-			<div class="col-12 col-sm-6 col-lg-4">
+			<div class="col-12 {{-- col-sm-6 col-lg-4 --}}">
 				<div class="card mb-2 border-dark">
 					<div class="card-header bg-dark text-white">
 						<h4 class="my-1">

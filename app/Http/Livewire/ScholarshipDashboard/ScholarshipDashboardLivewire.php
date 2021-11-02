@@ -41,7 +41,9 @@ class ScholarshipDashboardLivewire extends Component
 
     public function render()
     {
-        return view('livewire.pages.scholarship-dashboard.scholarship-dashboard-livewire')
+        return view('livewire.pages.scholarship-dashboard.scholarship-dashboard-livewire', [
+                'scholarship' => $this->get_scholarship()
+            ])
             ->extends('livewire.main.scholarship');
     }
 

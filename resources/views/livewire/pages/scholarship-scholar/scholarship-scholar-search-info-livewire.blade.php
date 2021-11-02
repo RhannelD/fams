@@ -138,10 +138,6 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>School:</td>
-                                            <td>{{ $scholar->user->scholar_info->school->school }}</td>
-                                        </tr>
-                                        <tr>
                                             <td>Course:</td>
                                             <td>{{ $scholar->user->scholar_info->course->course }}</td>
                                         </tr>

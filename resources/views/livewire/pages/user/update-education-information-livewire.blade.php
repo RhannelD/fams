@@ -14,16 +14,6 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="c_school">School</label>
-                                <select wire:model="user_info.school_id" class="form-control" id="c_school">
-                                    <option>Select School</option>
-                                    @foreach ($schools as $school)
-                                        <option value="{{ $school->id }}">{{ $school->school }}</option>
-                                    @endforeach
-                                </select>
-                                @error('user_info.school_id') <span class="text-danger">{{ $message }}</span> @enderror
-                            </div>
-                            <div class="form-group">
                                 <label for="c_course">Course</label>
                                 <select wire:model="user_info.course_id" class="form-control" id="c_course">
                                     <option>Select Course</option>

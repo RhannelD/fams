@@ -16,7 +16,6 @@ class CreateScholarInfosTable extends Migration
         Schema::create('scholar_infos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->foreignId('school_id');
             $table->foreignId('course_id');
             $table->integer('year');
             $table->integer('semester');
@@ -33,7 +32,6 @@ class CreateScholarInfosTable extends Migration
             $table->timestamps();
             
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('school_id')->references('id')->on('scholar_schools')->onDelete('cascade');
             $table->foreign('course_id')->references('id')->on('scholar_courses')->onDelete('cascade');
         });
     }
@@ -47,9 +45,8 @@ class CreateScholarInfosTable extends Migration
     {
         Schema::table('scholar_infos', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
-            $table->dropForeign(['school_id']);
             $table->dropForeign(['course_id']);
-            $table->dropColumn(['user_id', 'school_id', 'course_id']);
+            $table->dropColumn(['user_id', 'course_id']);
         });
         
         Schema::dropIfExists('scholar_infos');

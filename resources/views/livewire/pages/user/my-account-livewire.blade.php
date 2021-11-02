@@ -1,4 +1,4 @@
-<div>
+<div class="m-2">
 @isset($user)
     <h2 class="my-2">
         <strong>Your Account</strong>

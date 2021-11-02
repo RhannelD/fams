@@ -39,10 +39,6 @@
     <table>
         <tbody>
             <tr>
-                <td>School:</td>
-                <td>{{ $user->scholar_info->school->school }}</td>
-            </tr>
-            <tr>
                 <td>Course:</td>
                 <td>{{ $user->scholar_info->course->course }}</td>
             </tr>
