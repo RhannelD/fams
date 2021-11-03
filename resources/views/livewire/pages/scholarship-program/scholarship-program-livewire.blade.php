@@ -1,16 +1,19 @@
 <div>
     @isset($scholarship)
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark-grey border-bottom-0">
-        <button onclick="menu_toggle()" class="btn btn-outline-light disabled" id="menu-toggle">
-            <i class="fas fa-bars"></i>
-        </button>
-        <div class="navbar-brand ml-2 font-weight-bold">
-            {{ $scholarship->scholarship }}
+        <div class="d-flex flex-shrink-1 flex-grow-1 overflow-auto mx-0">
+            <button onclick="menu_toggle()" class="btn btn-outline-light disabled" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="flex-shrink-1 overflow-auto">
+                <div class="navbar-brand ml-2 font-weight-bold">
+                    {{ $scholarship->scholarship }}
+                </div>
+            </div>
+            <button type="" class="navbar-toggler ml-auto" data-toggle="collapse" data-target="#navbarCollapse1">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
         </div>
-
-        <button type="" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse1">
-            <i class="fas fa-ellipsis-v"></i>
-        </button>
 
         <div class="collapse navbar-collapse" id="navbarCollapse1">
             <ul class="navbar-nav ml-auto">

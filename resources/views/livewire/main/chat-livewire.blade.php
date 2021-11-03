@@ -36,7 +36,7 @@
                     <div class="h-100 d-flex flex-column">
                         <div class="row {{-- justify-content-center --}} bg-primary">
                             <nav class="col-12 navbar navbar-expand-lg navbar-light bg-light border-bottom  {{-- justify-content-center --}}">
-                                <button class="btn btn-outline-secondary disabled" id="menu-toggle">
+                                <button onclick="menu_toggle()" class="btn btn-outline-secondary disabled" id="menu-toggle">
                                     <span class="navbar-toggler-icon"></span>
                                 </button>
                                 <div class="navbar-brand ml-2 font-weight-bold">{{ config('app.name') }}</div>

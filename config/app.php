@@ -179,6 +179,7 @@ return [
         Jenssegers\Agent\AgentServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        Aldemeery\BulkSMS\BulkSMSChannelServiceProvider::class,
         
     ],
 

@@ -62,6 +62,18 @@ class User extends Authenticatable
         return '63'.substr($this->phone, 1); 
     }
 
+    /**
+     * Get the notification routing information for the Bulk SMS driver.
+     *
+     * @param \Illuminate\Notifications\Notification|null $notification Notification instance.
+     *
+     * @return  mixed
+     */
+    public function routeNotificationForBulkSms($notification = null)
+    {
+        return '+63'.substr($this->phone, 1); 
+    }
+
     public function scholarship_scholars()
     {
         return $this->hasMany(ScholarshipScholar::class, 'user_id', 'id');

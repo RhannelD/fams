@@ -33,4 +33,11 @@ return [
     'nexmo' => [
         'sms_from' => 'EAMS',
     ],
+    
+    'bulk_sms' => [
+        'username'  =>  env('BULK_SMS_USERNAME'),
+        'password'  =>  env('BULK_SMS_PASSWORD'),
+        'sms_from'  =>  env('BULK_SMS_FROM'),
+        'base_url'  =>  env('BULK_SMS_BASEURL'),
+    ],    
 ];

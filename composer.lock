@@ -4,8 +4,63 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b9b5b6a6242a600d2fbd72152e28123",
+    "content-hash": "a6cd54ab53f4117cbe21930d299a4997",
     "packages": [
+        {
+            "name": "aldemeery/bulksms-notification-channel",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aldemeery/bulksms-notification-channel.git",
+                "reference": "91dbf5af8d6c3f03f9f6adbf22e2b8889560ce31"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aldemeery/bulksms-notification-channel/zipball/91dbf5af8d6c3f03f9f6adbf22e2b8889560ce31",
+                "reference": "91dbf5af8d6c3f03f9f6adbf22e2b8889560ce31",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^5.5|^6.0|^7.0|^8.0",
+                "illuminate/notifications": "^5.5|^6.0|^7.0|^8.0",
+                "illuminate/support": "^5.5|^6.0|^7.0|^8.0",
+                "php": ">=7.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Aldemeery\\BulkSMS\\BulkSMSChannelServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Aldemeery\\BulkSMS\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Osama Aldemeery",
+                    "email": "aldemeery@gmail.com"
+                }
+            ],
+            "description": "BulkSMS notification channel for laravel.",
+            "keywords": [
+                "bulksms",
+                "laravel",
+                "notifications"
+            ],
+            "support": {
+                "issues": "https://github.com/aldemeery/bulksms-notification-channel/issues",
+                "source": "https://github.com/aldemeery/bulksms-notification-channel/tree/v1.2.0"
+            },
+            "time": "2020-09-10T07:22:45+00:00"
+        },
         {
             "name": "asm89/stack-cors",
             "version": "v2.0.3",

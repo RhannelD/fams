@@ -5,6 +5,7 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Aldemeery\BulkSMS\Messages\BulkSMSMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\NexmoMessage;
 
@@ -31,6 +32,7 @@ class SmsSendNotification extends Notification
      */
     public function via($notifiable)
     {
+        // return ['bulkSms'];
         return ['nexmo'];
     }
 
@@ -45,6 +47,18 @@ class SmsSendNotification extends Notification
         return (new NexmoMessage)
             ->content($this->details->message);
     }
+
+    // /**
+    //  * Get the BulkSMS representation of the notification.
+    //  *
+    //  * @param mixed $notifiable Notifiable instance.
+    //  *
+    //  * @return \Aldemeery\BulkSMS\Messages\BulkSMSMessage
+    //  */
+    // public function toBulkSms($notifiable)
+    // {
+    //     return new BulkSMSMessage($this->details->message);
+    // }
 
     /**
      * Get the array representation of the notification.
