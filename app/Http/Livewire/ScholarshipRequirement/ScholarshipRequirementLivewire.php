@@ -36,12 +36,12 @@ class ScholarshipRequirementLivewire extends Component
     {
         $this->scholarship_id = $scholarship_id;
         abort_if(!$this-> get_scholarship(), '404');
-        $this->authorize('viewAny', [ScholarshipRequirement::class, $scholarship_id]);
+        $this->authorize('viewAny', [ScholarshipRequirement::class]);
     }
 
     public function hydrate()
     {
-        if ( Auth::guest() || Auth::user()->cannot('viewAny', [ScholarshipRequirement::class, $this->scholarship_id]) ) {
+        if ( Auth::guest() || Auth::user()->cannot('viewAny', [ScholarshipRequirement::class]) ) {
             return redirect()->route('scholarship.requirement', [$this->scholarship_id]);
         }
     }
@@ -75,7 +75,7 @@ class ScholarshipRequirementLivewire extends Component
 
     public function create_requirement()
     {
-        if ( Auth::guest() || Auth::user()->cannot('create', [ScholarshipRequirement::class, $this->scholarship_id]) ) 
+        if ( Auth::guest() || Auth::user()->cannot('create', [ScholarshipRequirement::class]) ) 
             return;
 
         $scholarship = $this->get_scholarship();

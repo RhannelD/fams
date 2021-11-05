@@ -10,9 +10,9 @@
                     @if ( !(Auth::user()->usertype == 'scholar') )
                         <th>#</th>
                         <th>Name</th>
-                        @empty($category_id)
+                        @if ( empty($category_id) && count($categories)>1 )
                             <th>Category</th>
-                        @endempty
+                        @endif
                         <th>Email</th>
                         <th>Phone</th>
                         <th></th>
@@ -36,11 +36,11 @@
                             <td>
                                 {{ $scholar->user->fmlname() }}
                             </td>
-                            @empty($category_id)
+                            @if ( empty($category_id) && count($categories)>1 )
                                 <td>
                                     {{ $scholar->category->category }}
                                 </td>
-                            @endempty
+                            @endif
                             <td>
                                 {{ $scholar->user->email }}
                             </td>

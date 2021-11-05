@@ -33,14 +33,7 @@ class ScholarshipCategoryPolicy
      */
     public function viewAny(User $user, $scholarship_id)
     {
-        return User::where('id', $user->id)
-            ->where(function ($query) use ($scholarship_id) {
-                $query->whereOfficerOf($scholarship_id)
-                    ->orWhere(function ($query) use ($scholarship_id) {
-                        $query->whereScholarOf($scholarship_id);
-                    });
-            })
-            ->exists();
+        return $user->is_officer() || User::where('id', $user->id)->whereScholarOf($scholarship_id)->exists();
     }
 
     /**
@@ -63,10 +56,7 @@ class ScholarshipCategoryPolicy
      */
     public function create(User $user, $scholarship_id)
     {
-        return ScholarshipOfficer::where('user_id', $user->id)
-            ->where('scholarship_id', $scholarship_id)
-            ->whereAdmin()
-            ->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -78,10 +68,7 @@ class ScholarshipCategoryPolicy
      */
     public function update(User $user, ScholarshipCategory $scholarshipCategory)
     {
-        return ScholarshipOfficer::where('user_id', $user->id)
-            ->where('scholarship_id', $scholarshipCategory->scholarship_id)
-            ->whereAdmin()
-            ->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -93,10 +80,7 @@ class ScholarshipCategoryPolicy
      */
     public function delete(User $user, ScholarshipCategory $scholarshipCategory)
     {
-        return ScholarshipOfficer::where('user_id', $user->id)
-            ->where('scholarship_id', $scholarshipCategory->scholarship_id)
-            ->whereAdmin()
-            ->exists();
+        return $user->is_officer();
     }
 
     /**

@@ -3,7 +3,7 @@
     
 	<div class="mb-1 mx-3">
 		<div class="d-flex mt-2">
-            <h3 class="ml-3 my-auto py-1">
+            <h3 class="my-auto py-1">
                 <strong>Categories</strong>
             </h3>
             @can( 'create', [\App\Models\ScholarshipCategory::class, $scholarship_id] )
@@ -13,6 +13,14 @@
             @endcan
         </div>
 	</div>
+
+    @if ( !$scholarship->categories->count() )
+        <div class="mb-1 mx-3">
+            <div class="alert alert-info">
+                Please create a Category first.
+            </div>
+        </div>
+    @endif
 
     <div class="mx-md-3 mx-1 row mt-3">
         @forelse ($categories as $category)

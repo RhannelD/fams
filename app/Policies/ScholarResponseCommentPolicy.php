@@ -46,10 +46,7 @@ class ScholarResponseCommentPolicy
      */
     public function view(User $user, ScholarResponseComment $scholarResponseComment)
     {
-        return $user->id == $scholarResponseComment->user_id
-            || ScholarshipOfficer::where('user_id', $user->id)
-                ->where('scholarship_id', $scholarResponseComment->response->requirement->scholarship_id)
-                ->exists();
+        return $user->id == $scholarResponseComment->user_id || $user->is_officer();
     }
 
     /**
@@ -60,15 +57,9 @@ class ScholarResponseCommentPolicy
      */
     public function create(User $user, $response_id)
     {
-        return ScholarResponse::where('id', $response_id)
-            ->where(function ($query) use ($user) {
-                $query->where('user_id', $user->id)
-                ->orWhereHas('requirement', function ($query) use ($user) {
-                    $query->whereHas('scholarship', function ($query) use ($user) {
-                        $query->whereHasOfficer($user->id);
-                    });
-                });
-            })
+        return $user->is_officer() 
+            || ScholarResponse::where('id', $response_id)
+            ->where('user_id', $user->id)
             ->exists();
     }
 

@@ -84,16 +84,6 @@ class User extends Authenticatable
         return $this->hasOne(ScholarshipScholar::class, 'user_id', 'id');
     }
 
-    public function scholarship_officers()
-    {
-        return $this->hasMany(ScholarshipOfficer::class, 'user_id', 'id');
-    }
-
-    public function scholarship_officer()
-    {
-        return $this->hasOne(ScholarshipOfficer::class, 'user_id', 'id');
-    }
-
     public function responses()
     {
         return $this->hasMany(ScholarResponse::class, 'user_id', 'id');
@@ -104,11 +94,6 @@ class User extends Authenticatable
         return $this->hasMany(ScholarResponseComment::class, 'user_id', 'id');
     }
 
-    public function scholarship_invites()
-    {
-        return $this->hasMany(ScholarshipOfficerInvite::class, 'email', 'email');
-    }
-    
     public function scholars_invites()
     {
         return $this->hasMany(ScholarshipScholarInvite::class, 'email', 'email');
@@ -174,20 +159,6 @@ class User extends Authenticatable
                     ->orWhere(DB::raw('CONCAT(firstname, " ", lastname)'), 'like', "%$search%")
                     ->orWhere(DB::raw('CONCAT(firstname, " ", middlename, " ", lastname)'), 'like', "%$search%")
                     ->orWhere('users.email', 'like', "%$search%");
-            });
-    }
-
-    public function scopeWhereNotOfficerOf($query, $scholarship_id)
-    {
-        return $query->whereDoesntHave('scholarship_officers', function ($query) use ($scholarship_id) {
-                $query->where('scholarship_id', '=', $scholarship_id);
-            });
-    }
-
-    public function scopeWhereOfficerOf($query, $scholarship_id)
-    {
-        return $query->whereHas('scholarship_officers', function ($query) use ($scholarship_id) {
-                $query->where('scholarship_id', '=', $scholarship_id);
             });
     }
 
@@ -262,8 +233,6 @@ class User extends Authenticatable
     {
         if ( $this->is_scholar() ) {
             return ScholarshipScholarInvite::where('email', $this->email)->whereNull('respond')->count();
-        } elseif ( $this->is_officer() ) {
-            return ScholarshipOfficerInvite::where('email', $this->email)->whereNull('respond')->count();
         }
         return 0;
     }

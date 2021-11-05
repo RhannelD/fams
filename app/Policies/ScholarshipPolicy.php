@@ -45,7 +45,7 @@ class ScholarshipPolicy
      */
     public function view(User $user, Scholarship $scholarship)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarship->id)->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -57,7 +57,7 @@ class ScholarshipPolicy
      */
     public function viewDashboard(User $user, Scholarship $scholarship)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarship->id)->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -69,7 +69,7 @@ class ScholarshipPolicy
      */
     public function sendEmails(User $user, Scholarship $scholarship)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarship->id)->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -81,7 +81,7 @@ class ScholarshipPolicy
      */
     public function deleteSendEmails(User $user, Scholarship $scholarship)
     {
-        return ScholarshipOfficer::where('user_id', $user->id)->where('scholarship_id', $scholarship->id)->whereAdmin()->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -93,7 +93,7 @@ class ScholarshipPolicy
      */
     public function sendSMSes(User $user, Scholarship $scholarship)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarship->id)->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -105,7 +105,7 @@ class ScholarshipPolicy
      */
     public function deleteSendSMSes(User $user, Scholarship $scholarship)
     {
-        return ScholarshipOfficer::where('user_id', $user->id)->where('scholarship_id', $scholarship->id)->whereAdmin()->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -116,7 +116,7 @@ class ScholarshipPolicy
      */
     public function create(User $user)
     {
-        return $user->is_admin();
+        return $user->is_officer();
     }
 
     /**
@@ -128,7 +128,7 @@ class ScholarshipPolicy
      */
     public function update(User $user, Scholarship $scholarship)
     {
-        return ScholarshipOfficer::where('user_id', $user->id)->where('scholarship_id', $scholarship->id)->whereAdmin()->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -140,7 +140,7 @@ class ScholarshipPolicy
      */
     public function delete(User $user, Scholarship $scholarship)
     {
-        return $user->is_admin();
+        return $user->is_officer();
     }
 
     /**

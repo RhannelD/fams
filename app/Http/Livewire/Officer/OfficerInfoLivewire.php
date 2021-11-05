@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Officer;
 
 use Livewire\Component;
 use App\Models\User;
-use App\Models\ScholarshipOfficer;
+use App\Models\ScholarshipPost;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +32,7 @@ class OfficerInfoLivewire extends Component
 
     protected function is_not_admin()
     {
-        return Auth::guest() || Auth::user()->cannot('admin', [ScholarshipOfficer::class]);
+        return Auth::guest() || !Auth::user()->is_admin();
     }
 
     public function mount($user_id)
@@ -114,15 +114,13 @@ class OfficerInfoLivewire extends Component
 
     protected function cannotbedeleted()
     {
-        $checker = ScholarshipOfficer::select('id')
-            ->where('user_id', $this->user_id)
-            ->exists();
+        $checker = ScholarshipPost::where('user_id', $this->user_id)->exists();
 
         if ($checker) {
             $this->dispatchBrowserEvent('swal:modal', [
                 'type' => 'info',  
                 'message' => 'Cannot be Deleted', 
-                'text' => 'Account is Connected to a Scholarship Program'
+                'text' => 'This officer as already made progress on the system.'
             ]);
         }
         

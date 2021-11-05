@@ -16,15 +16,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="category">Category</label>
-                        <select wire:model="category_id" class="form-control" id="category">
-                            <option value="">All Categories</option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category['id'] }}">{{ $category['category'] }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    @if ( count($categories)>1 )
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select wire:model="category_id" class="form-control" id="category">
+                                <option value="">All Categories</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category['id'] }}">{{ $category['category'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
                     <div class="form-group">
                         <label for="category"># of other scholarship</label>
                         <div class="input-group mb-3">

@@ -67,7 +67,7 @@ class ScholarshipRequirementItemOptionPolicy
      */
     public function update(User $user, ScholarshipRequirementItemOption $scholarshipRequirementItemOption)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarshipRequirementItemOption->item->requirement->scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -79,7 +79,7 @@ class ScholarshipRequirementItemOptionPolicy
      */
     public function delete(User $user, ScholarshipRequirementItemOption $scholarshipRequirementItemOption)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarshipRequirementItemOption->item->requirement->scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**

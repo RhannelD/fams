@@ -21,7 +21,7 @@ class ScholarshipPostCommentSeeder extends Seeder
 
         foreach ($posts as $post) {
             $scholarship_id = $post->scholarship_id;
-            $users = User::whereOfficerOf($scholarship_id)
+            $users = User::whereOfficer()
                 ->orWhere(function ($query) use ($scholarship_id) {
                     $query->whereScholarOf($scholarship_id);
                 })

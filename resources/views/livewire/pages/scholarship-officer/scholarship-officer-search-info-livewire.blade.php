@@ -53,15 +53,6 @@
                             </table>
                         </div>
                     </div>
-    
-                    @can('delete', $officer->scholarship_officer)
-                        <hr class="my-1">   
-                        <div class="d-flex flex-row-reverse">
-                            <button wire:click="remove_officer_confirmation({{ $officer->scholarship_officer->id }})" class="btn btn-danger">
-                                Remove
-                            </button>
-                        </div>
-                    @endcan
                 </div>
             </div>
         </div>

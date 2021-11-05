@@ -40,7 +40,7 @@ class ScholarshipPostSeeder extends Seeder
         // For new Scholars fake applications of firsy scholar
         foreach ($scholarships as $scholarship) {
             $scholarship_id =  $scholarship->id;
-            $officers = User::whereOfficerOf($scholarship_id)->get();
+            $officers = User::whereOfficer()->get();
 
             $date = Carbon::parse('2018-01-01 00:00:00')
                 ->subMonths(rand(0, 2))
@@ -67,7 +67,7 @@ class ScholarshipPostSeeder extends Seeder
         // For the Renewal Scholars
         foreach ($scholarships as $scholarship) {
             $scholarship_id =  $scholarship->id;
-            $officers = User::whereOfficerOf($scholarship_id)->get();
+            $officers = User::whereOfficer()->get();
 
             $year_now = Carbon::today()->format('Y');
             $date_now = Carbon::today()->format('Y-m-d h:i:s');
@@ -135,7 +135,7 @@ class ScholarshipPostSeeder extends Seeder
         // For new applicants
         foreach ($scholarships as $scholarship) {
             $scholarship_id =  $scholarship->id;
-            $officers = User::whereOfficerOf($scholarship_id)->get();
+            $officers = User::whereOfficer()->get();
 
             $date = Carbon::today()->subDays(rand(3, 30))->format('Y-m-d h:i:s');
 

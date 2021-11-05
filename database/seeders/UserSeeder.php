@@ -37,22 +37,6 @@ class UserSeeder extends Seeder
             ],
             [   
                 'usertype'      => 'officer',
-                'firstname'     => 'Ren',
-                'middlename'    => 'Eroles',
-                'lastname'      => 'Dalida',
-                'gender'        => 'male',
-                'religion'      => 'Roman Catholic',
-                'birthday'      => '1999-11-23',
-                'birthplace'    => 'Biga, Calatagan, Batangas',
-                'address'       => 'Biga, Calatagan, Batangas',
-                'phone'         => '09368638084',
-                'email'         => 'rendalida@gmail.com',
-                'password'      => Hash::make('123123123'),
-                'created_at'    => Carbon::now(),
-                'updated_at'    => Carbon::now(),
-            ],
-            [   
-                'usertype'      => 'officer',
                 'firstname'     => 'Hazel',
                 'middlename'    => 'Gal',
                 'lastname'      => 'Gonzales',
@@ -85,74 +69,22 @@ class UserSeeder extends Seeder
             ],
         ]);
 
-        $officers = [
-            [
-                'firstname' => 'Alzeo',
-                'lastname' => 'Landicho',
-                'gender' => 'male',
-                'email' => 'alzeo.landicho@example.com',
-            ],
-            [
-                'firstname' => 'Alvin',
-                'lastname' => 'Dalida',
-                'gender' => 'male',
-                'email' => 'alvin.dalida@example.com',
-            ],
-            [
-                'firstname' => 'Analy',
-                'lastname' => 'Dalida',
-                'gender' => 'female',
-                'email' => 'analy.dalida@example.com',
-            ],
-            [
-                'firstname' => 'Jaypee',
-                'lastname' => 'Venzon',
-                'gender' => 'male',
-                'email' => 'jaypee.venzon@example.com',
-            ],
-            [
-                'firstname' => 'Daisy',
-                'lastname' => 'Elposar',
-                'gender' => 'male',
-                'email' => 'daisy.elposar@example.com',
-            ],
-            [
-                'firstname' => 'Nikki Sofia',
-                'lastname' => 'Mailig',
-                'gender' => 'female',
-                'email' => 'nikkisofia.mailig@example.com',
-            ],
-            [
-                'firstname' => 'Ryan',
-                'lastname' => 'De Luna',
-                'gender' => 'male',
-                'email' => 'ryan.deluna@example.com',
-            ],
-            [
-                'firstname' => 'Jayrald',
-                'lastname' => 'Holgado',
-                'gender' => 'male',
-                'email' => 'jayrald.holgado@example.com',
-            ],
-        ];
-
-        foreach ($officers as $key => $officer) {
-            User::factory()->create([
-                'usertype' => 'officer',
-                'firstname' => $officer['firstname'],
-                'lastname' => $officer['lastname'],
-                'gender' => $officer['gender'],
-                'email' => $officer['email'],
-            ]);
-        }
-
         $scholars = array(
+            array('firstname' => 'Ren','middlename' => 'Eroles','lastname' => 'Dalida','gender' => 'male','address' => 'Biga, Calatagan, Batangas','birthplace' => 'Biga, Calatagan, Batangas','phone' => '09664251790','email' => 'rendalida@gmail.com'),
+            array('firstname' => 'Alzeo','middlename' => 'Togonon','lastname' => 'Landicho','gender' => 'male','address' => 'Matabungkay Lian Batangas','birthplace' => 'Matabungkay Lian Batangas','phone' => '9478295181','email' => 'alzeo.landicho@example.com'),
+            array('firstname' => 'Alvin','middlename' => 'Dimaala','lastname' => 'Dalida','gender' => 'male','address' => 'Bucana Nasugbu Batangas','birthplace' => 'Bucana Nasugbu Batangas','phone' => '9142366532','email' => 'alvin.dalida@example.com'),
+            array('firstname' => 'Analy','middlename' => 'Cuadra','lastname' => 'Dalida','gender' => 'female','address' => 'Barangay 4, Nasugbu Batangas','birthplace' => 'Barangay 4, Nasugbu Batangas','phone' => '9234627346','email' => 'analy.dalida@example.com'),
+            array('firstname' => 'Jaypee','middlename' => 'Conocido','lastname' => 'Venzon','gender' => 'male','address' => 'Puting kahoy Lian Batangas','birthplace' => 'Puting kahoy Lian Batangas','phone' => '9627237462','email' => 'jaypee.venzon@example.com'),
+            array('firstname' => 'Daisy','middlename' => 'Barangas','lastname' => 'Elposar','gender' => 'male','address' => 'Wawa, Nasugbu Batangas','birthplace' => 'Wawa, Nasugbu Batangas','phone' => '9674572347','email' => 'daisy.elposar@example.com'),
+            array('firstname' => 'Nikki Sofia','middlename' => 'Lopez','lastname' => 'Mailig','gender' => 'female','address' => 'Baragay 7, Nasugbu Batangas','birthplace' => 'Baragay 7, Nasugbu Batangas','phone' => '9656892304','email' => 'nikkisofia.mailig@example.com'),
+            array('firstname' => 'Ryan','middlename' => 'Tanilon','lastname' => 'De Luna','gender' => 'male','address' => 'Baragay 7, Nasugbu Batangas','birthplace' => 'Baragay 7, Nasugbu Batangas','phone' => '9523423404','email' => 'ryan.deluna@example.com'),
+            array('firstname' => 'Jayrald','middlename' => 'Dimaala','lastname' => 'Holgado','gender' => 'male','address' => 'Poblacion 3, Calatagan Batangas','birthplace' => 'Poblacion 3, Calatagan Batangas','phone' => '9342376434','email' => 'jayrald.holgado@example.com'),
             array('firstname' => 'Ian Glenn','middlename' => 'Togonon','lastname' => 'Mercado','gender' => 'male','address' => 'Barangay 4 Nasugbu Batangas','birthplace' => 'Barangay 4 Nasugbu Batangas','phone' => '9180917030','email' => 'ianglenn.mercado@example.com'),
             array('firstname' => 'Judith','middlename' => 'Macalalad','lastname' => 'Manalo','gender' => 'female','address' => 'Balibago, Calatagan Batangas','birthplace' => 'Balibago, Calatagan Batangas','phone' => '9463126241','email' => 'judith.manalo@example.com'),
             array('firstname' => 'John Paul','middlename' => 'Macalindong','lastname' => 'Macalindong','gender' => 'male','address' => 'Barangay 1, Nasugbu Batangas','birthplace' => 'Barangay 1, Nasugbu Batangas','phone' => '9915347221','email' => 'johnpaul.macalindong@example.com'),
             array('firstname' => 'Ronniel','middlename' => 'Hernandez','lastname' => 'Buhay','gender' => 'male','address' => 'Barangay 5 Nasugbu Batangas','birthplace' => 'Barangay 5 Nasugbu Batangas','phone' => '9620127225','email' => 'ronniel.buhay@example.com'),
             array('firstname' => 'Jhanzen','middlename' => 'Rodriguez','lastname' => 'Lopez','gender' => 'male','address' => 'Balitoc, Calatagan Batangas','birthplace' => 'Balitoc, Calatagan Batangas','phone' => '9424744941','email' => 'jhanzen.lopez@example.com'),
-            array('firstname' => 'John Alex','middlename' => 'De Jesus','lastname' => 'Binuya','gender' => 'male','address' => 'Poblacion 3, Calatagan Batangas','birthplace' => 'Poblacion 3, Calatagan Batangas','phone' => '9321775829','email' => 'johnalex.binuya@example.com'),
+            array('firstname' => 'John Alex','middlename' => 'De Jesus','lastname' => 'Binuya','gender' => 'male','address' => '','birthplace' => 'Poblacion 3, Calatagan Batangas','phone' => '9321775829','email' => 'johnalex.binuya@example.com'),
             array('firstname' => 'Ma. Vanessa','middlename' => 'Cruz','lastname' => 'Bengcang','gender' => 'female','address' => 'Barangay 1, Nasugbu Batangas','birthplace' => 'Barangay 1, Nasugbu Batangas','phone' => '9608886575','email' => 'mavanessa.bengcang@example.com'),
             array('firstname' => 'Angelo Kim','middlename' => 'Gonzales','lastname' => 'Espina','gender' => 'male','address' => 'Barangay 5 Nasugbu Batangas','birthplace' => 'Barangay 5 Nasugbu Batangas','phone' => '9182531732','email' => 'angelokim.espina@example.com'),
             array('firstname' => 'Aila Mei','middlename' => 'Dimaala','lastname' => 'Atienza','gender' => 'female','address' => 'Baragay 7, Nasugbu Batangas','birthplace' => 'Baragay 7, Nasugbu Batangas','phone' => '9354523155','email' => 'ailamei.atienza@example.com'),

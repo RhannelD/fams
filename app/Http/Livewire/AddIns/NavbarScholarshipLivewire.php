@@ -19,12 +19,7 @@ class NavbarScholarshipLivewire extends Component
 
     protected function get_scholarships()
     {
-        return Scholarship::when( Auth::user()->is_officer(), function ($query) {
-                $query->whereHas('officers', function ($query) {
-                    $query->where('user_id', Auth::id());
-                });
-            })
-            ->when( Auth::user()->is_scholar(), function ($query) {
+        return Scholarship::when( Auth::user()->is_scholar(), function ($query) {
                 $query->whereHas('categories', function ($query) {
                     $query->whereHas('scholars', function ($query) {
                         $query->where('user_id', Auth::id());

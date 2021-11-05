@@ -32,7 +32,7 @@ class ScholarshipScholarInvitePolicy
      */
     public function viewAny(User $user, $scholarship_id)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -55,7 +55,7 @@ class ScholarshipScholarInvitePolicy
      */
     public function create(User $user, $scholarship_id)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -90,7 +90,7 @@ class ScholarshipScholarInvitePolicy
      */
     public function updateMany(User $user, $scholarship_id)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -113,7 +113,7 @@ class ScholarshipScholarInvitePolicy
      */
     public function deleteMany(User $user, $scholarship_id)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**

@@ -23,7 +23,7 @@ class ScholarshipRequirementEditDuplicateLivewire extends Component
     
     public function hydrate()
     {
-        if ( Auth::guest() || Auth::user()->cannot('viewAny', [ScholarshipRequirement::class, $this->scholarship_id]) ) {
+        if ( Auth::guest() || Auth::user()->cannot('viewAny', [ScholarshipRequirement::class]) ) {
             $this->emitUp('refresh');
         }
     }

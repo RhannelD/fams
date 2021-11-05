@@ -48,7 +48,7 @@ class ScholarshipPostOpenCommentLivewire extends Component
     public function delete_comment()
     {
         $comment = $this->get_comment();
-        if ( !$comment || Auth::guest() || Auth::user()->cannot('delete', $comment) ) {
+        if ( Auth::guest() || Auth::user()->cannot('delete', $comment) ) {
             return;
         }
 

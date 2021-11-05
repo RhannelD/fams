@@ -103,7 +103,7 @@ class ScholarshipPostOpenLivewire extends Component
     public function delete_post()
     {
         $post = $this->get_post();
-        if ( !$post || Auth::guest() || Auth::user()->cannot('delete', $post) ) {
+        if ( Auth::guest() || Auth::user()->cannot('delete', $post) ) {
             return;
         }
 

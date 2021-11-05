@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Scholarship;
 
 use Livewire\Component;
 use App\Models\Scholarship;
-use App\Models\ScholarshipOfficer;
+use App\Models\ScholarshipScholar;
 use App\Models\ScholarshipCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -31,7 +31,7 @@ class ScholarshipLivewire extends Component
 
     public function hydrate()
     {
-        if ( Auth::guest() || Auth::user()->is_officer() ) {
+        if ( Auth::guest() ) {
             $this->dispatchBrowserEvent('remove:modal-backdrop');
         }
         if ( $this->is_not_officer() ) {
@@ -60,11 +60,6 @@ class ScholarshipLivewire extends Component
     protected function get_scholarships()
     {
         return Scholarship::where('scholarship', 'like', "%{$this->search}%")
-            ->when( Auth::user()->is_officer(), function ($query) {
-                $query->whereHas('officers', function ($query) {
-                    $query->where('user_id', Auth::id());
-                });
-            })
             ->orderBy('scholarship')
             ->get();
     }
@@ -127,15 +122,16 @@ class ScholarshipLivewire extends Component
     }
 
     protected function cannotbedeleted(){
-        $checker = ScholarshipOfficer::select('id')
-            ->where('scholarship_id', $this->scholarship_program_id)
-            ->exists();
+        $scholarship_program_id = $this->scholarship_program_id;
+        $checker = ScholarshipScholar::whereHas('category', function ($query) {
+                $query->where('scholarship_id', $this->scholarship_program_id);
+            })->exists();
 
         if ($checker) {
             $this->dispatchBrowserEvent('swal:modal', [
                 'type' => 'info',  
                 'message' => 'Cannot be Deleted', 
-                'text' => 'Scholarship has Already Scholarship Officers'
+                'text' => 'Scholarship has Already Scholars'
             ]);
         }
         
@@ -185,6 +181,7 @@ class ScholarshipLivewire extends Component
             ]);
             $this->info($scholarship->id);
             $this->dispatchBrowserEvent('scholarship-form', ['action' => 'hide']);
+            session()->flash("border-success-{$scholarship->id}", 'success');
             return;
         } elseif (!$scholarship->wasRecentlyCreated && $scholarship->wasChanged()){
             $this->dispatchBrowserEvent('swal:modal', [
@@ -194,6 +191,7 @@ class ScholarshipLivewire extends Component
             ]);
             $this->info($this->scholarship_id);
             $this->dispatchBrowserEvent('scholarship-form', ['action' => 'hide']);
+            session()->flash("border-success-{$scholarship->id}", 'primary');
             return;
         } elseif (!$scholarship->wasRecentlyCreated && !$scholarship->wasChanged()){
             $this->dispatchBrowserEvent('swal:modal', [

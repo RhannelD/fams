@@ -49,14 +49,8 @@
                                 </span>
                             @endif
                         </a>
-                        @if ( !Auth::user()->is_admin() )
-                            <a class="dropdown-item" 
-                                @if ( Auth::user()->is_officer() )
-                                    href="{{ route('invite.officer') }}"
-                                @else
-                                    href="{{ route('invite.scholar') }}"
-                                @endif
-                                >
+                        @if ( Auth::user()->is_scholar() )
+                            <a class="dropdown-item"  href="{{ route('invite.scholar') }}">
                                 <i class="fas fa-envelope"></i>
                                 Invites 
                                 @if ( Auth::user()->get_invite_count() )
@@ -74,67 +68,61 @@
     </nav>
     <nav class="navbar navbar-expand-lg navbar-light bg-light-grey justify-content-center">
         <ul class="nav">
-            @can('viewDashboard', $scholarship)
-                <li class="nav-item"> 
-                    <a class="nav-link text-white{{ $active == 'dashboard'? '': '-50' }}" href="{{ route('scholarship.dashboard', [$scholarship->id]) }}">
-                        <i class="fas fa-chart-pie"></i>
-                        Dashboard
-                    </a>
-                </li>
-            @endcan
-            @can('viewAny', [\App\Models\ScholarshipPost::class, $scholarship_id])
-                <li class="nav-item">
-                    <a class="nav-link text-white{{ $active == 'home'? '': '-50' }}" href="{{ route('scholarship.home', [$scholarship->id]) }}">
-                        <i class="fas fa-newspaper"></i>
-                        Home
-                    </a>
-                </li>
-            @endcan
-            @can('viewAny', [\App\Models\ScholarshipScholar::class, $scholarship_id])
-                <li class="nav-item">
-                    <a class="nav-link text-white{{ $active == 'scholars'? '': '-50' }} text-nowrap" href="{{ route('scholarship.scholar', [$scholarship->id]) }}">
-                        <i class="fas fa-user-graduate"></i>
-                        Scholars
-                        @if ( $scholarship->get_num_of_scholars() )
-                            <span class="badge badge-primary">
-                                {{ $scholarship->get_num_of_scholars() }}
-                            </span>
-                        @endif
-                    </a>
-                </li>
-            @endcan
-            @can('viewAny', [\App\Models\ScholarshipOfficer::class, $scholarship_id])
-                <li class="nav-item">
-                    <a class="nav-link text-white{{ $active == 'officers'? '': '-50' }}" href="{{ route('scholarship.officer', [$scholarship->id]) }}">
-                        <i class="fas fa-user-tie"></i>
-                        Officers
-                    </a>
-                </li>
-            @endcan
-            @can('viewAny', [\App\Models\ScholarshipRequirement::class, $scholarship_id])
-                <li class="nav-item">
-                    <a class="nav-link text-white{{ $active == 'applications'? '': '-50' }} text-nowrap" href="{{ route('scholarship.application', [$scholarship->id]) }}">
-                        <i class="fas fa-file-alt"></i>
-                        Applications
-                        @if ( $scholarship->get_num_of_pending_application_responses() )
-                            <span class="badge badge-primary">
-                                {{ $scholarship->get_num_of_pending_application_responses() }}
-                            </span>
-                        @endif
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white{{ $active == 'renewals'? '': '-50' }} text-nowrap" href="{{ route('scholarship.requirement', [$scholarship->id]) }}">
-                        <i class="fas fa-file-alt"></i>
-                        Renewals
-                        @if ( $scholarship->get_num_of_pending_renewal_responses() )
-                            <span class="badge badge-primary">
-                                {{ $scholarship->get_num_of_pending_renewal_responses() }}
-                            </span>
-                        @endif
-                    </a>
-                </li>
-            @endcan
+            @if (  $scholarship->categories->count() > 0 )    
+                @can('viewDashboard', $scholarship)
+                    <li class="nav-item"> 
+                        <a class="nav-link text-white{{ $active == 'dashboard'? '': '-50' }}" href="{{ route('scholarship.dashboard', [$scholarship->id]) }}">
+                            <i class="fas fa-chart-pie"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                @endcan
+                @can('viewAny', [\App\Models\ScholarshipPost::class, $scholarship_id])
+                    <li class="nav-item">
+                        <a class="nav-link text-white{{ $active == 'home'? '': '-50' }}" href="{{ route('scholarship.home', [$scholarship->id]) }}">
+                            <i class="fas fa-newspaper"></i>
+                            Home
+                        </a>
+                    </li>
+                @endcan
+                @can('viewAny', [\App\Models\ScholarshipScholar::class, $scholarship_id])
+                    <li class="nav-item">
+                        <a class="nav-link text-white{{ $active == 'scholars'? '': '-50' }} text-nowrap" href="{{ route('scholarship.scholar', [$scholarship->id]) }}">
+                            <i class="fas fa-user-graduate"></i>
+                            Scholars
+                            @if ( $scholarship->get_num_of_scholars() )
+                                <span class="badge badge-primary">
+                                    {{ $scholarship->get_num_of_scholars() }}
+                                </span>
+                            @endif
+                        </a>
+                    </li>
+                @endcan
+                @can('viewAny', [\App\Models\ScholarshipRequirement::class, $scholarship_id])
+                    <li class="nav-item">
+                        <a class="nav-link text-white{{ $active == 'applications'? '': '-50' }} text-nowrap" href="{{ route('scholarship.application', [$scholarship->id]) }}">
+                            <i class="fas fa-file-alt"></i>
+                            Applications
+                            @if ( $scholarship->get_num_of_pending_application_responses() )
+                                <span class="badge badge-primary">
+                                    {{ $scholarship->get_num_of_pending_application_responses() }}
+                                </span>
+                            @endif
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white{{ $active == 'renewals'? '': '-50' }} text-nowrap" href="{{ route('scholarship.requirement', [$scholarship->id]) }}">
+                            <i class="fas fa-file-alt"></i>
+                            Renewals
+                            @if ( $scholarship->get_num_of_pending_renewal_responses() )
+                                <span class="badge badge-primary">
+                                    {{ $scholarship->get_num_of_pending_renewal_responses() }}
+                                </span>
+                            @endif
+                        </a>
+                    </li>
+                @endcan
+            @endif
             @can('viewAny', [\App\Models\ScholarshipCategory::class, $scholarship_id])
                 <li class="nav-item">
                     <a class="nav-link text-white{{ $active == 'category'? '': '-50' }}" href="{{ route('scholarship.category', [$scholarship->id]) }}">
@@ -143,25 +131,27 @@
                     </a>
                 </li>
             @endcan
-            @canany(['sendEmails', 'sendSMSes'], $scholarship)
-                <li class="nav-item dropdown">
-                    <a class="nav-link text-white{{ in_array($active, ['send-sms', 'send-email']) ? '': '-50' }} dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
-                        Send
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        @can('sendEmails', $scholarship)
-                            <a class="dropdown-item {{ $active == 'send-email'? 'active': '' }}" href="{{ route('scholarship.send.email', [$scholarship->id]) }}">
-                                Send Email
-                            </a>
-                        @endcan
-                        @can('sendSMSes', $scholarship)
-                            <a class="dropdown-item {{ $active == 'send-sms'? 'active': '' }}" href="{{ route('scholarship.send.sms', [$scholarship->id]) }}">
-                                Send SMS
-                            </a>
-                        @endcan
-                    </div>
-                </li>
-            @endcanany
+            @if ( $scholarship->categories->count() > 0 )
+                @canany(['sendEmails', 'sendSMSes'], $scholarship)
+                    <li class="nav-item dropdown">
+                        <a class="nav-link text-white{{ in_array($active, ['send-sms', 'send-email']) ? '': '-50' }} dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+                            Send
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            @can('sendEmails', $scholarship)
+                                <a class="dropdown-item {{ $active == 'send-email'? 'active': '' }}" href="{{ route('scholarship.send.email', [$scholarship->id]) }}">
+                                    Send Email
+                                </a>
+                            @endcan
+                            @can('sendSMSes', $scholarship)
+                                <a class="dropdown-item {{ $active == 'send-sms'? 'active': '' }}" href="{{ route('scholarship.send.sms', [$scholarship->id]) }}">
+                                    Send SMS
+                                </a>
+                            @endcan
+                        </div>
+                    </li>
+                @endcanany
+            @endif
         </ul>
     </nav>
     @endisset

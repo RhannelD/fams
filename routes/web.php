@@ -14,7 +14,6 @@ use App\Http\Controllers\ScholarListController;
 use App\Http\Livewire\Response\ResponseLivewire;
 use App\Http\Livewire\UserChat\UserChatLivewire;
 use App\Http\Livewire\Dashboard\DashboardLivewire;
-use App\Http\Livewire\Invite\InviteOfficerLivewire;
 use App\Http\Livewire\Invite\InviteScholarLivewire;
 use App\Http\Livewire\Scholarship\ScholarshipLivewire;
 use App\Http\Livewire\Requirement\RequirementPreviewLivewire;
@@ -29,7 +28,6 @@ use App\Http\Livewire\ScholarshipDashboard\ScholarshipDashboardLivewire;
 use App\Http\Livewire\ScholarshipRequirement\ScholarshipApplicationLivewire;
 use App\Http\Livewire\ScholarshipRequirement\ScholarshipRequirementLivewire;
 use App\Http\Livewire\ScholarshipScholar\ScholarshipScholarInviteImportExcel;
-use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerInviteLinkLivewire;
 use App\Http\Livewire\ScholarshipRequirement\ScholarshipRequirementOpenLivewire;
 use App\Http\Livewire\ScholarshipRequirementEdit\ScholarshipRequirementEditLivewire;
 use App\Http\Livewire\ScholarshipRequirementResponse\ScholarshipRequirementResponseLivewire;
@@ -52,8 +50,6 @@ Route::group(['middleware' => ['user.login']], function(){
     Route::get('/login', LoginLivewire::class)->name('login.index');
 
     Route::get('/sign-up', SignUpLivewire::class)->name('sign-up.index');
-
-    Route::get('/sign-up/officer/{invite_token}', ScholarshipOfficerInviteLinkLivewire::class)->name('invite');
 });
 
 // Needs to be signed in to access
@@ -67,6 +63,8 @@ Route::group(['middleware' => ['user.auth']], function(){
     Route::get('/scholar', ScholarLivewire::class)->name('scholar');
 
     Route::get('/scholarship', ScholarshipLivewire::class)->name('scholarship');
+    
+    Route::get('/scholarship/officer', ScholarshipOfficerLivewire::class)->name('scholarship.officer');
 
     Route::get('/scholarship/scholar', ScholarScholarshipViewLivewire::class)->name('scholar.scholarship');
 
@@ -80,8 +78,6 @@ Route::group(['middleware' => ['user.auth']], function(){
         Route::get('/{scholarship_id}/home', ScholarshipPageLivewire::class)->name('scholarship.home');
 
         Route::get('/post/{post_id}', ScholarshipPostOpenLivewire::class)->name('scholarship.post.show');
-
-        Route::get('/{scholarship_id}/officer', ScholarshipOfficerLivewire::class)->name('scholarship.officer');
 
         Route::get('/{scholarship_id}/scholar', ScholarshipScholarLivewire::class)->name('scholarship.scholar');
 
@@ -106,8 +102,6 @@ Route::group(['middleware' => ['user.auth']], function(){
 
     Route::prefix('/my-account')->group(function () {
         Route::get('/invite/scholar', InviteScholarLivewire::class)->name('invite.scholar');
-
-        Route::get('/invite/officer', InviteOfficerLivewire::class)->name('invite.officer');
 
         Route::get('/info', MyAccountLivewire::class)->name('my.account');
     });

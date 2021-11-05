@@ -28,11 +28,17 @@
 	<hr class="my-2 mx-2">
 	<div class="row mx-1">
 		@forelse ($scholarships as $scholarship)
-			<div class="col-12 {{-- col-sm-6 col-lg-4 --}}">
-				<div class="card mb-2 border-dark">
-					<div class="card-header bg-dark text-white">
+			<div class="col-12 col-sm-6 col-lg-4">
+				<div class="card mb-2 border-{{ session()->has("border-success-{$scholarship->id}")? session("border-success-{$scholarship->id}"): 'dark' }}">
+					<div class="card-header bg-{{ session()->has("border-success-{$scholarship->id}")? session("border-success-{$scholarship->id}"): 'dark' }} text-white">
 						<h4 class="my-1">
-							<a href="{{ route('scholarship.home', [$scholarship->id]) }}">
+							<a
+								@if ( $scholarship->categories->count() )
+									href="{{ route('scholarship.home', [$scholarship->id]) }}"
+								@else
+									href="{{ route('scholarship.category', [$scholarship->id]) }}"
+								@endif
+								>
 								<strong class="text-white">{{ $scholarship->scholarship }}</strong>
 							</a>
 						</h4>
@@ -43,14 +49,18 @@
 								<td>Scholars:</td>
 								<td>{{ $scholarship->get_num_of_scholars() }}</td>
 							</tr>
-							<tr>
-								<td>Applications:</td>
-								<td>{{ $scholarship->get_num_of_pending_application_responses() }}</td>
-							</tr>
-							<tr>
-								<td>Renewals:</td>
-								<td>{{ $scholarship->get_num_of_pending_renewal_responses() }}</td>
-							</tr>
+							@if ( $scholarship->get_num_of_pending_application_responses() )
+								<tr>
+									<td>Applications:</td>
+									<td>{{ $scholarship->get_num_of_pending_application_responses() }}</td>
+								</tr>
+							@endif
+							@if ( $scholarship->get_num_of_pending_renewal_responses() )
+								<tr>
+									<td>Renewals:</td>
+									<td>{{ $scholarship->get_num_of_pending_renewal_responses() }}</td>
+								</tr>
+							@endif
 						</table>
 					</div>
 					@can('delete', $scholarship)

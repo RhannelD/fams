@@ -8,6 +8,7 @@
 @section('contents')
 
 <div class="d-flex" id="wrapper">
+@if ( Auth::check() )
 
     <!-- Sidebar -->
     <div class="bg-dark-grey-2" id="sidebar-wrapper">
@@ -16,7 +17,7 @@
         </div>
 
         <div class="list-group list-group-flush">  
-            @if (Auth::user()->is_admin())
+            @if (Auth::user()->is_admin() || Auth::user()->is_officer())
                 <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('dashboard') }}">
                     <i class="fas fa-chart-line"></i>
                     Dashboard
@@ -31,35 +32,38 @@
                 @endif
                 >
                 <i class="fas fa-file-invoice-dollar"></i>
-                Scholarships
+                Scholarship
             </a>
 
-            @if ( Auth::check() && Auth::user()->is_scholar() )
+            @if ( Auth::user()->is_scholar() )
                 <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('requirement.reponses.list') }}">
                     <i class="fas fa-file-upload"></i>
-                    Responses
+                    Response
                 </a> 
             @endif
 
-            @if (!Auth::check())
-                <hr>
-            @elseif (Auth::user()->is_admin())
-                <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('officer') }}">
-                    <i class="fas fa-address-card"></i>
-                    Officers
-                </a>
+            <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" 
+                @if ( Auth::user()->is_admin() )
+                    href="{{ route('officer') }}"   
+                @else
+                    href="{{ route('scholarship.officer') }}"   
+                @endif
+                >
+                <i class="fas fa-address-card"></i>
+                Officer
+            </a>
+
+            @if ( Auth::user()->is_admin() )
                 <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('scholar') }}">
                     <i class="fas fa-user-graduate"></i>
-                    Scholars
+                    Scholar
                 </a>
-            @elseif (in_array(Auth::user()->usertype, array('officer', 'scholar')))
+            @endif
+
+            @if ( Auth::user()->is_scholar() )
                 <hr class="my-2">
                 <strong class="ml-3 text-light">
-                    @if (Auth::user()->is_officer())
-                        Managing
-                    @else
-                        Scholarship
-                    @endif
+                    Scholarship
                 </strong>
                 @livewire('add-ins.navbar-scholarship-livewire', key('sidebar-scholarship-'.time().$scholarship->id))
             @endif
@@ -72,6 +76,9 @@
     <div id="page-content-wrapper">
         @yield('content')
     </div>
+    
+    
+@endif
 </div>
 
 @endsection

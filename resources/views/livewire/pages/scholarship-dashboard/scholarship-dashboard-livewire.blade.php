@@ -60,9 +60,11 @@
         </div>
     </div>
     <div class="row mb-3">
-        <div class="col-10 offset-1 offset-md-0 col-md-12 col-lg-6 col-xl-4">
-            <canvas id="scholars" width="100" height="100"></canvas>
-        </div>
+        @if ( $scholarship->categories->count() > 1 )
+            <div class="col-10 offset-1 offset-md-0 col-md-12 col-lg-6 col-xl-4">
+                <canvas id="scholars" width="100" height="100"></canvas>
+            </div>
+        @endif
         <div class="col-10 offset-1 offset-md-0 col-md-12 col-lg-6 col-xl-4">
             <canvas id="scholars_by_gender" width="100" height="100"></canvas>
         </div>

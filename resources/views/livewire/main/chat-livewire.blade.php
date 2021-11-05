@@ -61,14 +61,8 @@
                                                     <i class="fas fa-user-circle"></i>
                                                     My account
                                                 </a>
-                                                @if ( !Auth::user()->is_admin() )
-                                                    <a class="dropdown-item" 
-                                                        @if ( Auth::user()->is_officer() )
-                                                            href="{{ route('invite.officer') }}"
-                                                        @else
-                                                            href="{{ route('invite.scholar') }}"
-                                                        @endif
-                                                        >
+                                                @if ( Auth::user()->is_scholar() )
+                                                    <a class="dropdown-item" href="{{ route('invite.scholar') }}">
                                                         <i class="fas fa-envelope"></i>
                                                         Invites 
                                                         @if ( Auth::user()->get_invite_count() )

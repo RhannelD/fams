@@ -10,13 +10,11 @@
                     @if (Auth::user()->usertype != 'scholar')
                         <th>#</th>
                         <th>Name</th>
-                        <th>Position</th>
                         <th>Email</th>
                         <th>Phone</th>
                         <th></th>
                     @else
                         <th>Name</th>
-                        <th>Position</th>
                         <th>Email</th>
                         <th></th>
                     @endif
@@ -31,9 +29,6 @@
                             </th>
                             <td>
                                 {{ $officer->fmlname() }}
-                            </td>
-                            <td>
-                                {{ $officer->scholarship_officer->position->position }}
                             </td>
                             <td>
                                 {{ $officer->email }}
@@ -61,9 +56,6 @@
                                 {{ $officer->fmlname() }}
                             </td>
                             <td>
-                                {{ $officer->scholarship_officer->position->position }}
-                            </td>
-                            <td>
                                 {{ $officer->email }}
                             </td>
                             <td class="py-2 text-center">
@@ -84,21 +76,4 @@
             </tbody>
         </table>
     </div>
-
-    <script>
-        window.addEventListener('swal:confirm:remove_officer', event => { 
-            swal({
-              title: event.detail.message,
-              text: event.detail.text,
-              icon: event.detail.type,
-              buttons: true,
-              dangerMode: true,
-            })
-            .then((willDelete) => {
-              if (willDelete) {
-                @this.call(event.detail.function)
-              }
-            });
-        });
-    </script>
 </div>

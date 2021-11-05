@@ -64,12 +64,9 @@ class ScholarshipPostCommentPolicy
         if ( $scholarshipPost->promote ) 
             return true;
         
-        return Scholarship::where('id', $scholarshipPost->scholarship_id)
+        return $user->is_officer() || Scholarship::where('id', $scholarshipPost->scholarship_id)
             ->where(function ($query) use ($user) {
-                $query->whereHas('officers', function ($query) use ($user) {
-                    $query->where('user_id',  $user->id);
-                })
-                ->orWhereHas('categories', function ($query) use ($user) {
+                $query->WhereHas('categories', function ($query) use ($user) {
                     $query->whereHas('scholars', function ($query) use ($user) {
                         $query->where('user_id', $user->id);
                     });

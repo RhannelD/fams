@@ -34,7 +34,7 @@ class ScholarResponsePolicy
     public function viewAny(User $user, $requirement_id)
     {
         $requirement = ScholarshipRequirement::find($requirement_id);
-        return (isset($requirement)? User::where('id', $user->id)->whereOfficerOf($requirement->scholarship_id)->exists(): false);
+        return (isset($requirement)? $user->is_officer(): false);
     }
 
     /**
@@ -97,7 +97,7 @@ class ScholarResponsePolicy
      */
     public function assess(User $user, ScholarResponse $scholarResponse)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarResponse->requirement->scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**

@@ -107,10 +107,6 @@
         @include('livewire.pages.user.my-account-scholarship-scholar-livewire')
         <hr>
     @endif
-    @if ( $user->is_officer() && $user->scholarship_officers->count()>0 )
-        @include('livewire.pages.user.my-account-scholarship-officer-livewire')
-        <hr>
-    @endif
     <div class="d-flex justify-content-end">
         <button class="btn btn-primary mx-1" data-toggle="modal" data-target="#update-email-modal"
             wire:click="$emitTo('user.change-email-livewire', 'reset_values')"

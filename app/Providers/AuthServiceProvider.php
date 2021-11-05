@@ -21,8 +21,6 @@ class AuthServiceProvider extends ServiceProvider
         ScholarshipRequirementItem::class => ScholarshipRequirementItemPolicy::class,
         ScholarshipRequirementItemOption::class => ScholarshipRequirementItemOptionPolicy::class,
         ScholarshipRequirementAgreement::class => ScholarshipRequirementAgreementPolicy::class,
-        ScholarshipOfficer::class => ScholarshipOfficerPolicy::class,
-        ScholarshipOfficerInvite::class => ScholarshipOfficerInvitePolicy::class,
         ScholarResponse::class => ScholarResponsePolicy::class,
         ScholarshipScholar::class => ScholarshipScholarPolicy::class,
         ScholarshipScholarInvite::class => ScholarshipScholarInvitePolicy::class,

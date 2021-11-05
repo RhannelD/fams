@@ -31,14 +31,14 @@ class OfficerLivewire extends Component
 
     public function hydrate()
     {
-        if ( Auth::guest() || Auth::user()->cannot('admin', [ScholarshipOfficer::class]) ) {
+        if ( Auth::guest() || !Auth::user()->is_admin() ) {
             return redirect()->route('officer', ['user' => $this->user]);
         }
     }
 
     public function mount()
     {
-        $this->authorize('admin', [ScholarshipOfficer::class]);
+        abort_if( !Auth::user()->is_admin(), '403' );
     }
 
     public function render()
@@ -74,7 +74,7 @@ class OfficerLivewire extends Component
 
     public function info($id)
     {
-        if ( Auth::guest() || Auth::user()->cannot('admin', [ScholarshipOfficer::class]) )
+        if ( Auth::guest() || !Auth::user()->is_admin() )
             return;
 
         if ( !isset($id) ) {

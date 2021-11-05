@@ -32,9 +32,9 @@ class ScholarshipRequirementPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function viewAny(User $user, $scholarship_id)
+    public function viewAny(User $user)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -46,7 +46,7 @@ class ScholarshipRequirementPolicy
      */
     public function view(User $user, ScholarshipRequirement $scholarshipRequirement)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarshipRequirement->scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -134,9 +134,9 @@ class ScholarshipRequirementPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function create(User $user, $scholarship_id)
+    public function create(User $user)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -148,7 +148,7 @@ class ScholarshipRequirementPolicy
      */
     public function update(User $user, ScholarshipRequirement $scholarshipRequirement)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarshipRequirement->scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -160,7 +160,7 @@ class ScholarshipRequirementPolicy
      */
     public function delete(User $user, ScholarshipRequirement $scholarshipRequirement)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarshipRequirement->scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**

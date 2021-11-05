@@ -44,7 +44,7 @@ class ScholarshipRequirementAgreementPolicy
      */
     public function view(User $user, ScholarshipRequirementAgreement $scholarshipRequirementAgreement)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarshipRequirementAgreement->requirement->scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -67,7 +67,7 @@ class ScholarshipRequirementAgreementPolicy
      */
     public function update(User $user, ScholarshipRequirementAgreement $scholarshipRequirementAgreement)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarshipRequirementAgreement->requirement->scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -79,7 +79,7 @@ class ScholarshipRequirementAgreementPolicy
      */
     public function delete(User $user, ScholarshipRequirementAgreement $scholarshipRequirementAgreement)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarshipRequirementAgreement->requirement->scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**

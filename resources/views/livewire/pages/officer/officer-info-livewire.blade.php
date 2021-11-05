@@ -63,9 +63,6 @@
             </div>
         </div>
 
-        @livewire('officer.officer-scholarship-livewire', [$user->id], key('officer-scholarships-'.time().$user->id))
-
-
 		<div>
 			<div wire:ignore.self class="modal fade" id="change_password_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 				<div class="modal-dialog modal-dialog-centered modal-md" role="document">

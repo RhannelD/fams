@@ -43,7 +43,7 @@ class OfficerEditLivewire extends Component
 
     protected function is_not_admin()
     {
-        return Auth::guest() || Auth::user()->cannot('admin', [ScholarshipOfficer::class]);
+        return Auth::guest() || !Auth::user()->is_admin();
     }
 
     public function mount()

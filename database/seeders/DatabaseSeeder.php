@@ -13,12 +13,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
         $this->call([
             UserSeeder::class,
+            ScholarCourseSeeder::class,
+            ScholarInfoSeeder::class,
+            ScholarFacebookSeeder::class,
             ScholarshipSeeder::class,
-            OfficerPositionSeeder::class,
-            ScholarshipOfficerSeeder::class,
             ScholarshipScholarSeeder::class,
             ScholarshipPostSeeder::class,
             ScholarshipPostCommentSeeder::class,
@@ -31,9 +31,6 @@ class DatabaseSeeder extends Seeder
             ScholarResponseOptionSeeder::class,
             ScholarResponseFileSeeder::class,
             ScholarResponseCommentSeeder::class,
-            ScholarCourseSeeder::class,
-            ScholarInfoSeeder::class,
-            ScholarFacebookSeeder::class,
             UserChatSeeder::class,
         ]);
     }

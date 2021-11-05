@@ -34,14 +34,7 @@ class ScholarshipPostPolicy
      */
     public function viewAny(User $user, $scholarship_id)
     {
-        return User::where('id', $user->id)
-            ->where(function ($query) use ($scholarship_id) {
-                $query->whereOfficerOf($scholarship_id)
-                    ->orWhere(function ($query) use ($scholarship_id) {
-                        $query->whereScholarOf($scholarship_id);
-                    });
-            })
-            ->exists();
+        return $user->is_officer() || User::where('id', $user->id)->whereScholarOf($scholarship_id)->exists();
     }
 
     /**
@@ -53,21 +46,9 @@ class ScholarshipPostPolicy
      */
     public function view(User $user, ScholarshipPost $scholarshipPost)
     {
-        if ( $scholarshipPost->promote ) 
-            return true;
-        
-        return Scholarship::where('id', $scholarshipPost->scholarship_id)
-            ->where(function ($query) use ($user) {
-                $query->whereHas('officers', function ($query) use ($user) {
-                    $query->where('user_id',  $user->id);
-                })
-                ->orWhereHas('categories', function ($query) use ($user) {
-                    $query->whereHas('scholars', function ($query) use ($user) {
-                        $query->where('user_id', $user->id);
-                    });
-                });
-            })
-            ->exists();
+        return $scholarshipPost->promote 
+            || $user->is_officer()
+            || Scholarship::where('id', $scholarshipPost->scholarship_id)->whereHasScholar($query, $user->id)->exists();
     }
 
     /**
@@ -78,7 +59,7 @@ class ScholarshipPostPolicy
      */
     public function create(User $user, $scholarship_id)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**
@@ -90,7 +71,7 @@ class ScholarshipPostPolicy
      */
     public function update(User $user, ScholarshipPost $scholarshipPost)
     {
-        return $user->id == $scholarshipPost->user_id || $user->scholarship_officers->where('scholarship_id', $scholarshipPost->scholarship_id)->where('position_id', 1)->count() > 0;
+        return $user->id == $scholarshipPost->user_id;
     }
 
     /**
@@ -102,7 +83,7 @@ class ScholarshipPostPolicy
      */
     public function delete(User $user, ScholarshipPost $scholarshipPost)
     {
-        return $user->id == $scholarshipPost->user_id || $user->scholarship_officers->where('scholarship_id', $scholarshipPost->scholarship_id)->where('position_id', 1)->count() > 0;
+        return $user->id == $scholarshipPost->user_id;
     }
 
     /**

@@ -20,11 +20,7 @@ class DashboardLivewire extends Component
 
     protected function verifyUser()
     {
-        if (!Auth::check()) {
-            redirect()->route('dashboard');
-            return true;
-        }
-        if (!Auth::user()->is_admin()) {
+        if ( Auth::guest() || !(Auth::user()->is_admin() || Auth::user()->is_officer()) ) {
             redirect()->route('index');
             return true;
         }
