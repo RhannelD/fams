@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Livewire\Auth\LoginLivewire;
 use App\Http\Livewire\Auth\SignUpLivewire;
 use App\Http\Livewire\Send\SendSmsLivewire;
+use App\Http\Livewire\Course\CourseLivewire;
 use App\Http\Livewire\Send\SendEmailLivewire;
 use App\Http\Livewire\User\MyAccountLivewire;
 use App\Http\Livewire\Officer\OfficerLivewire;
@@ -61,6 +62,8 @@ Route::group(['middleware' => ['user.auth']], function(){
     Route::get('/officer', OfficerLivewire::class)->name('officer');
 
     Route::get('/scholar', ScholarLivewire::class)->name('scholar');
+
+    Route::get('/course', CourseLivewire::class)->name('course');
 
     Route::get('/scholarship', ScholarshipLivewire::class)->name('scholarship');
     

@@ -25,7 +25,7 @@ class ChangeEmailLivewire extends Component
 
     protected $rules = [
         'password' => 'required|min:9',
-        'email' => "required|unique:users,email",
+        'email' => "required|unique:users,email|regex:/^[a-zA-Z0-9._%+-]+\@g.batstate-u.edu.ph$/i",
         'code' => 'required|min:6|max:6',
     ];
     

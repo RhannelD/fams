@@ -12,7 +12,7 @@ class LoginLivewire extends Component
     public $password;
 
     protected $rules = [
-        'email' => 'required|email',
+        'email' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+\@g.batstate-u.edu.ph$/i',
         'password' => 'required|min:9',
     ];
 

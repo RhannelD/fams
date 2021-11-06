@@ -35,7 +35,7 @@
                 Scholarship
             </a>
 
-            @if ( Auth::check() && Auth::user()->is_scholar() )
+            @if ( Auth::user()->is_scholar() )
                 <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('requirement.reponses.list') }}">
                     <i class="fas fa-file-upload"></i>
                     Response
@@ -57,6 +57,13 @@
                 <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('scholar') }}">
                     <i class="fas fa-user-graduate"></i>
                     Scholar
+                </a>
+            @endif
+            
+            @if ( Auth::user()->is_admin() || Auth::user()->is_officer() ) 
+                <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('course') }}">
+                    <i class="fas fa-book"></i>
+                    Course
                 </a>
             @endif
 

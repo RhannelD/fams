@@ -32,12 +32,12 @@ class ScholarshipScholarSeeder extends Seeder
         $scholars = User::whereScholar()->where('email', '!=', 'johnravenbalbar@gmail.com')->get();
 
         foreach ($scholars as $scholar) {
-            if (rand(1, 12) == 1) {
+            if (rand(1, 15) == 1) {
                 continue;
             }
 
             foreach ($scholarships as $scholarship) {
-                if (rand(1, 4) == 1) {    
+                if (rand(1, 3) == 1) {    
                     ScholarshipScholar::factory()->create([
                         'user_id'       => $scholar->id,
                         'category_id'   => $scholarship->categories[rand(0, count($scholarship->categories)-1)]->id,

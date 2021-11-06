@@ -18,54 +18,78 @@ class ScholarshipSeeder extends Seeder
     {
         $scholarships = [
             [
-                'scholarship'=>'Mayor Antonio Jose A. Barcelon Educational Assistance Program',
+                'scholarship'=>'TES (Tertiary Education Subsidy)',
                 'categories' =>[
                     [
-                        'category'=> 'MAAEBP',
-                        'amount'  => 5000,
+                        'category'=> 'TES',
+                        'amount'  => 20000,
                     ],
                 ],
             ],
             [
-                'scholarship'=>'Provincial Governor Scholarship',
+                'scholarship'=>'TES-TDP (Tulong Dunong Program)',
                 'categories' =>[
                     [
-                        'category'=> 'Public',
-                        'amount'  => 3000,
+                        'category'=> '6k',
+                        'amount'  => 6000,
                     ],
                     [
-                        'category'=> 'Private',
-                        'amount'  => 5000,
-                    ],
-                    [
-                        'category'=> 'High Honors',
-                        'amount'  => 8000,
-                    ],
-                ],
-            ],
-            [
-                'scholarship'=>'Sugar Industry Foundation, Inc',
-                'categories' =>[
-                    [
-                        'category'=> 'LUZONFED',
-                        'amount'  => 7500,
-                    ],
-                    [
-                        'category'=> 'CADPI',
-                        'amount'  => 7500,
-                    ],
-                    [
-                        'category'=> 'RFI',
+                        'category'=> '7.5k',
                         'amount'  => 7500,
                     ],
                 ],
             ],
             [
-                'scholarship'=>'Cong. Eileen Ermita-Buhain Scholars',
+                'scholarship'=>'BFAR',
                 'categories' =>[
                     [ 
-                        'category'=> 'EEB Scholars',
-                        'amount'  => 7500,
+                        'category'=> 'BFAR',
+                        'amount'  => 20000,
+                    ],
+                ],
+            ],
+            [
+                'scholarship'=>'CHED Half Merit',
+                'categories' =>[
+                    [ 
+                        'category'=> 'CHED',
+                        'amount'  => 10000,
+                    ],
+                ],
+            ],
+            [
+                'scholarship'=>'PLDT Gabay Guro',
+                'categories' =>[
+                    [ 
+                        'category'=> 'PLDT',
+                        'amount'  => 17500,
+                    ],
+                ],
+            ],
+            [
+                'scholarship'=>'DOST',
+                'categories' =>[
+                    [
+                        'category'=> 'DOST',
+                        'amount'  => 1,
+                    ],
+                ],
+            ],
+            [
+                'scholarship'=>'Sakamoto',
+                'categories' =>[
+                    [ 
+                        'category'=> 'Sakamoto',
+                        'amount'  => 25000,
+                    ],
+                ],
+            ],
+            [
+                'scholarship'=>'LCCKFI (Luis Co Chi Kat Foundation Inc.)',
+                'categories' =>[
+                    [ 
+                        'category'=> 'LCCKFI',
+                        'amount'  => 5000,
                     ],
                 ],
             ],

@@ -36,7 +36,12 @@
             "#b91d47",
             '#494949',
             '#C2F1DB',
-            '#496076'
+            '#496076',
+            '#AE557F',
+            '#132664',
+            '#32A350',
+            '#492B4C',
+            '#F49E12',
         ];
         
         window.addEventListener('scholar_chart', event => { 

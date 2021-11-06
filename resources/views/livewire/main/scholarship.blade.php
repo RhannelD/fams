@@ -60,6 +60,13 @@
                 </a>
             @endif
 
+            @if ( Auth::user()->is_admin() || Auth::user()->is_officer() ) 
+                <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('course') }}">
+                    <i class="fas fa-book"></i>
+                    Course
+                </a>
+            @endif
+
             @if ( Auth::user()->is_scholar() )
                 <hr class="my-2">
                 <strong class="ml-3 text-light">

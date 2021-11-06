@@ -29,7 +29,7 @@ class OfficerEditLivewire extends Component
             'user.birthplace' => 'max:200',
             'user.address' => 'max:200',
             'user.religion' => 'max:200',
-            'user.email' => "required|unique:users,email".((isset($this->user_id))?",".$this->user_id:''),
+            'user.email' => "required|unique:users,email".((isset($this->user_id))?",".$this->user_id:'')."|regex:/^[a-zA-Z0-9._%+-]+\@g.batstate-u.edu.ph$/i",
             'password' => 'required|min:9',
         ];
     }

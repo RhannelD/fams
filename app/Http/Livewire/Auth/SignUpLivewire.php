@@ -32,7 +32,7 @@ class SignUpLivewire extends Component
         'user.birthplace' => 'required|max:200',
         'user.religion' => 'max:200',
         'user.address' => 'max:200',
-        'user.email' => "required|unique:users,email",
+        'user.email' => "required|unique:users,email|regex:/^[a-zA-Z0-9._%+-]+\@g.batstate-u.edu.ph$/i",
         'password' => 'required|min:9',
         'password_confirm' => 'required|min:9|same:password',
 

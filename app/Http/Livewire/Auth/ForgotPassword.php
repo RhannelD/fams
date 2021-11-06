@@ -22,7 +22,7 @@ class ForgotPassword extends Component
     public $confirm_password;
 
     protected $rules = [
-        'email' => 'required|email|exists:users,email',
+        'email' => 'required|email|exists:users,email|regex:/^[a-zA-Z0-9._%+-]+\@g.batstate-u.edu.ph$/i',
         'code' => 'required|min:6|max:6',
         'new_password' => 'required|min:9',
         'confirm_password' => 'required|min:9|same:new_password',

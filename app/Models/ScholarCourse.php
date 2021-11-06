@@ -17,4 +17,9 @@ class ScholarCourse extends Model
     protected $fillable = [
         'course',
     ];
+
+    public function scholars()
+    {
+        return $this->hasMany(ScholarInfo::class, 'course_id', 'id');
+    }
 }
