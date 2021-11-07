@@ -13,11 +13,13 @@ use App\Models\ScholarCourse;
 use App\Mail\PasswordResetMail;
 use App\Models\ScholarResponse;
 use App\Models\ScholarshipPost;
+use App\Models\ScholarResponseGwa;
 use App\Models\ScholarshipScholar;
 use Illuminate\Support\Facades\DB;
 use App\Mail\OfficerInvitationMail;
 use App\Mail\ScholarInvitationMail;
 use App\Models\ScholarResponseFile;
+use App\Models\ScholarResponseUnit;
 use App\Models\ScholarshipCategory;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarResponseAnswer;
@@ -32,6 +34,7 @@ use App\Models\ScholarshipScholarInvite;
 use App\Mail\OfficerVerificationCodeMail;
 use App\Mail\ScholarVerificationCodeMail;
 use App\Models\ScholarshipRequirementItem;
+use Phpml\Classification\KNearestNeighbors;
 use App\Mail\UpdateEmailVerificationCodeMail;
 use App\Models\ScholarshipRequirementCategory;
 use App\Models\ScholarshipRequirementAgreement;
@@ -61,7 +64,29 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return 1<"0";
+        // ---------------------------- BOOM ANALYTICS HAHAHAHAH ----------------------------------
+        $responses = ScholarResponse::selectRaw('scholar_responses.approval, ROUND(scholar_response_gwas.gwa, 2) as gwa, scholar_response_units.units')
+            ->join(with(new ScholarResponseGwa)->getTable(), 'scholar_response_gwas.response_id', '=', 'scholar_responses.id')
+            ->join(with(new ScholarResponseUnit)->getTable(), 'scholar_response_units.response_id', '=', 'scholar_responses.id')
+            ->whereNotNull('approval')
+            ->get();
+
+        // return $responses;
+
+        $samples = [];
+        $labels = [];
+        foreach ($responses as $response) {
+            $samples[] = [$response->gwa, $response->units];
+            $labels[] = ($response->approval) == 1? 'approve': 'denied';
+        }
+
+        $classifier = new KNearestNeighbors();
+        $classifier->train($samples, $labels);
+
+        return $classifier->predict([1, 23]);
+        // ---------------------------- BOOM ANALYTICS HAHAHAHAH END ----------------------------------
+
+        // return 1<"0";
 
         // $response_id = 1;
         // return ScholarResponse::where('id', $response_id)

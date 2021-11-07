@@ -4,9 +4,12 @@ namespace App\Http\Livewire\ScholarshipRequirementResponse;
 
 use Livewire\Component;
 use App\Models\ScholarResponse;
+use App\Models\ScholarResponseGwa;
 use App\Models\ScholarshipScholar;
 use Illuminate\Support\Facades\DB;
+use App\Models\ScholarResponseUnit;
 use Illuminate\Support\Facades\Auth;
+use Phpml\Classification\KNearestNeighbors;
 
 class ScholarshipRequirementResponseViewLivewire extends Component
 {
@@ -31,8 +34,29 @@ class ScholarshipRequirementResponseViewLivewire extends Component
     public function render()
     {
         return view('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-view-livewire', [
-                'scholar_response' => $this->get_scholar_response()
+                'scholar_response' => $this->get_scholar_response(),
+                'classifier_knn' => $this->get_classifier_knn(),
             ]);
+    }
+
+    public function get_classifier_knn()
+    {
+        $responses = ScholarResponse::selectRaw('scholar_responses.approval, ROUND(scholar_response_gwas.gwa, 2) as gwa, scholar_response_units.units')
+            ->join(with(new ScholarResponseGwa)->getTable(), 'scholar_response_gwas.response_id', '=', 'scholar_responses.id')
+            ->join(with(new ScholarResponseUnit)->getTable(), 'scholar_response_units.response_id', '=', 'scholar_responses.id')
+            ->whereNotNull('approval')
+            ->get();
+
+        $samples = [];
+        $labels = [];
+        foreach ($responses as $response) {
+            $samples[] = [$response->gwa, $response->units];
+            $labels[] = ($response->approval) == 1? 'approve': 'denied';
+        }
+
+        $classifier = new KNearestNeighbors();
+        $classifier->train($samples, $labels);
+        return $classifier;
     }
 
     protected function get_scholar_response()

@@ -43,6 +43,16 @@ class ScholarResponse extends Model
         return $this->belongsTo(ScholarshipRequirement::class, 'requirement_id', 'id');
     }
 
+    public function unit()
+    {
+        return $this->hasOne(ScholarResponseUnit::class, 'response_id', 'id');
+    }
+
+    public function gwa()
+    {
+        return $this->hasOne(ScholarResponseGwa::class, 'response_id', 'id');
+    }
+    
 
     public function submmited_on_time()
     {

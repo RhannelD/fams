@@ -19,6 +19,7 @@
         "livewire/livewire": "^2.5",
         "maatwebsite/excel": "^3.1",
         "nexmo/laravel": "^2.4",
+        "php-ai/php-ml": "^0.9.0",
         "stevebauman/purify": "^4.0",
         "uxweb/sweet-alert": "^2.0"
     },

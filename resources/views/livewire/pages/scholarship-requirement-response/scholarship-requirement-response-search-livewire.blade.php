@@ -43,7 +43,16 @@
 
             <tbody>
                 @forelse($responses as $key_index => $response)
-                    <tr class="rows">
+                    <tr class="rows 
+                        @if ( is_null($response->approval) && isset($response->unit) && isset($response->gwa) )
+                            @if ( $classifier_knn->predict([$response->gwa->gwa, $response->unit->units]) == 'approve' )
+                                table-success
+                            @else
+                                table-danger
+                            @endif
+                        @endif
+                        "
+                        >
                         <th>
                             {{ ( ($loop->index + 1) + ( ($show_row * $page ) - $show_row) ) }}
                         </th>

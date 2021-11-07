@@ -3,7 +3,16 @@
     <div class="table-responsive">
         <div class="row mx-1">
             <div class="col-md-4 order-md-last">
-                <div class="card mt-2 shadow">
+                <div class="card mt-2 shadow
+                    @if ( is_null($scholar_response->approval) && isset($scholar_response->unit) && isset($scholar_response->gwa) )
+                        @if ( $classifier_knn->predict([$scholar_response->gwa->gwa, $scholar_response->unit->units]) == 'approve' )
+                            border-success
+                        @else
+                            border-danger
+                        @endif
+                    @endif
+                    "
+                    >
                     <div class="card-body">
                         @if ( is_null($scholar_response->approval) )
                             <button wire:click="response_approve" class="btn btn-success">

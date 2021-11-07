@@ -5,9 +5,12 @@ namespace App\Http\Livewire\ScholarshipRequirementResponse;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\ScholarResponse;
+use App\Models\ScholarResponseGwa;
 use Illuminate\Support\Facades\DB;
+use App\Models\ScholarResponseUnit;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirement;
+use Phpml\Classification\KNearestNeighbors;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ScholarshipRequirementResponseLivewire extends Component
@@ -52,6 +55,7 @@ class ScholarshipRequirementResponseLivewire extends Component
         return view('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-livewire', [
                 'requirement' => $this->get_requirement(),
                 'responses'   => $this->get_responses(),
+                'classifier_knn' => $this->get_classifier_knn(),
             ])
             ->extends('livewire.main.scholarship');
     }
@@ -59,6 +63,26 @@ class ScholarshipRequirementResponseLivewire extends Component
     protected function get_requirement()
     {
         return ScholarshipRequirement::find($this->requirement_id);
+    }
+
+    public function get_classifier_knn()
+    {
+        $responses = ScholarResponse::selectRaw('scholar_responses.approval, ROUND(scholar_response_gwas.gwa, 2) as gwa, scholar_response_units.units')
+            ->join(with(new ScholarResponseGwa)->getTable(), 'scholar_response_gwas.response_id', '=', 'scholar_responses.id')
+            ->join(with(new ScholarResponseUnit)->getTable(), 'scholar_response_units.response_id', '=', 'scholar_responses.id')
+            ->whereNotNull('approval')
+            ->get();
+
+        $samples = [];
+        $labels = [];
+        foreach ($responses as $response) {
+            $samples[] = [$response->gwa, $response->units];
+            $labels[] = ($response->approval) == 1? 'approve': 'denied';
+        }
+
+        $classifier = new KNearestNeighbors();
+        $classifier->train($samples, $labels);
+        return $classifier;
     }
 
     protected function get_responses()
