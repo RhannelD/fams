@@ -181,11 +181,11 @@
                                 @case('units')  
                                     <div class="border-primary card">
                                         <p class="mb-0 card-body py-2 px-3">
-                                            @if( isset($requirement_item->response_answer[0]) )
+                                            @if( $requirement_item->type == 'question' && isset($requirement_item->response_answer[0]) )
                                                 {!! nl2br(e($requirement_item->response_answer[0]->answer)) !!}
-                                            @elseif ( isset($requirement_item->response_units[0]) )
+                                            @elseif ( $requirement_item->type == 'units' && isset($requirement_item->response_units[0]) )
                                                 {!! nl2br(e($requirement_item->response_units[0]->units)) !!}
-                                            @elseif ( isset($requirement_item->response_gwas[0]) )
+                                            @elseif ( $requirement_item->type == 'gwa' && isset($requirement_item->response_gwas[0]) )
                                                 {!! nl2br(e(number_format((float)$requirement_item->response_gwas[0]->gwa, 2, '.', ''))) !!}
                                             @endif
                                         </p>
