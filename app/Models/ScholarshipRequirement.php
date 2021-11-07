@@ -83,4 +83,33 @@ class ScholarshipRequirement extends Model
     {
         return $this->belongsTo(Scholarship::class, 'scholarship_id', 'id');
     }
+
+
+    public function scopeWhereHasItemWithType($query, $type)
+    {
+        return $query->whereHas('items', function ($query) use ($type) {
+                $query->where('type', $type);
+            });
+    }
+
+
+    public function has_item_cor()
+    {
+        return ScholarshipRequirementItem::where('requirement_id', $this->id)->where('type', 'cor')->exists();
+    }
+
+    public function has_item_units()
+    {
+        return ScholarshipRequirementItem::where('requirement_id', $this->id)->where('type', 'units')->exists();
+    }
+
+    public function has_item_grade()
+    {
+        return ScholarshipRequirementItem::where('requirement_id', $this->id)->where('type', 'grade')->exists();
+    }
+
+    public function has_item_gwa()
+    {
+        return ScholarshipRequirementItem::where('requirement_id', $this->id)->where('type', 'gwa')->exists();
+    }
 }

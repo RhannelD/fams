@@ -36,29 +36,29 @@
                 <div class="card mt-2 shadow">
                     <div class="card-body" wire:poll.8000ms>
                         @isset($scholar_response->comments)
-                        <h5 class="mx-2">Comments</h5>
-                        <hr class="my-2">
-                        @foreach ($scholar_response->comments as $comment)
-                            @if ( $comment->user_id == Auth::id() ) 
-                                @livewire('requirement.requirement-response-open-comment-livewire', [$comment->id], key('response-comment-open-'.time().$comment->id))
-            
-                            @else
-                                <div class="my-1">
-                                    <div class="mr-auto mx-2 p-0 bd-highlight d-flex">
-                                        <h6>
-                                            <strong> {{ $comment->user->flname() }} </strong>
-                                        </h6>
-                        
-                                        <h6 class="ml-auto mr-1 bd-highlight my-0">
-                                            {{ \Carbon\Carbon::parse($comment->created_at)->format("M d, Y h:i A") }}
-                                        </h6>
+                            <h5 class="mx-2">Comments</h5>
+                            <hr class="my-2">
+                            @foreach ($scholar_response->comments as $comment)
+                                @if ( $comment->user_id == Auth::id() ) 
+                                    @livewire('requirement.requirement-response-open-comment-livewire', [$comment->id], key('response-comment-open-'.time().$comment->id))
+                
+                                @else
+                                    <div class="my-1">
+                                        <div class="mr-auto mx-2 p-0 bd-highlight d-flex">
+                                            <h6>
+                                                <strong> {{ $comment->user->flname() }} </strong>
+                                            </h6>
+                            
+                                            <h6 class="ml-auto mr-1 bd-highlight my-0">
+                                                {{ \Carbon\Carbon::parse($comment->created_at)->format("M d, Y h:i A") }}
+                                            </h6>
+                                        </div>
+                                        <p class="mb-0 mx-2">{!! nl2br(e($comment->comment)) !!}</p>
                                     </div>
-                                    <p class="mb-0 mx-2">{!! nl2br(e($comment->comment)) !!}</p>
-                                </div>
-                                
-                                <hr class="my-1">
-                            @endif
-                        @endforeach
+                                    
+                                    <hr class="my-1">
+                                @endif
+                            @endforeach
                         @endisset
                     </div>
                     <div wire:ignore class="card-footer bg-white" id="requirement-response-comment">
@@ -129,10 +129,10 @@
                                 @case('file')
                                 @case('cor')
                                 @case('grade')
-                                    @php
-                                        $response_file = $requirement_item->response_files->where('response_id', $scholar_response->id)->first();
-                                    @endphp
-                                    @isset($response_file)
+                                    @isset($requirement_item->response_files[0])
+                                        @php
+                                            $response_file = $requirement_item->response_files[0];
+                                        @endphp
                                         <div class="d-flex">
                                             <div class="mr-1 bd-highlight my-0 btn-block">
                                                 <div class="input-group item-hover">
@@ -177,16 +177,24 @@
                                     @break
 
                                 @case('question')  
+                                @case('gwa')  
+                                @case('units')  
                                     <div class="border-primary card">
                                         <p class="mb-0 card-body py-2 px-3">
-                                            {!! nl2br(e($requirement_item->response_answer->where('response_id', $scholar_response->id)->first()->answer)) !!}
+                                            @if( isset($requirement_item->response_answer[0]) )
+                                                {!! nl2br(e($requirement_item->response_answer[0]->answer)) !!}
+                                            @elseif ( isset($requirement_item->response_units[0]) )
+                                                {!! nl2br(e($requirement_item->response_units[0]->units)) !!}
+                                            @elseif ( isset($requirement_item->response_gwas[0]) )
+                                                {!! nl2br(e(number_format((float)$requirement_item->response_gwas[0]->gwa, 2, '.', ''))) !!}
+                                            @endif
                                         </p>
                                     </div>
                                     @break
 
                                 @case('radio')    
                                     @foreach ($requirement_item->options as $option)
-                                        @if ( $option->responses->where('response_id', $scholar_response->id)->first() )
+                                        @if ( isset($option->responses[0]) )
                                             <div class="input-group mb-1">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text border-primary bg-primary text-white">
@@ -214,7 +222,7 @@
 
                                 @case('check')
                                     @foreach ($requirement_item->options as $option)
-                                        @if ( $option->responses->where('response_id', $scholar_response->id)->first() )
+                                        @if ( isset($option->responses[0]) )
                                             <div class="input-group mb-1">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text border-primary bg-primary text-white">
@@ -245,13 +253,13 @@
                     </div>
                 @endforeach
                 
-                @if ($scholar_response->requirement->agreements->count())
+                @isset ( $scholar_response->requirement->agreements[0] )
                     <div class="card mb-3 shadow requirement-item-hover">
                         <div class="card-body">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text border-primary bg-primary text-white">
-                                        @if ($scholar_response->requirement->agreements->first()->response_agreements->where('response_id', $response_id)->count())
+                                        @if ( isset($scholar_response->requirement->agreements[0]->response_agreements[0]) )
                                             <i class="fas fa-check-square"></i>
                                         @else
                                             <i class="far fa-square"></i>
@@ -268,12 +276,12 @@
                             <div wire:ignore.self class="collapse" id="agreement-collapse">
                                 <hr class="my-2">
                                 <p>
-                                    {!! Purify::clean($scholar_response->requirement->agreements->first()->agreement) !!}
+                                    {!! Purify::clean($scholar_response->requirement->agreements[0]->agreement) !!}
                                 </p>
                             </div>
                         </div>
                     </div>
-                @endif
+                @endisset
             </div>
         </div>
     </div>

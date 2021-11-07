@@ -24,20 +24,9 @@ class FilePreviewController extends Controller
             return abort(404);
 
         $file = ScholarResponseFile::where('id', $id)
-            ->when(!Auth::user()->is_admin(), function ($query) {
-                $query->where(function ($query) {
-                    $query->whereHas('response', function ($query) {
-                        $query->whereHas('requirement', function ($query) {
-                            $query->whereHas('scholarship', function ($query) {
-                                $query->whereHas('officers', function ($query) {
-                                    $query->where('user_id', Auth::id());
-                                });
-                            });
-                        });
-                    })
-                    ->orWhereHas('response', function ($query) {
-                        $query->where('user_id', Auth::id());
-                    });
+            ->when(!Auth::user()->is_admin() && !Auth::user()->is_officer(), function ($query) {
+                $query->whereHas('response', function ($query) {
+                    $query->where('user_id', Auth::id());
                 });
             })
             ->first();

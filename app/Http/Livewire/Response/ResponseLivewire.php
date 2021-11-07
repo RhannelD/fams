@@ -99,6 +99,18 @@ class ResponseLivewire extends Component
                             });
                     })
                     ->orWhereHas('items', function ($query) use ($response_id) {
+                        $query->where('type', 'units')
+                            ->whereDoesntHave('response_units', function ($query) use ($response_id) {
+                                $query->where('response_id', $response_id);
+                            });
+                    })
+                    ->orWhereHas('items', function ($query) use ($response_id) {
+                        $query->where('type', 'gwa')
+                            ->whereDoesntHave('response_gwas', function ($query) use ($response_id) {
+                                $query->where('response_id', $response_id);
+                            });
+                    })
+                    ->orWhereHas('items', function ($query) use ($response_id) {
                         $query->whereIn('type', ['radio', 'check'])
                             ->whereDoesntHave('options', function ($query) use ($response_id) {
                                 $query->whereHas('responses', function ($query) use ($response_id) {

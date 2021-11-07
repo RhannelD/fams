@@ -3,9 +3,10 @@
 namespace App\Http\Livewire\ScholarshipRequirementEdit;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ScholarshipRequirement;
 use App\Models\ScholarshipRequirementItem;
 use App\Models\ScholarshipRequirementItemOption;
-use Illuminate\Support\Facades\Auth;
 
 class ScholarshipRequirementEditItemLivewire extends Component
 {
@@ -56,12 +57,15 @@ class ScholarshipRequirementEditItemLivewire extends Component
     
     public function updated($propertyName)
     {
-        if ( Auth::guest() || Auth::user()->cannot('update', $this->get_requirement_item()) )
+        $requirement_item = $this->get_requirement_item();
+        if ( Auth::guest() || Auth::user()->cannot('update', $requirement_item) )
             return;
 
         $this->validate();
 
         if($propertyName == 'item.type') {
+            if ( in_array($this->item->type, array('cor', 'units', 'grade', 'gwa')) )
+                $this->emitTo('scholarship-requirement-edit.scholarship-requirement-edit-item-livewire', 'get_options');
             $this->change_item_type();
         }
         $this->save();
@@ -102,9 +106,13 @@ class ScholarshipRequirementEditItemLivewire extends Component
     {
         if ( Auth::guest() || Auth::user()->cannot('delete', $this->get_requirement_item()) )
             return;
-
+        
+        $type = $this->item->type;
         if ( !ScholarshipRequirementItem::where('id', $this->item_id)->delete() ) 
             return;
+        
+        if ( in_array($type, array('cor', 'units', 'grade', 'gwa')) )
+            $this->emitTo('scholarship-requirement-edit.scholarship-requirement-edit-item-livewire', 'get_options');
 
         $this->dispatchBrowserEvent('delete_item_div', [
             'div_class' => $this->item_id,  
@@ -118,6 +126,7 @@ class ScholarshipRequirementEditItemLivewire extends Component
 
         if(!in_array($this->item->type, array('radio', 'check'))) {
             $options = ScholarshipRequirementItemOption::where('item_id', $this->item_id)->delete();
+            $this->set_detail_on_special_items();
             return;
         }
         
@@ -126,6 +135,35 @@ class ScholarshipRequirementEditItemLivewire extends Component
             return;
 
         $this->add_item_option();
+    }
+
+    protected function set_detail_on_special_items()
+    {
+        if ( !in_array($this->item->type, array('cor', 'units', 'grade', 'gwa')) ) 
+            return;
+
+        $requirement_item = $this->get_requirement_item();
+        if ( !$requirement_item || ScholarshipRequirement::where('id', $requirement_item->requirement_id)->whereHasItemWithType($this->item->type)->exists() ) 
+            return;
+        
+        switch ($this->item->type) {
+            case 'cor':
+                $this->item->item = 'Certificate of Registration';
+                $this->item->note = 'Upload in PDF file';
+                break;
+            case 'units':
+                $this->item->item = 'No. of units taken';
+                $this->item->note = 'Specify the current no. of units taken';
+                break;
+            case 'grade':
+                $this->item->item = 'Previuos Semester Grades';
+                $this->item->note = 'Upload in PDF file';
+                break;
+            case 'gwa':
+                $this->item->item = 'GWA of previuos semester';
+                $this->item->note = 'GWA in 1, 1.25, ..., 5 format only';
+                break;
+        }
     }
 
     public function add_item_option()

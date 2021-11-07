@@ -25,19 +25,19 @@ class ScholarshipRequirementItemSeeder extends Seeder
                 'type' => 'cor',
             ],
             [
+                'item' => 'No. of units taken',
+                'note' => 'Specify the current no. of units taken',
+                'type' => 'units',
+            ],
+            [
                 'item' => 'Previuos Semester Grades',
                 'note' => 'Upload in PDF file',
                 'type' => 'grade',
             ],
             [
                 'item' => 'GWA of previuos semester',
-                'note' => 'Answer in % format only',
-                'type' => 'question',
-            ],
-            [
-                'item' => 'No. of units taken',
-                'note' => '',
-                'type' => 'question',
+                'note' => 'GWA in 1, 1.25, ..., 5 format only',
+                'type' => 'gwa',
             ],
             [
                 'item' => 'Back to back ID Picture',

@@ -2,8 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\ScholarshipRequirementItem;
 use App\Models\User;
+use App\Models\ScholarResponseFile;
+use App\Models\ScholarResponseAnswer;
+use App\Models\ScholarResponseOption;
+use App\Models\ScholarshipRequirementItem;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ScholarshipRequirementItemPolicy
@@ -19,7 +22,7 @@ class ScholarshipRequirementItemPolicy
      */
     public function before(User $user, $ability)
     {
-        if ($user->is_admin()) {
+        if ($user->is_admin() && $ability != 'updateType' ) {
             return true;
         }
     }
@@ -68,6 +71,21 @@ class ScholarshipRequirementItemPolicy
     public function update(User $user, ScholarshipRequirementItem $scholarshipRequirementItem)
     {
         return $user->is_officer();
+    }
+
+    /**
+     * Determine whether the user can update type of the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ScholarshipRequirementItem  $scholarshipRequirementItem
+     * @return mixed
+     */
+    public function updateType(User $user, ScholarshipRequirementItem $scholarshipRequirementItem)
+    {
+        return ($user->is_officer() || $user->is_admin())
+            && !ScholarResponseAnswer::where('item_id', $scholarshipRequirementItem->id)->exists()
+            && !ScholarResponseFile::where('item_id', $scholarshipRequirementItem->id)->exists()
+            && !ScholarResponseOption::where('item_id', $scholarshipRequirementItem->id)->exists();
     }
 
     /**

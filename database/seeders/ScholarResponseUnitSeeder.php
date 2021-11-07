@@ -3,11 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\ScholarResponseUnit;
 use App\Models\ScholarshipRequirement;
-use App\Models\ScholarResponse;
-use App\Models\ScholarResponseAnswer;
 
-class ScholarResponseAnswerSeeder extends Seeder
+class ScholarResponseUnitSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -20,18 +19,18 @@ class ScholarResponseAnswerSeeder extends Seeder
             ->with('responses')
             ->with([
                 'items' => function($query) {
-                    $query->where('type','question');
+                    $query->where('type','units');
                 }
             ])
             ->whereHas('items', function ($query) {
-                $query->where('type', 'question');
+                $query->where('type', 'units');
             })
             ->get();
 
         foreach ($requirements as $requirement) {
             foreach ($requirement->responses as $response) {
                 foreach ($requirement->items as $question) {
-                    ScholarResponseAnswer::factory()->create([   
+                    ScholarResponseUnit::factory()->create([   
                         'response_id' => $response->id,
                         'item_id' => $question->id,
                     ]);

@@ -121,13 +121,23 @@
                                             </div>
                                             @break
                                         @case('question')
+                                        @case('gwa')
+                                        @case('units')
                                             <div class="input-group mb-1">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">
                                                         <i class="fas fa-question"></i>
                                                     </span>
                                                 </div>
-                                                <div class="form-control">Answer</div>
+                                                <div class="form-control">
+                                                    @if ( $requirement_item->type == 'question' )
+                                                        Answer
+                                                    @elseif ( $requirement_item->type == 'gwa' )
+                                                        GWA
+                                                    @else
+                                                        No. of Units
+                                                    @endif
+                                                </div>
                                             </div>
                                             @break
                                         @case('radio')

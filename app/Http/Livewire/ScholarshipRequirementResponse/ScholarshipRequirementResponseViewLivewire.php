@@ -37,7 +37,52 @@ class ScholarshipRequirementResponseViewLivewire extends Component
 
     protected function get_scholar_response()
     {
-        return ScholarResponse::find($this->response_id);
+        $response_id = $this->response_id;
+        return ScholarResponse::where('id', $response_id)
+            ->with([
+                'user', 
+
+                'comments' => function ($query) {
+                    $query->with('user');
+                },
+
+                'requirement' => function ($query) use ($response_id) {
+                    $query->with([
+                        'agreements' => function ($query) use ($response_id) {
+                            $query->with([
+                                'response_agreements' => function ($query) use ($response_id) {
+                                    $query->where('response_id', $response_id);
+                                }
+                            ]);
+                        },
+                        'items' => function ($query) use ($response_id) {
+                            $query->with([
+                                'options' => function ($query) use ($response_id) {
+                                    $query->with([
+                                        'responses' => function ($query) use ($response_id) {
+                                            $query->where('response_id', $response_id);
+                                        }
+                                    ]);
+                                },
+
+                                'response_answer' => function ($query) use ($response_id) {
+                                    $query->where('response_id', $response_id);
+                                },
+                                'response_files' => function ($query) use ($response_id) {
+                                    $query->where('response_id', $response_id);
+                                },
+                                'response_units' => function ($query) use ($response_id) {
+                                    $query->where('response_id', $response_id);
+                                },
+                                'response_gwas' => function ($query) use ($response_id) {
+                                    $query->where('response_id', $response_id);
+                                },
+                            ]);
+                        }
+                    ]);
+                },
+            ])
+            ->first();
     }
 
     protected function is_scholar($scholar_response)

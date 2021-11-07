@@ -23,7 +23,7 @@ class ScholarResponseCommentSeeder extends Seeder
         foreach ($responses as $response) {
             $officer = User::whereOfficer()->inRandomOrder()->first();
             
-            for ($comment_count=0; $comment_count < rand(0, 30); $comment_count++) { 
+            for ($comment_count=0; $comment_count < rand(3, 15); $comment_count++) { 
                 $user_id = (rand(0, 1) == 1)?  $officer->id: $response->user_id;
 
                 ScholarResponseComment::factory()->create([   

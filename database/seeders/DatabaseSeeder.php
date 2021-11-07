@@ -30,6 +30,8 @@ class DatabaseSeeder extends Seeder
             ScholarResponseAnswerSeeder::class,
             ScholarResponseOptionSeeder::class,
             ScholarResponseFileSeeder::class,
+            ScholarResponseGwaSeeder::class,
+            ScholarResponseUnitSeeder::class,
             ScholarResponseCommentSeeder::class,
             UserChatSeeder::class,
         ]);

@@ -117,6 +117,14 @@
                                         @livewire('response.response-radio-livewire', [$requirement_item->id, $user_response->id], key('response-radio-livewire-'.time().$requirement_item->id))
                                         @break
 
+                                    @case('units')
+                                        @livewire('response.response-unit-livewire', [$requirement_item->id, $user_response->id], key('response-unit-livewire-'.time().$requirement_item->id))
+                                        @break
+
+                                    @case('gwa')
+                                        @livewire('response.response-gwa-livewire', [$requirement_item->id, $user_response->id], key('response-gwa-livewire-'.time().$requirement_item->id))
+                                        @break
+
                                     @case('check')
                                         @isset($requirement_item->options)
                                             @foreach ($requirement_item->options as $option)

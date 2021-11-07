@@ -37,6 +37,16 @@ class ScholarshipRequirementItem extends Model
         return $this->hasMany(ScholarResponseAnswer::class, 'item_id', 'id');
     }
 
+    public function response_units()
+    {
+        return $this->hasMany(ScholarResponseUnit::class, 'item_id', 'id');
+    }
+
+    public function response_gwas()
+    {
+        return $this->hasMany(ScholarResponseGwa::class, 'item_id', 'id');
+    }
+
     public function requirement()
     {
         return $this->belongsTo(ScholarshipRequirement::class, 'requirement_id', 'id');

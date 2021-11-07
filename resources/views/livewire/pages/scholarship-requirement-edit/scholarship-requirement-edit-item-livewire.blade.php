@@ -31,13 +31,27 @@
                 <div class="col-3">
                     <div class="form-group">
                         <label for="type_{{ $requirement_item->id }}">Type</label>
-                        <select wire:model.lazy="item.type" class="form-control" id="type_{{ $requirement_item->id }}">
+                        <select wire:model.lazy="item.type" class="form-control" id="type_{{ $requirement_item->id }}"
+                            @cannot( 'updateType', $requirement_item )
+                                disabled
+                            @endcannot
+                            >
                             <option value="question">Answer</option>
                             <option value="file">File Upload</option>
                             <option value="radio">Radio</option>
                             <option value="check">Checkbox</option>
-                            <option value="cor">COR Upload</option>
-                            <option value="grade">Grade Upload</option>
+                            @if ( $item->type == 'cor' || !$requirement_item->requirement->has_item_cor() )
+                                <option value="cor">COR Upload</option>
+                            @endif
+                            @if ( $item->type == 'units' || !$requirement_item->requirement->has_item_units() )
+                                <option value="units">No. of Units</option>
+                            @endif
+                            @if ( $item->type == 'grade' || !$requirement_item->requirement->has_item_grade() )
+                                <option value="grade">Grade Upload</option>
+                            @endif
+                            @if ( $item->type == 'gwa' || !$requirement_item->requirement->has_item_gwa() )
+                                <option value="gwa">GWA</option>
+                            @endif
                         </select>
                         @error('item.type') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
@@ -47,6 +61,8 @@
                 <div class="col-12">
                     @switch($requirement_item->type)
                         @case('question')
+                        @case('units')
+                        @case('gwa')
                             <div class="form-group">
                                 <div class="input-group mb-1">
                                     <div class="input-group-prepend">
@@ -54,7 +70,15 @@
                                             <i class="fas fa-question"></i>
                                         </span>
                                     </div>
-                                    <div class="form-control">Answer</div>
+                                    <div class="form-control">
+                                        @if ( $requirement_item->type == 'question' )
+                                            Answer
+                                        @elseif ( $requirement_item->type == 'gwa' )
+                                            GWA
+                                        @else
+                                            No. of Units
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                             @break

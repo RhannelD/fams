@@ -61,7 +61,48 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return '+63'.substr("09123456789", 1);
+        return 1<"0";
+
+        // $response_id = 1;
+        // return ScholarResponse::where('id', $response_id)
+        //     ->with([
+        //         'user', 
+        //         'comments' => function ($query) {
+        //             $query->with('user');
+        //         },
+        //         'requirement' => function ($query) use ($response_id) {
+        //             $query->with([
+        //                 'agreements' => function ($query) use ($response_id) {
+        //                     $query->with([
+        //                         'response_agreements' => function ($query) use ($response_id) {
+        //                             $query->where('response_id', $response_id);
+        //                         }
+        //                     ]);
+        //                 },
+        //                 'items' => function ($query) use ($response_id) {
+        //                     $query->with([
+        //                         'options' => function ($query) use ($response_id) {
+        //                             $query->with([
+        //                                 'responses' => function ($query) use ($response_id) {
+        //                                     $query->where('response_id', $response_id);
+        //                                 }
+        //                             ]);
+        //                         },
+
+        //                         'response_answer' => function ($query) use ($response_id) {
+        //                             $query->where('response_id', $response_id);
+        //                         },
+        //                         'response_files' => function ($query) use ($response_id) {
+        //                             $query->where('response_id', $response_id);
+        //                         },
+        //                     ]);
+        //                 }
+        //             ]);
+        //         },
+        //     ])
+        //     ->first();
+
+        // return '+63'.substr("09123456789", 1);
 
         // $category_id = 1;
         // return ScholarResponse::selectRaw('
