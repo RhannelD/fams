@@ -4,7 +4,7 @@
         @livewire('add-ins.scholarship-program-livewire', [$post->scholarship_id, 'home'], key('page-tabs-'.time().$post->scholarship_id))
     </div>
 
-    <div class="row mt-2">
+    <div class="row mt-2 px-1">
         <div class="col-12 mb-2">
             <div class="card mb-3 shadow item-hover mx-auto" style="max-width: 800px">
                 <div class="card-header"> 

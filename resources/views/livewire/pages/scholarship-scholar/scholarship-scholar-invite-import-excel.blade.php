@@ -7,7 +7,7 @@
                 <div class="alert alert-info">
                     Import excel file to invite scholars.
                     <a data-toggle="collapse" href="#excel_example" role="button" aria-expanded="false" aria-controls="excel_example">
-                        Click here to view exampple.
+                        Click here to view example.
                     </a>
                 </div>
                 <div class="collapse my-2" id="excel_example">
@@ -15,18 +15,30 @@
                         <h4>Excel format example</h4>
                         <div class="table-responsive">
                             <table class="table table-bordered">
-                                <tr>
-                                    <td>juandelacruz@email.com</td>
-                                    <td>Category 1</td>
-                                </tr>
-                                <tr>
-                                    <td>obie.oconner@email.com</td>
-                                    <td>Category 2</td>
-                                </tr>
-                                <tr>
-                                    <td>ronny.muller@email.com</td>
-                                    <td>Category 1</td>
-                                </tr>
+                                @if ( $category_count>1 )
+                                    <tr>
+                                        <td>juandelacruz@g.batstate-u.edu.ph</td>
+                                        <td>Category 1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>obie.oconner@g.batstate-u.edu.ph</td>
+                                        <td>Category 2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ronny.muller@g.batstate-u.edu.ph</td>
+                                        <td>Category 1</td>
+                                    </tr>
+                                @else
+                                    <tr>
+                                        <td>juandelacruz@g.batstate-u.edu.ph</td>
+                                    </tr>
+                                    <tr>
+                                        <td>obie.oconner@g.batstate-u.edu.ph</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ronny.muller@g.batstate-u.edu.ph</td>
+                                    </tr>
+                                @endif
                                 <tr>
                                     <td colspan="2">...</td>
                                 </tr>
@@ -35,7 +47,9 @@
                         <div class="alert alert-info mb-0">
                             <ul class="my-1">
                                 <li>First collumn must be valid email.</li>
-                                <li>Second collumn must be an exact match to scholarship's categories.</li>
+                                @if ( $category_count>1 )
+                                    <li>Second collumn must be an exact match to scholarship's categories.</li>
+                                @endif
                                 <li>File extension must be '.xlsx' (Microsoft Excel Open XML Spreadsheet).</li>
                             </ul>
                         </div>
@@ -61,7 +75,7 @@
                 @error('excel') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
         </div>
-        <div class="row mt-2">
+        <div class="row mt-2 mx-1">
             <div class="col-12">
                 @isset($dataset[0])
                     <h3 class="my-auto">Valid Information [{{ count($dataset) }}]</h3>
@@ -102,19 +116,24 @@
                             Refresh
                         </button>
                     </div>
-                    <table class="table table-sm table-bordered">
+                    <table class="table table-sm table-bordered" wire:poll.8000ms>
                         <tr>
                             <th>#</th>
                             <th>Email</th>
-                            <th>Category</th>
+                            @if ( $category_count>1 )
+                                <th>Category</th>
+                            @endif
                             <th>Account</th>
                             <th>Invite</th>
+                            <th></th>
                         </tr>
                         @foreach ($dataset as $row)
                             <tr>
                                 <td>{{ $loop->index+1 }}</td>
                                 <td>{{ $row['email'] }}</td>
-                                <td>{{ $row['category'] }}</td>
+                                @if ( $category_count>1 && isset($row['category']) )
+                                    <td>{{ $row['category'] }}</td>
+                                @endif
                                 <td>
                                     @if ( isset($row['account']) )
                                         <a>
@@ -124,16 +143,43 @@
                                         <span class="badge badge-secondary">Not Yet Registered</span>
                                     @endif    
                                 </td>
-                                <td>
-                                    @if ( !isset($row['invite']) )
-                                        ...
-                                    @elseif ($row['invite'])
-                                        <span class="badge badge-pill badge-success">Invited</span>
-                                        @if ( isset($row['invite_send']) && !$row['invite_send'] )
-                                            <span class="badge badge-pill badge-danger">Email not sent!</span>
+                                    @if ( isset($row['invite']) && $row['invite'] )
+                                        @if ( !isset($row['sent']) )
+                                            <td>
+                                                <span class="badge badge-pill badge-info text-white">Sending...</span>
+                                            </td>
+                                        @elseif ( $row['sent'] )
+                                            <td>
+                                                <span class="badge badge-pill badge-success">Invited</span>
+                                            </td>
+                                        @else
+                                            <td>
+                                                <span class="badge badge-pill badge-danger">Email not sent!</span>
+                                            </td>
+                                            <td class="text-center py-1">
+                                                <button class="btn btn-sm btn-success"
+                                                    wire:click='resend_invite({{ $row['invite_id'] }})'
+                                                    wire:loading.attr='disabled'
+                                                    wire:target="resend_invite({{ $row['invite_id'] }})"
+                                                    >
+                                                    <i class="fas fa-spinner fa-spin" id="resend_invite_icon_{{ $row['invite_id'] }}"
+                                                        wire:loading 
+                                                        wire:target="resend_invite({{ $row['invite_id'] }})"
+                                                        >
+                                                    </i>
+                                                    <span id="resend_invite_label_{{ $row['invite_id'] }}"
+                                                        wire:loading.remove
+                                                        wire:target="resend_invite({{ $row['invite_id'] }})"
+                                                        >
+                                                        Resend
+                                                    </span>
+                                                </button>
+                                            </td>
                                         @endif
                                     @else
-                                        <span class="badge badge-pill badge-danger">Failed</span>
+                                        <td>
+                                            ...
+                                        </td>
                                     @endif
                                 </td>
                             </tr>
@@ -155,13 +201,17 @@
                             <tr>
                                 <th>#</th>
                                 <th>Email</th>
-                                <th>Category</th>
+                                @if ( $category_count>1 )
+                                    <th>Category</th>
+                                @endif
                             </tr>
                             @foreach ($dataset_invalid as $row)
                                 <tr>
                                     <td rowspan="2">{{ $loop->index+1 }}</td>
                                     <td>{{ $row['email'] }}</td>
-                                    <td>{{ $row['category'] }}</td>
+                                    @if ( $category_count>1  && isset($row['category']) )
+                                        <td>{{ $row['category'] }}</td>
+                                    @endif
                                 </tr>
                                 <tr>
                                     <td colspan="2" class="text-danger">

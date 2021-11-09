@@ -16,7 +16,13 @@ class ScholarInviteImport implements ToArray
     public function array(array $rows)
     {
         foreach ($rows as $row) {
-            $this->data[] = array('email' => trim($row[0]), 'category' => trim($row[1]));
+            $data = [];
+            $data['email']    = trim($row[0]);
+            if ( isset($row[1]) ) {
+                $data['category'] = trim($row[1]);
+            }
+
+            $this->data[] = $data;
         }
     }
 

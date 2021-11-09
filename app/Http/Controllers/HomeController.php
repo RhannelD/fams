@@ -16,7 +16,6 @@ use App\Models\ScholarshipPost;
 use App\Models\ScholarResponseGwa;
 use App\Models\ScholarshipScholar;
 use Illuminate\Support\Facades\DB;
-use App\Mail\OfficerInvitationMail;
 use App\Mail\ScholarInvitationMail;
 use App\Models\ScholarResponseFile;
 use App\Models\ScholarResponseUnit;
@@ -31,7 +30,6 @@ use App\Models\ScholarshipRequirement;
 use Stevebauman\Purify\Facades\Purify;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ScholarshipScholarInvite;
-use App\Mail\OfficerVerificationCodeMail;
 use App\Mail\ScholarVerificationCodeMail;
 use App\Models\ScholarshipRequirementItem;
 use Phpml\Classification\KNearestNeighbors;
@@ -64,6 +62,14 @@ class HomeController extends Controller
      */
     public function index()
     {
+        return ScholarshipScholarInvite::where('id',19)
+            ->with([
+                'category' => function ($query) {
+                    $query->with('scholarship');
+                }
+            ])
+            ->first();
+
         // ---------------------------- BOOM ANALYTICS HAHAHAHAH ----------------------------------
         // $responses = ScholarResponse::selectRaw('scholar_responses.approval, ROUND(scholar_response_gwas.gwa, 2) as gwa, scholar_response_units.units')
         //     ->join(with(new ScholarResponseGwa)->getTable(), 'scholar_response_gwas.response_id', '=', 'scholar_responses.id')

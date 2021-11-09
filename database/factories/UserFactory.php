@@ -26,12 +26,29 @@ class UserFactory extends Factory
         $gender = $this->faker->randomElement(['male', 'female']);
         $religion = $this->faker->randomElement([
             'Roman Catholic', 
+            'Roman Catholic', 
+            'Roman Catholic', 
+            'Roman Catholic', 
+            'Roman Catholic', 
+            'Roman Catholic', 
+            'Roman Catholic', 
+            'Roman Catholic', 
+            'Roman Catholic', 
+            'Roman Catholic', 
+            'Roman Catholic', 
+            'Roman Catholic', 
+            'Roman Catholic', 
+            'Roman Catholic', 
             'Islam', 
             'Iglesia ni Cristo', 
-            'Evangelicals', 
-            'Jehovah\'s Witnesses', 
+            'Iglesia ni Cristo', 
+            'Iglesia ni Cristo', 
+            'Iglesia ni Cristo', 
             'Muslim', 
-            'Born Again'
+            'Born Again',
+            'Born Again',
+            'Born Again',
+            'Born Again',
         ]);
 
         return [
@@ -44,7 +61,7 @@ class UserFactory extends Factory
             'phone' => '09'.rand(100000000,999999999),
             'email' => $this->faker->unique()->safeEmail(),
             'password' => Hash::make('123123123'),
-            'birthday' => $this->faker->date($format = 'Y-m-d', $max = '2015-12-01'),
+            'birthday' => $this->faker->date($format = 'Y-m-d', $max = '2000-12-01'),
             'birthplace' => $this->faker->address,
             'address' => $this->faker->address,
             'email_verified_at' => now(),

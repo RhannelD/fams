@@ -66,6 +66,8 @@ class ScholarshipRequirementEditItemLivewire extends Component
         if($propertyName == 'item.type') {
             if ( in_array($this->item->type, array('cor', 'units', 'grade', 'gwa')) )
                 $this->emitTo('scholarship-requirement-edit.scholarship-requirement-edit-item-livewire', 'get_options');
+            if ( in_array($this->item->type, array('units', 'gwa')) )
+                $this->emitUp('refresh');
             $this->change_item_type();
         }
         $this->save();
@@ -92,13 +94,24 @@ class ScholarshipRequirementEditItemLivewire extends Component
 
     public function delete_confirmation()
     {
-        if ( Auth::check() && Auth::user()->can('update', $this->get_requirement_item()) ) {
-            $this->dispatchBrowserEvent('swal:confirm:delete_confirmation_'.$this->item_id, [
-                'type' => 'warning',  
-                'message' => 'Are you sure?', 
-                'text' => 'If deleted, you will not be able to recover this Item!',
-                'function' => "delete_item"
-            ]);
+        $item = $this->get_requirement_item();
+        if ( Auth::check() && Auth::user()->can('update', $item) ) {
+            if ( $item->is_for_analytics() ) {
+                $this->dispatchBrowserEvent('swal:confirm:delete_confirmation_'.$this->item_id, [
+                    'type' => 'warning',  
+                    'message' => 'Are you sure?', 
+                    'text' => 'If deleted, you will not be able to recover this Item and will not be able to use analytics!',
+                    'function' => "delete_item"
+                ]);
+            } else {
+                $this->dispatchBrowserEvent('swal:confirm:delete_confirmation_'.$this->item_id, [
+                    'type' => 'warning',  
+                    'message' => 'Are you sure?', 
+                    'text' => 'If deleted, you will not be able to recover this Item!',
+                    'function' => "delete_item"
+                ]);
+            }
+            
         }
     }
 

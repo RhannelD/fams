@@ -13,6 +13,7 @@ use App\Imports\ScholarInviteImport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Jobs\ProcessScholarInviteJob;
 use App\Models\ScholarshipScholarInvite;
 use Illuminate\Support\Facades\Validator;
 use App\Rules\NotScholarOfScholarshipRule;
@@ -27,6 +28,7 @@ class ScholarshipScholarInviteImportExcel extends Component
     
     public $scholarship_id;
     public $excel;
+    public $modified_array;
     
     public $dataset;
     public $dataset_invalid;
@@ -55,8 +57,16 @@ class ScholarshipScholarInviteImportExcel extends Component
 
     public function render()
     {
-        return view('livewire.pages.scholarship-scholar.scholarship-scholar-invite-import-excel')
+        $this->process_data();
+        return view('livewire.pages.scholarship-scholar.scholarship-scholar-invite-import-excel', [
+                'category_count' => $this->get_category_count()
+            ])
             ->extends('livewire.main.scholarship');
+    }
+
+    public function get_category_count()
+    {
+        return ScholarshipCategory::where('scholarship_id', $this->scholarship_id)->count();
     }
 
     public function updated($propertyName)
@@ -92,12 +102,44 @@ class ScholarshipScholarInviteImportExcel extends Component
 
         $import = new ScholarInviteImport;
         Excel::import($import, $this->excel);
-        $modified_array = $import->getArray();
+        $this->modified_array = $import->getArray();
+    }
+
+    protected function get_validated_data($row)
+    {
+        $scholarship_id =  $this->scholarship_id;
+        return Validator::make($row, [
+            'email' => [
+                    'required',
+                    'email',
+                    'regex:/^[a-zA-Z0-9._%+-]+\@g.batstate-u.edu.ph$/i',
+                    new EmailNotExistOrScholarEmailRule,
+                    new NotScholarOfScholarshipRule($this->scholarship_id)
+                ],
+            'category' => [
+                    'required',
+                    Rule::exists('scholarship_categories')->where(function ($query) use ($scholarship_id) {
+                        return $query->where('scholarship_id', $scholarship_id);
+                    }),
+                ],
+        ]);
+    }
+
+    public function process_data()
+    {
+        $modified_array = $this->modified_array;
         
         if ( !isset($modified_array) || !is_array($modified_array) ) {
             $this->dataset = null;
             $this->dataset_invalid = null;
             return;
+        }
+
+        $categories = ScholarshipCategory::where('scholarship_id', $this->scholarship_id)->get();
+        if ( count($categories)==1 ) {
+            foreach ($modified_array as $key => $row) {
+                $modified_array[$key]['category'] = $categories[0]->category;
+            }
         }
 
         $dataset = [];
@@ -110,9 +152,18 @@ class ScholarshipScholarInviteImportExcel extends Component
                 if ($user) 
                     $row['account'] = $user->flname();
 
-                $invite = ScholarshipScholarInvite::where('email', $row['email'])->whereNull('respond')->first();
-                if ( $invite ) 
+                $invite = ScholarshipScholarInvite::where('email', $row['email'])
+                    ->whereNull('respond')
+                    ->whereScholarship($this->scholarship_id)
+                    ->first();
+
+                if ( $invite ) {
                     $row['invite'] = true;
+                    $row['sent']   = $invite->sent;
+                    $row['invite_id']   = $invite->id;
+                } else {
+                    $row['invite'] = false;
+                }
                 
                 $dataset[] = $row;
             } else {
@@ -123,25 +174,6 @@ class ScholarshipScholarInviteImportExcel extends Component
 
         $this->dataset = $dataset;
         $this->dataset_invalid = $dataset_invalid;
-    }
-
-    protected function get_validated_data($row)
-    {
-        $scholarship_id =  $this->scholarship_id;
-        return Validator::make($row, [
-            'email' => [
-                    'required',
-                    'email',
-                    new EmailNotExistOrScholarEmailRule,
-                    new NotScholarOfScholarshipRule($this->scholarship_id)
-                ],
-            'category' => [
-                    'required',
-                    Rule::exists('scholarship_categories')->where(function ($query) use ($scholarship_id) {
-                        return $query->where('scholarship_id', $scholarship_id);
-                    }),
-                ],
-        ]);
     }
 
     public function confirm_invite_all()
@@ -179,10 +211,7 @@ class ScholarshipScholarInviteImportExcel extends Component
                 ]);
             
             if ( $invite ) {
-                $this->dataset[$key]['invite'] = true;
-                $this->dataset[$key]['invite_send'] = $this->send_mail($invite);
-            } else {
-                $this->dataset[$key]['invite'] = false;
+                $this->send_mail($invite);
             }
         }
     }
@@ -198,21 +227,26 @@ class ScholarshipScholarInviteImportExcel extends Component
         return $categories;
     }
 
+    public function resend_invite($invite_id)
+    {
+        $invite = ScholarshipScholarInvite::where('id', $invite_id)
+            ->whereNull('respond')
+            ->whereScholarship($this->scholarship_id)
+            ->first();
+
+        if ( $invite ) {
+            $invite->sent = null;
+            $invite->save();
+            $this->send_mail($invite);
+        }
+    }
+
     protected function send_mail($invitation)
     {
         if ( is_null($invitation) || isset($invitation->respond) )
             return;
         
-        $details = [
-            'scholarship' => $invitation->category->scholarship->scholarship
-        ];
-
-        try {
-            Mail::to($invitation->email)->send(new ScholarInvitationMail($details));
-        } catch (\Exception $e) {
-            return false;
-        }
-        return true;
+        ProcessScholarInviteJob::dispatch($invitation);
     }
 
     public function confirm_cancel_all()
@@ -239,18 +273,11 @@ class ScholarshipScholarInviteImportExcel extends Component
 
         $scholarship_id = $this->scholarship_id;
         foreach ($this->dataset as $key => $data) {
-            if ( isset($data['invite']) && !$data['invite'] ) 
-                continue;
-            
             $invites = ScholarshipScholarInvite::where('email', $data['email'])
                 ->whereHas('category', function ($query) use ($scholarship_id) {
                         $query->where('scholarship_id', $scholarship_id);
                     })
                 ->delete();
-
-            if ( $invites ) {
-                $this->dataset[$key]['invite'] = null;
-            }
         }
     }
 }

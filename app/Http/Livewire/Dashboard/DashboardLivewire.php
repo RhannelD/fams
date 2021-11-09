@@ -49,6 +49,7 @@ class DashboardLivewire extends Component
         $this->scholarship_chart();
         $this->scholars_by_gender();
         $this->scholars_by_scholarship();
+        $this->responses_chart();
     }
 
     public function responses_chart()

@@ -30,19 +30,15 @@ class ScholarshipScholarSeeder extends Seeder
         }
 
         $scholars = User::whereScholar()->where('email', '!=', 'johnravenbalbar@gmail.com')->get();
-
         foreach ($scholars as $scholar) {
-            if (rand(1, 15) == 1) {
-                continue;
-            }
+            $rand = rand(1,4)==3? 3: (rand(1,3)==2? 2: 1);
+            $scholarships = Scholarship::with('categories')->inRandomOrder()->take($rand)->get();
 
             foreach ($scholarships as $scholarship) {
-                if (rand(1, 3) == 1) {    
-                    ScholarshipScholar::factory()->create([
-                        'user_id'       => $scholar->id,
-                        'category_id'   => $scholarship->categories[rand(0, count($scholarship->categories)-1)]->id,
-                    ]);
-                }
+                ScholarshipScholar::factory()->create([
+                    'user_id'       => $scholar->id,
+                    'category_id'   => $scholarship->categories[rand(0, count($scholarship->categories)-1)]->id,
+                ]);
             }
         }
     }

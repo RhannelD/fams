@@ -24,8 +24,8 @@
             <div class="row">
                 @forelse ($scholarships as $scholarship)
                     <div class="col-12 col-sm-6 col-lg-4">
-                        <div class="card mb-2">
-                            <div class="card-header bg-dark text-white">
+                        <div class="card mb-2 border-secondary">
+                            <div class="card-header bg-secondary text-white">
                                 <h4 class="my-1">
                                     <a href="{{ route('scholarship.home', [$scholarship->id]) }}">
                                         <strong class="text-white">{{ $scholarship->scholarship }}</strong>

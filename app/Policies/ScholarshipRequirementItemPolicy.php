@@ -3,7 +3,9 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Models\ScholarResponseGwa;
 use App\Models\ScholarResponseFile;
+use App\Models\ScholarResponseUnit;
 use App\Models\ScholarResponseAnswer;
 use App\Models\ScholarResponseOption;
 use App\Models\ScholarshipRequirementItem;
@@ -85,7 +87,9 @@ class ScholarshipRequirementItemPolicy
         return ($user->is_officer() || $user->is_admin())
             && !ScholarResponseAnswer::where('item_id', $scholarshipRequirementItem->id)->exists()
             && !ScholarResponseFile::where('item_id', $scholarshipRequirementItem->id)->exists()
-            && !ScholarResponseOption::where('item_id', $scholarshipRequirementItem->id)->exists();
+            && !ScholarResponseOption::where('item_id', $scholarshipRequirementItem->id)->exists()
+            && !ScholarResponseGwa::where('item_id', $scholarshipRequirementItem->id)->exists()
+            && !ScholarResponseUnit::where('item_id', $scholarshipRequirementItem->id)->exists();
     }
 
     /**

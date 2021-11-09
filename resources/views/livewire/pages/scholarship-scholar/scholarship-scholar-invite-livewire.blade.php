@@ -5,7 +5,7 @@
             <span aria-hidden="true"><i class="fas fa-times-circle text-white"></i></span>
         </button>
     </div>
-    <div class="modal-body pt-1" style="min-height: 300px;">
+    <div class="modal-body pt-1" style="min-height: 300px;"  wire:poll.8000ms>
         <div class="row"> 
             <div class="col-12 pt-0">
                 <ul wire:ignore class="nav nav-tabs" id="myTab" role="tablist">
@@ -33,26 +33,35 @@
                 <div class="tab-content" id="myTabContent">
                     <div wire:ignore.self class="tab-pane fade show active pt-1" id="send" role="tabpanel" aria-labelledby="send-tab">
                         <div class="form-row">
-                            <div class="col-md-4 order-md-last"> 
-                                <div class="form-group">
-                                    <label for="category">Category</label>
-                                    <select  wire:model="category_id" class="form-control" id="category">
-                                        @forelse ($categories as $category)
-                                            <option value="{{ $category->id }}">
-                                                {{ $category->category }}
-                                            </option>
-                                        @empty
-                                            <option>None</option>
-                                        @endforelse
-                                    </select>
+                            @if ( count($categories)>1 )
+                                <div class="col-md-4 order-md-last"> 
+                                    <div class="form-group">
+                                        <label for="category">Category</label>
+                                        <select  wire:model="category_id" class="form-control" id="category">
+                                            @forelse ($categories as $category)
+                                                <option value="{{ $category->id }}">
+                                                    {{ $category->category }}
+                                                </option>
+                                            @empty
+                                                <option>None</option>
+                                            @endforelse
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <label for="name_email">Enter name or email</label>
-                                    <input wire:model.debounce.1000ms="name_email" type="text" class="form-control" placeholder="Enter name or email" id="name_email">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="name_email">Enter name or email</label>
+                                        <input wire:model.debounce.1000ms="name_email" type="text" class="form-control" placeholder="Enter name or email" id="name_email">
+                                    </div>
                                 </div>
-                            </div>
+                            @else
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="name_email">Enter name or email</label>
+                                        <input wire:model.debounce.1000ms="name_email" type="text" class="form-control" placeholder="Enter name or email" id="name_email">
+                                    </div>
+                                </div>    
+                            @endif
                         </div>
                         @if (session()->has('message-success'))
                             <div class="alert alert-success">
@@ -151,11 +160,36 @@
                         @endisset
                         @forelse ($pending_invites as $invite)
                             <div class="input-group my-1">
-                                <input type="text" class="form-control bg-white border-info" value="{{ $invite->email }}" readonly>
+                                <input type="text" class="form-control bg-white border-info" 
+                                    value="{{ $invite->email }}" readonly>
                                 <div class="input-group-append">
-                                    <span class="input-group-text border-info bg-white rounded-right">
-                                        {{ $invite->category->category }}
-                                    </span>
+                                    @if ( count($categories)>1 )
+                                        <span class="input-group-text border-info bg-white">
+                                            {{ $invite->category->category }}
+                                        </span>
+                                    @endif
+                                    @if ( !isset($invite->sent) )
+                                        <span class="input-group-text border-info bg-white rounded-right text-info">
+                                            <i class="fas fa-circle-notch fa-spin"></i>
+                                        </span>
+                                    @elseif ( $invite->sent )
+                                        <span class="input-group-text border-info bg-white rounded-right text-success">
+                                            <i class="fas fa-check-circle"></i>
+                                        </span>
+                                    @else
+                                        <span class="input-group-text border-info bg-white text-danger">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                        </span>
+                                        <button class="btn btn-success rounded-right" type="button"
+                                            wire:click='resend_rejected_invite({{ $invite->id }})' 
+                                            wire:loading.attr="disabled"
+                                            >
+                                            <i class="fas fa-sync-alt" id="resend_rejected_invite_load_{{ $invite->id }}"
+                                                wire:loading.class="fa-spin"
+                                                wire:target="resend_rejected_invite('{{ $invite->id }}')">
+                                        </i>
+                                    </button>
+                                    @endif
                                     <button class="btn btn-danger ml-1 rounded" type="button"
                                         wire:click="cancel_invite({{ $invite->id }})" 
                                         wire:loading.attr="disabled"
@@ -195,11 +229,14 @@
                         @endisset
                         @forelse ($accepted_invites as $invite)
                             <div class="input-group my-1">
-                                <input type="text" class="form-control bg-white border-success" value="{{ $invite->email }}" readonly>
+                                <input type="text" class="form-control bg-white border-success {{ count($categories)<2? 'rounded': '' }}" 
+                                    value="{{ $invite->email }}" readonly>
                                 <div class="input-group-append">
-                                    <span class="input-group-text border-success bg-white rounded-right">
-                                        {{ $invite->category->category }}
-                                    </span>
+                                    @if ( count($categories)>1 )
+                                        <span class="input-group-text border-success bg-white rounded-right">
+                                            {{ $invite->category->category }}
+                                        </span>
+                                    @endif
                                     <button class="btn btn-dark rounded ml-1" type="button"
                                         wire:click="cancel_invite({{ $invite->id }})" 
                                         wire:loading.attr="disabled" 
@@ -251,11 +288,14 @@
                         @endisset
                         @forelse ($rejected_invites as $invite)
                             <div class="input-group my-1">
-                                <input type="text" class="form-control bg-white border-dark" value="{{ $invite->email }}" readonly>
+                                <input type="text" class="form-control bg-white border-dark {{ count($categories)<2? 'rounded': '' }}" 
+                                    value="{{ $invite->email }}" readonly>
                                 <div class="input-group-append">
-                                    <span class="input-group-text border-dark bg-white rounded-right">
-                                        {{ $invite->category->category }}
-                                    </span>
+                                    @if ( count($categories)>1 )
+                                        <span class="input-group-text border-dark bg-white rounded-right">
+                                            {{ $invite->category->category }}
+                                        </span>
+                                    @endif
                                     <button class="btn btn-success rounded-left ml-1" type="button"
                                         wire:click='resend_rejected_invite({{ $invite->id }})' 
                                         wire:loading.attr="disabled"

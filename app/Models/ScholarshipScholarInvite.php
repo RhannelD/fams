@@ -17,6 +17,7 @@ class ScholarshipScholarInvite extends Model
     protected $fillable = [
         'category_id',
         'email',
+        'sent',
         'respond',
     ];
     
@@ -29,7 +30,6 @@ class ScholarshipScholarInvite extends Model
     {
         return $this->belongsTo(User::class, 'email', 'email');
     }
-
 
     public function scopeWhereScholarship($query, $scholarship_id)
     {

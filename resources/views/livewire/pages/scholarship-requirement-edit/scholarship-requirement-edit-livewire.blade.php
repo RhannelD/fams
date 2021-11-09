@@ -141,6 +141,22 @@
                             Proceed with caution.
                         </div>
                     @endif
+                    @if ( !($scholarship_requirement->has_item_units() || $scholarship_requirement->has_item_gwa()) ) 
+                        <div class="alert alert-danger col-sm-12 offset-sm-0 col-md-10 offset-md-1">
+                            The items with the type of <strong>GWA and No. of Units</strong> has been removed.<br>
+                            You will not be able to use the analytics for assessing the responses.
+                        </div>
+                    @elseif ( !$scholarship_requirement->has_item_units() )
+                        <div class="alert alert-danger col-sm-12 offset-sm-0 col-md-10 offset-md-1">
+                            The item with the type of <strong>No. of Units</strong> has been removed.<br>
+                            You will not be able to use the analytics for assessing the responses.
+                        </div>
+                    @elseif ( !$scholarship_requirement->has_item_gwa() )
+                        <div class="alert alert-danger col-sm-12 offset-sm-0 col-md-10 offset-md-1">
+                            The items with the type of <strong>GWA</strong> has been removed.<br>
+                            You will not be able to use the analytics for assessing the responses.
+                        </div>
+                    @endif
 
                     <div class="col-12"  wire:sortable="update_requirement_order">
                         @foreach ($scholarship_requirement->items as $item)

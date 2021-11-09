@@ -1,4 +1,4 @@
-<div>
+<div class="mx-2">
     <div class="row mt-4">
         <div class="col-12">
             <h4>Invites</h4>

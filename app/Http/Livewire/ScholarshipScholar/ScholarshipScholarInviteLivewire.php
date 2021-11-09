@@ -2,15 +2,16 @@
 
 namespace App\Http\Livewire\ScholarshipScholar;
 
-use Livewire\Component;
-use App\Mail\ScholarInvitationMail;
 use App\Models\User;
+use Livewire\Component;
 use App\Models\ScholarshipOfficer;
-use App\Models\ScholarshipCategory;
-use App\Models\ScholarshipScholarInvite;
 use Illuminate\Support\Facades\DB;
+use App\Mail\ScholarInvitationMail;
+use App\Models\ScholarshipCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Jobs\ProcessScholarInviteJob;
+use App\Models\ScholarshipScholarInvite;
 
 class ScholarshipScholarInviteLivewire extends Component
 {
@@ -123,13 +124,14 @@ class ScholarshipScholarInviteLivewire extends Component
 
         if ( $invite->wasRecentlyCreated ) {
             $this->send_mail($invite->id);
-            session()->flash('message-success', "$email has been added to pending invites.");
+            session()->flash('message-success', "Sending invite to $email");
         }
         $this->if_invited();
     }
 
-    public function cancel_invite(ScholarshipScholarInvite $invite)
+    public function cancel_invite($invite_id)
     {
+        $invite = ScholarshipScholarInvite::find($invite_id);
         if ( Auth::check() && Auth::user()->can('delete', $invite) ) 
             $invite->delete();
     }
@@ -235,14 +237,24 @@ class ScholarshipScholarInviteLivewire extends Component
         }
     }
 
-    public function resend_rejected_invite(ScholarshipScholarInvite $invite)
+    public function resend_rejected_invite($invite_id)
     {
+        $invite = ScholarshipScholarInvite::find($invite_id);
         if ( Auth::guest() || Auth::user()->cannot('resend', $invite) ) 
             return;
         
-        ScholarshipScholarInvite::where('id', $invite->id)
-            ->where('respond', false)
-            ->update(['respond' => null]);
+        $invitation = ScholarshipScholarInvite::where('id', $invite->id)
+            ->where(function ($query) {
+                $query->where('respond', false)
+                    ->orWhere('sent', false);
+            })
+            ->first();
+
+        if ( $invitation ) {
+            $invitation->respond = null;
+            $invitation->sent = null;
+            $invitation->save();
+        }
 
         $this->send_mail($invite->id);
     }
@@ -252,15 +264,7 @@ class ScholarshipScholarInviteLivewire extends Component
         $invitation = ScholarshipScholarInvite::find($invite_id);
         if ( is_null($invitation) || isset($invitation->respond) )
             return;
-        
-        $details = [
-            'scholarship' => $invitation->category->scholarship->scholarship
-        ];
 
-        try {
-            Mail::to($invitation->email)->send(new ScholarInvitationMail($details));
-        } catch (\Exception $e) {
-            session()->flash('message-error', "Email has not been sent!");
-        }
+        ProcessScholarInviteJob::dispatch($invitation);
     }
 }

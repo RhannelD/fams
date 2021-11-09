@@ -79,7 +79,7 @@ class ScholarshipScholarInvitePolicy
      */
     public function resend(User $user, ScholarshipScholarInvite $scholarshipScholarInvite)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarshipScholarInvite->category->scholarship_id)->exists();
+        return $user->is_officer();;
     }
 
     /**
@@ -102,7 +102,7 @@ class ScholarshipScholarInvitePolicy
      */
     public function delete(User $user, ScholarshipScholarInvite $scholarshipScholarInvite)
     {
-        return User::where('id', $user->id)->whereOfficerOf($scholarshipScholarInvite->category->scholarship_id)->exists();
+        return $user->is_officer();
     }
 
     /**

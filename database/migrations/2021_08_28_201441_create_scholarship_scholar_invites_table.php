@@ -17,6 +17,7 @@ class CreateScholarshipScholarInvitesTable extends Migration
             $table->id();
             $table->foreignId('category_id');
             $table->string('email');
+            $table->boolean('sent')->nullable()->default(null);
             $table->boolean('respond')->nullable();
             $table->timestamps();
             

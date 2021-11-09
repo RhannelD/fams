@@ -51,4 +51,9 @@ class ScholarshipRequirementItem extends Model
     {
         return $this->belongsTo(ScholarshipRequirement::class, 'requirement_id', 'id');
     }
+
+    public function is_for_analytics()
+    {
+        return in_array($this->type, ['gwa', 'units']);
+    }
 }

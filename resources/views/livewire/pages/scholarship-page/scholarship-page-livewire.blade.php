@@ -1,7 +1,7 @@
 <div class="w-100">
     @livewire('add-ins.scholarship-program-livewire', [$scholarship_id, 'home'], key('page-tabs-'.time().$scholarship_id))
 
-    <div class="row mt-3">
+    <div class="row mt-3 px-1">
         <div class="col-12">
             @can('create', [\App\Models\ScholarshipPost::class, $scholarship_id])
                 <div class="card mb-4 shadow requirement-item-hover mx-auto" style="max-width: 800px">
