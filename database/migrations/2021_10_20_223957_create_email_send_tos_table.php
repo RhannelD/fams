@@ -17,7 +17,7 @@ class CreateEmailSendTosTable extends Migration
             $table->id();
             $table->foreignId('email_send_id');
             $table->string('email');
-            $table->boolean('sent');
+            $table->boolean('sent')->nullable()->default(null);
             $table->timestamps();
             
             $table->foreign('email_send_id')->references('id')->on('email_sends')->onDelete('cascade');

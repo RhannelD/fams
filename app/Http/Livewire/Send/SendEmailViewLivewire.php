@@ -7,8 +7,8 @@ use Livewire\Component;
 use App\Models\EmailSend;
 use App\Models\EmailSendTo;
 use Livewire\WithPagination;
+use App\Jobs\ScholarshipSendMailJob;
 use Illuminate\Support\Facades\Auth;
-use App\Notifications\ScholarshipSendMailNotification;
 
 class SendEmailViewLivewire extends Component
 {
@@ -79,33 +79,17 @@ class SendEmailViewLivewire extends Component
         if ( Auth::guest() || is_null($user_recipient) || Auth::user()->cannot('sendEmails', ($email_send? $email_send->scholarship: null)) ) 
             return;
 
-        $sent = $this->sending_email($user_recipient, $email_send);
-
-        EmailSendTo::updateOrCreate(
+        $send_to = EmailSendTo::updateOrCreate(
             [
                 'email_send_id' => $email_send->id,
                 'email' => $user_recipient->email,
             ], [
-                'sent' => $sent,
+                'sent' => null,
             ]
         );
 
+        ScholarshipSendMailJob::dispatch($send_to);
+
         $this->emitTo('send.send-email-list-livewire', 'refresh');
-    }
-
-    protected function sending_email($user_recipient, $email_send)
-    {
-        $details = [
-            'scholarship' => $email_send->scholarship->scholarship,
-            'sender' => Auth::user()->flname(),
-            'message' => $email_send->message,
-        ];
-
-        try {
-            $user_recipient->notify(new ScholarshipSendMailNotification($details));
-            return true;
-        } catch (\Exception $e) {
-        }
-        return false;
     }
 }

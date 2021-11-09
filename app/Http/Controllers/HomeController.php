@@ -62,13 +62,21 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return ScholarshipScholarInvite::where('id',19)
-            ->with([
-                'category' => function ($query) {
-                    $query->with('scholarship');
-                }
-            ])
-            ->first();
+        for ($i=0; $i < 3; $i++) { 
+            try {
+                echo $i;
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+
+        // return ScholarshipScholarInvite::where('id',19)
+        //     ->with([
+        //         'category' => function ($query) {
+        //             $query->with('scholarship');
+        //         }
+        //     ])
+        //     ->first();
 
         // ---------------------------- BOOM ANALYTICS HAHAHAHAH ----------------------------------
         // $responses = ScholarResponse::selectRaw('scholar_responses.approval, ROUND(scholar_response_gwas.gwa, 2) as gwa, scholar_response_units.units')

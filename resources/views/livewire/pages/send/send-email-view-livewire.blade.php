@@ -17,7 +17,7 @@
                     </div>
                     <div wire:loading.remove wire:target='set_email_send' class="row">
                     @isset($email_send)
-                        <div class="col-md-6">
+                        <div class="col-md-6" wire:poll.8000ms>
                             <h5>Sent Message</h5>
                             <p class="border border-primary rounded p-2">
                                 {!! nl2br(e($email_send->message)) !!}
@@ -47,7 +47,11 @@
                                                     {{ $sent_to->email }}
                                                 </td>
                                                 <td class="text-center align-middle">
-                                                    @if ( $sent_to->sent )
+                                                    @if ( is_null($sent_to->sent) )
+                                                        <span class="text-info my-auto">
+                                                            <i class="fas fa-circle-notch fa-spin"></i>
+                                                        </span>
+                                                    @elseif ( $sent_to->sent )
                                                         <span class="text-success my-auto">
                                                             <i class="fas fa-check-circle"></i>
                                                         </span>

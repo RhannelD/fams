@@ -8,8 +8,8 @@ use App\Models\EmailSend;
 use App\Models\EmailSendTo;
 use App\Models\Scholarship;
 use Livewire\WithPagination;
+use App\Jobs\ScholarshipSendMailJob;
 use Illuminate\Support\Facades\Auth;
-use App\Notifications\ScholarshipSendMailNotification;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class SendEmailLivewire extends Component
@@ -129,12 +129,6 @@ class SendEmailLivewire extends Component
 
         $user_recipients = $this->get_added_recipients();
 
-        $details = [
-            'scholarship' => $scholarship->scholarship,
-            'sender' => Auth::user()->flname(),
-            'message' => $this->message,
-        ];
-
         $email_send = EmailSend::create([
                 'scholarship_id' => $this->scholarship_id,
                 'user_id' => Auth::id(),
@@ -145,19 +139,13 @@ class SendEmailLivewire extends Component
             return;
 
         foreach ($user_recipients as $user_recipient) {
-            $sent = false;
-            try {
-                $user_recipient->notify(new ScholarshipSendMailNotification($details));
-                $sent = true;
-            } catch (\Exception $e) {
-                $sent = false;
-            }
-
-            EmailSendTo::create([
+            $send_to = EmailSendTo::create([
                 'email_send_id' => $email_send->id,
                 'email' => $user_recipient->email,
-                'sent' => $sent,
+                'sent' => null,
             ]);
+            
+            ScholarshipSendMailJob::dispatch($send_to);
         }
 
         $this->reset('message');
