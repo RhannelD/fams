@@ -1,6 +1,6 @@
 <div>
     @isset($scholarship)
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-grey border-bottom-0">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-top-bar border-bottom-0">
         <div class="d-flex flex-shrink-1 flex-grow-1 overflow-auto mx-0">
             <button onclick="menu_toggle()" class="btn btn-outline-light disabled" id="menu-toggle">
                 <i class="fas fa-bars"></i>
@@ -66,7 +66,7 @@
             </ul>
         </div>
     </nav>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light-grey justify-content-center">
+    <nav class="navbar navbar-expand-lg navbar-light bg-mid-bar justify-content-center">
         <ul class="nav">
             @if (  $scholarship->categories->count() > 0 )    
                 @can('viewDashboard', $scholarship)

@@ -1,7 +1,7 @@
 <div>
     <script src="{{ asset('js/Chart.min.js') }}"></script>
     
-    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary border-bottom-0">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-mid-bar border-bottom-0">
         <div class="navbar-brand ml-2 font-weight-bold">
             Dashboard
         </div>
@@ -11,6 +11,11 @@
         </button>
     </nav>
 
+    <div class="row mb-3 mx-1">
+        <div class="col-12">
+            <canvas id="responses_chart" width="100" height="300"></canvas>
+        </div>
+    </div>
     <div class="row mb-3 mx-1">
         <div class="col-10 offset-1 offset-md-0 col-md-8 col-lg-6 col-xl-4">
             <canvas id="scholars_by_scholarship" width="100" height="100"></canvas>
@@ -44,6 +49,33 @@
             '#F49E12',
         ];
         
+        window.addEventListener('responses_chart', event => { 
+            new Chart("responses_chart", {
+                type: 'bar',
+                data: {
+                    labels: event.detail.label,
+                    datasets: [{
+                        label: 'Responses',
+                        data: event.detail.data,
+                        backgroundColor: barColors,
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: "Scholar responses every quarter"
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                },
+            });
+        });
+
         window.addEventListener('scholar_chart', event => { 
             new Chart("scholar", {
                 type: "pie",
@@ -121,6 +153,7 @@
         });
 
         $(document).ready(function(){
+            window.livewire.emit('responses_chart');
             window.livewire.emit('scholar_chart');
             window.livewire.emit('scholarship_chart');
             window.livewire.emit('scholars_by_gender');

@@ -11,20 +11,20 @@
 @if ( Auth::check() )
 
     <!-- Sidebar -->
-    <div class="bg-dark-grey-2" id="sidebar-wrapper">
+    <div class="bg-side-bar" id="sidebar-wrapper">
         <div class="sidebar-heading" style="font-size: 26px;">
             <img src="{{ asset('img/scholarship-icon.png') }}" alt="" height="80px" class="mx-auto d-block mb-2">
         </div>
 
         <div class="list-group list-group-flush">  
             @if (Auth::user()->is_admin() || Auth::user()->is_officer())
-                <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('dashboard') }}">
+                <a class="list-group-item list-group-item-action bg-side-bar bg-side-item-bar text-white border-white tabs" href="{{ route('dashboard') }}">
                     <i class="fas fa-chart-line"></i>
                     Dashboard
                 </a> 
             @endif
 
-            <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" 
+            <a class="list-group-item list-group-item-action bg-side-bar bg-side-item-bar text-white border-white tabs" 
                 @if (Auth::user()->is_scholar())
                     href="{{ route('scholar.scholarship') }}"
                 @else
@@ -36,13 +36,13 @@
             </a>
 
             @if ( Auth::user()->is_scholar() )
-                <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('requirement.reponses.list') }}">
+                <a class="list-group-item list-group-item-action bg-side-bar bg-side-item-bar text-white border-white tabs" href="{{ route('requirement.reponses.list') }}">
                     <i class="fas fa-file-upload"></i>
                     Response
                 </a> 
             @endif
 
-            <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" 
+            <a class="list-group-item list-group-item-action bg-side-bar bg-side-item-bar text-white border-white tabs" 
                 @if ( Auth::user()->is_admin() )
                     href="{{ route('officer') }}"   
                 @else
@@ -54,14 +54,14 @@
             </a>
 
             @if ( Auth::user()->is_admin() )
-                <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('scholar') }}">
+                <a class="list-group-item list-group-item-action bg-side-bar bg-side-item-bar text-white border-white tabs" href="{{ route('scholar') }}">
                     <i class="fas fa-user-graduate"></i>
                     Scholar
                 </a>
             @endif
 
             @if ( Auth::user()->is_admin() || Auth::user()->is_officer() ) 
-                <a class="list-group-item list-group-item-action bg-dark-grey-2 hover-bg-white text-white border-white tabs" href="{{ route('course') }}">
+                <a class="list-group-item list-group-item-action bg-side-bar bg-side-item-bar text-white border-white tabs" href="{{ route('course') }}">
                     <i class="fas fa-book"></i>
                     Course
                 </a>

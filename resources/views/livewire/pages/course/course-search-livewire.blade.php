@@ -3,7 +3,7 @@
         {{ $courses->links() }}
     </div> 
 
-    <div class="card table-responsive mb-3">
+    <div class="table-responsive mb-3">
         <table class="table table-sm table-hover card-header">
             <thead class="thead-dark">
                 <tr>

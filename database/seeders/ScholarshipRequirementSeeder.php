@@ -112,7 +112,7 @@ class ScholarshipRequirementSeeder extends Seeder
                         'promote' => true,
                         'enable' => null,
                         'start_at' => $post_created_at->format('Y-m-d h:i:s'),
-                        'end_at'   => $post_created_at->addMonth(rand(1,4))->addWeek(rand(2,4))->format('Y-m-d h:i:s'),
+                        'end_at'   => $post_created_at->addMonth(rand(0,2))->addWeek(rand(2,4))->format('Y-m-d h:i:s'),
                     ]);
 
                     ScholarshipPostLinkRequirement::factory()->create([   

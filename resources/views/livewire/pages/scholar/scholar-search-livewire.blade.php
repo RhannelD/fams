@@ -4,7 +4,7 @@
         {{ $scholars->links() }}
     </div> 
 
-    <div class="card table-responsive">
+    <div class="table-responsive bg-white">
 
         <table class="table table-sm table-hover card-header student_table">
         

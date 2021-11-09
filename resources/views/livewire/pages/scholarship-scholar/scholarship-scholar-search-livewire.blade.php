@@ -4,7 +4,7 @@
     </div> 
 
     <div class="table-wrap table-responsive">
-        <table class="table" id="accordion">
+        <table class="table table-sm" id="accordion">
             <thead>
                 <tr>
                     @if ( !(Auth::user()->usertype == 'scholar') )
@@ -47,7 +47,7 @@
                             <td>
                                 {{ $scholar->user->phone }}
                             </td>
-                            <td class="py-2 text-center">
+                            <td class="py-1 text-center">
                                 <button class="btn btn-info btn-sm text-white" type="button" 
                                     data-toggle="collapse" 
                                     data-target="#collapse{{ $scholar->user_id }}" 

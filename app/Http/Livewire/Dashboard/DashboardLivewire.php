@@ -2,14 +2,17 @@
 
 namespace App\Http\Livewire\Dashboard;
 
-use Livewire\Component;
+use Carbon\Carbon;
 use App\Models\User;
+use Livewire\Component;
+use App\Models\ScholarResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardLivewire extends Component
 {
     protected $listeners = [
+        'responses_chart' => 'responses_chart',
         'scholar_chart' => 'scholar_chart',
         'scholarship_chart' => 'scholarship_chart',
         'scholars_by_gender' => 'scholars_by_gender',
@@ -48,6 +51,61 @@ class DashboardLivewire extends Component
         $this->scholars_by_scholarship();
     }
 
+    public function responses_chart()
+    {
+        $quarters = [
+            1 => 'Jan-Mar',
+            2 => 'Apr-Jun',
+            3 => 'Jul-Sep',
+            4 => 'Oct-Dec',
+        ];
+
+        $label = [];
+        $data = [];
+
+        $date = Carbon::now();
+
+        $iterate = 8;
+        $quarter_now = $date->isoFormat('Q');
+        while ( $iterate > 0 ) {
+            $year  = $date->format('Y');
+
+            for ($quarter=$quarter_now; $quarter > 0; $quarter--) { 
+                if ( !$iterate ) 
+                    break;
+
+                $label[$iterate] = $year.' '.$quarters[$quarter];
+
+                $responses = ScholarResponse::selectRaw('
+                        count(scholar_responses.id) as response_count, 
+                        YEAR(submit_at) AS year, 
+                        QUARTER(submit_at) AS quarter
+                    ')
+                    ->whereNotNull('submit_at')
+                    ->whereRaw('YEAR(submit_at) = ?', [$year])
+                    ->whereRaw('QUARTER(submit_at) = ?', [$quarter])
+                    ->groupByRaw('year, quarter')
+                    ->orderByRaw('year DESC, quarter DESC')
+                    ->first();
+
+                $data[$iterate] = isset($responses)? $responses->response_count: 0;
+                
+                $iterate--;
+            }
+
+            $quarter_now = 4;
+            $date->subYear();
+        }
+
+        $label = array_reverse($label);
+        $data = array_reverse($data);
+
+        $this->dispatchBrowserEvent('responses_chart', [
+            'label' => $label,  
+            'data' => $data
+        ]);
+    }
+    
     public function scholar_chart()
     {
         $scholars =  DB::select('SELECT DISTINCT(COUNT(u.id)) as label, (

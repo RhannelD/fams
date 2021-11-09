@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Scholarship;
 use App\Models\ScholarResponse;
@@ -167,9 +168,12 @@ class ScholarResponseSeeder extends Seeder
             ->get();
         foreach ($requirements as $requirement) {
             $req_categories = ScholarshipRequirementCategory::where('requirement_id', $requirement->id)->get();
-            
+
             $min = strtotime($requirement->start_at);
-            $max = strtotime($requirement->end_at);
+            $end_at = Carbon::parse($requirement->end_at)->format('Y-m-d H:i:s') < Carbon::now()->format('Y-m-d H:i:s')
+                ? $requirement->end_at
+                : Carbon::now()->format('Y-m-d H:i:s');
+            $max = strtotime($end_at);
 
             foreach ($req_categories as $req_category) {
                 $students = User::whereScholar()

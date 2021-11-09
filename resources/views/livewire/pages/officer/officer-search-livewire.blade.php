@@ -4,7 +4,7 @@
         {{ $officers->links() }}
     </div> 
 
-    <div class="card table-responsive">
+    <div class="table-responsive">
 
         <table class="table table-sm table-hover card-header student_table">
         

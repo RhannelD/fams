@@ -65,26 +65,24 @@ class HomeController extends Controller
     public function index()
     {
         // ---------------------------- BOOM ANALYTICS HAHAHAHAH ----------------------------------
-        $responses = ScholarResponse::selectRaw('scholar_responses.approval, ROUND(scholar_response_gwas.gwa, 2) as gwa, scholar_response_units.units')
-            ->join(with(new ScholarResponseGwa)->getTable(), 'scholar_response_gwas.response_id', '=', 'scholar_responses.id')
-            ->join(with(new ScholarResponseUnit)->getTable(), 'scholar_response_units.response_id', '=', 'scholar_responses.id')
-            ->whereNotNull('approval')
-            ->get();
+        // $responses = ScholarResponse::selectRaw('scholar_responses.approval, ROUND(scholar_response_gwas.gwa, 2) as gwa, scholar_response_units.units')
+        //     ->join(with(new ScholarResponseGwa)->getTable(), 'scholar_response_gwas.response_id', '=', 'scholar_responses.id')
+        //     ->join(with(new ScholarResponseUnit)->getTable(), 'scholar_response_units.response_id', '=', 'scholar_responses.id')
+        //     ->whereNotNull('approval')
+        //     ->get();
 
-        // return $responses;
+        // $samples = [];
+        // $labels = [];
+        // foreach ($responses as $response) {
+        //     $samples[] = [$response->gwa, $response->units];
+        //     $labels[] = ($response->approval) == 1? 'approve': 'denied';
+        // }
 
-        $samples = [];
-        $labels = [];
-        foreach ($responses as $response) {
-            $samples[] = [$response->gwa, $response->units];
-            $labels[] = ($response->approval) == 1? 'approve': 'denied';
-        }
+        // $classifier = new KNearestNeighbors();
+        // $classifier->train($samples, $labels);
 
-        $classifier = new KNearestNeighbors();
-        $classifier->train($samples, $labels);
-
-        return $classifier->predict([1, 23]);
-        // ---------------------------- BOOM ANALYTICS HAHAHAHAH END ----------------------------------
+        // return $classifier->predict([1, 23]);
+        // ---------------------------- BOOM ANALYTICS END ----------------------------------
 
         // return 1<"0";
 

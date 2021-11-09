@@ -10,13 +10,13 @@
 <div class="d-flex" id="wrapper">
 
     <!-- Sidebar -->
-    <div class="bg-light border-right" id="sidebar-wrapper">
+    <div class="bg-side-bar text-white" id="sidebar-wrapper">
         <div class="sidebar-heading" style="font-size: 26px;">
             <img src="{{ asset('img/scholarship-icon.png') }}" alt="" height="80px" class="mx-auto d-block mb-2">
         </div>
 
         <div class="list-group list-group-flush">  
-            <a class="list-group-item list-group-item-action bg-light tabs" href="{{ route('index') }}">
+            <a class="list-group-item list-group-item-action bg-side-bar text-white bg-side-item-bar tabs" href="{{ route('index') }}">
                 <i class="fas fa-home"></i>
                 Home
             </a>
@@ -35,7 +35,7 @@
                 <div class="col-12">
                     <div class="h-100 d-flex flex-column">
                         <div class="row {{-- justify-content-center --}} bg-primary">
-                            <nav class="col-12 navbar navbar-expand-lg navbar-light bg-light border-bottom  {{-- justify-content-center --}}">
+                            <nav class="col-12 navbar navbar-expand-lg navbar-dark bg-top-bar {{-- justify-content-center --}}">
                                 <button onclick="menu_toggle()" class="btn btn-outline-secondary disabled" id="menu-toggle">
                                     <span class="navbar-toggler-icon"></span>
                                 </button>

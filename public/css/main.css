@@ -80,18 +80,26 @@ body {
     max-height: 35px;
 }
 
-.bg-dark-grey{
-    background-color: #3d4750;
+.bg-top-bar{
+    background-color: #333333;
 }
 
-.bg-dark-grey-2{
-    background-color: #343D46;
+.bg-side-bar{
+    background-color: #222222;
 }
 
-.hover-bg-white:hover{
-    background-color: #65737E;
+.bg-side-item-bar:hover{
+    background-color: #444444;
 }
 
-.bg-light-grey{
-    background-color: #576470;
+.bg-mid-bar{
+    background-color: #444444;
+}
+
+.bg-card-header{
+    background-color: #CDD2BD;
+}
+
+.border-card-color{
+    border-color: #CDD2BD;
 }

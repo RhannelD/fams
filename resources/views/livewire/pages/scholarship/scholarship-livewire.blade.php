@@ -1,47 +1,64 @@
 <div>
-	<div class="row mb-2 mx-1">
-		<div class="input-group col-md-6 mt-2">
-
+	<nav class="navbar navbar-expand-lg navbar-dark bg-mid-bar border-bottom-0 pb-1">
+        <div class="input-group col-md-6 mb-1 px-0">
 			<div class="input-group rounded">
-				<input type="search" class="form-control rounded" placeholder="Search Scholarships" wire:model.debounce.1000ms='search'/>
-				<span wire:click="$emitSelf('refresh')" class="input-group-text border-0">
+				<input type="search" class="form-control rounded btn-white border-white" placeholder="Search Scholarships" wire:model.debounce.1000ms='search'/>
+				<span wire:click="$emitSelf('refresh')" class="input-group-text bg-white border-0 ml-1">
 					<i class="fas fa-search"></i>
 				</span>
 			</div>
-
 		</div>
 
-		<div class="col-md-6 mt-2">
-
+		<div class="col-md-6 mb-1 px-0">
 			@can('create', [\App\Models\Scholarship::class])
 				<div class="input-group rounded">
-					<button class="btn btn-info ml-auto mr-0 text-white" type="button" wire:click="nullinputs" data-toggle="modal" data-target="#scholarship_form">
+					<button class="btn btn-secondary ml-auto mr-0" type="button" wire:click="nullinputs" data-toggle="modal" data-target="#scholarship_form">
 						<i class="fas fa-plus"></i>
 						Create Scholarship
 					</button>
 				</div>
 			@endcan
-
 		</div>
-	</div>
+    </nav>
 
-	<hr class="my-2 mx-2">
-	<div class="row mx-1">
+	<div class="row mx-1 mt-2">
 		@forelse ($scholarships as $scholarship)
-			<div class="col-12 col-sm-6 col-lg-4">
-				<div class="card mb-2 border-{{ session()->has("border-success-{$scholarship->id}")? session("border-success-{$scholarship->id}"): 'dark' }}">
-					<div class="card-header bg-{{ session()->has("border-success-{$scholarship->id}")? session("border-success-{$scholarship->id}"): 'dark' }} text-white">
-						<h4 class="my-1">
-							<a
-								@if ( $scholarship->categories->count() )
-									href="{{ route('scholarship.home', [$scholarship->id]) }}"
-								@else
-									href="{{ route('scholarship.category', [$scholarship->id]) }}"
-								@endif
-								>
-								<strong class="text-white">{{ $scholarship->scholarship }}</strong>
-							</a>
-						</h4>
+			<div class="col-12 col-sm-6 col-lg-4 d-flex flex-column">
+				<div class="card mb-2 flex-grow-1 border-{{ session()->has("border-success-{$scholarship->id}")? session("border-success-{$scholarship->id}"): 'secondary' }}">
+					<div class="card-header bg-{{ session()->has("border-success-{$scholarship->id}")? session("border-success-{$scholarship->id}"): 'secondary' }}">
+						<div class="d-flex">
+							<h4 class="my-1">
+								<a class="text-decoration-none"
+									@if ( $scholarship->categories->count() )
+										href="{{ route('scholarship.home', [$scholarship->id]) }}"
+									@else
+										href="{{ route('scholarship.category', [$scholarship->id]) }}"
+									@endif
+									>
+									<strong class="text-white">{{ $scholarship->scholarship }}</strong>
+								</a>
+							</h4>
+							
+							@can('delete', $scholarship)
+								<div class="ml-auto mr-0">
+									<div class="btn-group">
+										<button type="button" class="btn btn-sm btn-secondary btn-outline-light rounded" data-toggle="dropdown" aria-expanded="false">
+											<i class="fas fa-ellipsis-v"></i>
+										</button>
+										<div class="dropdown-menu dropdown-menu-right">
+											<button class="dropdown-item" type="button" wire:click="edit({{ $scholarship->id }})" data-toggle="modal" data-target="#scholarship_form">
+												<i class="fas fa-edit"></i>
+												Edit Info
+											</button>
+											<button class="dropdown-item" type="button" wire:click="confirm_delete({{ $scholarship->id }})">
+												<i class="fas fa-trash"></i>
+												Delete
+											</button>
+										</div>
+									</div>
+								</div>
+							@endcan
+						</div>
 					</div>
 					<div class="card-body">
 						<table>
@@ -63,18 +80,6 @@
 							@endif
 						</table>
 					</div>
-					@can('delete', $scholarship)
-						<div class="card-footer">
-							<button type="button" class="btn btn-info mb-1 mb-lg-0 text-white" wire:click="edit({{ $scholarship->id }})" data-toggle="modal" data-target="#scholarship_form">
-								<i class="fas fa-edit"></i>
-								Edit Info
-							</button>
-							<button class="btn btn-danger text-white mb-1 mb-lg-0" wire:click="confirm_delete({{ $scholarship->id }})">
-								<i class="fas fa-trash"></i>
-								Delete
-							</button>
-						</div>
-					@endcan
 				</div>
 			</div>
 		@empty
