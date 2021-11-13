@@ -5,9 +5,11 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Aldemeery\BulkSMS\Messages\BulkSMSMessage;
+// use Aldemeery\BulkSMS\Messages\BulkSMSMessage;
+use Humans\Semaphore\Laravel\SemaphoreChannel;
+use Humans\Semaphore\Laravel\SemaphoreMessage;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Messages\NexmoMessage;
+// use Illuminate\Notifications\Messages\NexmoMessage;
 
 class SmsSendNotification extends Notification
 {
@@ -32,21 +34,28 @@ class SmsSendNotification extends Notification
      */
     public function via($notifiable)
     {
+        return ['slack', SemaphoreChannel::class];
         // return ['bulkSms'];
-        return ['nexmo'];
+        // return ['nexmo'];
     }
 
-    /**
-     * Get the Vonage / SMS representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\NexmoMessage
-     */
-    public function toNexmo($notifiable)
+    public function toSemaphore($notifiable)
     {
-        return (new NexmoMessage)
-            ->content($this->details->message);
+        return (new SemaphoreMessage)
+            ->message($this->details->message);
     }
+
+    // /**
+    //  * Get the Vonage / SMS representation of the notification.
+    //  *
+    //  * @param  mixed  $notifiable
+    //  * @return \Illuminate\Notifications\Messages\NexmoMessage
+    //  */
+    // public function toNexmo($notifiable)
+    // {
+    //     return (new NexmoMessage)
+    //         ->content($this->details->message);
+    // }
 
     // /**
     //  * Get the BulkSMS representation of the notification.

@@ -15,7 +15,6 @@ body {
 }
 
 .login-panel {
-    border-radius: 1%;
     background-image:  url("/img/graduates.jpg");
     background-position: center;
     background-repeat: no-repeat;

@@ -13,7 +13,7 @@
 
         <div class="col-md-7 mt-2">
             <div class="form-row">
-                <div class="input-group col-4 my-0">
+                <div class="input-group col-7 col-md-5 my-0">
                     <div class="input-group-prepend">
                       <label class="input-group-text" for="rows">Rows</label>
                     </div>
@@ -27,7 +27,7 @@
                         <option value="200">200</option>
                     </select>
                 </div>
-                <div class="form-group col-3 my-0 offset-5">
+                <div class="form-group col-4 offset-1 col-md-4 offset-md-3 my-0">
                     <button wire:click="create_requirement" wire:loading.attr="disabled" class="form-control btn btn-success">
                         Create
                     </button>

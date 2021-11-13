@@ -1,8 +1,8 @@
-<div class="p-0 full-height p-sm-3 p-md-5 p-1 full-height">
-    <div class="card border-0 full-height overflow-hidden login-panel shadow-lg ">
+<div class="p-0 full-height p-sm-2 p-md-3 p-1 h-100">
+    <div class="card border-0 overflow-hidden h-100 login-panel shadow-lg rounded">
         <div class="row mx-0 full-height">
             <div class="offset-md-5 col-md-7 offset-lg-7 col-lg-5 full-height bg-white">
-                <div class="row full-height align-items-center">
+                <div class="row full-height align-items-center overflow-auto">
                     <div class="offset-md-1 col-md-10">
 
                         <img src="{{ asset('img/scholarship-icon.png') }}" alt="" height="100px" class="mx-auto d-block mb-5">

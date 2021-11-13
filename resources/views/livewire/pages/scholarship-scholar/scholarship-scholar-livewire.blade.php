@@ -2,15 +2,13 @@
     @livewire('add-ins.scholarship-program-livewire', [$scholarship_id, 'scholars'], key('page-tabs-'.time().$scholarship_id))
 
 	<div class="row mb-1 mx-2">
-		<div class="input-group col-md-5 mt-2">
-
+		<div class="input-group col-md-5 mt-2 mb-auto">
 			<div class="input-group rounded">
 				<input type="search" class="form-control rounded" placeholder="Search Scholars" wire:model.debounce.1000ms='search'/>
 				<span wire:click="$emitSelf('refresh')" class="input-group-text border-0">
 					<i class="fas fa-search"></i>
 				</span>
 			</div>
-
 		</div>
 
         <div class="col-md-7 mt-2">

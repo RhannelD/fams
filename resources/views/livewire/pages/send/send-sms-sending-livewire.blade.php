@@ -27,9 +27,11 @@
                         <th>
                             Phone
                         </th>
-                        <th>
-                            Category
-                        </th>
+                        @if ( $scholarship->categories->count()>1 )
+                            <th>
+                                Category
+                            </th>
+                        @endif
                         <th>
                             Email
                         </th>
@@ -46,9 +48,11 @@
                                 <td class='align-middle text-nowrap'>
                                     {{ $search_user->phone }}
                                 </td>
-                                <td class='align-middle text-nowrap'>
-                                    {{ $search_user->scholarship_scholar->category->category }}
-                                </td>
+                                @if ( $scholarship->categories->count()>1 )
+                                    <td class='align-middle text-nowrap'>
+                                        {{ $search_user->scholarship_scholar->category->category }}
+                                    </td>
+                                @endif
                                 <td class='align-middle text-nowrap'>
                                     {{ $search_user->email }}
                                 </td>

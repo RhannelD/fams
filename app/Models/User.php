@@ -51,27 +51,38 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // /**
+    //  * Route notifications for the Nexmo channel.
+    //  *
+    //  * @param  \Illuminate\Notifications\Notification  $notification
+    //  * @return string
+    //  */
+    // public function routeNotificationForNexmo($notification)
+    // {
+    //     return '63'.substr($this->phone, 1); 
+    // }
+
+    // /**
+    //  * Get the notification routing information for the Bulk SMS driver.
+    //  *
+    //  * @param \Illuminate\Notifications\Notification|null $notification Notification instance.
+    //  *
+    //  * @return  mixed
+    //  */
+    // public function routeNotificationForBulkSms($notification = null)
+    // {
+    //     return '+63'.substr($this->phone, 1); 
+    // }
+
     /**
-     * Route notifications for the Nexmo channel.
+     * Route notifications for the Semaphore channel.
      *
      * @param  \Illuminate\Notifications\Notification  $notification
      * @return string
      */
-    public function routeNotificationForNexmo($notification)
+    public function routeNotificationForSemaphore($notification = null)
     {
-        return '63'.substr($this->phone, 1); 
-    }
-
-    /**
-     * Get the notification routing information for the Bulk SMS driver.
-     *
-     * @param \Illuminate\Notifications\Notification|null $notification Notification instance.
-     *
-     * @return  mixed
-     */
-    public function routeNotificationForBulkSms($notification = null)
-    {
-        return '+63'.substr($this->phone, 1); 
+        return $this->phone;
     }
 
     public function scholarship_scholars()

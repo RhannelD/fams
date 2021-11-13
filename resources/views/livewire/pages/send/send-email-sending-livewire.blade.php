@@ -27,9 +27,11 @@
                         <th>
                             Email
                         </th>
-                        <th>
-                            Category
-                        </th>
+                        @if ( $scholarship->categories->count()>1 )
+                            <th>
+                                Category
+                            </th>
+                        @endif
                     </thead>
                     <tbody>
                         @forelse ($search_users as $search_user)
@@ -43,9 +45,11 @@
                                 <td class='align-middle text-nowrap'>
                                     {{ $search_user->email }}
                                 </td>
-                                <td class='align-middle text-nowrap'>
-                                    {{ $search_user->scholarship_scholar->category->category }}
-                                </td>
+                                @if ( $scholarship->categories->count()>1 )
+                                    <td class='align-middle text-nowrap'>
+                                        {{ $search_user->scholarship_scholar->category->category }}
+                                    </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>

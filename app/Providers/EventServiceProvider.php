@@ -33,7 +33,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // ScholarshipPost::observe(ScholarshipPostObserver::class);
-        // ScholarResponseComment::observe(ScholarResponseCommentObserver::class);
+        ScholarshipPost::observe(ScholarshipPostObserver::class);
+        ScholarResponseComment::observe(ScholarResponseCommentObserver::class);
     }
 }

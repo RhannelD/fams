@@ -79,32 +79,40 @@
                         @endif
                     </div>
                 @empty
-                    <div class="alert alert-info">
-                        Start the conversation by sending a message.
-                    </div>
+                    @if ( $rid == Auth::id() )
+                        <div class="alert alert-danger">
+                            You can't send a message to your self.
+                        </div>
+                    @else
+                        <div class="alert alert-info">
+                            Start the conversation by sending a message.
+                        </div>
+                    @endif
                 @endforelse
             </div>
         </div>
     </div>
-    <div>
-        <hr class="mt-1 mb-2">
-        <div class="mb-3">
-            <div class="input-group">
-                <textarea wire:model.lazy='chat' wire:ignore.self class="form-control rounded border-primary" rows="1" 
-                    aria-label="With textarea" placeholder="Message">
-                </textarea>
-                <div class="input-group-append ml-2 mb-auto">
-                    <button wire:click='send' wire:loading.attr="disabled" class="btn btn-primary rounded" type="button"
-                        @if ( $errors->has('chat') )
-                            disabled
-                        @endif
-                        >
-                        <i wire:loading.remove wire:target='send' class="fas fa-paper-plane"></i>
-                        <i wire:loading wire:target='send' class="fas fa-circle-notch fa-spin"></i>
-                    </button>
+    @if ( $rid != Auth::id() )
+        <div>
+            <hr class="mt-1 mb-2">
+            <div class="mb-3">
+                <div class="input-group">
+                    <textarea wire:model.lazy='chat' wire:ignore.self class="form-control rounded border-primary" rows="1" 
+                        aria-label="With textarea" placeholder="Message">
+                    </textarea>
+                    <div class="input-group-append ml-2 mb-auto">
+                        <button wire:click='send' wire:loading.attr="disabled" class="btn btn-primary rounded" type="button"
+                            @if ( $errors->has('chat') )
+                                disabled
+                            @endif
+                            >
+                            <i wire:loading.remove wire:target='send' class="fas fa-paper-plane"></i>
+                            <i wire:loading wire:target='send' class="fas fa-circle-notch fa-spin"></i>
+                        </button>
+                    </div>
                 </div>
+                @error('chat') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
-            @error('chat') <span class="text-danger">{{ $message }}</span> @enderror
         </div>
-    </div>
+    @endif
 </div>

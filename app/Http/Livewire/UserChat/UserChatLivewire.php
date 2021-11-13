@@ -8,6 +8,7 @@ use Livewire\Component;
 use App\Models\UserChat;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\UserChatNotification;
 
 class UserChatLivewire extends Component
 {
@@ -153,8 +154,10 @@ class UserChatLivewire extends Component
     {
         $this->validate();
         
-        if ( Auth::guest() || !User::where('id', $this->rid)->exists() ) 
+        if ( Auth::guest() || !User::where('id', $this->rid)->exists() || $this->rid == Auth::id() ) 
             return;
+
+        $send_email_notif = $this->to_send_email_notif();
 
         $message = UserChat::create([
                 'sender_id' => Auth::id(),
@@ -166,6 +169,36 @@ class UserChatLivewire extends Component
         if ( $message->wasRecentlyCreated ) {
             $this->chat = '';
             $this->chat_count ++;
+
+            if ( $send_email_notif ) 
+                $this->send_email($message);
+        }
+    }
+
+    protected function to_send_email_notif()
+    {
+        if ( empty($this->rid) ) 
+            return false;
+        $rid = $this->rid;
+        return !UserChat::where(function ($query) use ($rid) {
+                $query->where(function ($query) use ($rid) {
+                    $query->where('sender_id', Auth::id())
+                        ->where('receiver_id', $rid);
+                    })
+                    ->orWhere(function ($query) use ($rid) {
+                    $query->where('sender_id', $rid)
+                        ->where('receiver_id', Auth::id());  
+                });
+            })
+            ->where('created_at', '>', Carbon::now()->subDay()->format('Y-m-d h:i:s'))
+            ->exists();
+    }
+
+    public function send_email($message)
+    {
+        try {
+            $message->receiver->notify(new UserChatNotification($message));
+        } catch (\Exception $e) {
         }
     }
 }
