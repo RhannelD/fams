@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Send;
 use App\Models\User;
 use App\Models\SmsSend;
 use Livewire\Component;
+use App\Jobs\SmsSendJob;
 use App\Models\SmsSendTo;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
@@ -79,27 +80,17 @@ class SendSmsViewLivewire extends Component
         if ( Auth::guest() || is_null($user_recipient) || Auth::user()->cannot('sendSMSes', ($sms_send? $sms_send->scholarship: null)) ) 
             return;
 
-        $sent = $this->sending_sms($user_recipient, $sms_send);
-
-        SmsSendTo::updateOrCreate(
+        $send_to = SmsSendTo::updateOrCreate(
             [
                 'sms_send_id' => $sms_send->id,
                 'user_id' => $user_recipient->id,
             ], [
-                'sent' => $sent,
+                'sent' => null,
             ]
         );
 
-        $this->emitTo('send.send-sms-list-livewire', 'refresh');
-    }
+        SmsSendJob::dispatch($send_to);
 
-    protected function sending_sms($user_recipient, $sms_send)
-    {
-        try {
-            $user_recipient->notify(new SmsSendNotification(['message' => $sms_send->message]));
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
+        $this->emitTo('send.send-sms-list-livewire', 'refresh');
     }
 }

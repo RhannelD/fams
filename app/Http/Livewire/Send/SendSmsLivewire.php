@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Send;
 use App\Models\User;
 use App\Models\SmsSend;
 use Livewire\Component;
+use App\Jobs\SmsSendJob;
 use App\Models\SmsSendTo;
 use App\Models\Scholarship;
 use Livewire\WithPagination;
@@ -142,13 +143,13 @@ class SendSmsLivewire extends Component
             return;
 
         foreach ($user_recipients as $user_recipient) {
-            $sent = $this->send_sms($user_recipient);
-
-            SmsSendTo::create([
+            $send_to = SmsSendTo::create([
                 'sms_send_id' => $sms_send->id,
                 'user_id' => $user_recipient->id,
-                'sent' => $sent,
+                'sent' => null,
             ]);
+
+            SmsSendJob::dispatch($send_to);
         }
 
         $this->reset('message');

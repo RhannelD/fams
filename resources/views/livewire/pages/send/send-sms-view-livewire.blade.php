@@ -17,7 +17,7 @@
                     </div>
                     <div wire:loading.remove wire:target='set_sms_send' class="row">
                     @isset($sms_send)
-                        <div class="col-md-6">
+                        <div class="col-md-6" wire:poll.8000ms>
                             <h5>Sent Message</h5>
                             <p class="border border-primary rounded p-2">
                                 {!! nl2br(e($sms_send->message)) !!}
@@ -47,7 +47,11 @@
                                                     {{ isset($sent_to->user)? $sent_to->user->phone: '' }}
                                                 </td>
                                                 <td class="text-center align-middle">
-                                                    @if ( $sent_to->sent )
+                                                    @if ( is_null($sent_to->sent) )
+                                                        <span class="text-info my-auto">
+                                                            <i class="fas fa-circle-notch fa-spin"></i>
+                                                        </span>
+                                                    @elseif ( $sent_to->sent )
                                                         <span class="text-success my-auto">
                                                             <i class="fas fa-check-circle"></i>
                                                         </span>

@@ -17,7 +17,7 @@ class CreateSmsSendTosTable extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable();
             $table->foreignId('sms_send_id');
-            $table->boolean('sent');
+            $table->boolean('sent')->nullable()->default(null);
             $table->timestamps();
             
             $table->foreign('sms_send_id')->references('id')->on('sms_sends')->onDelete('cascade');

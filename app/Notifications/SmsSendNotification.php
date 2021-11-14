@@ -35,8 +35,6 @@ class SmsSendNotification extends Notification
     public function via($notifiable)
     {
         return ['slack', SemaphoreChannel::class];
-        // return ['bulkSms'];
-        // return ['nexmo'];
     }
 
     public function toSemaphore($notifiable)
@@ -44,30 +42,6 @@ class SmsSendNotification extends Notification
         return (new SemaphoreMessage)
             ->message($this->details->message);
     }
-
-    // /**
-    //  * Get the Vonage / SMS representation of the notification.
-    //  *
-    //  * @param  mixed  $notifiable
-    //  * @return \Illuminate\Notifications\Messages\NexmoMessage
-    //  */
-    // public function toNexmo($notifiable)
-    // {
-    //     return (new NexmoMessage)
-    //         ->content($this->details->message);
-    // }
-
-    // /**
-    //  * Get the BulkSMS representation of the notification.
-    //  *
-    //  * @param mixed $notifiable Notifiable instance.
-    //  *
-    //  * @return \Aldemeery\BulkSMS\Messages\BulkSMSMessage
-    //  */
-    // public function toBulkSms($notifiable)
-    // {
-    //     return new BulkSMSMessage($this->details->message);
-    // }
 
     /**
      * Get the array representation of the notification.
