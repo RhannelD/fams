@@ -39,6 +39,10 @@
     <table>
         <tbody>
             <tr>
+                <td>SR-code:</td>
+                <td>{{ $user->scholar_info->srcode }}</td>
+            </tr>
+            <tr>
                 <td>Course:</td>
                 <td>{{ $user->scholar_info->course->course }}</td>
             </tr>

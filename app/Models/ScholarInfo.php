@@ -17,6 +17,7 @@ class ScholarInfo extends Model
     protected $fillable = [
         'user_id',
         'course_id',
+        'srcode',
         'year',
         'semester',
         'mother_name',

@@ -35,7 +35,7 @@ class ScholarshipRequirementItemSeeder extends Seeder
                 'type' => 'grade',
             ],
             [
-                'item' => 'GWA of previuos semester',
+                'item' => 'GWA of previous semester',
                 'note' => 'GWA in 1, 1.25, ..., 5 format only',
                 'type' => 'gwa',
             ],
@@ -45,15 +45,15 @@ class ScholarshipRequirementItemSeeder extends Seeder
                 'type' => 'file',
             ],
             [
-                'item' => 'School type',
+                'item' => 'Regular Student',
                 'note' => '',
                 'type' => 'radio',
                 'options' => [
                     [
-                        'option' => 'Public',
+                        'option' => 'Yes',
                     ],
                     [
-                        'option' => 'Private',
+                        'option' => 'No',
                     ],
                 ],
             ],

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Auth;
 
 use App\Models\User;
+use App\Rules\SrCode;
 use Livewire\Component;
 use App\Models\ScholarInfo;
 use App\Models\ScholarCourse;
@@ -22,34 +23,37 @@ class SignUpLivewire extends Component
     public $verification_code;
     public $code;
 
-    protected $rules = [
-        'user.firstname' => 'required|regex:/^[a-z ,.\'-]+$/i',
-        'user.middlename' => 'required|regex:/^[a-z ,.\'-]+$/i',
-        'user.lastname' => 'required|regex:/^[a-z ,.\'-]+$/i',
-        'user.gender' => 'required|in:male,female',
-        'user.phone' => "required|unique:users,phone|regex:/(09)[0-9]\d{8}$/",
-        'user.birthday' => 'required|before:10 years ago|after:100 years ago',
-        'user.birthplace' => 'required|max:200',
-        'user.religion' => 'max:200',
-        'user.address' => 'max:200',
-        'user.email' => "required|unique:users,email|regex:/^[a-zA-Z0-9._%+-]+\@g.batstate-u.edu.ph$/i",
-        'password' => 'required|min:9',
-        'password_confirm' => 'required|min:9|same:password',
-
-        'user_info.course_id' => 'exists:scholar_courses,id',
-        'user_info.year' => 'required|max:10|min:1',
-        'user_info.semester' => 'required|max:3|min:1',
-        'user_info.mother_name' => 'required|regex:/^[a-z ,.\'-]+$/i',
-        'user_info.mother_birthday' => 'required|before:20 years ago|after:100 years ago',
-        'user_info.mother_occupation' => 'required|max:200',
-        'user_info.mother_living' => 'required',
-        'user_info.mother_educational_attainment' => 'required|max:200',
-        'user_info.father_name' => 'required|regex:/^[a-z ,.\'-]+$/i',
-        'user_info.father_birthday' => 'required|before:20 years ago|after:100 years ago',
-        'user_info.father_occupation' => 'required|max:200',
-        'user_info.father_living' => 'required',
-        'user_info.father_educational_attainment' => 'required|max:200',
-    ];
+    function rules() {
+        return [
+            'user.firstname' => 'required|regex:/^[a-z ,.\'-]+$/i',
+            'user.middlename' => 'required|regex:/^[a-z ,.\'-]+$/i',
+            'user.lastname' => 'required|regex:/^[a-z ,.\'-]+$/i',
+            'user.gender' => 'required|in:male,female',
+            'user.phone' => "required|unique:users,phone|regex:/(09)[0-9]\d{8}$/",
+            'user.birthday' => 'required|before:10 years ago|after:100 years ago',
+            'user.birthplace' => 'required|max:200',
+            'user.religion' => 'max:200',
+            'user.address' => 'max:200',
+            'user.email' => "required|unique:users,email|regex:/^[a-zA-Z0-9._%+-]+\@g.batstate-u.edu.ph$/i",
+            'password' => 'required|min:9',
+            'password_confirm' => 'required|min:9|same:password',
+    
+            'user_info.srcode' => ['required', 'unique:scholar_infos,srcode', new SrCode],
+            'user_info.course_id' => 'exists:scholar_courses,id',
+            'user_info.year' => 'required|max:10|min:1',
+            'user_info.semester' => 'required|max:3|min:1',
+            'user_info.mother_name' => 'required|regex:/^[a-z ,.\'-]+$/i',
+            'user_info.mother_birthday' => 'required|before:20 years ago|after:100 years ago',
+            'user_info.mother_occupation' => 'required|max:200',
+            'user_info.mother_living' => 'required',
+            'user_info.mother_educational_attainment' => 'required|max:200',
+            'user_info.father_name' => 'required|regex:/^[a-z ,.\'-]+$/i',
+            'user_info.father_birthday' => 'required|before:20 years ago|after:100 years ago',
+            'user_info.father_occupation' => 'required|max:200',
+            'user_info.father_living' => 'required',
+            'user_info.father_educational_attainment' => 'required|max:200',
+        ];
+    }
 
     protected $messages = [
         'user_info.course_id.exists' => 'The selected Course is invalid.',
@@ -59,6 +63,8 @@ class SignUpLivewire extends Component
         'user_info.semester.required' => 'Invalid semester.',
         'user_info.semester.min' => 'Invalid semester.',
         'user_info.semester.max' => 'Invalid semester.',
+        'user_info.srcode.required' => 'The SR-Code field is required.',
+        'user_info.srcode.unique' => 'The SR-Code has already been taken.',
     ];
  
     public function mount(){

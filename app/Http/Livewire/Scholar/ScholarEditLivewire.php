@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Scholar;
 
 use App\Models\User;
+use App\Rules\SrCode;
 use Livewire\Component;
 use App\Models\ScholarInfo;
 use App\Models\ScholarCourse;
@@ -22,6 +23,9 @@ class ScholarEditLivewire extends Component
     ];
 
     function rules() {
+        $user = User::find($this->user_id);
+        $scholar_info_id = (isset($user) && isset($user->scholar_info))? $user->scholar_info->id: null;
+
         return [
             'user.firstname' => 'required|regex:/^[a-z ,.\'-]+$/i',
             'user.middlename' => 'required|regex:/^[a-z ,.\'-]+$/i',
@@ -35,6 +39,7 @@ class ScholarEditLivewire extends Component
             'user.email' => "required|unique:users,email".((isset($this->user_id))?",".$this->user_id:'')."|regex:/^[a-zA-Z0-9._%+-]+\@g.batstate-u.edu.ph$/i",
             'password' => 'required|min:9',
 
+            'user_info.srcode' => ['required', 'unique:scholar_infos,srcode'.((isset($scholar_info_id))?",".$scholar_info_id:''), new SrCode],
             'user_info.course_id' => 'exists:scholar_courses,id',
             'user_info.year' => 'required|max:10|min:1',
             'user_info.semester' => 'required|max:3|min:1',
@@ -50,6 +55,18 @@ class ScholarEditLivewire extends Component
             'user_info.father_educational_attainment' => 'required|max:200',
         ];
     }
+
+    protected $messages = [
+        'user_info.course_id.exists' => 'The selected Course is invalid.',
+        'user_info.year.required' => 'Invalid year level.',
+        'user_info.year.min' => 'Invalid year level.',
+        'user_info.year.max' => 'Invalid year level.',
+        'user_info.semester.required' => 'Invalid semester.',
+        'user_info.semester.min' => 'Invalid semester.',
+        'user_info.semester.max' => 'Invalid semester.',
+        'user_info.srcode.required' => 'The SR-Code field is required.',
+        'user_info.srcode.unique' => 'The SR-Code has already been taken.',
+    ];
 
     public function hydrate()
     {
@@ -94,6 +111,7 @@ class ScholarEditLivewire extends Component
 
         $user_info = ScholarInfo::where('user_id', $user_id)->first();
         if ( isset($user_info) ) {
+            $this->user_info->srcode                        = $user_info->srcode;
             $this->user_info->course_id                     = $user_info->course_id;
             $this->user_info->year                          = $user_info->year;
             $this->user_info->semester                      = $user_info->semester;
@@ -187,6 +205,7 @@ class ScholarEditLivewire extends Component
                     'user_id' => $this->user_id
                 ],
                 [
+                    'srcode'                        => $user_info->srcode,
                     'course_id'                     => $user_info->course_id,
                     'year'                          => $user_info->year,
                     'semester'                      => $user_info->semester,

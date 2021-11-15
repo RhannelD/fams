@@ -21,11 +21,13 @@ class ScholarInfoSeeder extends Seeder
 
         $courses_count = $courses->count()-1;
 
+        $code = 10000;
         foreach ($scholars as $scholar) {
             $info = ScholarInfo::factory()->create([
                 'user_id'   => $scholar->id,
                 'course_id' => $courses[rand(0, $courses_count)]->id,
                 'semester' => 1,
+                'srcode' => "17-".($code++),
             ]);
         }
     }

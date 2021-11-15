@@ -17,6 +17,7 @@ class CreateScholarInfosTable extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('course_id');
+            $table->string('srcode');
             $table->integer('year');
             $table->integer('semester');
             $table->string('mother_name', 1000);

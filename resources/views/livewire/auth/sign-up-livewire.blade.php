@@ -60,6 +60,11 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
+                                    <label for="c_srcode">SR-Code</label>
+                                    <input wire:model.lazy="user_info.srcode" type="text" class="form-control" id="c_srcode" placeholder="SR-Code">
+                                    @error('user_info.srcode') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                                <div class="form-group">
                                     <label for="c_course">Course</label>
                                     <select wire:model="user_info.course_id" class="form-control" id="c_course">
                                         <option>Select Course</option>
@@ -88,8 +93,6 @@
                                     </select>
                                     @error('user_info.year') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
-                            </div>
-                            <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="c_semester">Semester</label>
                                     <select wire:model="user_info.semester" class="form-control" id="c_semester">

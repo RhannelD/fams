@@ -12,7 +12,7 @@
             </h6>
             
             @can('delete', $comment)
-                <div class="dropdown mr-0 ml-1">
+                <div wire:ignore.self class="dropdown mr-0 ml-1">
                     <span id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-ellipsis-h"></i>
                     </span>

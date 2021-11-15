@@ -70,6 +70,10 @@
             </thead>
             <tbody>
                 <tr>
+                    <td>SR-Code:</td>
+                    <td>{{ $scholar_response->user->scholar_info->srcode }}</td>
+                </tr>
+                <tr>
                     <td>Course:</td>
                     <td>{{ $scholar_response->user->scholar_info->course->course }}</td>
                 </tr>

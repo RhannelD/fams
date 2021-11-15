@@ -80,7 +80,7 @@ class ScholarInfoFactory extends Factory
         $father_living = !(rand(1, 10) == 9);
         
         return [
-            'year' => rand(1, 4),
+            'year' => rand(3, 4),
             'mother_name' => $this->faker->name('female'),
             'mother_birthday' => $this->faker->dateTimeBetween($startDate = '-50 years', $endDate = '-30 years', $timezone = null)->format('Y-m-d'),
             'mother_occupation' => $mother_living? $occupations[rand(0, $occupations_count)]: '',
