@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\ScholarResponseUnit;
 use Illuminate\Support\Facades\Auth;
 use Phpml\Classification\KNearestNeighbors;
+use App\Notifications\ScholarResponseApprovalNotification;
 
 class ScholarshipRequirementResponseViewLivewire extends Component
 {
@@ -146,6 +147,8 @@ class ScholarshipRequirementResponseViewLivewire extends Component
             }
 
             $this->add_scholar_to_scholarship($scholar_response);
+            
+            $scholar_response->user->notify(new ScholarResponseApprovalNotification($scholar_response));
 
             $this->dispatchBrowserEvent('swal:modal', [
                 'type' => 'success',  

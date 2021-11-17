@@ -32,7 +32,7 @@
 
                             @canany( ['update', 'delete'], $category )
                                 <div class="dropdown mr-0 ml-auto" id="dropdown-action-category-{{ $category->id }}">
-                                    <span id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="btn btn-sm btn-outline-dark" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-ellipsis-v"></i>
                                     </span>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
