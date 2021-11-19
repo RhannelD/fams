@@ -26,7 +26,7 @@
                     </a>
                 </div>
             </div>
-            <div class="collapse" id="agreement-collapse">
+            <div wire:ignore.self class="collapse" id="agreement-collapse">
                 <hr class="my-2">
                 <p>
                     {!! Purify::clean($agreement->agreement) !!}

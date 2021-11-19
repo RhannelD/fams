@@ -141,7 +141,7 @@
             
             <div wire:poll.10000ms id="scholarship-post-open-comment-content">
                 @foreach ($comments as $comment)
-                    @livewire('scholarship-post.scholarship-post-open-comment-livewire', [$comment->id], key('scholarship-page-post-comment-open-'.time().$post->id))
+                    @livewire('scholarship-post.scholarship-post-open-comment-livewire', [$comment->id], key('scholarship-page-post-comment-open-'.$comment->id))
                 @endforeach
             </div>
 

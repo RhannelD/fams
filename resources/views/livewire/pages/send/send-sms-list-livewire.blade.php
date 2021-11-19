@@ -60,10 +60,10 @@
                                         {{ $send_sms->message }}
                                     </td>
                                     <td class="text-center align-middle">
-                                        {{ $send_sms->sent_to->where('sent', true)->count() }}
+                                        {{ $send_sms->sent_to->where('sent', true)->whereNotNull('sent')->count() }}
                                     </td>
                                     <td class="text-center align-middle">
-                                        {{ $send_sms->sent_to->where('sent', false)->count() }}
+                                        {{ $send_sms->sent_to->where('sent', false)->whereNotNull('sent')->count() }}
                                     </td>
                                     <td class="text-center align-middle text-nowrap">
                                         {{ \Carbon\Carbon::parse($send_sms->created_at)->format('M d, Y  h:i A') }}

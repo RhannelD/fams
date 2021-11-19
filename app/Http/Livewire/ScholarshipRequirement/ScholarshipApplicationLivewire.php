@@ -105,9 +105,25 @@ class ScholarshipApplicationLivewire extends Component
         
         $item_Grade = new ScholarshipRequirementItem;
         $item_Grade->requirement_id  = $new_requirement->id;
+        $item_Grade->item = 'No. of units taken';
+        $item_Grade->note = 'Specify the current no. of units taken';
+        $item_Grade->type = 'units';
+        $item_Grade->position = $position++;
+        $item_Grade->save();
+        
+        $item_Grade = new ScholarshipRequirementItem;
+        $item_Grade->requirement_id  = $new_requirement->id;
         $item_Grade->item = 'Previuos Semester Grades';
         $item_Grade->note = 'Upload in PDF file';
         $item_Grade->type = 'grade';
+        $item_Grade->position = $position++;
+        $item_Grade->save();
+
+        $item_Grade = new ScholarshipRequirementItem;
+        $item_Grade->requirement_id  = $new_requirement->id;
+        $item_Grade->item = 'GWA of previuos semester';
+        $item_Grade->note = 'GWA in 1, 1.25, ..., 5 format only';
+        $item_Grade->type = 'gwa';
         $item_Grade->position = $position++;
         $item_Grade->save();
 

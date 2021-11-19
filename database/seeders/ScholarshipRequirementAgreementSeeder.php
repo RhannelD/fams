@@ -24,7 +24,7 @@ class ScholarshipRequirementAgreementSeeder extends Seeder
             ScholarshipRequirementAgreement::factory()->create([   
                 'requirement_id' => $requirement->id,
                 'agreement' => "
-                    <h3>This is an angreeement</h3>
+                    <h3>This is an agreement</h3>
                     Upon submitting this requirement you are agreeing with the terms.
                     <ul>
                         <li>

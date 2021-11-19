@@ -18,7 +18,7 @@
                 <span id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-ellipsis-h"></i>
                 </span>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                     <a wire:click="delete_comment_confirmation" class="dropdown-item">
                         <i class="fas fa-trash mr-1"></i>
                         Delete Comment

@@ -23,8 +23,8 @@
         <div wire:ignore.self class="tab-pane fade {{ $tab==''?'show active':'' }}" id="scholarship" role="tabpanel" aria-labelledby="scholarship-tab">
             <div class="row">
                 @forelse ($scholarships as $scholarship)
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <div class="card mb-2 border-secondary">
+                    <div class="col-12 col-sm-6 col-lg-4 d-flex flex-column">
+                        <div class="card mb-2 flex-grow-1 border-secondary">
                             <div class="card-header bg-secondary text-white">
                                 <h4 class="my-1">
                                     <a href="{{ route('scholarship.home', [$scholarship->id]) }}">

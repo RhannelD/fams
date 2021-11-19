@@ -69,7 +69,7 @@
             @foreach ($scholar_response->comments as $comment)
 
                 @if ( $comment->user_id == Auth::id() ) 
-                    @livewire('requirement.requirement-response-open-comment-livewire', [$comment->id], key('response-comment-open-'.time().$comment->id))
+                    @livewire('requirement.requirement-response-open-comment-livewire', [$comment->id], key('response-comment-open-'.$comment->id))
 
                 @else
                     <div class="my-2">
