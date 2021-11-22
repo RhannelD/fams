@@ -118,7 +118,7 @@ class ScholarshipRequirementLivewire extends Component
         
         $item_Grade = new ScholarshipRequirementItem;
         $item_Grade->requirement_id  = $new_requirement->id;
-        $item_Grade->item = 'Previuos Semester Grades';
+        $item_Grade->item = 'Previous Semester Grades';
         $item_Grade->note = 'Upload in PDF file';
         $item_Grade->type = 'grade';
         $item_Grade->position = $position++;
@@ -126,7 +126,7 @@ class ScholarshipRequirementLivewire extends Component
         
         $item_Grade = new ScholarshipRequirementItem;
         $item_Grade->requirement_id  = $new_requirement->id;
-        $item_Grade->item = 'GWA of previuos semester';
+        $item_Grade->item = 'GWA of previous semester';
         $item_Grade->note = 'GWA in 1, 1.25, ..., 5 format only';
         $item_Grade->type = 'gwa';
         $item_Grade->position = $position++;

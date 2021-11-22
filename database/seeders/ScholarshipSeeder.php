@@ -19,6 +19,7 @@ class ScholarshipSeeder extends Seeder
         $scholarships = [
             [
                 'scholarship'=>'TES (Tertiary Education Subsidy)',
+                'link' => 'https://web.facebook.com/unifastofficial',
                 'categories' =>[
                     [
                         'category'=> 'TES',
@@ -28,6 +29,7 @@ class ScholarshipSeeder extends Seeder
             ],
             [
                 'scholarship'=>'TES-TDP (Tulong Dunong Program)',
+                'link' => 'https://web.facebook.com/unifastofficial',
                 'categories' =>[
                     [
                         'category'=> '6k',
@@ -41,6 +43,7 @@ class ScholarshipSeeder extends Seeder
             ],
             [
                 'scholarship'=>'BFAR',
+                'link' => 'https://www.bfar.da.gov.ph/scholarship.jsp',
                 'categories' =>[
                     [ 
                         'category'=> 'BFAR',
@@ -50,6 +53,7 @@ class ScholarshipSeeder extends Seeder
             ],
             [
                 'scholarship'=>'CHED Half Merit',
+                'link' => 'https://web.facebook.com/groups/CHEDscholarship/',
                 'categories' =>[
                     [ 
                         'category'=> 'CHED',
@@ -59,6 +63,7 @@ class ScholarshipSeeder extends Seeder
             ],
             [
                 'scholarship'=>'PLDT Gabay Guro',
+                'link' => 'https://www.gabayguro.com/pillars-of-learning/scholarships/',
                 'categories' =>[
                     [ 
                         'category'=> 'PLDT',
@@ -68,6 +73,7 @@ class ScholarshipSeeder extends Seeder
             ],
             [
                 'scholarship'=>'DOST',
+                'link' => 'https://web.facebook.com/groups/DOSTscholarship/',
                 'categories' =>[
                     [
                         'category'=> 'DOST',
@@ -77,6 +83,7 @@ class ScholarshipSeeder extends Seeder
             ],
             [
                 'scholarship'=>'Sakamoto',
+                'link' => 'https://www.sy-kogyo.co.jp/english/company/index.html',
                 'categories' =>[
                     [ 
                         'category'=> 'Sakamoto',
@@ -86,6 +93,7 @@ class ScholarshipSeeder extends Seeder
             ],
             [
                 'scholarship'=>'LCCKFI (Luis Co Chi Kat Foundation Inc.)',
+                'link' => 'https://web.facebook.com/lcckfi/',
                 'categories' =>[
                     [ 
                         'category'=> 'LCCKFI',
@@ -97,7 +105,8 @@ class ScholarshipSeeder extends Seeder
 
         foreach ($scholarships as $key => $data) {
             $scholarship = Scholarship::factory()->create([
-                'scholarship' => $data['scholarship']
+                'scholarship' => $data['scholarship'],
+                'link' => $data['link'],
             ]);
             foreach ($data['categories'] as $key => $category) {
                 ScholarshipCategory::factory()->create([   

@@ -12,6 +12,10 @@ class ScholarshipProgramLivewire extends Component
     public $scholarship_id;
     public $active;
 
+    protected $listeners = [
+        'refresh' => '$refresh',
+    ];
+
     public function mount($scholarship_id, $active = null)
     {
         $this->scholarship_id = $scholarship_id;

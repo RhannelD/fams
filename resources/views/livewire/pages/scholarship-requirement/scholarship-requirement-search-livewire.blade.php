@@ -10,6 +10,7 @@
                     <th>#</th>
                     <th>Requirement</th>
                     <th class="text-right px-1">Responds</th>
+                    <th class="text-right px-1">Pending</th>
                     <th class="px-1">Category</th>
                     <th class="text-center px-1">State</th>
                     <th class="text-center px-1">Actions</th>
@@ -29,6 +30,9 @@
                             @if ( !$requirement->promote && $requirement->categories->count() > 0 )
                                 /{{ $requirement->categories->first()->category->scholars->count() }}
                             @endif
+                        </td>
+                        <td class="text-right pr-2 px-1">
+                            {{ $requirement->responses->whereNotNull('submit_at')->whereNull('approval')->count() }}
                         </td>
                         <td class="px-1">
                             @if ( $requirement->categories->count() > 0 )

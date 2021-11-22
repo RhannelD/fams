@@ -124,11 +124,7 @@ class ForgotPassword extends Component
             PasswordReset::where('email', $this->email)->delete();
             
             if (Auth::attempt(['email' => $this->email, 'password' => $this->new_password])) {
-                if (Auth::user()->usertype == 'scholar') {
-                    return redirect()->route('scholarship');
-                } else {
-                    return redirect()->route('dashboard');
-                }
+                return redirect()->route('index');
             }
         }
     }

@@ -30,7 +30,7 @@ class ScholarshipRequirementItemSeeder extends Seeder
                 'type' => 'units',
             ],
             [
-                'item' => 'Previuos Semester Grades',
+                'item' => 'Previous Semester Grades',
                 'note' => 'Upload in PDF file',
                 'type' => 'grade',
             ],

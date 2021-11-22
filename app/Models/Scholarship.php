@@ -16,6 +16,7 @@ class Scholarship extends Model
      */
     protected $fillable = [
         'scholarship',
+        'link',
     ];
 
     public function scholars_count()

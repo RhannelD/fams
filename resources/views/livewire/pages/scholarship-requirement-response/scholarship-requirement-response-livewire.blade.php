@@ -34,21 +34,18 @@
                     <div class="mt-1 mr-1">
                         @include('livewire.pages.scholarship-requirement-response.scholarship-requirement-response-filter-livewire')
                     </div>
-                    <div class="btn-group mt-1 mr-1">
-                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            More
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            @if ( !$requirement->promote )
+                    @if ( !$requirement->promote )
+                        <div class="btn-group mt-1 mr-1">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
                                 <button class="dropdown-item" type="button" data-toggle="modal" data-target="#unsubmitted-response">
                                     Not Yet Responding
                                 </button>
-                            @endif
-                            <button class="dropdown-item" type="button">
-                                Something else here
-                            </button>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                     @if ( is_null($index) )   
                         <div class="mt-1 d-flex">
                             <div class="input-group">

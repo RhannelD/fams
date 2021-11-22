@@ -110,6 +110,11 @@ class ScholarshipRequirementResponseViewLivewire extends Component
             ->first();
     }
 
+    public function dehydrate()
+    {
+        $this->emitTo('add-ins.scholarship-program-livewire', 'refresh');
+    }
+
     protected function is_scholar($scholar_response)
     {
         return $scholar_response->user->is_scholar_of($scholar_response->requirement->scholarship_id);

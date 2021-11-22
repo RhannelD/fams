@@ -197,6 +197,7 @@
                                 </div>
                             </div>
                         </div>
+                        @include('livewire.auth.sign-up-agreement')
                         <hr class="my-2">
                         <div class="d-flex justify-content-end">
                             <button class="btn btn-success"

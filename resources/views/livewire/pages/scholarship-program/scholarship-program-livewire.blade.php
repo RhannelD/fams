@@ -152,6 +152,14 @@
                     </li>
                 @endcanany
             @endif
+            @if ( isset($scholarship->link) && $scholarship->categories->count() > 0 )
+                <li class="nav-item">
+                    <a class="nav-link text-white{{ $active == 'about'? '': '-50' }}" href="{{ $scholarship->link }}" target="blank">
+                        <i class="fas fa-question-circle"></i>
+                        About
+                    </a>
+                </li>
+            @endif
         </ul>
     </nav>
     @endisset

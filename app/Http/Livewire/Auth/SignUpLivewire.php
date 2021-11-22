@@ -20,6 +20,7 @@ class SignUpLivewire extends Component
     public $password;
     public $password_confirm;
 
+    public $agreeement;
     public $verification_code;
     public $code;
 
@@ -52,6 +53,8 @@ class SignUpLivewire extends Component
             'user_info.father_occupation' => 'required|max:200',
             'user_info.father_living' => 'required',
             'user_info.father_educational_attainment' => 'required|max:200',
+
+            'agreeement' => 'required|accepted',
         ];
     }
 

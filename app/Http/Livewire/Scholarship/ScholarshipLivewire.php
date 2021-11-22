@@ -18,6 +18,7 @@ class ScholarshipLivewire extends Component
 
     public $scholarship_id;
     public $scholarship;
+    public $link;
 
     protected $listeners = [
         'refresh' => '$refresh',
@@ -26,6 +27,7 @@ class ScholarshipLivewire extends Component
     function rules() {
         return [
             'scholarship' => 'required|min:5|max:255',
+            'link' => 'active_url',
         ];
     }
 
@@ -142,6 +144,7 @@ class ScholarshipLivewire extends Component
     {
         $this->scholarship_id = null;
         $this->scholarship    = null;
+        $this->link           = null;
     }
 
     public function edit($scholarship_program_id)
@@ -155,6 +158,7 @@ class ScholarshipLivewire extends Component
 
         $this->scholarship_id = $scholarship->id;
         $this->scholarship    = $scholarship->scholarship;
+        $this->link           = $scholarship->link;
     }
     
     public function save()
