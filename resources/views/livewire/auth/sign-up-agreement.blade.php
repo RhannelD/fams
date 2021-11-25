@@ -16,9 +16,6 @@
         </div>
         @error('agreeement') <span class="text-danger">{{ $message }}</span> @enderror
     </div>
-
-    {{ $agreeement }}
-
     <div wire:ignore.self class="modal fade" id="data-privacy-modal" tabindex="-1" aria-labelledby="data-privacy-modal-label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content">

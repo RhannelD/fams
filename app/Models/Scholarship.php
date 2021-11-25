@@ -30,6 +30,11 @@ class Scholarship extends Model
     {
         return $this->hasMany(ScholarshipCategory::class, 'scholarship_id', 'id');
     } 
+    
+    public function requirements()
+    {
+        return $this->hasMany(ScholarshipRequirement::class, 'scholarship_id', 'id');
+    } 
 
     public function scopeWhereHasScholar($query, $user_id)
     {

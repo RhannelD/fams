@@ -28,7 +28,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Gender:</td>
+                    <td>Sex:</td>
                     <td>
                         {{ $scholar_response->user->gender }}
                     </td>

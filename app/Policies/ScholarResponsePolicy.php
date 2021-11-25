@@ -20,7 +20,7 @@ class ScholarResponsePolicy
      */
     public function before(User $user, $ability)
     {
-        if ($user->is_admin() && $ability != 'viewUserResponse' ) {
+        if ($user->is_admin() && $ability != 'viewUserResponse' &&  $ability != 'assess' ) {
             return true;
         }
     }

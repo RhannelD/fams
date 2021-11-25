@@ -40,7 +40,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Gender:</td>
+                                            <td>Sex:</td>
                                             <td>
                                                 {{ $scholar->user->gender }}
                                             </td>

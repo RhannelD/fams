@@ -23,7 +23,7 @@
                             <td class="pl-sm-1 pl-md-2">{{ $user->email }}</td>
                         </tr>
                         <tr>
-                            <td>Gender:</td>
+                            <td>Sex:</td>
                             <td class="pl-sm-1 pl-md-2">{{ $user->gender }}</td>
                         </tr>
                         <tr>

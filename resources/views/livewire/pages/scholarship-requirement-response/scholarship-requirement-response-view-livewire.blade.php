@@ -4,7 +4,7 @@
         <div class="row mx-1">
             <div class="col-md-4 order-md-last">
                 <div class="card mt-2 shadow
-                    @if ( is_null($scholar_response->approval) && isset($scholar_response->unit) && isset($scholar_response->gwa) )
+                    @if ( is_null($scholar_response->approval) && isset($scholar_response->unit) && isset($scholar_response->gwa) && Auth::user()->can('assess', $scholar_response))
                         @if ( $classifier_knn->predict([$scholar_response->gwa->gwa, $scholar_response->unit->units]) == 'approve' )
                             border-success
                         @else
@@ -14,7 +14,25 @@
                     "
                     >
                     <div class="card-body">
-                        @if ( is_null($scholar_response->approval) )
+                        @if ( Auth::user()->cannot('assess', $scholar_response) )
+                            @if ( is_null($scholar_response->approval) )
+                                <div class="alert alert-info my-0 d-flex">
+                                    <span class="my-auto">Pending</span>
+                                </div>
+
+                            @elseif ( $scholar_response->approval )
+                                <div class="alert alert-success my-0 d-flex">
+                                    <span class="my-auto">Scholar Response Approve!</span>
+                                </div>  
+
+                            @else
+                                <div class="alert alert-danger my-0 d-flex">
+                                    <span class="my-auto">Scholar Response Denied!</span>
+                                </div> 
+                            @endif
+
+
+                        @elseif ( is_null($scholar_response->approval) )
                             <button wire:click="response_approve" class="btn btn-success">
                                 Approve
                             </button>

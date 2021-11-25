@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Dashboard;
 use Carbon\Carbon;
 use App\Models\User;
 use Livewire\Component;
+use App\Models\Scholarship;
 use App\Models\ScholarResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -37,8 +38,29 @@ class DashboardLivewire extends Component
 
     public function render()
     {
-        return view('livewire.pages.dashboard.dashboard-livewire')
+        return view('livewire.pages.dashboard.dashboard-livewire', [
+                'pending_responses' => $this->get_pending_responses(),
+            ])
             ->extends('livewire.main.main-livewire');
+    }
+
+    protected function get_pending_responses()
+    {
+        return Scholarship::with([
+                'requirements' => function ($query) {
+                    $query->whereHas('responses', function ($query) {
+                        $query->whereNotNull('submit_at')
+                            ->whereNull('approval');
+                    });
+                }
+            ])
+            ->whereHas('requirements', function ($query) {
+                $query->whereHas('responses', function ($query) {
+                    $query->whereNotNull('submit_at')
+                        ->whereNull('approval');
+                });
+            })
+            ->get();
     }
 
     public function refresh_all()

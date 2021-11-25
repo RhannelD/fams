@@ -44,7 +44,8 @@ class ScholarshipApplicationLivewire extends Component
     public function render()
     {
         return view('livewire.pages.scholarship-requirement.scholarship-application-livewire', [
-                'requirements' => $this->get_requirements()
+                'requirements' => $this->get_requirements(),
+                'categories_count' => $this->get_categories_count(),
             ])
             ->extends('livewire.main.scholarship');
     }
@@ -57,6 +58,12 @@ class ScholarshipApplicationLivewire extends Component
     protected function get_scholarship()
     {
         return Scholarship::find($this->scholarship_id);
+    }
+
+    protected function get_categories_count()
+    {
+        $scholarship = $this->get_scholarship();
+        return $scholarship? $scholarship->categories->count(): 0;
     }
 
     protected function get_requirements()

@@ -40,7 +40,7 @@
                     </tr>
                     <tr>
                         <td>
-                            Gender: 
+                            Sex: 
                         </td>
                         <td>
                             {{ Str::ucfirst($user->gender) }}

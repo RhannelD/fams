@@ -23,7 +23,7 @@
             </div>
 
             <div>
-                <label>Gender</label>
+                <label>Sex</label>
                 <select class="form-control" wire:model.lazy="user.gender">
                     <option value="male">Male</option>
                     <option value="female">Female</option>

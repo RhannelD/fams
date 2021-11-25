@@ -11,11 +11,52 @@
         </button>
     </nav>
 
+
+    <div class="row mb-3 mt-2 mx-1">
+        <div class="col-12">
+            <h4 class="font-weight-bold mb-0">
+                Pending Scholars' Responses
+            </h4>
+            <hr class="mb-2 mt-1">
+        </div>
+        @foreach ($pending_responses as $scholarship)
+            <div class="col-12 col-md-6 col-lg-4 my-1 px-2 d-flex flex-column">
+                <div class="card flex-grow-1">
+                    <div class="card-header bg-secondary ">
+                        <h5 class="font-weight-bold my-auto">
+                            <a href="{{ route('scholarship.home', [$scholarship->id]) }}" class="text-white">
+                                {{ $scholarship->scholarship }}
+                            </a>
+                        </h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @foreach ($scholarship->requirements as $requirement)
+                            <li class="list-group-item py-2 d-flex">
+                                <a href="{{ route('scholarship.requirement.responses', [$requirement->id]) }}"
+                                    class="text-dark text-nowrap text-truncate"
+                                    >
+                                    {{ $requirement->requirement }}
+                                </a>
+                                <span class="badge badge-primary my-auto mr-0 ml-auto">
+                                    {{ $requirement->responses->whereNotNull('submit_at')->whereNull('approval')->count() }}
+                                </span>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        @endforeach
+        <div class="col-12">
+            <hr class="my-1">
+        </div>
+    </div>
+    
     <div class="row mb-3 mx-1">
         <div class="col-12">
             <canvas id="responses_chart" width="100" height="300"></canvas>
         </div>
     </div>
+
     <div class="row mb-3 mx-1">
         <div class="col-10 offset-1 offset-md-0 col-md-8 col-lg-6 col-xl-4">
             <canvas id="scholars_by_scholarship" width="100" height="100"></canvas>

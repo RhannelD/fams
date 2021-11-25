@@ -62,18 +62,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return UserChat::where(function ($query) use ($rid) {
-            $query->where('sender_id', Auth::id())
-                ->where('receiver_id', $rid);
-            })
-            ->orWhere(function ($query) use ($rid) {
-            $query->where('sender_id', $rid)
-                ->where('receiver_id', Auth::id());  
-            }) 
-            ->where('created_at', '>', Carbon::now()->subDay()->format('Y-m-d h:i:s'))
-            ->orderBy('created_at', 'desc')
-            ->first();
-
         // return ScholarshipScholarInvite::where('id',19)
         //     ->with([
         //         'category' => function ($query) {

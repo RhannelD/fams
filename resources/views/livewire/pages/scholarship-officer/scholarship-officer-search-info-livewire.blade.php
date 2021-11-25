@@ -34,7 +34,7 @@
                             <table class="table table-borderless table-sm m-0">
                                 <tbody>
                                     <tr>
-                                        <td>Gender:</td>
+                                        <td>Sex:</td>
                                         <td>{{ $officer->gender }}</td>
                                     </tr>
                                     <tr>

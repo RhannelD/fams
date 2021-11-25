@@ -11,7 +11,9 @@
                     <th>Requirement</th>
                     <th class="text-right px-1">Responds</th>
                     <th class="text-right px-1">Pending</th>
-                    <th class="px-1">Category</th>
+                    @if ( $categories_count>1 )
+                        <th class="px-1">Category</th>  
+                    @endif
                     <th class="text-center px-1">State</th>
                     <th class="text-center px-1">Actions</th>
                 </tr>
@@ -34,11 +36,13 @@
                         <td class="text-right pr-2 px-1">
                             {{ $requirement->responses->whereNotNull('submit_at')->whereNull('approval')->count() }}
                         </td>
-                        <td class="px-1">
-                            @if ( $requirement->categories->count() > 0 )
-                                {{ $requirement->categories->first()->category->category }}
-                            @endif
-                        </td>
+                        @if ( $categories_count>1 )
+                            <td class="px-1">
+                                @if ( $requirement->categories->count() > 0 )
+                                    {{ $requirement->categories->first()->category->category }}
+                                @endif
+                            </td>
+                        @endif
                         <td class="text-center px-1">
                             @switch( $requirement->can_be_accessed() )
                                 @case('ongoing')
