@@ -27,7 +27,9 @@ class OfficerEditLivewire extends Component
             'user.phone' => "required|unique:users,phone".((isset($this->user_id))?",".$this->user_id:'')."|regex:/(09)[0-9]\d{8}$/",
             'user.birthday' => 'required|before:10 years ago|after:100 years ago',
             'user.birthplace' => 'max:200',
-            'user.address' => 'max:200',
+            'user.barangay' => 'required|max:200',
+            'user.municipality' => 'required|max:200',
+            'user.province' => 'required|max:200',
             'user.religion' => 'max:200',
             'user.email' => "required|unique:users,email".((isset($this->user_id))?",".$this->user_id:'')."|regex:/^[a-zA-Z0-9._%+-]+\@g.batstate-u.edu.ph$/i",
             'password' => 'required|min:9',
@@ -61,18 +63,9 @@ class OfficerEditLivewire extends Component
             return;
         }
 
-        $this->user_id            = $user_id;
-        $this->user->firstname    = $user->firstname;
-        $this->user->middlename   = $user->middlename;
-        $this->user->lastname     = $user->lastname;
-        $this->user->gender       = $user->gender;
-        $this->user->address      = $user->address;
-        $this->user->birthday     = $user->birthday;
-        $this->user->birthplace   = $user->birthplace;
-        $this->user->religion     = $user->religion;
-        $this->user->phone        = $user->phone;
-        $this->user->email        = $user->email;
-        $this->password           = $user->password;
+        $this->user_id  = $user_id;
+        $this->user     = $user->replicate();
+        $this->password = $user->password;
         
         $this->resetErrorBag();
         $this->resetValidation();
@@ -118,7 +111,9 @@ class OfficerEditLivewire extends Component
             $user->middlename   = $this->user->middlename;
             $user->lastname     = $this->user->lastname;
             $user->gender       = $this->user->gender;
-            $user->address      = $this->user->address;
+            $user->barangay     = $this->user->barangay;
+            $user->municipality = $this->user->municipality;
+            $user->province     = $this->user->province;
             $user->birthday     = $this->user->birthday;
             $user->birthplace   = $this->user->birthplace;
             $user->religion     = $this->user->religion;
@@ -167,6 +162,7 @@ class OfficerEditLivewire extends Component
                 'message' => 'Nothing has been changed', 
                 'text' => ''
             ]);
+            $this->dispatchBrowserEvent('officer-form', ['action' => 'hide']);
             return;
         }
  

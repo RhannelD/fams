@@ -47,7 +47,7 @@
                                         </tr>
                                         <tr>
                                             <td>Address:</td>
-                                            <td>{{ $scholar->user->address }}</td>
+                                            <td>{{ $scholar->user->address() }}</td>
                                         </tr>
                                         <tr>
                                             <td>Religion:</td>

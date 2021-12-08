@@ -26,6 +26,9 @@ class User extends Authenticatable
         'gender',
         'phone',
         'email',
+        'barangay',
+        'municipality',
+        'province',
         'password',
         'birthday',
         'birthplace',
@@ -50,29 +53,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    // /**
-    //  * Route notifications for the Nexmo channel.
-    //  *
-    //  * @param  \Illuminate\Notifications\Notification  $notification
-    //  * @return string
-    //  */
-    // public function routeNotificationForNexmo($notification)
-    // {
-    //     return '63'.substr($this->phone, 1); 
-    // }
-
-    // /**
-    //  * Get the notification routing information for the Bulk SMS driver.
-    //  *
-    //  * @param \Illuminate\Notifications\Notification|null $notification Notification instance.
-    //  *
-    //  * @return  mixed
-    //  */
-    // public function routeNotificationForBulkSms($notification = null)
-    // {
-    //     return '+63'.substr($this->phone, 1); 
-    // }
 
     /**
      * Route notifications for the Semaphore channel.
@@ -200,6 +180,11 @@ class User extends Authenticatable
     public function fmlname()
     {
         return $this->firstname .' '. $this->middlename .' '. $this->lastname;
+    }
+
+    public function address()
+    {
+        return "{$this->barangay}, {$this->municipality}, {$this->province}";
     }
 
     public function is_admin()

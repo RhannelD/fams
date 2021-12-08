@@ -103,3 +103,7 @@ body {
 .border-card-color{
     border-color: #CDD2BD;
 }
+
+.text-10px{
+    font-size: 10px;
+}

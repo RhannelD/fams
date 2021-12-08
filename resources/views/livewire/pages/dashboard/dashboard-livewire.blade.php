@@ -151,15 +151,15 @@
                                 <tr>
                                     <td>
                                         @if ( $ongoing_requirement->enable )
-                                            <h5 class="my-auto text-secondary">
+                                            <div class="my-auto text-secondary">
                                                 No Due
-                                            </h5>
+                                            </div>
                                         @else
                                             <div class="d-flex">
-                                                <h2 class="my-0 py-0">
+                                                <h4 class="my-0 py-0">
                                                     {{ \Carbon\Carbon::parse($ongoing_requirement->end_at)->format('d') }}
-                                                </h2>
-                                                <h6 class="my-0 text-secondary">
+                                                </h4>
+                                                <h6 class="my-0 text-secondary text-10px">
                                                     {{ \Carbon\Carbon::parse($ongoing_requirement->end_at)->format('M') }}
                                                     <br>
                                                     {{ \Carbon\Carbon::parse($ongoing_requirement->end_at)->format('Y') }}
@@ -255,11 +255,11 @@
                     legend: {
                         display: false
                     },
-                    elements: {
-                        line: {
-                            tension: 0, // disables bezier curves
-                        }
-                    }
+                    // elements: {
+                    //     line: {
+                    //         tension: 0, // disables bezier curves
+                    //     }
+                    // }
                 },
             });
         });

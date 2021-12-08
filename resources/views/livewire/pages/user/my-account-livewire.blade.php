@@ -95,7 +95,7 @@
                             Address: 
                         </td>
                         <td>
-                            {{ $user->address }}
+                            {{ $user->address() }}
                         </td>
                     </tr>
                 </table>

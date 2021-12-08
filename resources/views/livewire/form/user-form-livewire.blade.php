@@ -38,10 +38,22 @@
             </div>
 
             @if (!isset($user_id))
-                <div class="form-group mt-3">
-                    <label for="c_address">Address</label>
-                    <input type="text" wire:model.lazy="user.address" class="form-control" id="c_address" placeholder="Address">
-                    @error('user.address') <span class="text-danger">{{ $message }}</span> @enderror	
+                <div class="form-row mt-0">
+                    <div class="form-group col mt-0">
+                        <label for="c_barangay">Barangay</label>
+                        <input type="text" wire:model.lazy="user.barangay" class="form-control" id="c_barangay" placeholder="Barangay">
+                        @error('user.barangay') <span class="text-danger">{{ $message }}</span> @enderror	
+                    </div>
+                    <div class="form-group col mt-0">
+                        <label for="c_municipality">Municipality</label>
+                        <input type="text" wire:model.lazy="user.municipality" class="form-control" id="c_municipality" placeholder="Municipality">
+                        @error('user.municipality') <span class="text-danger">{{ $message }}</span> @enderror	
+                    </div>
+                    <div class="form-group col mt-0">
+                        <label for="c_province">Province</label>
+                        <input type="text" wire:model.lazy="user.province" class="form-control" id="c_province" placeholder="Province">
+                        @error('user.province') <span class="text-danger">{{ $message }}</span> @enderror	
+                    </div>
                 </div>
             @endif
 
@@ -66,10 +78,22 @@
             </div>
 
             @isset($user_id)
-                <div class="form-group mt-3">
-                    <label for="c_address">Address</label>
-                    <input type="text" wire:model.lazy="user.address" class="form-control" id="c_address" placeholder="Address">
-                    @error('user.address') <span class="text-danger">{{ $message }}</span> @enderror	
+                <div class="form-row mt-0">
+                    <div class="form-group col mt-0">
+                        <label for="c_barangay">Barangay</label>
+                        <input type="text" wire:model.lazy="user.barangay" class="form-control" id="c_barangay" placeholder="Barangay">
+                        @error('user.barangay') <span class="text-danger">{{ $message }}</span> @enderror	
+                    </div>
+                    <div class="form-group col mt-0">
+                        <label for="c_municipality">Municipality</label>
+                        <input type="text" wire:model.lazy="user.municipality" class="form-control" id="c_municipality" placeholder="Municipality">
+                        @error('user.municipality') <span class="text-danger">{{ $message }}</span> @enderror	
+                    </div>
+                    <div class="form-group col mt-0">
+                        <label for="c_province">Province</label>
+                        <input type="text" wire:model.lazy="user.province" class="form-control" id="c_province" placeholder="Province">
+                        @error('user.province') <span class="text-danger">{{ $message }}</span> @enderror	
+                    </div>
                 </div>
             @endisset
 

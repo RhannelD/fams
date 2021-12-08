@@ -31,8 +31,10 @@ class UpdatePersonalInformation extends Component
     function rules() {
         return [
             'user.phone' => "required|unique:users,phone,".Auth::id()."|regex:/(09)[0-9]\d{8}$/",
-            'user.address' => 'max:200',
             'user.religion' => 'max:200',
+            'user.barangay' => 'required|max:200',
+            'user.municipality' => 'required|max:200',
+            'user.province' => 'required|max:200',
         ];
     }
 
@@ -50,11 +52,7 @@ class UpdatePersonalInformation extends Component
     {
         if ( Auth::check() ) {
             $user = Auth::user();
-            $this->user =  new User;
-            $this->user->phone     = $user->phone;
-            $this->user->address   = $user->address;
-            $this->user->religion  = $user->religion;
-
+            $this->user =  $user->replicate();
         }
     }
 
@@ -67,7 +65,9 @@ class UpdatePersonalInformation extends Component
 
         $user = Auth::user();
         $user->phone     = $this->user->phone;
-        $user->address   = $this->user->address;
+        $user->barangay  = $this->user->barangay;
+        $user->municipality = $this->user->municipality;
+        $user->province  = $this->user->province;
         $user->religion  = $this->user->religion;
 
         $user->save();

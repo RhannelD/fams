@@ -25,7 +25,7 @@
                                     </tr>
                                     <tr>
                                         <td>Address:</td>
-                                        <td>{{ $officer->address }}</td>
+                                        <td>{{ $officer->address() }}</td>
                                     </tr>
                                 </tbody>
                             </table>
