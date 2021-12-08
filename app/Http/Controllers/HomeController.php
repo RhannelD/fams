@@ -62,6 +62,11 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // return User::selectRaw("municipality, COUNT(municipality) as count")
+        //     ->has('scholarship_scholar')
+        //     ->groupByRaw('municipality, province')
+        //     ->get();
+
         // $datenow = Carbon::now()->format('Y-m-d h:i:s');
         // return ScholarshipRequirement::where(function ($query) use ($datenow) {
         //         $query->where('enable', true)

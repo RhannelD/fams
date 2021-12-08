@@ -188,6 +188,15 @@
 
     <div class="row mb-3 mx-1">
         <div class="col-12">
+            <canvas id="scholars_by_municipality" width="100" height="200"></canvas>
+        </div>
+        <div class="col-12">
+            <hr class="my-1">
+        </div>
+    </div>
+
+    <div class="row mb-3 mx-1">
+        <div class="col-12">
             <canvas id="scholars_by_course" width="100" height="500"></canvas>
         </div>
         <div class="col-12">
@@ -260,6 +269,48 @@
                     //         tension: 0, // disables bezier curves
                     //     }
                     // }
+                },
+            });
+        });
+        
+        window.addEventListener('scholars_by_municipality', event => { 
+            var all_color = barColors;
+
+            while ( event.detail.data.length > all_color.length ) {
+                all_color = all_color.concat(barColors);
+            }
+
+            new Chart("scholars_by_municipality", {
+                type: 'horizontalBar',
+                data: {
+                    labels: event.detail.label,
+                    datasets: [{
+                        label: 'Muniipality',
+                        data: event.detail.data,
+                        backgroundColor: all_color,
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    indexAxis: 'y',
+                    title: {
+                        display: true,
+                        text: "Number of Scholar on every Course"
+                    },
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        },
+                        xAxes: [{
+                                ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
                 },
             });
         });
@@ -384,6 +435,7 @@
             window.livewire.emit('scholars_by_gender');
             window.livewire.emit('scholars_by_scholarship');
             window.livewire.emit('scholars_by_course');
+            window.livewire.emit('scholars_by_municipality');
         });
     </script>
 

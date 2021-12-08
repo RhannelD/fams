@@ -22,6 +22,7 @@ class DashboardLivewire extends Component
         'scholars_by_gender' => 'scholars_by_gender',
         'scholars_by_scholarship' => 'scholars_by_scholarship',
         'scholars_by_course' => 'scholars_by_course',
+        'scholars_by_municipality' => 'scholars_by_municipality',
     ];
 
     public $scholars;
@@ -123,6 +124,7 @@ class DashboardLivewire extends Component
         $this->scholars_by_scholarship();
         $this->responses_chart();
         $this->scholars_by_course();
+        $this->scholars_by_municipality();
     }
 
     public function responses_chart()
@@ -180,6 +182,27 @@ class DashboardLivewire extends Component
         ]);
     }
 
+    public function scholars_by_municipality()
+    {
+        $municipalities =  User::selectRaw("municipality, COUNT(municipality) as count")
+            ->has('scholarship_scholar')
+            ->groupByRaw('municipality, province')
+            ->get();
+
+        $data = [];
+        $label = [];
+
+        foreach ($municipalities as $municipality) {
+            $label[] = $municipality->municipality;
+            $data[]  = $municipality->count;
+        }
+
+        $this->dispatchBrowserEvent('scholars_by_municipality', [
+            'label' => $label,  
+            'data' => $data,
+        ]);
+    }
+
     public function scholars_by_course()
     {
         $courses =  ScholarCourse::with([
@@ -205,7 +228,7 @@ class DashboardLivewire extends Component
         }
 
         $this->dispatchBrowserEvent('scholars_by_course', [
-            'label' => $label, 100,  
+            'label' => $label,  
             'data' => $data
         ]);
     }
