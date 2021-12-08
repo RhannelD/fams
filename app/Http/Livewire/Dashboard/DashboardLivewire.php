@@ -6,9 +6,12 @@ use Carbon\Carbon;
 use App\Models\User;
 use Livewire\Component;
 use App\Models\Scholarship;
+use Illuminate\Support\Str;
+use App\Models\ScholarCourse;
 use App\Models\ScholarResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ScholarshipRequirement;
 
 class DashboardLivewire extends Component
 {
@@ -17,7 +20,8 @@ class DashboardLivewire extends Component
         'scholar_chart' => 'scholar_chart',
         'scholarship_chart' => 'scholarship_chart',
         'scholars_by_gender' => 'scholars_by_gender',
-        'scholars_by_scholarship' => 'scholars_by_scholarship'
+        'scholars_by_scholarship' => 'scholars_by_scholarship',
+        'scholars_by_course' => 'scholars_by_course',
     ];
 
     public $scholars;
@@ -40,8 +44,28 @@ class DashboardLivewire extends Component
     {
         return view('livewire.pages.dashboard.dashboard-livewire', [
                 'pending_responses' => $this->get_pending_responses(),
+                'ongoing_requirements' => $this->get_ongoing_requirements(),
+                'pending_applications' => $this->get_pending_applications(),
+                'pending_renewals' => $this->get_pending_renewals(),
+                'pending_all' => $this->get_pending_all(),
+                'drafts' => $this->get_drafts(),
             ])
             ->extends('livewire.main.main-livewire');
+    }
+
+    public function get_ongoing_requirements()
+    {
+        $datenow = Carbon::now()->format('Y-m-d h:i:s');
+        return ScholarshipRequirement::where(function ($query) use ($datenow) {
+                $query->where('enable', true)
+                ->orWhere(function ($query) use ($datenow) {
+                    $query->whereNull('enable')
+                    ->where('start_at', '<=', $datenow)
+                    ->where('end_at', '>=', $datenow);
+                });
+            })
+            ->orderBy('requirement')
+            ->get();
     }
 
     protected function get_pending_responses()
@@ -63,6 +87,32 @@ class DashboardLivewire extends Component
             ->get();
     }
 
+    protected function get_pending_applications()
+    {
+        return ScholarResponse::whereNull('approval')
+            ->whereHas('requirement', function ($query) {
+                $query->where('promote', true);
+            })->count();
+    }
+
+    protected function get_pending_renewals()
+    {
+        return ScholarResponse::whereNull('approval')
+            ->whereHas('requirement', function ($query) {
+                $query->where('promote', false);
+            })->count();
+    }
+
+    protected function get_pending_all()
+    {
+        return ScholarResponse::whereNull('approval')->count();
+    }
+
+    protected function get_drafts()
+    {
+        return ScholarResponse::whereNull('submit_at')->count();
+    }
+
     public function refresh_all()
     {
         if ($this->verifyUser()) return;
@@ -72,6 +122,7 @@ class DashboardLivewire extends Component
         $this->scholars_by_gender();
         $this->scholars_by_scholarship();
         $this->responses_chart();
+        $this->scholars_by_course();
     }
 
     public function responses_chart()
@@ -128,6 +179,36 @@ class DashboardLivewire extends Component
             'data' => $data
         ]);
     }
+
+    public function scholars_by_course()
+    {
+        $courses =  ScholarCourse::with([
+                'scholars' => function ($query) {
+                    $query->whereHas('user', function ($query) {
+                        $query->has('scholarship_scholar');
+                    });
+                }
+            ])
+            ->whereHas('scholars', function ($query) {
+                $query->whereHas('user', function ($query) {
+                    $query->has('scholarship_scholar');
+                });
+            })
+            ->get();
+
+        $data = [];
+        $label = [];
+
+        foreach ($courses as $course) {
+            $label[] = Str::limit($course->course, 50);
+            $data[] = count($course->scholars);
+        }
+
+        $this->dispatchBrowserEvent('scholars_by_course', [
+            'label' => $label, 100,  
+            'data' => $data
+        ]);
+    }
     
     public function scholar_chart()
     {
@@ -156,7 +237,7 @@ class DashboardLivewire extends Component
             'data' => $data
         ]);
     }
-    
+
     public function scholarship_chart()
     {
         $scholarships =  DB::select('SELECT DISTINCT(COUNT(sc.scholarship_id)) AS label, (

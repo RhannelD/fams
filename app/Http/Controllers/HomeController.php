@@ -62,6 +62,40 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // $datenow = Carbon::now()->format('Y-m-d h:i:s');
+        // return ScholarshipRequirement::where(function ($query) use ($datenow) {
+        //         $query->where('enable', true)
+        //         ->orWhere(function ($query) use ($datenow) {
+        //             $query->whereNull('enable')
+        //             ->where('start_at', '<=', $datenow)
+        //             ->where('end_at', '>=', $datenow);
+        //         });
+        //     })
+        //     ->orderBy('requirement')
+        //     ->get();
+
+        // $courses =  ScholarCourse::with([
+        //         'scholars' => function ($query) {
+        //             $query->whereHas('user', function ($query) {
+        //                 $query->has('scholarship_scholar');
+        //             });
+        //         }
+        //     ])
+        //     ->whereHas('scholars', function ($query) {
+        //         $query->whereHas('user', function ($query) {
+        //             $query->has('scholarship_scholar');
+        //         });
+        //     })
+        //     ->get();
+
+        // $data = [];
+
+        // foreach ($courses as $course) {
+        //     $data[$course->course] = count($course->scholars);
+        // }
+
+        // return $data;
+
         // return ScholarshipScholarInvite::where('id',19)
         //     ->with([
         //         'category' => function ($query) {
