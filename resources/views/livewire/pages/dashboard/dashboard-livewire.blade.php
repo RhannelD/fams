@@ -187,39 +187,23 @@
     </div>
 
     <div class="row mb-3 mx-1">
-        <div class="col-12">
+        <div class="col-12 col-md-8">
             <canvas id="scholars_by_municipality" width="100" height="200"></canvas>
         </div>
-        <div class="col-12">
-            <hr class="my-1">
-        </div>
-    </div>
-
-    <div class="row mb-3 mx-1">
-        <div class="col-12">
-            <canvas id="scholars_by_course" width="100" height="500"></canvas>
-        </div>
-        <div class="col-12">
-            <hr class="my-1">
-        </div>
-    </div>
-
-    <div class="row mb-3 mx-1">
-        <div class="col-10 offset-1 offset-md-0 col-md-8 col-lg-6 col-xl-4">
+        <div class="col-12 col-md-4">
             <canvas id="scholars_by_scholarship" width="100" height="100"></canvas>
         </div>
-        <div class="col-10 offset-1 offset-md-0 col-md-4 col-lg-6 col-xl-8">
-            <div class="row">
-                <div class="col-10 offset-1 offset-md-0 col-md-12 col-lg-6 col-xl-4">
-                    <canvas id="scholar" width="100" height="100"></canvas>
-                </div>
-                <div class="col-10 offset-1 offset-md-0 col-md-12 col-lg-6 col-xl-4">
-                    <canvas id="scholarship" width="100" height="100"></canvas>
-                </div>
-                <div class="col-10 offset-1 offset-md-0 col-md-12 col-lg-6 col-xl-4">
-                    <canvas id="scholars_by_gender" width="100" height="100"></canvas>
-                </div>
-            </div>
+        <div class="col-12">
+            <hr class="my-1">
+        </div>
+    </div>
+
+    <div class="row mb-3 mx-1">
+        <div class="col-12">
+            <canvas id="scholars_by_course" width="100" height="400"></canvas>
+        </div>
+        <div class="col-12">
+            <hr class="my-1">
         </div>
     </div>
 
@@ -296,7 +280,7 @@
                     indexAxis: 'y',
                     title: {
                         display: true,
-                        text: "Number of Scholar on every Course"
+                        text: "Number of Scholar on every Municipality"
                     },
                     legend: {
                         display: false
@@ -346,66 +330,14 @@
                     scales: {
                         y: {
                             beginAtZero: true
-                        }
+                        },
+                        xAxes: [{
+                                ticks: {
+                                beginAtZero: true
+                            }
+                        }]
                     }
                 },
-            });
-        });
-
-        window.addEventListener('scholar_chart', event => { 
-            new Chart("scholar", {
-                type: "pie",
-                data: {
-                labels: event.detail.label,
-                datasets: [{
-                    backgroundColor: barColors,
-                    data: event.detail.data
-                }]
-                },  
-                options: {
-                    title: {
-                        display: true,
-                        text: "Scholar count per acquired Scholarships"
-                    }
-                }
-            });
-        });
-
-        window.addEventListener('scholarship_chart', event => { 
-            new Chart("scholarship", {
-                type: "pie",
-                data: {
-                labels: event.detail.label,
-                datasets: [{
-                    backgroundColor: barColors,
-                    data: event.detail.data
-                }]
-                },  
-                options: {
-                    title: {
-                        display: true,
-                        text: "Scholarships number of Categories"
-                    }
-                }
-            });
-        });
-
-        window.addEventListener('scholars_by_gender', event => { 
-            new Chart("scholars_by_gender", {
-                type: "pie",
-                data: {
-                labels: event.detail.label,
-                datasets: [{
-                    backgroundColor: barColors,
-                    data: event.detail.data
-                }]
-                },  
-                options: {
-                    title: {
-                        display: true,
-                        text: "Scholars by Sex"
-                    }
-                }
             });
         });
 
@@ -430,9 +362,6 @@
 
         $(document).ready(function(){
             window.livewire.emit('responses_chart');
-            window.livewire.emit('scholar_chart');
-            window.livewire.emit('scholarship_chart');
-            window.livewire.emit('scholars_by_gender');
             window.livewire.emit('scholars_by_scholarship');
             window.livewire.emit('scholars_by_course');
             window.livewire.emit('scholars_by_municipality');
