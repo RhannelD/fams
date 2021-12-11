@@ -39,9 +39,12 @@ use App\Models\ScholarshipRequirementAgreement;
 use App\Models\ScholarshipRequirementItemOption;
 use App\Notifications\ScholarshipPostNotification;
 use Illuminate\Notifications\Messages\MailMessage;
+use App\Traits\YearSemTrait;
 
 class HomeController extends Controller
 {
+    use YearSemTrait;
+    
     /**
      * Create a new controller instance.
      *
@@ -62,6 +65,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        return $this->get_year_sem();
         // return User::selectRaw("municipality, COUNT(municipality) as count")
         //     ->has('scholarship_scholar')
         //     ->groupByRaw('municipality, province')

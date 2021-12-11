@@ -56,6 +56,14 @@
                                 <input type="text" class="form-control bg-white border-info" readonly value="{{ $scholarship_requirement->categories->first()->category->category }}">
                             </div>
                         @else
+                            <div class="form-group">
+                                <label for="">Year</label>
+                                <input type="text" class="form-control bg-white" readonly value="{{ $scholarship_requirement->acad_year }}-{{ $scholarship_requirement->acad_year+1 }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Semester</label>
+                                <input type="text" class="form-control bg-white" readonly value="{{ $scholarship_requirement->acad_sem=='1'? 'First': 'Second' }} Semester">
+                            </div>
                             <div class="form-group mb-0">
                                 <label for="">{{ $scholarship_requirement->promote? 'Application': 'Renewal' }} for category</label>
                                 @foreach ($categories as $category)

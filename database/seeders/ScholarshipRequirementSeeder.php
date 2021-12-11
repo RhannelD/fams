@@ -41,6 +41,8 @@ class ScholarshipRequirementSeeder extends Seeder
                         'description' => "<h3>$category->category Applicants</h3> You submit your requirements here.",
                         'promote' => true,
                         'enable' => null,
+                        'acad_year' => '2018',
+                        'acad_sem' => '1',
                         'start_at' => $date,
                         'end_at' => Carbon::parse($post->created_at)->addWeek(2)->format('Y-m-d h:i:s'),
                     ]);
@@ -76,6 +78,8 @@ class ScholarshipRequirementSeeder extends Seeder
                         'description' => "<h1>$category->category Scholars</h1> You submit your requirements here.",
                         'start_at' => $date,
                         'enable' => null,
+                        'acad_year' => $post_created_at->format('Y'),
+                        'acad_sem' => '1',
                         'end_at' => Carbon::parse($post->created_at)->addWeek(2)->format('Y-m-d h:i:s'),
                     ]);
 
@@ -111,6 +115,8 @@ class ScholarshipRequirementSeeder extends Seeder
                         'description' => "<h3>$category->category Applicants</h3> You submit your requirements here.",
                         'promote' => true,
                         'enable' => null,
+                        'acad_year' => '2021',
+                        'acad_sem' => '1',
                         'start_at' => $post_created_at->format('Y-m-d h:i:s'),
                         'end_at'   => $post_created_at->addMonth(rand(0,2))->addWeek(rand(2,4))->format('Y-m-d h:i:s'),
                     ]);

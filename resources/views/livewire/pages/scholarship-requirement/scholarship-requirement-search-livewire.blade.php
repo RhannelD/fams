@@ -15,6 +15,7 @@
                         <th class="px-1">Category</th>  
                     @endif
                     <th class="text-center px-1">State</th>
+                    <th class="text-center px-1">Year Sem</th>
                     <th class="text-center px-1">Actions</th>
                 </tr>
                 @forelse ($requirements as $requirement)
@@ -53,6 +54,9 @@
                                     <span class="badge badge-pill badge-dark">Disabled</span>
                                     @break
                             @endswitch
+                        </td>
+                        <td class="text-center px-1">
+                            {{ $requirement->req_year_sem() }}
                         </td>
                         <td class="text-center d-flex px-1 py-2">
                             <a href="{{ route('scholarship.requirement.open', [$requirement->id]) }}" class="btn btn-sm btn-success ml-auto">

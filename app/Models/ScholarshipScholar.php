@@ -17,6 +17,8 @@ class ScholarshipScholar extends Model
     protected $fillable = [
         'user_id',
         'category_id',
+        'acad_year',
+        'acad_sem',
     ];
     
     public function category()
@@ -35,5 +37,11 @@ class ScholarshipScholar extends Model
         return $query->whereHas('category', function ($query) use ($scholarship_id) {
                 $query->where('scholarship_id', $scholarship_id);
             });
+    }
+
+    public function scopeWhereYearSem($query, $year, $sem)
+    {
+        return $query->where('acad_year', $year)
+            ->where('acad_sem', $sem);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Livewire\ScholarshipScholar;
 use Carbon\Carbon;
 use App\Models\User;
 use Livewire\Component;
+use App\Traits\YearSemTrait;
 use Livewire\WithFileUploads;
 use Illuminate\Validation\Rule;
 use App\Mail\ScholarInvitationMail;
@@ -24,9 +25,12 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class ScholarshipScholarInviteImportExcel extends Component
 {
     use AuthorizesRequests;
+    use YearSemTrait;
     use WithFileUploads;
     
     public $scholarship_id;
+    public $acad_year;
+    public $acad_sem;
     public $excel;
     public $modified_array;
     
@@ -53,13 +57,16 @@ class ScholarshipScholarInviteImportExcel extends Component
     {
         $this->scholarship_id = $scholarship_id;
         $this->authorize('viewAny',[ScholarshipScholarInvite::class, $scholarship_id]);
+        $this->acad_year = $this->get_acad_year();
+        $this->acad_sem  = $this->get_acad_sem();
     }
 
     public function render()
     {
         $this->process_data();
         return view('livewire.pages.scholarship-scholar.scholarship-scholar-invite-import-excel', [
-                'category_count' => $this->get_category_count()
+                'category_count' => $this->get_category_count(),
+                'max_acad_year' => $this->get_acad_year(),
             ])
             ->extends('livewire.main.scholarship');
     }
@@ -208,6 +215,9 @@ class ScholarshipScholarInviteImportExcel extends Component
             $invite = ScholarshipScholarInvite::updateOrCreate([
                     'email' => $data['email'],
                     'category_id' => $categories[$data['category']],
+                ], [
+                    'acad_year'  => $this->acad_year,
+                    'acad_sem'   => $this->acad_sem,
                 ]);
             
             if ( $invite ) {

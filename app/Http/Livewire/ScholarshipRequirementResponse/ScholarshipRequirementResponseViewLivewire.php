@@ -168,10 +168,14 @@ class ScholarshipRequirementResponseViewLivewire extends Component
         if ( !$this->is_scholar($scholar_response) ) {
             $requirement_category = $scholar_response->requirement->categories->first();
             if ( $requirement_category ) {
-                $scholarship_scholar = new ScholarshipScholar;
-                $scholarship_scholar->user_id = $scholar_response->user_id;
-                $scholarship_scholar->category_id = $requirement_category->category_id;
-                $scholarship_scholar->save();
+                $scholarship_scholar = ScholarshipScholar::firstOrCreate(
+                    [
+                        'user_id'       => $scholar_response->user_id,
+                        'category_id'   => $requirement_category->category_id,
+                        'acad_year'     => $scholar_response->requirement->acad_year,
+                        'acad_sem'      => $scholar_response->requirement->acad_sem,
+                    ], []
+                );
             }
         }
     }
@@ -217,9 +221,16 @@ class ScholarshipRequirementResponseViewLivewire extends Component
 
     protected function remove_scholar_to_scholarship($scholar_response)
     {
-        $scholarship_scholar = $scholar_response->user->get_scholarship_scholar($scholar_response->requirement->scholarship_id);
-        if ( isset($scholarship_scholar) )
-            $scholarship_scholar->delete();  
+        $scholarship_scholar  = $scholar_response->user->get_scholarship_scholar($scholar_response->requirement->scholarship_id);
+        $requirement_category = $scholar_response->requirement->categories->first();
+
+        if ( isset($scholarship_scholar) && $requirement_category ) {
+            ScholarshipScholar::where('user_id', $scholar_response->user_id)
+                ->where('category_id', $requirement_category->category_id)
+                ->where('acad_year', $scholar_response->requirement->acad_year)
+                ->where('acad_sem', $scholar_response->requirement->acad_sem)
+                ->delete();
+        }
     }
 
     public function response_delete_confirm()

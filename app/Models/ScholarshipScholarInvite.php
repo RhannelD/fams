@@ -19,6 +19,8 @@ class ScholarshipScholarInvite extends Model
         'email',
         'sent',
         'respond',
+        'acad_year',
+        'acad_sem',
     ];
     
     public function category()

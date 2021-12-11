@@ -4,6 +4,7 @@ namespace App\Http\Livewire\ScholarshipScholar;
 
 use App\Models\User;
 use Livewire\Component;
+use App\Traits\YearSemTrait;
 use App\Models\ScholarshipOfficer;
 use Illuminate\Support\Facades\DB;
 use App\Mail\ScholarInvitationMail;
@@ -15,9 +16,13 @@ use App\Models\ScholarshipScholarInvite;
 
 class ScholarshipScholarInviteLivewire extends Component
 {
+    use YearSemTrait;
+
     public $scholarship_id;
     public $name_email;
     public $category_id = 0;
+    public $acad_year;
+    public $acad_sem;
 
     protected $rules = [
         'name_email' => 'required|email|unique:users,email',
@@ -39,12 +44,16 @@ class ScholarshipScholarInviteLivewire extends Component
         if ( isset($categories[0]->id) ) {
             $this->category_id = $categories[0]->id;
         }
+        
+        $this->acad_year = $this->get_acad_year();
+        $this->acad_sem  = $this->get_acad_sem();
     }
 
     public function render()
     {
         return view('livewire.pages.scholarship-scholar.scholarship-scholar-invite-livewire', [
                 'categories' => $this->get_categories(),
+                'max_acad_year' => $this->get_acad_year(),
                 'pending_invites' => $this->get_pending_invites(),
                 'accepted_invites' => $this->get_accepted_invites(),
                 'rejected_invites' => $this->get_rejected_invites(),
@@ -117,9 +126,11 @@ class ScholarshipScholarInviteLivewire extends Component
         $this->validateOnly('category_id');
 
         $invite = ScholarshipScholarInvite::updateOrCreate([
-                'email' => $email,
+                'email'      => $email,
                 'category_id' => $this->category_id,
             ], [
+                'acad_year'  => $this->acad_year,
+                'acad_sem'   => $this->acad_sem,
             ]);
 
         if ( $invite->wasRecentlyCreated ) {

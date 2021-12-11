@@ -28,7 +28,7 @@
                     </select>
                 </div>
                 <div class="form-group col-4 offset-1 col-md-4 offset-md-3 my-0">
-                    <button wire:click="create_requirement" wire:loading.attr="disabled" class="form-control btn btn-success">
+                    <button class="form-control btn btn-success" data-toggle="modal" data-target="#create_new_modal">
                         Create
                     </button>
                 </div>
@@ -42,11 +42,50 @@
             </div>
         @endif
     </div>
+    
 	<div class="row mx-1">
-
 		<div class="contents-container col-12 mb-2">
 			@include('livewire.pages.scholarship-requirement.scholarship-requirement-search-livewire')
 		</div>
-
 	</div>
+
+    <div wire:ignore.self class="modal fade" id="create_new_modal" tabindex="-1" aria-labelledby="create_new_modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="create_new_modalLabel">Create new Renewal</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="acad_year">Academic Year</label>
+                        <select wire:model="acad_year" id="acad_year" class="form-control">
+                            @for ($year = $max_acad_year; $year>2016; $year--)
+                                <option value="{{ $year }}">
+                                    {{ $year }}-{{ $year+1 }}
+                                </option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="acad_semester">Semester</label>
+                        <select wire:model="acad_sem" id="acad_semester" class="form-control">
+                            <option value="1">First Semester</option>
+                            <option value="2">Second Semester</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Close
+                    </button>
+                    <button  wire:click="create_requirement" wire:loading.attr="disabled" type="button" class="btn btn-success">
+                        Create
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

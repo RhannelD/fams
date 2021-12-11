@@ -20,6 +20,8 @@ class CreateScholarshipRequirementsTable extends Migration
             $table->text('description');
             $table->boolean('promote')->default(0);
             $table->boolean('enable')->default(0)->nullable();
+            $table->year('acad_year');
+            $table->tinyInteger('acad_sem');
             $table->timestamp('start_at')->nullable();
             $table->timestamp('end_at')->nullable();
             $table->timestamps();

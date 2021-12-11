@@ -56,9 +56,12 @@ class InviteScholarLivewire extends Component
         
         $invite->respond = true;
         if ( $invite->save() ) {
-            ScholarshipScholar::firstOrCreate([
+            ScholarshipScholar::updateOrCreate([
                 'user_id' => Auth::id(),
                 'category_id' => $invite->category_id
+            ], [
+                'acad_year'  => $invite->acad_year,
+                'acad_sem'   => $invite->acad_sem,
             ]);
             $this->emitTo('add-ins.navbar-scholarship-livewire', 'refresh');
         }

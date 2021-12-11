@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use App\Traits\YearSemTrait;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScholarshipRequirement extends Model
 {
-    use HasFactory;
+    use HasFactory, YearSemTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +22,8 @@ class ScholarshipRequirement extends Model
         'description',
         'promote',
         'enable',
+        'acad_year',
+        'acad_sem',
         'start_at',
         'end_at',
     ];
@@ -52,6 +55,11 @@ class ScholarshipRequirement extends Model
     public function get_submitted_responses_count()
     {
         return $this->responses->whereNotNull('submit_at')->count();
+    }
+
+    public function req_year_sem()
+    {
+        return "{$this->acad_year}-".($this->acad_year+1)." ".($this->acad_sem=='1'?'First': 'Second')." Sem";
     }
 
     public function has_categories()

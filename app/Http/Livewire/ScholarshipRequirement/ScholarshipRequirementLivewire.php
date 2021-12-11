@@ -5,6 +5,7 @@ namespace App\Http\Livewire\ScholarshipRequirement;
 use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\Scholarship;
+use App\Traits\YearSemTrait;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -16,12 +17,15 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class ScholarshipRequirementLivewire extends Component
 {
     use AuthorizesRequests;
+    use YearSemTrait;
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
     public $scholarship_id;
     public $search;
     public $show_row = 10;
+    public $acad_year;
+    public $acad_sem;
 
     protected $listeners = [
         'refresh' => '$refresh',
@@ -37,6 +41,8 @@ class ScholarshipRequirementLivewire extends Component
         $this->scholarship_id = $scholarship_id;
         abort_if(!$this-> get_scholarship(), '404');
         $this->authorize('viewAny', [ScholarshipRequirement::class]);
+        $this->acad_year = $this->get_acad_year();
+        $this->acad_sem  = $this->get_acad_sem();
     }
 
     public function hydrate()
@@ -56,6 +62,7 @@ class ScholarshipRequirementLivewire extends Component
         return view('livewire.pages.scholarship-requirement.scholarship-requirement-livewire', [
                 'requirements' => $this->get_requirements(),
                 'categories_count' => $this->get_categories_count(),
+                'max_acad_year' => $this->get_acad_year(),
             ])
             ->extends('livewire.main.scholarship');
     }
@@ -101,6 +108,8 @@ class ScholarshipRequirementLivewire extends Component
         $new_requirement->description = 'Renewal Description';
         $new_requirement->promote = false;
         $new_requirement->enable = null;
+        $new_requirement->acad_year = $this->acad_year;
+        $new_requirement->acad_sem = $this->acad_sem;
         $new_requirement->start_at = Carbon::now()->format('Y-m-d H:i:s');
         $new_requirement->end_at = Carbon::now()->addDay()->format('Y-m-d H:i:s');
         $new_requirement->save();

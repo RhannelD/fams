@@ -57,6 +57,7 @@
                 </div>
             </div>
             <div class="col-md-6">
+                <label for="customFile">Import Excel File</label>
                 <div class="custom-file">
                     <input wire:model="excel" type="file" class="custom-file-input" id="customFile">
                     <label class="custom-file-label" for="customFile">
@@ -73,6 +74,23 @@
                     </label>
                 </div>
                 @error('excel') <span class="text-danger">{{ $message }}</span> @enderror
+            </div>
+            <div class="form-group col-md-3">
+                <label for="acad_year">Academic Year</label>
+                <select wire:model="acad_year" id="acad_year" class="form-control">
+                    @for ($year = $max_acad_year; $year>2016; $year--)
+                        <option value="{{ $year }}">
+                            {{ $year }}-{{ $year+1 }}
+                        </option>
+                    @endfor
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="acad_semester">Semester</label>
+                <select wire:model="acad_sem" id="acad_semester" class="form-control">
+                    <option value="1">First Semester</option>
+                    <option value="2">Second Semester</option>
+                </select>
             </div>
         </div>
         <div class="row mt-2 mx-1">

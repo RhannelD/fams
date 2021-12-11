@@ -18,6 +18,8 @@ class CreateScholarshipScholarInvitesTable extends Migration
             $table->foreignId('category_id');
             $table->string('email');
             $table->boolean('sent')->nullable()->default(null);
+            $table->year('acad_year');
+            $table->tinyInteger('acad_sem');
             $table->boolean('respond')->nullable();
             $table->timestamps();
             

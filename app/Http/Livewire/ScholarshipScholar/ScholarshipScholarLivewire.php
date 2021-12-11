@@ -4,6 +4,7 @@ namespace App\Http\Livewire\ScholarshipScholar;
 
 use Livewire\Component;
 use App\Models\Scholarship;
+use App\Traits\YearSemTrait;
 use Livewire\WithPagination;
 use App\Models\ScholarshipScholar;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class ScholarshipScholarLivewire extends Component
 {
     use AuthorizesRequests;
+    use YearSemTrait;
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
@@ -21,6 +23,9 @@ class ScholarshipScholarLivewire extends Component
     public $remove_scholar_id;
     public $search;
     public $show_row = 10;
+
+    public $acad_year;
+    public $acad_sem;
 
     public $category_id = '';
     public $comparision = '';
@@ -51,6 +56,9 @@ class ScholarshipScholarLivewire extends Component
         $this->scholarship_id = $scholarship_id;
         abort_if(!Scholarship::find($scholarship_id), '404');
         $this->authorize('viewAny', [ScholarshipScholar::class, $this->scholarship_id]);
+
+        $this->acad_year = $this->get_acad_year();
+        $this->acad_sem  = $this->get_acad_sem();
     }
     
     public function updated($name)
@@ -104,6 +112,7 @@ class ScholarshipScholarLivewire extends Component
         return view('livewire.pages.scholarship-scholar.scholarship-scholar-livewire', [
                 'scholars' => $this->get_scholars(),
                 'categories' => $this->get_categories(),
+                'max_acad_year' => $this->get_acad_year(),
             ])
             ->extends('livewire.main.scholarship');
     }
@@ -129,6 +138,8 @@ class ScholarshipScholarLivewire extends Component
                         $query->has('scholarship_scholars', $comparision, $num_scholarship+1);
                     });
             })
+            ->where('acad_year', $this->acad_year)
+            ->where('acad_sem', $this->acad_sem)
             ->when(!empty($category_id), function ($query) use ($category_id) {
                 $query->where('category_id', $category_id);
             })

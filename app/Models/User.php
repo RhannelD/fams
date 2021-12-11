@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Traits\YearSemTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -11,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, YearSemTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -153,19 +154,29 @@ class User extends Authenticatable
             });
     }
 
-    public function scopeWhereNotScholarOf($query, $scholarship_id)
+    public function scopeWhereNotScholarOf($query, $scholarship_id, Carbon $date = null)
     {
-        return $query->whereDoesntHave('scholarship_scholars', function ($query) use ($scholarship_id) {
-                $query->whereHas('category', function ($query) use ($scholarship_id) {
+        if ( is_null($date) ) {
+            $date = Carbon::now();
+        }
+
+        return $query->whereDoesntHave('scholarship_scholars', function ($query) use ($scholarship_id, $date) {
+                $query->whereYearSem($this->get_acad_year($date), $this->get_acad_sem($date))
+                    ->whereHas('category', function ($query) use ($scholarship_id) {
                         $query->where('scholarship_id', '=', $scholarship_id);
                     });
             });
     }
 
-    public function scopeWhereScholarOf($query, $scholarship_id)
+    public function scopeWhereScholarOf($query, $scholarship_id, Carbon $date = null)
     {
+        if ( is_null($date) ) {
+            $date = Carbon::now();
+        }
+
         return $query->whereHas('scholarship_scholars', function ($query) use ($scholarship_id) {
-                $query->whereHas('category', function ($query) use ($scholarship_id) {
+                $query->whereYearSem($this->get_acad_year($date), $this->get_acad_sem($date))
+                    ->whereHas('category', function ($query) use ($scholarship_id) {
                         $query->where('scholarship_id', '=', $scholarship_id);
                     });
             });

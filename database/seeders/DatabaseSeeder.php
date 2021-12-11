@@ -30,8 +30,8 @@ class DatabaseSeeder extends Seeder
             ScholarResponseAnswerSeeder::class,
             ScholarResponseOptionSeeder::class,
             ScholarResponseFileSeeder::class,
-            ScholarResponseCommentSeeder::class,
-            UserChatSeeder::class,
+            // ScholarResponseCommentSeeder::class,
+            // UserChatSeeder::class,
         ]);
     }
 }

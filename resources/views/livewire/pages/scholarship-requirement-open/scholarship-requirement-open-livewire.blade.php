@@ -9,10 +9,10 @@
                 <div class="card shadow mb-2 requirement-item-hover">
                     <div class="card-body">
                         @if ( isset($requirement->categories->first()->category) )
-                            <h5>Category</h5>
+                            <h5>Information</h5>
                             <table>
                                 <tr>
-                                    <td>Name:</td>
+                                    <td>Category:</td>
                                     <td>{{ $requirement->categories->first()->category->category }}</td>
                                 </tr>
                                 <tr>
@@ -23,10 +23,18 @@
                                     <td>For:</td>
                                     <td>{{ $requirement->promote? 'Applicatants': 'Old Scholars' }}</td>
                                 </tr>
+                                <tr>
+                                    <td>Year:</td>
+                                    <td>{{ $requirement->acad_year }}-{{ $requirement->acad_year+1 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sem:</td>
+                                    <td>{{ $requirement->acad_sem=='1'? 'First': 'Second' }} Semester</td>
+                                </tr>
                             </table>
                         @else
                             <div class="alert alert-info my-auto">
-                                The requirement’s category is not set!
+                                The requirement's category is not set!
                             </div>
                         @endif
                     </div>

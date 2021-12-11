@@ -25,6 +25,8 @@ class ScholarshipScholarSeeder extends Seeder
                 ScholarshipScholar::factory()->create([   
                     'user_id'       => $test_scholar->id,
                     'category_id'   => $scholarships[($index==0? $index: $index+1)]->categories[0]->id,
+                    'acad_year'     => 2021,
+                    'acad_sem'      => 1,
                 ]);
             }
         }
@@ -38,6 +40,8 @@ class ScholarshipScholarSeeder extends Seeder
                 ScholarshipScholar::factory()->create([
                     'user_id'       => $scholar->id,
                     'category_id'   => $scholarship->categories[rand(0, count($scholarship->categories)-1)]->id,
+                    'acad_year'     => 2021,
+                    'acad_sem'      => 1,
                 ]);
             }
         }

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
+use App\Traits\YearSemTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Scholarship extends Model
 {
-    use HasFactory;
+    use HasFactory, YearSemTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -45,9 +47,13 @@ class Scholarship extends Model
             });
     }
     
-    public function get_num_of_scholars()
+    public function get_num_of_scholars(Carbon $date = null)
     {
-        return ScholarshipScholar::whereScholarshipId($this->id)->count();
+        if ( is_null($date) ) {
+            $date = Carbon::now();
+        }
+
+        return ScholarshipScholar::whereScholarshipId($this->id)->whereYearSem($this->get_acad_year($date), $this->get_acad_sem($date))->count();
     }
 
     public function get_num_of_pending_responses()

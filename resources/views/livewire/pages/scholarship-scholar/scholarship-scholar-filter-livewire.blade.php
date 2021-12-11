@@ -16,6 +16,26 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="acad_year">Academic Year</label>
+                            <select wire:model="acad_year" id="acad_year" class="form-control">
+                                @for ($year = $max_acad_year; $year>2016; $year--)
+                                    <option value="{{ $year }}">
+                                        {{ $year }}-{{ $year+1 }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="acad_semester">Semester</label>
+                            <select wire:model="acad_sem" id="acad_semester" class="form-control">
+                                <option value="1">First Semester</option>
+                                <option value="2">Second Semester</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr class="my-2">
                     @if ( count($categories)>1 )
                         <div class="form-group">
                             <label for="category">Category</label>
