@@ -5,7 +5,7 @@ namespace App\Traits;
 use Carbon\Carbon;
 
 trait YearSemTrait {
-    public function get_acad_sem_month(Type $var = null)
+    public function get_acad_sem_month()
     {
         return [
             1 => 'Jul 1',

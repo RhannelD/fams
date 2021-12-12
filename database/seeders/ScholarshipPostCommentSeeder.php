@@ -21,13 +21,13 @@ class ScholarshipPostCommentSeeder extends Seeder
 
         foreach ($posts as $post) {
             $scholarship_id = $post->scholarship_id;
+            $post_created_at = Carbon::parse($post->created_at);
+            
             $users = User::whereOfficer()
-                ->orWhere(function ($query) use ($scholarship_id) {
-                    $query->whereScholarOf($scholarship_id);
+                ->orWhere(function ($query) use ($scholarship_id, $post_created_at) {
+                    $query->whereScholarOf($scholarship_id, $post_created_at);
                 })
                 ->get();
-
-            $post_created_at = Carbon::parse($post->created_at);
 
             for ($comment_count=0; $comment_count < rand(0, 30); $comment_count++) { 
                 $post_created_at = $post_created_at

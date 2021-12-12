@@ -7,6 +7,7 @@ use App\Models\User;
 use Livewire\Component;
 use App\Models\Scholarship;
 use Illuminate\Support\Str;
+use App\Traits\YearSemTrait;
 use App\Models\ScholarCourse;
 use App\Models\ScholarResponse;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,8 @@ use App\Models\ScholarshipRequirement;
 
 class DashboardLivewire extends Component
 {
+    use YearSemTrait;
+
     protected $listeners = [
         'responses_chart' => 'responses_chart',
         'scholars_by_scholarship' => 'scholars_by_scholarship',
@@ -178,8 +181,14 @@ class DashboardLivewire extends Component
 
     public function scholars_by_municipality()
     {
+        $acad_year = $this->get_acad_year();
+        $acad_sem  = $this->get_acad_sem();
+
         $municipalities =  User::selectRaw("municipality, COUNT(municipality) as count")
-            ->has('scholarship_scholar')
+            ->whereHas('scholarship_scholar', function ($query) use ($acad_year, $acad_sem) {
+                    $query->where('acad_year', $acad_year)
+                        ->where('acad_sem', $acad_sem);
+                })
             ->groupByRaw('municipality, province')
             ->get();
 
@@ -199,16 +208,25 @@ class DashboardLivewire extends Component
 
     public function scholars_by_course()
     {
+        $acad_year = $this->get_acad_year();
+        $acad_sem  = $this->get_acad_sem();
+
         $courses =  ScholarCourse::with([
-                'scholars' => function ($query) {
-                    $query->whereHas('user', function ($query) {
-                        $query->has('scholarship_scholar');
+                'scholars' => function ($query) use ($acad_year, $acad_sem) {
+                    $query->whereHas('user', function ($query) use ($acad_year, $acad_sem) {
+                        $query->whereHas('scholarship_scholar', function ($query) use ($acad_year, $acad_sem) {
+                            $query->where('acad_year', $acad_year)
+                                ->where('acad_sem', $acad_sem);
+                        });
                     });
                 }
             ])
-            ->whereHas('scholars', function ($query) {
-                $query->whereHas('user', function ($query) {
-                    $query->has('scholarship_scholar');
+            ->whereHas('scholars', function ($query) use ($acad_year, $acad_sem) {
+                $query->whereHas('user', function ($query) use ($acad_year, $acad_sem) {
+                    $query->whereHas('scholarship_scholar', function ($query) use ($acad_year, $acad_sem) {
+                        $query->where('acad_year', $acad_year)
+                            ->where('acad_sem', $acad_sem);
+                    });
                 });
             })
             ->get();
@@ -229,13 +247,19 @@ class DashboardLivewire extends Component
     
     public function scholars_by_scholarship()
     {
+        $acad_year = $this->get_acad_year();
+        $acad_sem  = $this->get_acad_sem();
+
         $scholars =  DB::select("SELECT s.scholarship as label, COUNT(u.id) AS data
             FROM users u 
                 INNER JOIN scholarship_scholars ss ON u.id = ss.user_id
                 INNER JOIN scholarship_categories sc ON ss.category_id = sc.id
                 INNER JOIN scholarships s ON sc.scholarship_id = s.id
             WHERE u.usertype = 'scholar'
-            GROUP BY s.id");
+                AND ss.acad_year = {$acad_year}
+                AND ss.acad_sem = {$acad_sem}
+            GROUP BY s.id
+            ORDER BY data");
 
         $label = [];
         $data = [];

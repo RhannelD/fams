@@ -111,6 +111,7 @@ class ScholarshipScholarLivewire extends Component
     {
         return view('livewire.pages.scholarship-scholar.scholarship-scholar-livewire', [
                 'scholars' => $this->get_scholars(),
+                'num_of_scholars' => $this->get_num_of_scholars(),
                 'categories' => $this->get_categories(),
                 'max_acad_year' => $this->get_acad_year(),
             ])
@@ -149,6 +150,14 @@ class ScholarshipScholarLivewire extends Component
                     ->orderBy($order_by, $order);
             })
             ->paginate($this->show_row);
+    }
+
+    protected function get_num_of_scholars()
+    {
+        return ScholarshipScholar::whereScholarshipId($this->scholarship_id)
+            ->where('acad_year', $this->acad_year)
+            ->where('acad_sem', $this->acad_sem)
+            ->count();
     }
 
     public function clear_filter()

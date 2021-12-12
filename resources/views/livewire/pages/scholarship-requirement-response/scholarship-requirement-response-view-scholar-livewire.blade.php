@@ -154,7 +154,7 @@
                 <tr>
                     <td>
                         <ul class="my-auto">
-                            @forelse ($scholar_response->user->scholarship_scholars as $scholarship_scholar)
+                            @forelse ($scholar_response->user->get_scholarship_scholars($scholar_response->requirement->acad_year, $scholar_response->requirement->acad_sem) as $scholarship_scholar)
                                 <li>
                                     {{ $scholarship_scholar->category->scholarship->scholarship }}
                                 </li>

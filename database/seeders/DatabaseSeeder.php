@@ -19,10 +19,9 @@ class DatabaseSeeder extends Seeder
             ScholarInfoSeeder::class,
             ScholarFacebookSeeder::class,
             ScholarshipSeeder::class,
-            ScholarshipScholarSeeder::class,
             ScholarshipPostSeeder::class,
-            ScholarshipPostCommentSeeder::class,
             ScholarshipRequirementSeeder::class,
+            ScholarshipPostCommentSeeder::class,
             ScholarshipRequirementAgreementSeeder::class,
             ScholarshipRequirementItemSeeder::class,
             ScholarResponseSeeder::class,
@@ -30,8 +29,8 @@ class DatabaseSeeder extends Seeder
             ScholarResponseAnswerSeeder::class,
             ScholarResponseOptionSeeder::class,
             ScholarResponseFileSeeder::class,
-            // ScholarResponseCommentSeeder::class,
-            // UserChatSeeder::class,
+            ScholarResponseCommentSeeder::class,
+            UserChatSeeder::class,
         ]);
     }
 }

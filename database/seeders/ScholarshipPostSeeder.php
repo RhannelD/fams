@@ -5,11 +5,14 @@ namespace Database\Seeders;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Scholarship;
+use App\Traits\YearSemTrait;
 use App\Models\ScholarshipPost;
 use Illuminate\Database\Seeder;
 
 class ScholarshipPostSeeder extends Seeder
 {
+    use YearSemTrait;
+
     /**
      * Run the database seeds.
      *
@@ -18,136 +21,96 @@ class ScholarshipPostSeeder extends Seeder
     public function run()
     {
         $scholarships = Scholarship::all();
+        $officers = User::whereOfficer()->get();
 
-        $month_day_times = [
-            '2nd' => [
-                'after'  => '-01-01 00:00:00',
-                'before' => '-06-30 23:59:59',
-            ],
-            '1st' => [
-                'after'  => '-07-01 00:00:00',
-                'before' => '-12-31 23:59:59',
-            ],
-        ];
-
-        $years = [
+        $acad_years = [
             '2018',
             '2019',
             '2020',
             '2021',
         ];
 
-        // For new Scholars fake applications of firsy scholar
-        foreach ($scholarships as $scholarship) {
-            $scholarship_id =  $scholarship->id;
-            $officers = User::whereOfficer()->get();
+        $sems = [
+            1,
+            2,
+        ];
 
-            $date = Carbon::parse('2018-01-01 00:00:00')
-                ->subMonths(rand(0, 2))
-                ->subDays(rand(3, 30))
-                ->addHours(rand(0, 23))
-                ->addMinutes(rand(0, 59))
-                ->format('Y-m-d h:i:s');
+        $acad_sem_month = $this->get_acad_sem_month();
 
-            ScholarshipPost::factory()->create([   
-                'user_id' => $officers[(rand(0, (count($officers)-1)))],
-                'scholarship_id' => $scholarship_id,
-                'title' => "We are looking for new scholars!",
-                'post' => '
-                    <h4><strong>We have available slots</strong></h4>
-                    <p>To those who are looking for scholarship, we have available slots for you. Just accomplish the forms linked down below to submit your requirements.&nbsp;</p>
-                    <p>Thank you.</p>
-                    ',
-                'promote' => true,
-                'created_at' => $date,
-                'updated_at' => $date,
-            ]);
-        }
+        $max_year = $this->get_acad_year();
+        $max_sem  = $this->get_acad_sem();
 
-        // For the Renewal Scholars
-        foreach ($scholarships as $scholarship) {
-            $scholarship_id =  $scholarship->id;
-            $officers = User::whereOfficer()->get();
+        $first_iteration = true;
 
-            $year_now = Carbon::today()->format('Y');
-            $date_now = Carbon::today()->format('Y-m-d h:i:s');
+        foreach ($acad_years as $acad_year) {
+            foreach ($sems as $sem) {
+                $acad_sem = $sem=='1'? 'First': 'Second';
 
-            foreach ($years as $year) {
-                if ( $year_now < $year ) 
+                $year      = $sem==1? $acad_year: $acad_year+1;
+                $month_day = Carbon::parse($acad_sem_month[$sem])->format('-m-d');
+                $date      = $year.$month_day;
+
+                foreach ($scholarships as $scholarship) {
+                    $this->create_post_application($scholarship, $officers, $date, $acad_year, $acad_sem, $first_iteration);
+
+                    if ( !$first_iteration ) {
+                        $this->create_post_renewal($scholarship, $officers, $date, $acad_year, $acad_sem);
+                    }
+                }
+
+                if ( $max_year==$acad_year && $max_sem==$sem ) {
                     break;
+                }
 
-                foreach ($month_day_times as $semester => $mdt) {
-                    $date_after  = $year.$mdt['after'];
-                    $date_before = $year.$mdt['before'];
-
-                    $date_before_changed = $date_now < $date_before;
-                    if ( $date_now < $date_after ) {
-                        break;
-                    } elseif ( $date_before_changed ) {
-                        $date_before = $date_now;
-                    }
-                    
-                    $after  = Carbon::parse($date_after);
-                    $before = Carbon::parse($date_before);
-                    $random_days = rand(0, $before->diffInDays($after));
-
-                    $temp_random_date = $after->subHour(rand(0, 10))->subMinute(rand(0, 59));
-                    if ( !$date_before_changed ) {
-                        $temp_random_date = $temp_random_date->addDays($random_days)
-                            ->addHours(rand(0, 10))
-                            ->addMinutes(rand(0, 59));
-                    }
-                    $random_date = $temp_random_date->format('Y-m-d h:i:s');
-                    
-                    $school_year = $semester=='1st'? (int)$year: ((int)$year)-1;
-                    $academic_year = $school_year.'-'.($school_year+1);
-
-                    ScholarshipPost::factory()->create([   
-                        'user_id' => $officers[(rand(0, (count($officers)-1)))],
-                        'scholarship_id' => $scholarship_id,
-                        'title' => "Scholarship Renewal for $academic_year $semester semester",
-                        'post' => 'To all of our beloved scholars, you may now submit all of your requirements to your respective links.',
-                        'created_at' => $random_date,
-                        'updated_at' => $random_date,
-                    ]);
-
-
-                    // Just a random post
-                    if (rand(0,2) != 1) {
-                        $random_date = $temp_random_date
-                            ->subHour(rand(0, 13))
-                            ->subMinute(rand(0, 59))
-                            ->format('Y-m-d h:i:s');
-                            
-                        ScholarshipPost::factory()->create([   
-                            'user_id' => $officers[(rand(0, (count($officers)-1)))],
-                            'scholarship_id' => $scholarship_id,
-                            'title' => "Just a simple announcement!",
-                            'created_at' => $random_date,
-                            'updated_at' => $random_date,
-                        ]);
-                    }
+                if ( $first_iteration ) {
+                    $first_iteration = false;
                 }
             }
         }
+    }
 
+    public function create_post_application(Scholarship $scholarship, $officers, $date, $acad_year, $acad_sem, $first_iteration)
+    {
+        $acad_year_next = $acad_year+1;
+        $date_created = Carbon::parse($date)
+            ->addMonths(rand(0, 1))
+            ->addDays(rand(3, 30))
+            ->addHours(rand(0, 23))
+            ->addMinutes(rand(0, 59))
+            ->format('Y-m-d h:i:s');
 
-        // For new applicants
-        foreach ($scholarships as $scholarship) {
-            $scholarship_id =  $scholarship->id;
-            $officers = User::whereOfficer()->get();
-
-            $date = Carbon::today()->subDays(rand(3, 30))->format('Y-m-d h:i:s');
-
-            ScholarshipPost::factory()->create([   
+        ScholarshipPost::factory()->create([   
                 'user_id' => $officers[(rand(0, (count($officers)-1)))],
-                'scholarship_id' => $scholarship_id,
-                'title' => "We are looking for new scholars!",
-                'post' => '<h4><strong>We have available slots</strong></h4><p>To those who are looking for scholarship, we have available slots for you. Just accomplish the forms linked down below to submit your requirements.&nbsp;</p><p>Thank you.</p>',
+                'scholarship_id' => $scholarship->id,
+                'title' => "We are looking for".($first_iteration?'':' new')." scholars!",
+                'post' => "
+                    <h4><strong>We have available slots for {$acad_year}-{$acad_year_next} {$acad_sem} Sem</strong></h4>
+                    <p>To those who are looking for scholarship, we have available slots for you. Just accomplish the forms linked down below to submit your requirements.&nbsp;</p>
+                    <p>Thank you.</p>
+                    ",
                 'promote' => true,
-                'created_at' => $date,
-                'updated_at' => $date,
+                'created_at' => $date_created,
+                'updated_at' => $date_created,
             ]);
-        }
+    }
+
+    public function create_post_renewal(Scholarship $scholarship, $officers, $date, $acad_year, $acad_sem)
+    {
+        $acad_year_next = $acad_year+1;
+        $date_created = Carbon::parse($date)
+            ->addMonths(rand(0, 1))
+            ->addDays(rand(3, 30))
+            ->addHours(rand(0, 23))
+            ->addMinutes(rand(0, 59))
+            ->format('Y-m-d h:i:s');
+
+        ScholarshipPost::factory()->create([   
+            'user_id' => $officers[(rand(0, (count($officers)-1)))],
+            'scholarship_id' => $scholarship->id,
+            'title' => "Scholarship Renewal for $acad_year-$acad_year_next $acad_sem semester",
+            'post' => 'To all of our beloved scholars, you may now submit all of your requirements to your respective links.',
+            'created_at' => $date_created,
+            'updated_at' => $date_created,
+        ]);
     }
 }

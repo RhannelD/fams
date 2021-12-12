@@ -168,14 +168,54 @@ class User extends Authenticatable
             });
     }
 
+    public function scopeWhereNotPreviousScholarOf($query, $scholarship_id, Carbon $date = null)
+    {
+        if ( is_null($date) ) {
+            $date = Carbon::now();
+        }
+
+        $acad_year = $this->get_acad_year($date);
+        $acad_sem  = $this->get_acad_sem($date);
+
+        $prev_acad_year = $acad_sem=='1'? $acad_year-1: $acad_year;
+        $prev_acad_sem  = $acad_sem=='1'? '2': '1';
+
+        return $query->whereDoesntHave('scholarship_scholars', function ($query) use ($scholarship_id, $prev_acad_year, $prev_acad_sem) {
+                $query->whereYearSem($prev_acad_year, $prev_acad_sem)
+                    ->whereHas('category', function ($query) use ($scholarship_id) {
+                        $query->where('scholarship_id', '=', $scholarship_id);
+                    });
+            });
+    }
+
     public function scopeWhereScholarOf($query, $scholarship_id, Carbon $date = null)
     {
         if ( is_null($date) ) {
             $date = Carbon::now();
         }
 
-        return $query->whereHas('scholarship_scholars', function ($query) use ($scholarship_id) {
+        return $query->whereHas('scholarship_scholars', function ($query) use ($scholarship_id, $date) {
                 $query->whereYearSem($this->get_acad_year($date), $this->get_acad_sem($date))
+                    ->whereHas('category', function ($query) use ($scholarship_id) {
+                        $query->where('scholarship_id', '=', $scholarship_id);
+                    });
+            });
+    }
+
+    public function scopeWherePreviousScholarOf($query, $scholarship_id, Carbon $date = null)
+    {
+        if ( is_null($date) ) {
+            $date = Carbon::now();
+        }
+
+        $acad_year = $this->get_acad_year($date);
+        $acad_sem  = $this->get_acad_sem($date);
+
+        $prev_acad_year = $acad_sem=='1'? $acad_year-1: $acad_year;
+        $prev_acad_sem  = $acad_sem=='1'? '2': '1';
+
+        return $query->whereHas('scholarship_scholars', function ($query) use ($scholarship_id, $prev_acad_year, $prev_acad_sem) {
+                $query->whereYearSem($prev_acad_year, $prev_acad_sem)
                     ->whereHas('category', function ($query) use ($scholarship_id) {
                         $query->where('scholarship_id', '=', $scholarship_id);
                     });
@@ -234,6 +274,14 @@ class User extends Authenticatable
                 $query->where('scholarship_id', $scholarship_id);
             })
             ->first();
+    }
+    
+    public function get_scholarship_scholars($acad_year, $acad_sem)
+    {
+        return ScholarshipScholar::where('user_id', $this->id)
+            ->where('acad_year', $acad_year)
+            ->where('acad_sem', $acad_sem)
+            ->get();
     }
 
     public function get_invite_count()

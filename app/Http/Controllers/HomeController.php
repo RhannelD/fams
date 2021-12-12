@@ -65,7 +65,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return $this->get_year_sem();
         // return User::selectRaw("municipality, COUNT(municipality) as count")
         //     ->has('scholarship_scholar')
         //     ->groupByRaw('municipality, province')

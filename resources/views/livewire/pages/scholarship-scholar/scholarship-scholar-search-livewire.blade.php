@@ -1,7 +1,7 @@
 <div>
     <div class="d-flex justify-content-end my-1 flex-wrap">
         <h3 class="my-auto mr-auto">
-            {{ $acad_sem=='1'? 'First': 'Second' }} Semester of {{ $acad_year }}-{{ $acad_year+1 }} 
+            {{ $acad_sem=='1'? 'First': 'Second' }} Semester of {{ $acad_year }}-{{ $acad_year+1 }} [{{ $num_of_scholars }}]
         </h3>
         {{ $scholars->links() }}
     </div> 
