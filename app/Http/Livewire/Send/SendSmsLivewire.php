@@ -86,6 +86,8 @@ class SendSmsLivewire extends Component
                 $query->whereNameOrEmail($search)
                 ->orWhere('phone', 'like', "%{$search}%");
             })
+            ->orderBy('firstname')
+            ->orderBy('lastname')
             ->paginate($this->show_row);
     }
 

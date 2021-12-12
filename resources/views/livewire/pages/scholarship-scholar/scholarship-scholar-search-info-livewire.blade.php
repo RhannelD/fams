@@ -179,6 +179,13 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td>Year & Sem:</td>
+                                            <td>
+                                                {{ $scholar->acad_year }}-{{ $scholar->acad_year+1 }} 
+                                                {{ $scholar->acad_sem=='1'? 'First': 'Second' }} Sem
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td>Date Joined:</td>
                                             <td>
                                                 {{ date_format(new DateTime($scholar->created_at),"M d, Y") }}

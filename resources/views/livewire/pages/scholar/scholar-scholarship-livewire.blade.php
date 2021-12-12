@@ -21,6 +21,13 @@
                             <td class="pl-sm-1 pl-md-2">{{ $scholarship->category->amount }}</td>
                         </tr>
                         <tr>
+                            <td>Year & Sem:</td>
+                            <td class="pl-sm-1 pl-md-2">
+                                {{ $scholarship->acad_year }}-{{ $scholarship->acad_year+1 }} 
+                                {{ $scholarship->acad_sem=='1'? 'First': 'Second' }} Sem
+                            </td>
+                        </tr>
+                        <tr>
                             <td>Accepted at:</td>
                             <td class="pl-sm-1 pl-md-2">{{ \Carbon\Carbon::parse($scholarship->created_at)->format("M d, Y h:i A") }}</td>
                         </tr>
@@ -38,6 +45,53 @@
                     None
                 </div>
             @endforelse
+            @if ( count($prev_scholar_scholarships) > 0 )
+                <hr>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse" data-target="#prev_scholarships" aria-expanded="false" aria-controls="prev_scholarships">
+                        See more
+                    </button>
+                </div>
+                <div class="collapse" id="prev_scholarships">
+                    @foreach ($prev_scholar_scholarships as $scholarship)
+                            <hr>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Scholarship:</td>
+                                    <td class="pl-sm-1 pl-md-2">{{ $scholarship->category->scholarship->scholarship }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Category:</td>
+                                    <td class="pl-sm-1 pl-md-2">{{ $scholarship->category->category }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Amount:</td>
+                                    <td class="pl-sm-1 pl-md-2">{{ $scholarship->category->amount }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Year & Sem:</td>
+                                    <td class="pl-sm-1 pl-md-2">
+                                        {{ $scholarship->acad_year }}-{{ $scholarship->acad_year+1 }} 
+                                        {{ $scholarship->acad_sem=='1'? 'First': 'Second' }} Sem
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Accepted at:</td>
+                                    <td class="pl-sm-1 pl-md-2">{{ \Carbon\Carbon::parse($scholarship->created_at)->format("M d, Y h:i A") }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <button wire:click="confirm_delete({{ $scholarship->id }})" class="btn btn-danger btn-sm">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </div>
 

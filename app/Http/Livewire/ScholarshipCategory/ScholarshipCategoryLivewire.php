@@ -4,6 +4,7 @@ namespace App\Http\Livewire\ScholarshipCategory;
 
 use Livewire\Component;
 use App\Models\Scholarship;
+use App\Traits\YearSemTrait;
 use App\Models\ScholarshipOfficer;
 use App\Models\ScholarshipCategory;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ScholarshipCategoryLivewire extends Component
 {
+    use YearSemTrait;
     use AuthorizesRequests;
     
     public $scholarship_id;
@@ -50,7 +52,17 @@ class ScholarshipCategoryLivewire extends Component
 
     protected function get_categories()
     {
-        return ScholarshipCategory::where('scholarship_id', $this->scholarship_id)->get();
+        $acad_year = $this->get_acad_year();
+        $acad_sem  = $this->get_acad_sem();
+
+        return ScholarshipCategory::where('scholarship_id', $this->scholarship_id)
+            ->with([
+                'scholars' => function ($query) use ($acad_year, $acad_sem) {
+                    $query->where('acad_year', $acad_year)
+                        ->where('acad_sem', $acad_sem);
+                }
+            ])
+            ->get();
     }
 
     public function delete_category_confirmation($category_id)

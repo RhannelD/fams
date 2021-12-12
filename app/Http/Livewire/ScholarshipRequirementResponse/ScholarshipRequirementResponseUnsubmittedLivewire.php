@@ -4,12 +4,14 @@ namespace App\Http\Livewire\ScholarshipRequirementResponse;
 
 use App\Models\User;
 use Livewire\Component;
+use App\Traits\YearSemTrait;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirement;
 
 class ScholarshipRequirementResponseUnsubmittedLivewire extends Component
 {
+    use YearSemTrait;
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
@@ -61,9 +63,14 @@ class ScholarshipRequirementResponseUnsubmittedLivewire extends Component
         $order_by   = $this->order_by;
         $order      = $this->order;
 
+        $prev_acad_year = $this->get_prev_acad_year_by_year_sem($requirement->acad_year, $requirement->acad_sem);
+        $prev_acad_sem  = $this->get_prev_acad_sem_by_sem($requirement->acad_sem);
+
         return User::whereNameOrEmail($this->search)
-            ->whereHas('scholarship_scholars', function ($query) use ($category_id) {
-                $query->where('category_id', $category_id);
+            ->whereHas('scholarship_scholars', function ($query) use ($category_id, $prev_acad_year, $prev_acad_sem) {
+                $query->where('category_id', $category_id)
+                    ->where('acad_year', $prev_acad_year)
+                    ->where('acad_sem', $prev_acad_sem);
             })
             ->whereDoesntHave('responses', function ($query) use ($requirement_id) {
                 $query->where('requirement_id', $requirement_id)

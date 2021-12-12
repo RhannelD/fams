@@ -126,12 +126,27 @@ class ScholarshipScholarLivewire extends Component
     protected function get_scholars()
     {
         $search = $this->search;
+        $scholarship_id = $this->scholarship_id;
         $category_id = $this->category_id;
         $comparision = $this->comparision;
         $num_scholarship = $this->num_scholarship;
         $order_by = $this->order_by;
         $order = $this->order;
+
+        $acad_year = $this->acad_year;
+        $acad_sem  = $this->acad_sem;
+
         return ScholarshipScholar::whereScholarshipId($this->scholarship_id)
+            ->with([
+                'user' => function ($query) use ($scholarship_id, $acad_year, $acad_sem) {
+                    $query->with([
+                        'scholarship_scholars' => function ($query) use ($scholarship_id, $acad_year, $acad_sem) {
+                            $query->where('acad_year', $acad_year)
+                                ->where('acad_sem', $acad_sem);
+                        }
+                    ]);
+                }
+            ])
             ->whereHas('user', function ($query) use ($search, $comparision, $num_scholarship) {
                 $query->whereNameOrEmail($search)
                     ->where('usertype', 'scholar')

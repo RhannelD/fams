@@ -51,7 +51,7 @@
                                     {{ $requirement->responses->whereNotNull('submit_at')->count() }}
                                 </strong>
                                 @if ( !$requirement->promote && $requirement->categories->count() > 0 )
-                                    /{{ $requirement->categories->first()->category->scholars->count() }}
+                                    /{{ $requirement->categories->first()->count_previous_scholars_by_year_sem($requirement->acad_year, $requirement->acad_sem) }}
                                 @endif
                             </span>
                         </a>

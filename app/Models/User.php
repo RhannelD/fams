@@ -258,12 +258,17 @@ class User extends Authenticatable
         return Carbon::parse($this->birthday)->age;
     }
 
-    public function is_scholar_of($scholarship_id)
+    public function is_scholar_of($scholarship_id, Carbon $date = null)
     {
+        if ( is_null($date) ) {
+            $date = Carbon::now();
+        }
+
         return ScholarshipScholar::where('user_id', $this->id)
             ->whereHas('category', function ($query) use ($scholarship_id) {
                 $query->where('scholarship_id', $scholarship_id);
             })
+            ->whereYearSem($this->get_acad_year($date), $this->get_acad_sem($date))
             ->exists();
     }
 

@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Scholarship;
+use App\Traits\YearSemTrait;
 use App\Models\ScholarshipPost;
 use App\Models\ScholarshipPostComment;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -11,6 +12,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class ScholarshipPostCommentPolicy
 {
     use HandlesAuthorization;
+    use YearSemTrait;
 
     /**
      * Perform pre-authorization checks.
@@ -63,12 +65,17 @@ class ScholarshipPostCommentPolicy
         
         if ( $scholarshipPost->promote ) 
             return true;
+
+        $acad_year = $this->get_acad_year();
+        $acad_sem  = $this->get_acad_sem();
         
         return $user->is_officer() || Scholarship::where('id', $scholarshipPost->scholarship_id)
-            ->where(function ($query) use ($user) {
-                $query->WhereHas('categories', function ($query) use ($user) {
-                    $query->whereHas('scholars', function ($query) use ($user) {
-                        $query->where('user_id', $user->id);
+            ->where(function ($query) use ($user, $acad_year, $acad_sem) {
+                $query->whereHas('categories', function ($query) use ($user, $acad_year, $acad_sem) {
+                    $query->whereHas('scholars', function ($query) use ($user, $acad_year, $acad_sem) {
+                        $query->where('user_id', $user->id)
+                            ->where('acad_year', $acad_year)
+                            ->where('acad_sem', $acad_sem);
                     });
                 });
             })

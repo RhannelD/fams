@@ -81,6 +81,8 @@ class SendEmailLivewire extends Component
             ->whereNotIn('id', $this->recipient)
             ->whereNameOrEmail($this->search)
             ->whereScholarOf($this->scholarship_id)
+            ->orderBy('firstname')
+            ->orderBy('lastname')
             ->paginate($this->show_row);
     }
 

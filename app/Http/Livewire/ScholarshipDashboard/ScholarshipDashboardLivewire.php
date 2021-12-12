@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use Livewire\Component;
 use App\Models\Scholarship;
+use App\Traits\YearSemTrait;
 use App\Models\ScholarResponse;
 use App\Models\ScholarshipScholar;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class ScholarshipDashboardLivewire extends Component
 {
     use AuthorizesRequests;
+    use YearSemTrait;
     
     public $scholarship_id;
 
@@ -134,7 +136,15 @@ class ScholarshipDashboardLivewire extends Component
     public function scholar_count_chart()
     {
         $scholarship_id = $this->scholarship_id;
-        $categories =  ScholarshipCategory::with('scholars')
+        $acad_year = $this->get_acad_year();
+        $acad_sem  = $this->get_acad_sem();
+
+        $categories =  ScholarshipCategory::with([
+                'scholars' => function ($query) use ($acad_year, $acad_sem) {
+                    $query->where('acad_year', $acad_year)
+                        ->where('acad_sem', $acad_sem);
+                }
+            ])
             ->where('scholarship_id', $scholarship_id)
             ->get();
 
@@ -175,10 +185,19 @@ class ScholarshipDashboardLivewire extends Component
     
     public function scholars_scholarship_count()
     {
+        $acad_year = $this->get_acad_year();
+        $acad_sem  = $this->get_acad_sem();
+
         $scholars = User::selectRaw('count(id) as data')
-            ->withCount('scholarship_scholars as label')
+            ->withCount([
+                'scholarship_scholars as label' => function ($query) use ($acad_year, $acad_sem) {
+                    $query->where('acad_year', $acad_year)
+                        ->where('acad_sem', $acad_sem);
+                }
+            ])
             ->whereScholarOf($this->scholarship_id)
             ->groupBy('label')
+            ->orderBy('data')
             ->get();
 
         $label = [];

@@ -3,12 +3,14 @@
 namespace App\Http\Livewire\ScholarScholarship;
 
 use Livewire\Component;
+use App\Traits\YearSemTrait;
 use App\Models\ScholarshipPost;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ScholarScholarshipFindLivewire extends Component
 {
+    use YearSemTrait;
     use AuthorizesRequests;
     
     public $post_count = 10;
@@ -40,12 +42,17 @@ class ScholarScholarshipFindLivewire extends Component
 
     protected function get_posts()
     {
+        $acad_year = $this->get_acad_year();
+        $acad_sem  = $this->get_acad_sem();
+
         return ScholarshipPost::with('scholarship')
             ->wherePromote()
-            ->whereDoesntHave('scholarship', function ($query) {
-                $query->whereHas('categories', function ($query) {
-                    $query->whereHas('scholars', function ($query) {
-                        $query->where('user_id', Auth::id());
+            ->whereDoesntHave('scholarship', function ($query) use ($acad_year, $acad_sem) {
+                $query->whereHas('categories', function ($query) use ($acad_year, $acad_sem) {
+                    $query->whereHas('scholars', function ($query) use ($acad_year, $acad_sem) {
+                        $query->where('user_id', Auth::id())
+                            ->where('acad_year', $acad_year)
+                            ->where('acad_sem', $acad_sem);
                     });
                 });
             })

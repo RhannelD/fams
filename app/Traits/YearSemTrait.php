@@ -53,6 +53,16 @@ trait YearSemTrait {
         return $sem_first > $date->format('m-d')? ($sem_second > $date->format('m-d')? '1': '2'): '1';
     }
 
+    public function get_prev_acad_year_by_year_sem($acad_year, $acad_sem)
+    {
+        return $acad_sem=='1'? $acad_year-1: $acad_year;
+    }
+
+    public function get_prev_acad_sem_by_sem($acad_sem)
+    {
+        return $acad_sem=='1'? '2': '1';
+    }
+
     public function is_first_sem(Carbon $date = null)
     {
         return $this->get_acad_sem($date) == '1';

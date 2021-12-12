@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Traits\YearSemTrait;
 use App\Models\ScholarResponse;
 use App\Models\ScholarshipRequirement;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -10,6 +11,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class ScholarResponsePolicy
 {
     use HandlesAuthorization;
+    use YearSemTrait;
 
     /**
      * Perform pre-authorization checks.
@@ -70,6 +72,9 @@ class ScholarResponsePolicy
     {
         $scholarshipRequirement = ScholarshipRequirement::find('requirement_id', $requirement_id);
 
+        $acad_year = $this->get_acad_year();
+        $acad_sem  = $this->get_acad_sem();
+
         return isset($scholarshipRequirement) && (
             (
                 // returns true if scholar didn't have scholarship under this program and requirement are for applicants
@@ -80,9 +85,11 @@ class ScholarResponsePolicy
                 // returns true if scholar has the same category with requirement and requirement are for existing scholar's
                 !$scholarshipRequirement->promote 
                 && ScholarshipRequirementCategory::where('requirement_id', $scholarshipRequirement->id)
-                    ->whereHas('category', function ($query) use ($user) {
-                        $query->whereHas('scholars', function ($query) use ($user){
-                            $query->where('user_id', $user->id);
+                    ->whereHas('category', function ($query) use ($user, $acad_year, $acad_sem) {
+                        $query->whereHas('scholars', function ($query) use ($user, $acad_year, $acad_sem){
+                            $query->where('user_id', $user->id)
+                                ->where('acad_year', $acad_year)
+                                ->where('acad_sem', $acad_sem);
                         });
                     })->exists()
             )

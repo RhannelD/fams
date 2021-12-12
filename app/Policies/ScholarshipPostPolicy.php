@@ -48,7 +48,7 @@ class ScholarshipPostPolicy
     {
         return $scholarshipPost->promote 
             || $user->is_officer()
-            || Scholarship::where('id', $scholarshipPost->scholarship_id)->whereHasScholar($query, $user->id)->exists();
+            || Scholarship::where('id', $scholarshipPost->scholarship_id)->whereHasScholar($user->id)->exists();
     }
 
     /**

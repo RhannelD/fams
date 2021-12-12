@@ -115,6 +115,9 @@
                             <div class="input-group mb-1">
                                 <input type="text" class="form-control bg-white" value="{{ $requirement->requirement }}" readonly>
                                 <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        {{ $requirement->req_year_sem() }}
+                                    </span>
                                     <button wire:click="add_requirement({{ $requirement->id }})" class="btn btn-success" type="button">
                                         <i class="fas fa-plus-circle"></i>
                                     </button>

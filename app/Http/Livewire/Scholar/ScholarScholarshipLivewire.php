@@ -4,12 +4,15 @@ namespace App\Http\Livewire\Scholar;
 
 use Livewire\Component;
 use App\Models\Scholarship;
+use App\Traits\YearSemTrait;
 use App\Models\ScholarshipScholar;
 use Illuminate\Support\Facades\Auth;
 
 
 class ScholarScholarshipLivewire extends Component
 {
+    use YearSemTrait;
+    
     public $user_id;
     public $delete_scholarship;
     
@@ -32,10 +35,30 @@ class ScholarScholarshipLivewire extends Component
     
     public function render()
     {
-        $scholar_scholarships = ScholarshipScholar::where('scholarship_scholars.user_id', $this->user_id)
-            ->get();
+        return view('livewire.pages.scholar.scholar-scholarship-livewire', [
+            'scholar_scholarships' => $this->get_scholar_scholarships(),
+            'prev_scholar_scholarships' => $this->get_prev_scholar_scholarships(),
+        ]);
+    }
 
-        return view('livewire.pages.scholar.scholar-scholarship-livewire', ['scholar_scholarships' => $scholar_scholarships]);
+    public function get_scholar_scholarships()
+    {
+        return ScholarshipScholar::where('user_id', $this->user_id)
+            ->where('acad_year', $this->get_acad_year())
+            ->where('acad_sem', $this->get_acad_sem())
+            ->orderBy('acad_year', 'desc')
+            ->orderBy('acad_sem', 'desc')
+            ->get();
+    }
+
+    public function get_prev_scholar_scholarships()
+    {
+        return ScholarshipScholar::where('user_id', $this->user_id)
+            ->where('acad_year', '!=', $this->get_acad_year())
+            ->where('acad_sem', '!=', $this->get_acad_sem())
+            ->orderBy('acad_year', 'desc')
+            ->orderBy('acad_sem', 'desc')
+            ->get();
     }
 
     public function confirm_delete($id)
