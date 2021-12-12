@@ -21,7 +21,7 @@
                 <div class="card-body">
 
                     @if ( !isset($scholar_response) )
-                        @if (!$access && $requirement->promote && $is_scholar)
+                        @if ($requirement->promote && $is_scholar)
                             <div class="alert alert-info mb-2">
                                 You can't respond to this requirement.
                                 <br>

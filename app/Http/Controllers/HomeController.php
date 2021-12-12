@@ -65,6 +65,19 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $acad_year = $this->get_acad_year();
+        $acad_sem  = $this->get_acad_sem();
+        return ScholarResponse::selectRaw('approval, COUNT(approval) as count')
+            ->whereNotNull('submit_at')
+            ->whereNotNull('approval')
+            ->whereHas('requirement', function ($query) use ($acad_year, $acad_sem) {
+                $query->where('acad_year', $acad_year)
+                    ->where('acad_sem', $acad_sem);
+            })
+            ->groupBy('approval')
+            ->orderBy('approval', 'desc')
+            ->get();
+            
         // return User::selectRaw("municipality, COUNT(municipality) as count")
         //     ->has('scholarship_scholar')
         //     ->groupByRaw('municipality, province')

@@ -11,6 +11,7 @@ use App\Traits\YearSemTrait;
 use App\Models\ScholarCourse;
 use App\Models\ScholarResponse;
 use Illuminate\Support\Facades\DB;
+use App\Models\ScholarshipCategory;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ScholarshipRequirement;
 
@@ -18,15 +19,15 @@ class DashboardLivewire extends Component
 {
     use YearSemTrait;
 
+    public $scholarship_id;
+
     protected $listeners = [
         'responses_chart' => 'responses_chart',
         'scholars_by_scholarship' => 'scholars_by_scholarship',
         'scholars_by_course' => 'scholars_by_course',
         'scholars_by_municipality' => 'scholars_by_municipality',
     ];
-
-    public $scholars;
-
+    
     protected function verifyUser()
     {
         if ( Auth::guest() || !(Auth::user()->is_admin() || Auth::user()->is_officer()) ) {
@@ -39,12 +40,15 @@ class DashboardLivewire extends Component
     public function mount()
     {
         if ($this->verifyUser()) return;
+        $this->acad_year = $this->get_acad_year();
+        $this->acad_sem  = $this->get_acad_sem();
     }
 
     public function render()
     {
         return view('livewire.pages.dashboard.dashboard-livewire', [
-                'pending_responses' => $this->get_pending_responses(),
+                'max_acad_year' => $this->get_acad_year(),
+                'scholarships' => $this->get_scholarships(),
                 'ongoing_requirements' => $this->get_ongoing_requirements(),
                 'pending_applications' => $this->get_pending_applications(),
                 'pending_renewals' => $this->get_pending_renewals(),
@@ -54,9 +58,16 @@ class DashboardLivewire extends Component
             ->extends('livewire.main.main-livewire');
     }
 
+    public function get_scholarships()
+    {
+        return Scholarship::all();
+    }
+
     public function get_ongoing_requirements()
     {
         $datenow = Carbon::now()->format('Y-m-d h:i:s');
+        $scholarship_id = $this->scholarship_id;
+        
         return ScholarshipRequirement::where(function ($query) use ($datenow) {
                 $query->where('enable', true)
                 ->orWhere(function ($query) use ($datenow) {
@@ -65,53 +76,70 @@ class DashboardLivewire extends Component
                     ->where('end_at', '>=', $datenow);
                 });
             })
-            ->orderBy('requirement')
-            ->get();
-    }
-
-    protected function get_pending_responses()
-    {
-        return Scholarship::with([
-                'requirements' => function ($query) {
-                    $query->whereHas('responses', function ($query) {
-                        $query->whereNotNull('submit_at')
-                            ->whereNull('approval');
-                    });
-                }
-            ])
-            ->whereHas('requirements', function ($query) {
-                $query->whereHas('responses', function ($query) {
-                    $query->whereNotNull('submit_at')
-                        ->whereNull('approval');
-                });
+            ->when(isset($scholarship_id) && !empty($scholarship_id), function ($query) use ($scholarship_id) {
+                $query->where('scholarship_id', $scholarship_id);
             })
+            ->orderBy('requirement')
             ->get();
     }
 
     protected function get_pending_applications()
     {
+        $scholarship_id = $this->scholarship_id;
+
         return ScholarResponse::whereNull('approval')
-            ->whereHas('requirement', function ($query) {
-                $query->where('promote', true);
-            })->count();
+            ->whereHas('requirement', function ($query) use ($scholarship_id) {
+                $query->where('promote', true)
+                ->when(isset($scholarship_id) && !empty($scholarship_id), function ($query) use ($scholarship_id) {
+                    $query->where('scholarship_id', $scholarship_id);
+                });
+            })
+            ->count();
     }
 
     protected function get_pending_renewals()
     {
+        $scholarship_id = $this->scholarship_id;
+
         return ScholarResponse::whereNull('approval')
-            ->whereHas('requirement', function ($query) {
-                $query->where('promote', false);
-            })->count();
+            ->whereHas('requirement', function ($query) use ($scholarship_id) {
+                $query->where('promote', false)
+                ->when(isset($scholarship_id) && !empty($scholarship_id), function ($query) use ($scholarship_id) {
+                    $query->where('scholarship_id', $scholarship_id);
+                });
+            })
+            ->count();
     }
 
     protected function get_pending_all()
     {
-        return ScholarResponse::whereNull('approval')->count();
+        $scholarship_id = $this->scholarship_id;
+        
+        return ScholarResponse::whereNull('approval')
+            ->when(isset($scholarship_id) && !empty($scholarship_id), function ($query) use ($scholarship_id) {
+                $query->whereHas('requirement', function ($query) use ($scholarship_id) {
+                    $query->where('scholarship_id', $scholarship_id);
+                });
+            })
+            ->count();
     }
 
     protected function get_drafts()
     {
-        return ScholarResponse::whereNull('submit_at')->count();
+        $scholarship_id = $this->scholarship_id;
+        
+        return ScholarResponse::whereNull('submit_at')
+            ->when(isset($scholarship_id) && !empty($scholarship_id), function ($query) use ($scholarship_id) {
+                $query->whereHas('requirement', function ($query) use ($scholarship_id) {
+                    $query->where('scholarship_id', $scholarship_id);
+                });
+            })
+            ->count();
+    }
+
+    public function updated($propertyName)
+    {
+        $this->refresh_all();
     }
 
     public function refresh_all()
@@ -134,44 +162,54 @@ class DashboardLivewire extends Component
         ];
 
         $label = [];
-        $data = [];
+        $data = [
+            'approved' => [],
+            'denied'   => [],
+        ];
 
-        $date = Carbon::now();
+        $acad_year = $this->get_acad_year();
+        $acad_sem  = $this->get_acad_sem();
+        
+        $scholarship_id = $this->scholarship_id;
 
-        $iterate = 8;
-        $quarter_now = $date->isoFormat('Q');
-        while ( $iterate > 0 ) {
-            $year  = $date->format('Y');
+        $iterate = 7;
+        while ($iterate > 0) {
+            $label[$iterate] = $acad_year.'-'.($acad_year+1).' '.($acad_sem=='1'? '1st': '2nd').' Sem';
 
-            for ($quarter=$quarter_now; $quarter > 0; $quarter--) { 
-                if ( !$iterate ) 
-                    break;
+            $responses = ScholarResponse::selectRaw('approval, COUNT(approval) as count')
+                ->whereNotNull('submit_at')
+                ->whereNotNull('approval')
+                ->whereHas('requirement', function ($query) use ($scholarship_id, $acad_year, $acad_sem) {
+                    $query->where('acad_year', $acad_year)
+                        ->where('acad_sem', $acad_sem)
+                        ->when(isset($scholarship_id) && !empty($scholarship_id), function ($query) use ($scholarship_id) {
+                            $query->where('scholarship_id', $scholarship_id);
+                        });
+                })
+                ->groupBy('approval')
+                ->orderBy('approval', 'desc')
+                ->get();
 
-                $label[$iterate] = $year.' '.$quarters[$quarter];
+            $data['approved'][$iterate] = 0;
+            $data['denied'][$iterate]   = 0;
 
-                $responses = ScholarResponse::selectRaw('
-                        count(scholar_responses.id) as response_count, 
-                        YEAR(submit_at) AS year, 
-                        QUARTER(submit_at) AS quarter
-                    ')
-                    ->whereNotNull('submit_at')
-                    ->whereRaw('YEAR(submit_at) = ?', [$year])
-                    ->whereRaw('QUARTER(submit_at) = ?', [$quarter])
-                    ->groupByRaw('year, quarter')
-                    ->orderByRaw('year DESC, quarter DESC')
-                    ->first();
-
-                $data[$iterate] = isset($responses)? $responses->response_count: 0;
-                
-                $iterate--;
+            foreach ($responses as $response) {
+                if ( $response->approval ) {
+                    $data['approved'][$iterate] = $response->count;
+                } else {
+                    $data['denied'][$iterate] = $response->count;
+                }
             }
 
-            $quarter_now = 4;
-            $date->subYear();
+            $acad_year = $this->get_prev_acad_year_by_year_sem($acad_year, $acad_sem);
+            $acad_sem  = $this->get_prev_acad_sem_by_sem($acad_sem);
+
+            $iterate--;
         }
 
         $label = array_reverse($label);
-        $data = array_reverse($data);
+        $data['approved'] = array_reverse($data['approved']);
+        $data['denied'] = array_reverse($data['denied']);
 
         $this->dispatchBrowserEvent('responses_chart', [
             'label' => $label,  
@@ -181,13 +219,17 @@ class DashboardLivewire extends Component
 
     public function scholars_by_municipality()
     {
+        $scholarship_id = $this->scholarship_id;
         $acad_year = $this->get_acad_year();
         $acad_sem  = $this->get_acad_sem();
 
         $municipalities =  User::selectRaw("municipality, COUNT(municipality) as count")
-            ->whereHas('scholarship_scholar', function ($query) use ($acad_year, $acad_sem) {
+            ->whereHas('scholarship_scholar', function ($query) use ($scholarship_id,$acad_year, $acad_sem) {
                     $query->where('acad_year', $acad_year)
-                        ->where('acad_sem', $acad_sem);
+                        ->where('acad_sem', $acad_sem)
+                        ->when(isset($scholarship_id) && !empty($scholarship_id), function ($query) use ($scholarship_id) {
+                            $query->whereScholarshipId($scholarship_id);
+                        });
                 })
             ->groupByRaw('municipality, province')
             ->get();
@@ -247,24 +289,28 @@ class DashboardLivewire extends Component
     
     public function scholars_by_scholarship()
     {
+        $scholarship_id = $this->scholarship_id;
         $acad_year = $this->get_acad_year();
         $acad_sem  = $this->get_acad_sem();
 
-        $scholars =  DB::select("SELECT s.scholarship as label, COUNT(u.id) AS data
-            FROM users u 
-                INNER JOIN scholarship_scholars ss ON u.id = ss.user_id
-                INNER JOIN scholarship_categories sc ON ss.category_id = sc.id
-                INNER JOIN scholarships s ON sc.scholarship_id = s.id
-            WHERE u.usertype = 'scholar'
-                AND ss.acad_year = {$acad_year}
-                AND ss.acad_sem = {$acad_sem}
-            GROUP BY s.id
-            ORDER BY data");
+        $scholars = ScholarshipCategory::with('scholarship')
+            ->withCount([
+                'scholars as data' => function ($query) use ($acad_year, $acad_sem) {
+                    $query->where('acad_year', $acad_year)
+                    ->where('acad_sem', $acad_sem);
+                }
+            ])
+            ->when(isset($scholarship_id) && !empty($scholarship_id), function ($query) use ($scholarship_id) {
+                $query->where('scholarship_id', $scholarship_id);
+            })
+            ->groupBy('scholarship_id')
+            ->orderBy('data')
+            ->get();
 
         $label = [];
         $data = [];
         foreach ($scholars as $scholar) {
-            array_push($label, $scholar->label);
+            array_push($label, $scholar->scholarship->scholarship);
             array_push($data, $scholar->data);
         }
 

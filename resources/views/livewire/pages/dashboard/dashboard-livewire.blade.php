@@ -5,62 +5,23 @@
         <div class="navbar-brand ml-2 font-weight-bold">
             Dashboard
         </div>
-        <button class="btn btn-outline-light ml-auto" wire:click='refresh_all'>
+        <div class="d-flex ml-auto">
+            <select wire:model="scholarship_id" id="acad_year" class="form-control border-0 my-0">
+                <option value="">All Scholarships</option>
+                @foreach ($scholarships as $scholarship)
+                    <option value="{{ $scholarship->id }}">
+                        {{ $scholarship->scholarship }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <button class="btn btn-outline-light ml-1" wire:click='refresh_all'>
             <i class="fas fa-sync-alt" wire:target="refresh_all" wire:loading.class.add='fa-spin'></i>
             Refresh
         </button>
     </nav>
 
-    <div class="row mb-3 mt-2 mx-1">
-        <div class="col-12">
-            <h4 class="font-weight-bold mb-0">
-                <a data-toggle="collapse" href="#collapse_pending_responses" role="button" aria-expanded="false" aria-controls="collapse_pending_responses">
-                    Pending Scholars' Responses
-                    <i class="fas fa-caret-down"></i>
-                </a>
-            </h4>
-            <hr class="mb-2 mt-1">
-        </div>
-    </div>
-    
-    <div class="collapse" id="collapse_pending_responses">
-        <div class="container-fluid">
-            <div class="row">
-                @foreach ($pending_responses as $scholarship)
-                    <div class="col-12 col-md-6 col-lg-4 my-1 px-2 d-flex flex-column">
-                        <div class="card flex-grow-1">
-                            <div class="card-header bg-secondary ">
-                                <h5 class="font-weight-bold my-auto">
-                                    <a href="{{ route('scholarship.home', [$scholarship->id]) }}" class="text-white">
-                                        {{ $scholarship->scholarship }}
-                                    </a>
-                                </h5>
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                @foreach ($scholarship->requirements as $requirement)
-                                    <li class="list-group-item py-2 d-flex">
-                                        <a href="{{ route('scholarship.requirement.responses', [$requirement->id]) }}"
-                                            class="text-dark text-nowrap text-truncate"
-                                            >
-                                            {{ $requirement->requirement }}
-                                        </a>
-                                        <span class="badge badge-primary my-auto mr-0 ml-auto">
-                                            {{ $requirement->responses->whereNotNull('submit_at')->whereNull('approval')->count() }}
-                                        </span>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                @endforeach
-                <div class="col-12">
-                    <hr class="my-1">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mb-3 mx-1">
+    <div class="row mb-3 mx-1 mt-2">
         <div class="col-12 col-sm-6 col-md-3 my-md-0 my-2 px-2 d-flex flex-column">
             <div class="card card-body flex-grow-1  bg-primary text-white">
                 <div class="d-flex">
@@ -134,11 +95,11 @@
     </div>
     
     <div class="row mb-3 mx-1">
-        <div class="col-12 col-md-8">
+        <div wire:ignore class="col-12 col-md-8" id="responses_chart_div">
             <canvas id="responses_chart" width="100" height="300"></canvas>
         </div>
-        <div class="col-12 col-md-4">
-            <div class="card" style="max-height: 300px">
+        <div class="col-12 col-md-4 d-flex flex-column">
+            <div class="card border-secondary flex-grow-1 flex-shrink-1" style="max-height: 300px">
                 <div class="card-header bg-secondary py-2">
                     <h5 class="my-auto text-white">
                         Ongoing Applications/Renewals
@@ -186,7 +147,7 @@
         </div>
     </div>
 
-    <div class="row mb-3 mx-1">
+    <div wire:ignore class="row mb-3 mx-1" id="chart_div_2">
         <div class="col-12 col-md-8">
             <canvas id="scholars_by_municipality" width="100" height="200"></canvas>
         </div>
@@ -198,7 +159,7 @@
         </div>
     </div>
 
-    <div class="row mb-3 mx-1">
+    <div wire:ignore class="row mb-3 mx-1" id="scholars_by_course_div">
         <div class="col-12">
             <canvas id="scholars_by_course" width="100" height="400"></canvas>
         </div>
@@ -220,25 +181,42 @@
             '#492B4C',
             '#F49E12',
         ];
+
+        var responses_chart = null;
+        var scholars_by_municipality = null;
+        var scholars_by_course = null;
+        var scholars_by_scholarship = null;
         
         window.addEventListener('responses_chart', event => { 
-            new Chart("responses_chart", {
+            if ( responses_chart != null ) {
+                responses_chart.destroy();
+            }
+
+            responses_chart = new Chart("responses_chart", {
                 type: 'line',
                 data: {
                     labels: event.detail.label,
-                    datasets: [{
-                        label: 'Responses',
-                        fill: false,
-                        data: event.detail.data,
-                        backgroundColor: '#00aba9',
-                    }]
+                    datasets: [
+                        {
+                            label: 'Approved',
+                            fill: false,
+                            data: event.detail.data['approved'],
+                            backgroundColor: '#00aba9',
+                        },
+                        {
+                            label: 'Denied',
+                            fill: false,
+                            data: event.detail.data['denied'],
+                            backgroundColor: '#b91d47',
+                        },
+                    ]
                 },
                 options: {
                     maintainAspectRatio: false,
                     responsive: true,
                     title: {
                         display: true,
-                        text: "Submitted Applications/Renewals every quarter"
+                        text: "Approved vs Denied"
                     },
                     scales: {
                         y: {
@@ -246,32 +224,31 @@
                         }
                     },
                     legend: {
-                        display: false
+                        display: true
                     },
-                    // elements: {
-                    //     line: {
-                    //         tension: 0, // disables bezier curves
-                    //     }
-                    // }
                 },
             });
         });
         
         window.addEventListener('scholars_by_municipality', event => { 
+            if ( scholars_by_municipality != null ) {
+                scholars_by_municipality.destroy();
+            }
+
             var all_color = barColors;
 
             while ( event.detail.data.length > all_color.length ) {
                 all_color = all_color.concat(barColors);
             }
 
-            new Chart("scholars_by_municipality", {
+            scholars_by_municipality = new Chart("scholars_by_municipality", {
                 type: 'horizontalBar',
                 data: {
                     labels: event.detail.label,
                     datasets: [{
                         label: 'Muniipality',
                         data: event.detail.data,
-                        backgroundColor: all_color,
+                        backgroundColor: '#00aba9',
                     }]
                 },
                 options: {
@@ -300,13 +277,17 @@
         });
         
         window.addEventListener('scholars_by_course', event => { 
+            if ( scholars_by_course != null ) {
+                scholars_by_course.destroy();
+            }
+
             var all_color = barColors;
 
             while ( event.detail.data.length > all_color.length ) {
                 all_color = all_color.concat(barColors);
             }
 
-            new Chart("scholars_by_course", {
+            scholars_by_course = new Chart("scholars_by_course", {
                 type: 'horizontalBar',
                 data: {
                     labels: event.detail.label,
@@ -342,7 +323,11 @@
         });
 
         window.addEventListener('scholars_by_scholarship', event => { 
-            new Chart("scholars_by_scholarship", {
+            if ( scholars_by_scholarship != null ) {
+                scholars_by_scholarship.destroy();
+            }
+
+            scholars_by_scholarship = new Chart("scholars_by_scholarship", {
                 type: "pie",
                 data: {
                 labels: event.detail.label,
