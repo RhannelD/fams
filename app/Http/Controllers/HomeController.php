@@ -67,16 +67,79 @@ class HomeController extends Controller
     {
         $acad_year = $this->get_acad_year();
         $acad_sem  = $this->get_acad_sem();
-        return ScholarResponse::selectRaw('approval, COUNT(approval) as count')
-            ->whereNotNull('submit_at')
-            ->whereNotNull('approval')
-            ->whereHas('requirement', function ($query) use ($acad_year, $acad_sem) {
-                $query->where('acad_year', $acad_year)
-                    ->where('acad_sem', $acad_sem);
-            })
-            ->groupBy('approval')
-            ->orderBy('approval', 'desc')
-            ->get();
+        
+        $data  = [];
+        $label = [];
+
+        $municipalities = User::selectRaw('municipality, province')->groupByRaw('municipality, province')->orderByRaw('municipality, province')->get();
+        $scholarships = Scholarship::all();
+
+        foreach ($municipalities as $key_municipality => $municipality) {
+            $label[$key_municipality] = $municipality->municipality;
+        }
+
+        foreach ($scholarships as $key_scholarship => $scholarship) {
+            $scholarship_id = $scholarship->id;
+            
+            $data[$key_scholarship] = [];
+            $data[$key_scholarship]['data'] = [];
+
+            $scholars = User::selectRaw('municipality, province, COUNT(users.id) as data')
+                ->whereHas('scholarship_scholars', function ($query) use ($scholarship_id) {
+                    $query->whereYearSem('2021', '1')
+                        ->whereHas('category', function ($query) use ($scholarship_id) {
+                            $query->where('scholarship_id', '=', $scholarship_id);
+                        });
+                })
+                ->groupByRaw('municipality, province')
+                ->get();
+
+            foreach ($municipalities as $key_municipality => $municipality) {
+                foreach ($scholars as $key_scholar => $scholar) {
+                    if ( $municipality->municipality == $scholar->municipality && $municipality->province == $scholar->province ) {
+                        $data[$key_scholarship]['scholarship'] = $scholarship->scholarship;
+                        $data[$key_scholarship]['data'][$key_municipality] = $scholar->data;
+                    }
+                }
+            }
+                
+        }
+
+        return $data;
+
+        // $scholarships = Scholarship::all();
+
+        // $data = [];
+        // foreach ($scholarships as $key => $scholarship) {
+        //     $scholarship_id = $scholarship->id;
+
+        //     $scholars = User::selectRaw('municipality')
+        //         ->whereHas('scholarship_scholars', function ($query) use ($scholarship_id) {
+        //         $query->whereYearSem($this->get_acad_year($date), $this->get_acad_sem($date))
+        //             ->whereHas('category', function ($query) use ($scholarship_id) {
+        //                 $query->where('scholarship_id', '=', $scholarship_id);
+        //             });
+        //         })
+        //         ->groupBy('users.municipality')
+        //         ->get();
+
+        //     $data[$key] = [];
+        //     $data[$key]['scholarship'] = $scholarship->scholarship;
+
+        // }
+
+        // return $data;
+
+        // return ScholarshipScholar::selectRaw('users.municipality, scholarship_categories.scholarship_id, COUNT(scholarship_scholars.user_id) as count')
+        // // return ScholarshipScholar::selectRaw('*')
+        //     ->join('scholarship_categories', 'scholarship_categories.id', 'scholarship_scholars.category_id')
+        //     ->join('scholarships', 'scholarships.id', 'scholarship_categories.scholarship_id')
+        //     ->join('users', 'users.id', 'scholarship_scholars.user_id')
+        //     ->where('acad_year', '2021')
+        //     ->where('acad_sem', '1')
+        //     ->groupBy('users.municipality')
+        //     // ->orderBy('count')
+        //     ->get();
             
         // return User::selectRaw("municipality, COUNT(municipality) as count")
         //     ->has('scholarship_scholar')

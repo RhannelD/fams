@@ -21,11 +21,14 @@ class Scholarship extends Model
         'link',
     ];
 
-    public function scholars_count()
+    public function scholars_count($acad_year, $acad_sem)
     {
         return ScholarshipScholar::whereHas('category', function ($query) {
                 $query->where('scholarship_id', $this->id);
-            })->count();
+            })
+            ->where('acad_year', $acad_year)
+            ->where('acad_sem', $acad_sem)
+            ->count();
     }
     
     public function categories()
