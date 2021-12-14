@@ -65,47 +65,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $acad_year = $this->get_acad_year();
-        $acad_sem  = $this->get_acad_sem();
-        
-        $data  = [];
-        $label = [];
-
-        $municipalities = User::selectRaw('municipality, province')->groupByRaw('municipality, province')->orderByRaw('municipality, province')->get();
-        $scholarships = Scholarship::all();
-
-        foreach ($municipalities as $key_municipality => $municipality) {
-            $label[$key_municipality] = $municipality->municipality;
-        }
-
-        foreach ($scholarships as $key_scholarship => $scholarship) {
-            $scholarship_id = $scholarship->id;
-            
-            $data[$key_scholarship] = [];
-            $data[$key_scholarship]['data'] = [];
-
-            $scholars = User::selectRaw('municipality, province, COUNT(users.id) as data')
-                ->whereHas('scholarship_scholars', function ($query) use ($scholarship_id) {
-                    $query->whereYearSem('2021', '1')
-                        ->whereHas('category', function ($query) use ($scholarship_id) {
-                            $query->where('scholarship_id', '=', $scholarship_id);
-                        });
-                })
-                ->groupByRaw('municipality, province')
-                ->get();
-
-            foreach ($municipalities as $key_municipality => $municipality) {
-                foreach ($scholars as $key_scholar => $scholar) {
-                    if ( $municipality->municipality == $scholar->municipality && $municipality->province == $scholar->province ) {
-                        $data[$key_scholarship]['scholarship'] = $scholarship->scholarship;
-                        $data[$key_scholarship]['data'][$key_municipality] = $scholar->data;
-                    }
-                }
-            }
-                
-        }
-
-        return $data;
+        return ScholarResponse::selectRaw('COUNT(id) as data, approval')
+            ->whereHas('requirement', function ($query) {
+                $query->where('acad_year', '2018')
+                ->where('acad_sem', '1');
+            })
+            ->where('approval', false)
+            ->groupBy('approval')
+            ->first();
 
         // $scholarships = Scholarship::all();
 

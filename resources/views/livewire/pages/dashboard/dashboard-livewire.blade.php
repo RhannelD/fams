@@ -159,9 +159,9 @@
         </div>
     </div>
 
-    <div wire:ignore class="row mb-3 mx-1" id="scholars_by_course_div">
+    <div wire:ignore class="row mb-3 mx-1" id="response_approve_denied_div">
         <div class="col-12">
-            <canvas id="scholars_by_course" width="100" height="400"></canvas>
+            <canvas id="response_approve_denied" width="100" height="400"></canvas>
         </div>
         <div class="col-12">
             <hr class="my-1">
@@ -184,7 +184,7 @@
 
         var scholarship_scholars_trend = null;
         var scholars_by_municipality = null;
-        var scholars_by_course = null;
+        var response_approve_denied = null;
         var scholars_by_scholarship = null;
         
         window.addEventListener('scholarship_scholars_trend', event => { 
@@ -201,6 +201,7 @@
                     data: event.detail.data[key]['counts'],
                     borderColor: event.detail.data[key]['color'],
                     backgroundColor: event.detail.data[key]['color'],
+                    borderWidth: 2,
                 };
 
                 datasets.push(dataset);
@@ -225,7 +226,7 @@
                         }
                     },
                     legend: {
-                        display: true
+                        display: false
                     },
                 },
             });
@@ -277,9 +278,9 @@
             });
         });
         
-        window.addEventListener('scholars_by_course', event => { 
-            if ( scholars_by_course != null ) {
-                scholars_by_course.destroy();
+        window.addEventListener('response_approve_denied', event => { 
+            if ( response_approve_denied != null ) {
+                response_approve_denied.destroy();
             }
 
             var all_color = barColors;
@@ -288,15 +289,22 @@
                 all_color = all_color.concat(barColors);
             }
 
-            scholars_by_course = new Chart("scholars_by_course", {
-                type: 'horizontalBar',
+            response_approve_denied = new Chart("response_approve_denied", {
+                type: 'bar',
                 data: {
                     labels: event.detail.label,
-                    datasets: [{
-                        label: 'Course',
-                        data: event.detail.data,
-                        backgroundColor: all_color,
-                    }]
+                    datasets: [
+                        {
+                            label: 'Approved',
+                            data: event.detail.data['approved']['counts'],
+                            backgroundColor: '#61C97D',
+                        },
+                        {
+                            label: 'Denied',
+                            data: event.detail.data['denied']['counts'],
+                            backgroundColor: '#FFAAAA',
+                        },
+                    ],
                 },
                 options: {
                     maintainAspectRatio: false,
@@ -304,15 +312,12 @@
                     indexAxis: 'y',
                     title: {
                         display: true,
-                        text: "Number of Scholar on every Course"
+                        text: "Number of Approved and Denied Applications/Renewals per Semester"
                     },
                     legend: {
-                        display: false
+                        display: true
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true
-                        },
                         xAxes: [{
                                 ticks: {
                                 beginAtZero: true
@@ -362,7 +367,7 @@
         $(document).ready(function(){
             window.livewire.emit('scholarship_scholars_trend');
             window.livewire.emit('scholars_by_scholarship');
-            window.livewire.emit('scholars_by_course');
+            window.livewire.emit('response_approve_denied');
             window.livewire.emit('scholars_by_municipality');
         });
     </script>
