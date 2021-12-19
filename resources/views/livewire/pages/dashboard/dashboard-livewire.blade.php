@@ -143,28 +143,19 @@
             </div>
         </div>
         <div class="col-12">
-            <hr class="my-1">
+            <hr class="my-3">
         </div>
     </div>
 
     <div wire:ignore class="row mb-3 mx-1" id="chart_div_2">
-        <div class="col-12 col-md-7">
-            <canvas id="scholars_by_scholarship" width="100" height="250"></canvas>
+        <div class="col-12 col-md-8">
+            <canvas id="response_approve_denied" width="100" height="300"></canvas>
         </div>
-        <div class="col-12 col-md-5">
-            <canvas id="scholars_by_municipality" width="100" height="250"></canvas>
-        </div>
-        <div class="col-12">
-            <hr class="my-1">
-        </div>
-    </div>
-
-    <div wire:ignore class="row mb-3 mx-1" id="response_approve_denied_div">
-        <div class="col-12">
-            <canvas id="response_approve_denied" width="100" height="400"></canvas>
+        <div class="col-12 col-md-4">
+            <canvas id="scholars_by_municipality" width="100" height="300"></canvas>
         </div>
         <div class="col-12">
-            <hr class="my-1">
+            <hr class="my-2">
         </div>
     </div>
 
@@ -185,7 +176,6 @@
         var scholarship_scholars_trend = null;
         var scholars_by_municipality = null;
         var response_approve_denied = null;
-        var scholars_by_scholarship = null;
         
         window.addEventListener('scholarship_scholars_trend', event => { 
             if ( scholarship_scholars_trend != null ) {
@@ -221,9 +211,6 @@
                         text: "Approved vs Denied"
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true
-                        }
                     },
                     legend: {
                         display: false
@@ -319,44 +306,8 @@
                     },
                     scales: {
                         xAxes: [{
-                                ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                },
-            });
-        });
-
-        window.addEventListener('scholars_by_scholarship', event => { 
-            if ( scholars_by_scholarship != null ) {
-                scholars_by_scholarship.destroy();
-            }
-
-            scholars_by_scholarship = new Chart("scholars_by_scholarship", {
-                type: "horizontalBar",
-                data: {
-                labels: event.detail.label,
-                datasets: [{
-                    backgroundColor: event.detail.color,
-                    data: event.detail.data,
-                }]
-                },  
-                options: {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    indexAxis: 'y',
-                    title: {
-                        display: true,
-                        text: "Scholars count Per Scholarship"
-                    },
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        xAxes: [{
-                                ticks: {
-                                beginAtZero: true
+                            ticks: {
+                                beginAtZero: true,
                             }
                         }],
                     }
@@ -366,7 +317,6 @@
 
         $(document).ready(function(){
             window.livewire.emit('scholarship_scholars_trend');
-            window.livewire.emit('scholars_by_scholarship');
             window.livewire.emit('response_approve_denied');
             window.livewire.emit('scholars_by_municipality');
         });

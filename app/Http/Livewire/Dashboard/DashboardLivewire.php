@@ -37,7 +37,6 @@ class DashboardLivewire extends Component
 
     protected $listeners = [
         'scholarship_scholars_trend' => 'scholarship_scholars_trend',
-        'scholars_by_scholarship' => 'scholars_by_scholarship',
         'response_approve_denied' => 'response_approve_denied',
         'scholars_by_municipality' => 'scholars_by_municipality',
     ];
@@ -160,7 +159,6 @@ class DashboardLivewire extends Component
     {
         if ($this->verifyUser()) return;
         
-        $this->scholars_by_scholarship();
         $this->scholarship_scholars_trend();
         $this->response_approve_denied();
         $this->scholars_by_municipality();
@@ -342,44 +340,6 @@ class DashboardLivewire extends Component
         $this->dispatchBrowserEvent('response_approve_denied', [
             'label' => $label,  
             'data' => $data
-        ]);
-    }
-    
-    public function scholars_by_scholarship()
-    {
-        $scholarship_id = $this->scholarship_id;
-        $acad_year = $this->get_acad_year();
-        $acad_sem  = $this->get_acad_sem();
-        
-        $colors = $this->colors;
-        $color_count = count($this->colors);
-
-        $scholars = ScholarshipScholar::selectRaw('scholarships.scholarship, scholarship_categories.scholarship_id, COUNT(scholarship_scholars.user_id) as data')
-            ->join('scholarship_categories', 'scholarship_categories.id', 'scholarship_scholars.category_id')
-            ->join('scholarships', 'scholarships.id', 'scholarship_categories.scholarship_id')
-            ->when(isset($scholarship_id) && !empty($scholarship_id), function ($query) use ($scholarship_id) {
-                $query->where('scholarship_id', $scholarship_id);
-            })
-            ->where('acad_year', '2021')
-            ->where('acad_sem', '1')
-            ->groupBy('scholarship_categories.scholarship_id')
-            ->orderBy('data', 'desc')
-            ->get();
-
-        $label = [];
-        $data = [];
-        $color = [];
-
-        foreach ($scholars as $scholar) {
-            $label[] = $scholar->scholarship;
-            $data[] = $scholar->data;
-            $color[] = $colors[$scholar->scholarship_id%$color_count];
-        }
-
-        $this->dispatchBrowserEvent('scholars_by_scholarship', [
-            'label' => $label,  
-            'data' => $data,
-            'color' => $color,
         ]);
     }
 }

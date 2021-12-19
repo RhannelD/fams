@@ -25,7 +25,6 @@ use App\Http\Livewire\ScholarshipOfficer\ScholarshipOfficerLivewire;
 use App\Http\Livewire\ScholarshipScholar\ScholarshipScholarLivewire;
 use App\Http\Livewire\ScholarshipCategory\ScholarshipCategoryLivewire;
 use App\Http\Livewire\ScholarScholarship\ScholarScholarshipViewLivewire;
-use App\Http\Livewire\ScholarshipDashboard\ScholarshipDashboardLivewire;
 use App\Http\Livewire\ScholarshipRequirement\ScholarshipApplicationLivewire;
 use App\Http\Livewire\ScholarshipRequirement\ScholarshipRequirementLivewire;
 use App\Http\Livewire\ScholarshipScholar\ScholarshipScholarInviteImportExcel;
@@ -57,7 +56,7 @@ Route::group(['middleware' => ['user.login']], function(){
 Route::group(['middleware' => ['user.auth']], function(){
     Route::get('/message', UserChatLivewire::class)->name('user.chat');
 
-    Route::get('/dashboard', DashboardLivewire::class)->name('dashboard');
+    Route::get('/dashboard/{scholarship_id?}', DashboardLivewire::class)->name('dashboard');
 
     Route::get('/officer', OfficerLivewire::class)->name('officer');
 
@@ -76,8 +75,6 @@ Route::group(['middleware' => ['user.auth']], function(){
     Route::get('/scholar/{scholarship}/list/pdf', [ScholarListController::class, 'scholar_list'])->name('scholar.list.pdf');
 
     Route::prefix('/scholarship')->group(function () {
-        Route::get('/{scholarship_id}/dashboard', ScholarshipDashboardLivewire::class)->name('scholarship.dashboard');
-
         Route::get('/{scholarship_id}/home', ScholarshipPageLivewire::class)->name('scholarship.home');
 
         Route::get('/post/{post_id}', ScholarshipPostOpenLivewire::class)->name('scholarship.post.show');

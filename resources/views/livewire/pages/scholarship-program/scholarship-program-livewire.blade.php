@@ -71,7 +71,7 @@
             @if (  $scholarship->categories->count() > 0 )    
                 @can('viewDashboard', $scholarship)
                     <li class="nav-item"> 
-                        <a class="nav-link text-white{{ $active == 'dashboard'? '': '-50' }}" href="{{ route('scholarship.dashboard', [$scholarship->id]) }}">
+                        <a class="nav-link text-white{{ $active == 'dashboard'? '': '-50' }}" href="{{ route('dashboard', ['scholarship_id'=>$scholarship->id]) }}">
                             <i class="fas fa-chart-pie"></i>
                             Dashboard
                         </a>
