@@ -6,14 +6,7 @@
             Dashboard
         </div>
         <div class="d-flex mr-1">
-            <select wire:model="scholarship_id" id="acad_year" class="form-control border-0 my-0">
-                <option value="">All Scholarships</option>
-                @foreach ($scholarships as $scholarship)
-                    <option value="{{ $scholarship->id }}">
-                        {{ $scholarship->scholarship }}
-                    </option>
-                @endforeach
-            </select>
+            @include('livewire.pages.dashboard.dashboard-filter')
         </div>
         <button class="btn btn-outline-light mr-1" wire:click='refresh_all'>
             <i class="fas fa-sync-alt" wire:target="refresh_all" wire:loading.class.add='fa-spin'></i>
@@ -186,7 +179,7 @@
 
             for (var key in event.detail.data) {
                 dataset = {
-                    label: event.detail.data[key]['scholarship'],
+                    label: event.detail.data[key]['label'],
                     fill: false,
                     data: event.detail.data[key]['counts'],
                     borderColor: event.detail.data[key]['color'],
@@ -208,7 +201,7 @@
                     responsive: true,
                     title: {
                         display: true,
-                        text: "Approved vs Denied"
+                        text: event.detail.title,
                     },
                     scales: {
                     },
@@ -228,7 +221,7 @@
 
             for (var key in event.detail.data) {
                 dataset = {
-                    label: event.detail.data[key]['scholarship'],
+                    label: event.detail.data[key]['label'],
                     data: event.detail.data[key]['data'],
                     backgroundColor: event.detail.data[key]['color'],
                 };
@@ -299,7 +292,7 @@
                     indexAxis: 'y',
                     title: {
                         display: true,
-                        text: "Number of Approved and Denied Applications/Renewals per Semester"
+                        text: event.detail.title,
                     },
                     legend: {
                         display: true

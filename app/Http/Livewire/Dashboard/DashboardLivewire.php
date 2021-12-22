@@ -22,6 +22,9 @@ class DashboardLivewire extends Component
 
     public $scholarship_id;
 
+    public $filter_line_year = true;
+    public $filter_span = 5;
+
     public $colors = [
         "#00aba9",
         "#b91d47",
@@ -164,6 +167,11 @@ class DashboardLivewire extends Component
         $this->scholars_by_municipality();
     }
 
+    public function get_scholarship()
+    {
+        return isset($this->scholarship_id)? Scholarship::find($this->scholarship_id): null;
+    }
+
     public function scholarship_scholars_trend()
     {
         $quarters = [
@@ -180,26 +188,41 @@ class DashboardLivewire extends Component
         $acad_sem  = $this->get_acad_sem();
         
         $scholarship_id = $this->scholarship_id;
-        $scholarships = Scholarship::when(isset($scholarship_id) && !empty($scholarship_id), function ($query) use ($scholarship_id) {
-                $query->where('id',$scholarship_id);
-            })
-            ->get();
+        $scholarship = $this->get_scholarship();
 
         $colors = $this->colors;
         $color_count = count($this->colors);
 
-        $iterate = 7;
+        $iterate = $this->filter_span;
         while ($iterate > 0) {
-            $label[$iterate] = $acad_year.'-'.($acad_year+1).' '.($acad_sem=='1'? '1st': '2nd').' Sem';
-
-            foreach ($scholarships as $scholarship) {
-                $data[$scholarship->id]['counts'][$iterate] = $scholarship->scholars_count($acad_year, $acad_sem);
-                $data[$scholarship->id]['scholarship'] = $scholarship->scholarship;
-                $data[$scholarship->id]['color'] = $colors[$scholarship->id%$color_count];
+            if ( $this->filter_line_year ) {
+                $label[$iterate] = $acad_year.'-'.($acad_year+1);
+            } else {
+                $label[$iterate] = $acad_year.'-'.($acad_year+1).' '.($acad_sem=='1'? '1st': '2nd').' Sem';
             }
+            
+            $scholar_count = ScholarshipScholar::selectRaw('COUNT(DISTINCT(user_id)) as data')
+                ->where('acad_year', $acad_year)
+                ->when(!$this->filter_line_year, function ($query) use ($acad_sem) {
+                        $query->where('acad_sem', $acad_sem);
+                    })
+                ->when(!empty($scholarship_id), function ($query) use ($scholarship_id) {
+                        $query->whereHas('category', function ($query) use ($scholarship_id) {
+                            $query->where('scholarship_id', $scholarship_id);
+                        });
+                    })
+                ->first();
 
-            $acad_year = $this->get_prev_acad_year_by_year_sem($acad_year, $acad_sem);
-            $acad_sem  = $this->get_prev_acad_sem_by_sem($acad_sem);
+            $data[0]['counts'][$iterate] = $scholar_count->data;
+            $data[0]['label'] = $scholarship? $scholarship->scholarship: null;
+            $data[0]['color'] = '#61C97D';
+
+            if ( $this->filter_line_year ) {
+                $acad_year -= 1;
+            } else {
+                $acad_year = $this->get_prev_acad_year_by_year_sem($acad_year, $acad_sem);
+                $acad_sem  = $this->get_prev_acad_sem_by_sem($acad_sem);    
+            }
 
             $iterate--;
         }
@@ -211,7 +234,8 @@ class DashboardLivewire extends Component
 
         $this->dispatchBrowserEvent('scholarship_scholars_trend', [
             'label' => $label,  
-            'data' => $data
+            'data' => $data,
+            'title' => 'Number of Scholars per '.($this->filter_line_year? 'Year': 'Semester'),
         ]);
     }
 
@@ -227,39 +251,34 @@ class DashboardLivewire extends Component
         $label = [];
 
         $municipalities = User::selectRaw('municipality, province')->groupByRaw('municipality, province')->orderByRaw('municipality, province')->get();
-        $scholarship_id = $this->scholarship_id;
-        $scholarships = Scholarship::when(isset($scholarship_id) && !empty($scholarship_id), function ($query) use ($scholarship_id) {
-                $query->where('id',$scholarship_id);
-            })
-            ->get();
-
         foreach ($municipalities as $key_municipality => $municipality) {
             $label[$key_municipality] = $municipality->municipality;
         }
 
-        foreach ($scholarships as $key_scholarship => $scholarship) {
-            $scholarship_id = $scholarship->id;
-            
-            $data[$key_scholarship] = [];
-            $data[$key_scholarship]['data'] = [];
+        $scholarship_id = $this->scholarship_id;
+        $scholarship = $this->get_scholarship();
+        
+        $data[0] = [];
+        $data[0]['data'] = [];
 
-            $scholars = User::selectRaw('municipality, province, COUNT(users.id) as data')
-                ->whereHas('scholarship_scholars', function ($query) use ($scholarship_id, $acad_year, $acad_sem) {
-                    $query->whereYearSem($acad_year, $acad_sem)
-                        ->whereHas('category', function ($query) use ($scholarship_id) {
+        $scholars = User::selectRaw('municipality, province, COUNT(users.id) as data')
+            ->whereHas('scholarship_scholars', function ($query) use ($scholarship_id, $acad_year, $acad_sem) {
+                $query->whereYearSem($acad_year, $acad_sem)
+                    ->whereHas('category', function ($query) use ($scholarship_id) {
+                        $query->when(!empty($scholarship_id), function ($query) use ($scholarship_id) {
                             $query->where('scholarship_id', '=', $scholarship_id);
                         });
-                })
-                ->groupByRaw('municipality, province')
-                ->get();
+                    });
+            })
+            ->groupByRaw('municipality, province')
+            ->get();
 
-            foreach ($municipalities as $key_municipality => $municipality) {
-                foreach ($scholars as $key_scholar => $scholar) {
-                    if ( $municipality->municipality == $scholar->municipality && $municipality->province == $scholar->province ) {
-                        $data[$key_scholarship]['scholarship'] = $scholarship->scholarship;
-                        $data[$key_scholarship]['color'] = $colors[$scholarship->id%$color_count];
-                        $data[$key_scholarship]['data'][$key_municipality] = $scholar->data;
-                    }
+        foreach ($municipalities as $key_municipality => $municipality) {
+            foreach ($scholars as $key_scholar => $scholar) {
+                if ( $municipality->municipality == $scholar->municipality && $municipality->province == $scholar->province ) {
+                    $data[0]['label'] = $scholarship? $scholarship->scholarship: null;
+                    $data[0]['color'] = '#61C97D';
+                    $data[0]['data'][$key_municipality] = $scholar->data;
                 }
             }
         }
@@ -286,23 +305,26 @@ class DashboardLivewire extends Component
         $acad_sem  = $this->get_acad_sem();
         
         $scholarship_id = $this->scholarship_id;
-        $scholarships = Scholarship::when(isset($scholarship_id) && !empty($scholarship_id), function ($query) use ($scholarship_id) {
-                $query->where('id',$scholarship_id);
-            })
-            ->get();
 
         $colors = $this->colors;
         $color_count = count($this->colors);
 
-        $iterate = 7;
+        $filter_line_year = $this->filter_line_year;
+        $iterate = $this->filter_span;
         while ($iterate > 0) {
-            $label[$iterate] = $acad_year.'-'.($acad_year+1).' '.($acad_sem=='1'? '1st': '2nd').' Sem';
+            if ( $filter_line_year ) {
+                $label[$iterate] = $acad_year.'-'.($acad_year+1);
+            } else {
+                $label[$iterate] = $acad_year.'-'.($acad_year+1).' '.($acad_sem=='1'? '1st': '2nd').' Sem';
+            }
 
             $response = ScholarResponse::selectRaw('COUNT(id) as data, approval')
-                ->whereHas('requirement', function ($query) use ($scholarship_id, $acad_year, $acad_sem) {
+                ->whereHas('requirement', function ($query) use ($scholarship_id, $acad_year, $acad_sem, $filter_line_year) {
                     $query->where('acad_year', $acad_year)
-                        ->where('acad_sem', $acad_sem)
-                        ->when(isset($scholarship_id) && !empty($scholarship_id), function ($query) use ($scholarship_id) {
+                        ->when(!$filter_line_year, function ($query) use ($acad_sem) {
+                            $query->where('acad_sem', $acad_sem);
+                        })
+                        ->when(!empty($scholarship_id), function ($query) use ($scholarship_id) {
                             $query->where('scholarship_id', $scholarship_id);
                         });
                 })
@@ -313,10 +335,12 @@ class DashboardLivewire extends Component
             $data['approved']['color'] = $colors[1];
 
             $response = ScholarResponse::selectRaw('COUNT(id) as data, approval')
-                ->whereHas('requirement', function ($query) use ($scholarship_id, $acad_year, $acad_sem) {
+                ->whereHas('requirement', function ($query) use ($scholarship_id, $acad_year, $acad_sem, $filter_line_year) {
                     $query->where('acad_year', $acad_year)
-                        ->where('acad_sem', $acad_sem)
-                        ->when(isset($scholarship_id) && !empty($scholarship_id), function ($query) use ($scholarship_id) {
+                        ->when(!$filter_line_year, function ($query) use ($acad_sem) {
+                            $query->where('acad_sem', $acad_sem);
+                        })
+                        ->when(!empty($scholarship_id), function ($query) use ($scholarship_id) {
                             $query->where('scholarship_id', $scholarship_id);
                         });
                 })
@@ -326,8 +350,12 @@ class DashboardLivewire extends Component
             $data['denied']['counts'][$iterate] = $response;
             $data['denied']['color'] = $colors[2];
 
-            $acad_year = $this->get_prev_acad_year_by_year_sem($acad_year, $acad_sem);
-            $acad_sem  = $this->get_prev_acad_sem_by_sem($acad_sem);
+            if ( $filter_line_year ) {
+                $acad_year -= 1;
+            } else {
+                $acad_year = $this->get_prev_acad_year_by_year_sem($acad_year, $acad_sem);
+                $acad_sem  = $this->get_prev_acad_sem_by_sem($acad_sem);    
+            }
 
             $iterate--;
         }
@@ -339,7 +367,8 @@ class DashboardLivewire extends Component
 
         $this->dispatchBrowserEvent('response_approve_denied', [
             'label' => $label,  
-            'data' => $data
+            'data' => $data,
+            'title' => 'Number of Approved and Denied Applications/Renewals per '.($this->filter_line_year? 'Year': 'Semester'),
         ]);
     }
 }
