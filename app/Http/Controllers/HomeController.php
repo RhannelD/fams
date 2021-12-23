@@ -8,11 +8,13 @@ use App\Models\UserChat;
 use App\Models\EmailSend;
 use App\Models\Scholarship;
 use Illuminate\Support\Str;
+use App\Traits\YearSemTrait;
 use Illuminate\Http\Request;
 use App\Models\ScholarCourse;
 use App\Mail\PasswordResetMail;
 use App\Models\ScholarResponse;
 use App\Models\ScholarshipPost;
+use Ifsnop\Mysqldump\Mysqldump;
 use App\Models\ScholarResponseGwa;
 use App\Models\ScholarshipScholar;
 use Illuminate\Support\Facades\DB;
@@ -21,12 +23,14 @@ use App\Models\ScholarResponseFile;
 use App\Models\ScholarResponseUnit;
 use App\Models\ScholarshipCategory;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use App\Models\ScholarResponseAnswer;
 use App\Models\ScholarResponseOption;
 use Illuminate\Support\Facades\Route;
 use App\Models\ScholarResponseComment;
 use App\Models\ScholarshipPostComment;
 use App\Models\ScholarshipRequirement;
+use Illuminate\Support\Facades\Schema;
 use Stevebauman\Purify\Facades\Purify;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ScholarshipScholarInvite;
@@ -39,7 +43,6 @@ use App\Models\ScholarshipRequirementAgreement;
 use App\Models\ScholarshipRequirementItemOption;
 use App\Notifications\ScholarshipPostNotification;
 use Illuminate\Notifications\Messages\MailMessage;
-use App\Traits\YearSemTrait;
 
 class HomeController extends Controller
 {
@@ -65,14 +68,73 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return ScholarResponse::selectRaw('COUNT(id) as data, approval')
-            ->whereHas('requirement', function ($query) {
-                $query->where('acad_year', '2018')
-                ->where('acad_sem', '1');
-            })
-            ->where('approval', false)
-            ->groupBy('approval')
-            ->first();
+        // $array = [];
+        // $tables = DB::select('SHOW TABLES');
+        // foreach ($tables as $key => $value) {
+        //     $array[] = (array) $value;
+        // }
+        
+        // foreach ($array as $key => $table) {
+        //     foreach ($table as $key => $value) {
+        //         echo "$value <br>";
+        //     }
+        // }
+        // return  pathinfo(storage_path((Storage::disk('backups')->path('BAT-405-Final-Project_(3).docx'))), PATHINFO_EXTENSION);;
+
+        // $array = [];
+        // $files = Storage::disk('backups')->files();
+
+        // foreach ($files as $key => $file) {
+        //     $temp_arr = [];
+        //     $temp_arr['filename'] = $file;
+        //     $temp_arr['lastModified'] = Carbon::createFromTimestamp(Storage::disk('backups')->lastModified($file))->toDateTimeString(); ;
+        //     $array[$key] = $temp_arr;
+        // }
+
+        // return collect($array)->sortByDesc('lastModified')->values()->all();
+
+        // // Name of the file
+        // $filename = Storage::disk('backups')->path('EAMS_2021_12_23_12_05_35.sql');
+
+        // // Temporary variable, used to store current query
+        // $templine = '';
+        // // Read in entire file
+        // $lines = file($filename);
+        // // Loop through each line
+        // foreach ($lines as $line)
+        // {
+        //     // Skip it if it's a comment
+        //     if (substr($line, 0, 2) == '--' || $line == '')
+        //         continue;
+
+        //     // Add this line to the current segment
+        //     $templine .= $line;
+        //     // If it has a semicolon at the end, it's the end of the query
+        //     if (substr(trim($line), -1, 1) == ';')
+        //     {
+        //         // Perform the query
+        //         DB::unprepared($templine);
+        //         // Reset temp variable to empty
+        //         $templine = '';
+        //     }
+        // }
+        // return "Tables imported successfully";
+
+        // DB::unprepared((Storage::disk('backups')->path('EAMS_2021_12_23_12_05_35.sql')));
+
+        // $sql = File::get(Storage::disk('backups')->path('EAMS_2021_12_23_12_05_35.sql'));
+
+        // return DB::statement($sql);
+        
+        // try {
+        //     $dump = new Mysqldump('mysql:host='.env('DB_HOST').';dbname='.env('DB_DATABASE'), env('DB_USERNAME'), env('DB_PASSWORD'));
+        //     $dump->start(Storage::path('backups').'/dump.sql');
+        // } catch (\Exception $e) {
+        //     echo 'mysqldump-php error: ' . $e->getMessage();
+        // }
+
+        // return Storage::files('backups');
+        // return Storage::path('backups');
 
         // $scholarships = Scholarship::all();
 

@@ -67,6 +67,13 @@
                 </a>
             @endif
 
+            @if ( Gate::allows('backup-restore-view') )     
+                <a class="list-group-item list-group-item-action bg-side-bar bg-side-item-bar text-white border-white tabs" href="{{ route('back_restore') }}">
+                    <i class="fas fa-database"></i>
+                    Backup Restore
+                </a>
+            @endif
+
             @if ( Auth::user()->is_scholar() )
                 <hr class="my-2">
                 <strong class="ml-3 text-white">

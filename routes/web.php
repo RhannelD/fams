@@ -17,6 +17,7 @@ use App\Http\Livewire\UserChat\UserChatLivewire;
 use App\Http\Livewire\Dashboard\DashboardLivewire;
 use App\Http\Livewire\Invite\InviteScholarLivewire;
 use App\Http\Livewire\Scholarship\ScholarshipLivewire;
+use App\Http\Livewire\BackupRestore\BackupRestoreLivewire;
 use App\Http\Livewire\Requirement\RequirementPreviewLivewire;
 use App\Http\Livewire\ScholarshipPage\ScholarshipPageLivewire;
 use App\Http\Livewire\Requirement\RequirementResponsesLivewire;
@@ -113,6 +114,8 @@ Route::group(['middleware' => ['user.auth']], function(){
 
         Route::get('/{requirement_id}/response', ResponseLivewire::class)->name('requirement.response');
     });
+
+    Route::get('/back_restore', BackupRestoreLivewire::class)->name('back_restore');
 });
 
 //----------------------- To be Deleted --------------------------

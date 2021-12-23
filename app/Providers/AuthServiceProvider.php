@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use App\Policies\BackupRestorePolicy;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -21,7 +22,9 @@ class AuthServiceProvider extends ServiceProvider
         ScholarshipRequirementItem::class => ScholarshipRequirementItemPolicy::class,
         ScholarshipRequirementItemOption::class => ScholarshipRequirementItemOptionPolicy::class,
         ScholarshipRequirementAgreement::class => ScholarshipRequirementAgreementPolicy::class,
+        ScholarCourse::class => ScholarCoursePolicy::class,
         ScholarResponse::class => ScholarResponsePolicy::class,
+        ScholarResponseComment::class => ScholarResponseCommentPolicy::class,
         ScholarshipScholar::class => ScholarshipScholarPolicy::class,
         ScholarshipScholarInvite::class => ScholarshipScholarInvitePolicy::class,
     ];
@@ -35,6 +38,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('backup-restore-view', [BackupRestorePolicy::class, 'viewAny']);
+        Gate::define('backup-restore-create', [BackupRestorePolicy::class, 'create']);
+        Gate::define('backup-restore-download', [BackupRestorePolicy::class, 'download']);
+        Gate::define('backup-restore-restore', [BackupRestorePolicy::class, 'restore']);
+        Gate::define('backup-restore-delete', [BackupRestorePolicy::class, 'delete']);
+        Gate::define('backup-restore-upload', [BackupRestorePolicy::class, 'upload']);
     }
 }

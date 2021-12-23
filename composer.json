@@ -12,6 +12,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "humans/semaphore-sms": "^4.0",
+        "ifsnop/mysqldump-php": "^2.9",
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^8.40",
         "laravel/nexmo-notification-channel": "^2.5",
