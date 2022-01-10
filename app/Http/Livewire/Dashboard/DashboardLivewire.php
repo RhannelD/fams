@@ -174,13 +174,6 @@ class DashboardLivewire extends Component
 
     public function scholarship_scholars_trend()
     {
-        $quarters = [
-            1 => 'Jan-Mar',
-            2 => 'Apr-Jun',
-            3 => 'Jul-Sep',
-            4 => 'Oct-Dec',
-        ];
-
         $label = [];
         $data = [];
 
@@ -235,7 +228,7 @@ class DashboardLivewire extends Component
         $this->dispatchBrowserEvent('scholarship_scholars_trend', [
             'label' => $label,  
             'data' => $data,
-            'title' => 'Number of Scholars per '.($this->filter_line_year? 'Year': 'Semester'),
+            'title' => 'Count of Scholars '.($this->filter_line_year? 'Annually': ' each Semester'),
         ]);
     }
 
@@ -291,13 +284,6 @@ class DashboardLivewire extends Component
 
     public function response_approve_denied()
     {
-        $quarters = [
-            1 => 'Jan-Mar',
-            2 => 'Apr-Jun',
-            3 => 'Jul-Sep',
-            4 => 'Oct-Dec',
-        ];
-
         $label = [];
         $data = [];
 
@@ -368,7 +354,7 @@ class DashboardLivewire extends Component
         $this->dispatchBrowserEvent('response_approve_denied', [
             'label' => $label,  
             'data' => $data,
-            'title' => 'Number of Approved and Denied Applications/Renewals per '.($this->filter_line_year? 'Year': 'Semester'),
+            'title' => 'Count of Approved and Denied Applications/Renewals '.($this->filter_line_year? 'Annually': ' each Semester'),
         ]);
     }
 }

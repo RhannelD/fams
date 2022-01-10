@@ -3,7 +3,7 @@
         <a class="navbar-brand text-light">
             <img src="{{ asset('img/scholarship-icon.png') }}" width="30" height="30" alt="" style="margin-top: -5px;">
             <Strong>
-                FAMS
+                {{ config('app.name') }}
             </Strong>
         </a>
         <button class="navbar-toggler border-white" type="button" data-toggle="collapse" data-target="#demo-navbar" aria-controls="demo-navbar" aria-expanded="false" aria-label="Toggle navigation">

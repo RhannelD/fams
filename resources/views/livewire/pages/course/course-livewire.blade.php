@@ -25,7 +25,7 @@
 		</div>
 	</div>
 
-    @livewire('course.course-edit-livewire'))
+    @livewire('course.course-edit-livewire')
 
 	<script>
 		window.addEventListener('course-modal', event => {

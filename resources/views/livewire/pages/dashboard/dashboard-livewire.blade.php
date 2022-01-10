@@ -95,7 +95,7 @@
             <div class="card border-secondary flex-grow-1 flex-shrink-1" style="max-height: 350px">
                 <div class="card-header bg-secondary py-2">
                     <h5 class="my-auto text-white">
-                        Ongoing Applications/Renewals
+                        Important Dates to remember
                     </h5>
                 </div>
                 <div class="card-body p-2  overflow-auto">
@@ -153,19 +153,6 @@
     </div>
 
     <script>
-        var barColors = [
-            "#00aba9",
-            "#b91d47",
-            '#494949',
-            '#C2F1DB',
-            '#496076',
-            '#AE557F',
-            '#132664',
-            '#32A350',
-            '#492B4C',
-            '#F49E12',
-        ];
-
         var scholarship_scholars_trend = null;
         var scholars_by_municipality = null;
         var response_approve_denied = null;
@@ -241,7 +228,7 @@
                     indexAxis: 'y',
                     title: {
                         display: true,
-                        text: 'Number of Scholar on every Municipality'
+                        text: 'Number of Scholar in each Municipality'
                     },
                     scales: {
                         xAxes: [{
@@ -261,12 +248,6 @@
         window.addEventListener('response_approve_denied', event => { 
             if ( response_approve_denied != null ) {
                 response_approve_denied.destroy();
-            }
-
-            var all_color = barColors;
-
-            while ( event.detail.data.length > all_color.length ) {
-                all_color = all_color.concat(barColors);
             }
 
             response_approve_denied = new Chart("response_approve_denied", {

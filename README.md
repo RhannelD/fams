@@ -60,3 +60,30 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Applications Used
+
+- XAMPP 7.3.6-2
+- Composer - Php Dependency Manager
+- Node.js 14.17.1
+
+## Setup after Git Clone
+
+    1. composer install
+    2. npm install
+    3. cp .env.example .env
+    4. php artisan key:generate
+    5. configure .env
+        - APP_URL
+        - MAIL
+        - SEMAPHORE
+    6. any of these two
+        - php artisan vendor:publish --provider="Stevebauman\Purify\PurifyServiceProvider"
+        - "php artisan vendor:publish" then select "Stevebauman\Purify\PurifyServiceProvider"
+    7. create database named fams
+    8. migrating the database
+        - go to App/Providers/EventServiceProvider
+        - comment the observers on boot function
+    9. php artisan migrate --seed
+    10. uncommment the observers on boot function from App/Providers/EventServiceProvider
+    11. php artisan serve
