@@ -105,7 +105,7 @@
 @endif
 
 @isset($search_officers) 
-    <h6 class="mb-1">Officer results</h6>
+    <h6 class="mb-1">Scholar results</h6>
     <hr class="my-1">
     @forelse ($search_officers as $officer)
         <div class="input-group mb-1">

@@ -20,11 +20,11 @@
             value="{{ $invite->email }}" readonly>
         <div class="input-group-append">
             @if ( count($categories)>1 )
-                <span class="input-group-text border-success bg-white rounded-right">
+                <span class="input-group-text border-success bg-white">
                     {{ $invite->category->category }}
                 </span>
             @endif
-            <span class="input-group-text border-info bg-white">
+            <span class="input-group-text border-success bg-white rounded-right">
                 {{ $invite->acad_year }}-{{ $invite->acad_year+1 }} {{ ($invite->acad_semt==1)? '1st': '2nd' }} Sem
             </span>
             <button class="btn btn-dark rounded ml-1" type="button"

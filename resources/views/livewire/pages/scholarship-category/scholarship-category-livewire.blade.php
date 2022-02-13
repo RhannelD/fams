@@ -101,7 +101,7 @@
         @can( 'create', [\App\Models\ScholarshipCategory::class, $scholarship_id] )    
             <div wire:ignore.self class="modal fade category_form" id="category_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal" role="document">
-                    @livewire('scholarship-category.scholarship-category-edit-livewire', [$scholarship_id]))
+                    @livewire('scholarship-category.scholarship-category-edit-livewire', [$scholarship_id])
                 </div>
             </div>
         @endcan

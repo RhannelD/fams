@@ -77,13 +77,6 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
         - APP_URL
         - MAIL
         - SEMAPHORE
-    6. any of these two
-        - php artisan vendor:publish --provider="Stevebauman\Purify\PurifyServiceProvider"
-        - "php artisan vendor:publish" then select "Stevebauman\Purify\PurifyServiceProvider"
     7. create database named fams
-    8. migrating the database
-        - go to App/Providers/EventServiceProvider
-        - comment the observers on boot function
-    9. php artisan migrate --seed
-    10. uncommment the observers on boot function from App/Providers/EventServiceProvider
-    11. php artisan serve
+    8. import a sql file from storage/app/backups/
+    9. php artisan serve

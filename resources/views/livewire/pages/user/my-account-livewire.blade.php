@@ -114,13 +114,11 @@
             Update Email
         </button>
         
-        @if ( Auth::user()->is_scholar() )
-            <button class="btn btn-primary" data-toggle="modal" data-target="#change-password-modal"
-                wire:click="$emitTo('user.change-password-livewire', 'reset_values')"
-                >
-                Change Password
-            </button>
-        @endif
+        <button class="btn btn-primary" data-toggle="modal" data-target="#change-password-modal"
+            wire:click="$emitTo('user.change-password-livewire', 'reset_values')"
+            >
+            Change Password
+        </button>
     </div>
 
     @livewire('user.change-password-livewire')

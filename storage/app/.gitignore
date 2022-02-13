@@ -1,3 +1,9 @@
 *
 !public/
+!files/
+!files/*
+!purify/
+!purify/*
+!backups/
+!backups/*
 !.gitignore

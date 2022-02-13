@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use PDF;
+use Barryvdh\DomPDF\PDF;
 use App\Models\Scholarship;
 use Illuminate\Http\Request;
 
