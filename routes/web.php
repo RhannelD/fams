@@ -117,6 +117,3 @@ Route::group(['middleware' => ['user.auth']], function(){
 
     Route::get('/back_restore', BackupRestoreLivewire::class)->name('back_restore');
 });
-
-//----------------------- To be Deleted --------------------------
-Route::get('/try', [HomeController::class, 'index'])->name('try');  
